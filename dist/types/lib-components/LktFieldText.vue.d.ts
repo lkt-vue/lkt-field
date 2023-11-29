@@ -40,6 +40,10 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        showPassword: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
         reset: {
             type: BooleanConstructor;
             default: boolean;
@@ -60,7 +64,7 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
-        resetPasswordMessage: {
+        showPasswordMessage: {
             type: StringConstructor;
             default: string;
         };
@@ -132,6 +136,10 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        showPassword: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
         reset: {
             type: BooleanConstructor;
             default: boolean;
@@ -152,7 +160,7 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
-        resetPasswordMessage: {
+        showPasswordMessage: {
             type: StringConstructor;
             default: string;
         };
@@ -189,11 +197,12 @@ declare const _default: {
         modelValue: string | number | unknown[];
         palette: string;
         valid: boolean;
+        showPassword: boolean;
         resetMessage: string;
         mandatoryMessage: string;
         infoMessage: string;
         errorMessage: string;
-        resetPasswordMessage: string;
+        showPasswordMessage: string;
         isTel: boolean;
         isEmail: boolean;
         isPassword: boolean;
@@ -245,6 +254,10 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        showPassword: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
         reset: {
             type: BooleanConstructor;
             default: boolean;
@@ -265,7 +278,7 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
-        resetPasswordMessage: {
+        showPasswordMessage: {
             type: StringConstructor;
             default: string;
         };
@@ -308,11 +321,12 @@ declare const _default: {
         modelValue: string | number | unknown[];
         palette: string;
         valid: boolean;
+        showPassword: boolean;
         resetMessage: string;
         mandatoryMessage: string;
         infoMessage: string;
         errorMessage: string;
-        resetPasswordMessage: string;
+        showPasswordMessage: string;
         isTel: boolean;
         isEmail: boolean;
         isPassword: boolean;
@@ -361,6 +375,10 @@ declare const _default: {
         type: BooleanConstructor;
         default: boolean;
     };
+    showPassword: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
     reset: {
         type: BooleanConstructor;
         default: boolean;
@@ -381,7 +399,7 @@ declare const _default: {
         type: StringConstructor;
         default: string;
     };
-    resetPasswordMessage: {
+    showPasswordMessage: {
         type: StringConstructor;
         default: string;
     };
@@ -424,11 +442,12 @@ declare const _default: {
     modelValue: string | number | unknown[];
     palette: string;
     valid: boolean;
+    showPassword: boolean;
     resetMessage: string;
     mandatoryMessage: string;
     infoMessage: string;
     errorMessage: string;
-    resetPasswordMessage: string;
+    showPasswordMessage: string;
     isTel: boolean;
     isEmail: boolean;
     isPassword: boolean;

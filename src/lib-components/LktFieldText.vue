@@ -26,12 +26,13 @@ const props = defineProps({
     readonly: {type: Boolean, default: false},
     tabindex: {type: Number, default: undefined},
     mandatory: {type: Boolean, default: false},
+    showPassword: {type: Boolean, default: false},
     reset: {type: Boolean, default: false},
     resetMessage: {type: String, default: ''},
     mandatoryMessage: {type: String, default: ''},
     infoMessage: {type: String, default: ''},
     errorMessage: {type: String, default: ''},
-    resetPasswordMessage: {type: String, default: ''},
+    showPasswordMessage: {type: String, default: ''},
     isTel: {type: Boolean, default: false},
     isEmail: {type: Boolean, default: false},
     isPassword: {type: Boolean, default: false},
@@ -57,13 +58,13 @@ const isValid = computed(() => {
     }),
     changed = computed(() => value.value !== originalValue.value),
     showInfoUi = computed(() => {
-        return props.reset || props.infoMessage !== '' || props.errorMessage !== '' || (props.isPassword && props.resetPasswordMessage !== '');
+        return props.reset || props.infoMessage !== '' || props.errorMessage !== '' || (props.isPassword && props.showPassword);
     }),
     amountOfIcons = computed(() => {
         let r = 0;
         if (props.reset) ++r;
         if (props.infoMessage) ++r;
-        if (props.isPassword && props.resetPasswordMessage) ++r;
+        if (props.isPassword && props.showPassword) ++r;
         return r;
     }),
     resetText = computed(() => {
@@ -74,6 +75,7 @@ const isValid = computed(() => {
         return showPasswordIcon.value ? 'lkt-field__password-icon' : 'lkt-field__show-password-icon';
     }),
     type = computed(() => {
+        if (props.isPassword && showPasswordIcon.value) return 'text';
         if (props.isEmail) return 'email';
         if (props.isPassword) return 'password';
         if (props.isTel) return 'tel';
@@ -177,8 +179,8 @@ defineExpose({
                v-on:click="onClickError"></i>
             <i v-if="props.infoMessage" class="lkt-field__info-icon" :title="props.infoMessage"
                v-on:click="onClickInfo"></i>
-            <i v-if="props.isPassword && props.resetPasswordMessage" :class="passwordIcon"
-               :title="props.resetPasswordMessage"
+            <i v-if="props.isPassword && props.showPassword" :class="passwordIcon"
+               :title="props.showPasswordMessage"
                v-on:click="onClickShowPassword"></i>
             <i v-if="props.reset" class="lkt-field__reset-icon" :title="resetText" v-on:click="reset"></i>
             <i v-if="props.mandatory" class="lkt-field__mandatory-icon" :title="props.mandatoryMessage"></i>
