@@ -59,6 +59,13 @@ const isValid = computed(() => {
     showInfoUi = computed(() => {
         return props.reset || props.infoMessage !== '' || props.errorMessage !== '' || (props.isPassword && props.resetPasswordMessage !== '');
     }),
+    amountOfIcons = computed(() => {
+        let r = 0;
+        if (props.reset) ++r;
+        if (props.infoMessage) ++r;
+        if (props.isPassword && props.resetPasswordMessage) ++r;
+        return r;
+    }),
     resetText = computed(() => {
         if (props.resetMessage !== '') return props.resetMessage;
         return '';
@@ -79,6 +86,11 @@ const isValid = computed(() => {
         if (type) r.push(`is-${type.value}`);
         if (changed.value) r.push('is-changed');
         if (props.disabled) r.push('is-disabled');
+
+        if (amountOfIcons.value > 0) {
+            r.push(`has-icons`);
+            r.push(`has-icons-${amountOfIcons.value}`);
+        }
 
         r.push(isValid.value ? 'is-valid' : 'is-error');
         r.push(!!props.modelValue ? 'is-filled' : 'is-empty');
