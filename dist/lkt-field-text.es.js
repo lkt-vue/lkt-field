@@ -31,7 +31,7 @@ const O = ["data-show-ui", "data-labeled"], Q = ["type", "name", "id", "disabled
   setup(a, { expose: I, emit: L }) {
     const n = L, k = G(), e = a, s = K(16), y = p(null), b = p(e.modelValue), t = p(e.modelValue), g = p(!1), $ = u(() => typeof e.valid == "function" ? e.valid() : e.valid), U = u(() => t.value !== b.value), h = u(() => e.reset || e.infoMessage !== "" || e.errorMessage !== "" || e.isPassword && e.resetPasswordMessage !== ""), D = u(() => e.resetMessage !== "" ? e.resetMessage : ""), F = u(() => g.value ? "lkt-field__password-icon" : "lkt-field__show-password-icon"), v = u(() => e.isEmail ? "email" : e.isPassword ? "password" : e.isTel ? "tel" : "text"), N = u(() => {
       const l = ["lkt-field", "lkt-field-text"];
-      return e.palette && l.push(`lkt-field--${e.palette}`), v && l.push(`is-${v}`), U.value && l.push("is-changed"), e.disabled && l.push("is-disabled"), l.push($.value ? "is-valid" : "is-error"), l.push(e.modelValue ? "is-filled" : "is-empty"), l.join(" ");
+      return e.palette && l.push(`lkt-field--${e.palette}`), v && l.push(`is-${v.value}`), U.value && l.push("is-changed"), e.disabled && l.push("is-disabled"), l.push($.value ? "is-valid" : "is-error"), l.push(e.modelValue ? "is-filled" : "is-empty"), l.join(" ");
     }), A = () => {
       J(() => {
         y.value && y.value.focus();

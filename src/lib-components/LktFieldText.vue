@@ -76,7 +76,7 @@ const isValid = computed(() => {
         const r = ['lkt-field', 'lkt-field-text'];
 
         if (props.palette) r.push(`lkt-field--${props.palette}`);
-        if (type) r.push(`is-${type}`);
+        if (type) r.push(`is-${type.value}`);
         if (changed.value) r.push('is-changed');
         if (props.disabled) r.push('is-disabled');
 
