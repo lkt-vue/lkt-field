@@ -24,11 +24,23 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        autocomplete: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
         disabled: {
             type: BooleanConstructor;
             default: boolean;
         };
         readonly: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        readMode: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        allowReadModeSwitch: {
             type: BooleanConstructor;
             default: boolean;
         };
@@ -65,6 +77,10 @@ declare const _default: {
             default: string;
         };
         showPasswordMessage: {
+            type: StringConstructor;
+            default: string;
+        };
+        switchEditionMessage: {
             type: StringConstructor;
             default: string;
         };
@@ -120,11 +136,23 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        autocomplete: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
         disabled: {
             type: BooleanConstructor;
             default: boolean;
         };
         readonly: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        readMode: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        allowReadModeSwitch: {
             type: BooleanConstructor;
             default: boolean;
         };
@@ -164,6 +192,10 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
+        switchEditionMessage: {
+            type: StringConstructor;
+            default: string;
+        };
         isTel: {
             type: BooleanConstructor;
             default: boolean;
@@ -189,6 +221,7 @@ declare const _default: {
         name: string;
         label: string;
         reset: boolean;
+        autocomplete: boolean;
         disabled: boolean;
         readonly: boolean;
         mandatory: boolean;
@@ -197,12 +230,15 @@ declare const _default: {
         modelValue: string | number | unknown[];
         palette: string;
         valid: boolean;
+        readMode: boolean;
+        allowReadModeSwitch: boolean;
         showPassword: boolean;
         resetMessage: string;
         mandatoryMessage: string;
         infoMessage: string;
         errorMessage: string;
         showPasswordMessage: string;
+        switchEditionMessage: string;
         isTel: boolean;
         isEmail: boolean;
         isPassword: boolean;
@@ -238,11 +274,23 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        autocomplete: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
         disabled: {
             type: BooleanConstructor;
             default: boolean;
         };
         readonly: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        readMode: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        allowReadModeSwitch: {
             type: BooleanConstructor;
             default: boolean;
         };
@@ -282,6 +330,10 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
+        switchEditionMessage: {
+            type: StringConstructor;
+            default: string;
+        };
         isTel: {
             type: BooleanConstructor;
             default: boolean;
@@ -313,6 +365,7 @@ declare const _default: {
         name: string;
         label: string;
         reset: boolean;
+        autocomplete: boolean;
         disabled: boolean;
         readonly: boolean;
         mandatory: boolean;
@@ -321,12 +374,15 @@ declare const _default: {
         modelValue: string | number | unknown[];
         palette: string;
         valid: boolean;
+        readMode: boolean;
+        allowReadModeSwitch: boolean;
         showPassword: boolean;
         resetMessage: string;
         mandatoryMessage: string;
         infoMessage: string;
         errorMessage: string;
         showPasswordMessage: string;
+        switchEditionMessage: string;
         isTel: boolean;
         isEmail: boolean;
         isPassword: boolean;
@@ -359,11 +415,23 @@ declare const _default: {
         type: BooleanConstructor;
         default: boolean;
     };
+    autocomplete: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
     disabled: {
         type: BooleanConstructor;
         default: boolean;
     };
     readonly: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    readMode: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    allowReadModeSwitch: {
         type: BooleanConstructor;
         default: boolean;
     };
@@ -403,6 +471,10 @@ declare const _default: {
         type: StringConstructor;
         default: string;
     };
+    switchEditionMessage: {
+        type: StringConstructor;
+        default: string;
+    };
     isTel: {
         type: BooleanConstructor;
         default: boolean;
@@ -434,6 +506,7 @@ declare const _default: {
     name: string;
     label: string;
     reset: boolean;
+    autocomplete: boolean;
     disabled: boolean;
     readonly: boolean;
     mandatory: boolean;
@@ -442,18 +515,20 @@ declare const _default: {
     modelValue: string | number | unknown[];
     palette: string;
     valid: boolean;
+    readMode: boolean;
+    allowReadModeSwitch: boolean;
     showPassword: boolean;
     resetMessage: string;
     mandatoryMessage: string;
     infoMessage: string;
     errorMessage: string;
     showPasswordMessage: string;
+    switchEditionMessage: string;
     isTel: boolean;
     isEmail: boolean;
     isPassword: boolean;
 }, {}, string, {}> & import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps & (new () => {
     $slots: {
-        prefix: (_: {}) => any;
         label: (_: {}) => any;
     };
 });

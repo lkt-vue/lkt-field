@@ -22,8 +22,11 @@ const props = defineProps({
     palette: {type: String, default: ''},
     name: {type: String, default: generateRandomString(16)},
     valid: {type: Boolean, default: false},
+    autocomplete: {type: Boolean, default: true},
     disabled: {type: Boolean, default: false},
     readonly: {type: Boolean, default: false},
+    readMode: {type: Boolean, default: false},
+    allowReadModeSwitch: {type: Boolean, default: false},
     tabindex: {type: Number, default: undefined},
     mandatory: {type: Boolean, default: false},
     showPassword: {type: Boolean, default: false},
@@ -33,6 +36,7 @@ const props = defineProps({
     infoMessage: {type: String, default: ''},
     errorMessage: {type: String, default: ''},
     showPasswordMessage: {type: String, default: ''},
+    switchEditionMessage: {type: String, default: ''},
     isTel: {type: Boolean, default: false},
     isEmail: {type: Boolean, default: false},
     isPassword: {type: Boolean, default: false},
@@ -48,7 +52,9 @@ const inputElement = ref(null);
 // Reactive data
 const originalValue = ref(props.modelValue),
     value = ref(props.modelValue),
-    showPasswordIcon = ref(false);
+    showPasswordIcon = ref(false),
+    focusing = ref(false),
+    editable = ref(!props.readMode);
 
 
 const isValid = computed(() => {
@@ -72,10 +78,16 @@ const isValid = computed(() => {
         return '';
     }),
     passwordIcon = computed(() => {
-        return showPasswordIcon.value ? 'lkt-field__password-icon' : 'lkt-field__show-password-icon';
+        return showPasswordIcon.value === true ? 'lkt-field__hide-password-icon' : 'lkt-field__show-password-icon';
+    }),
+    autocompleteText = computed(() => {
+        return props.autocomplete === true ? 'on' : 'off';
+    }),
+    isFilled = computed(() => {
+        return value.value !== '';
     }),
     type = computed(() => {
-        if (props.isPassword && showPasswordIcon.value) return 'text';
+        if (props.isPassword && showPasswordIcon.value === true) return 'text';
         if (props.isEmail) return 'email';
         if (props.isPassword) return 'password';
         if (props.isTel) return 'tel';
@@ -88,11 +100,9 @@ const isValid = computed(() => {
         if (type) r.push(`is-${type.value}`);
         if (changed.value) r.push('is-changed');
         if (props.disabled) r.push('is-disabled');
+        if (focusing.value) r.push('has-focus');
 
-        if (amountOfIcons.value > 0) {
-            r.push(`has-icons`);
-            r.push(`has-icons-${amountOfIcons.value}`);
-        }
+        if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
 
         r.push(isValid.value ? 'is-valid' : 'is-error');
         r.push(!!props.modelValue ? 'is-filled' : 'is-empty');
@@ -117,12 +127,16 @@ const reset = () => value.value = originalValue.value,
     getValue = () => value.value,
     onKeyUp = ($event: any) => emits('keyup', $event, createLktEvent(Identifier, {value: value.value})),
     onKeyDown = ($event: any) => emits('keydown', $event, createLktEvent(Identifier, {value: value.value})),
-    onFocus = ($event: any) => emits('focus', $event, createLktEvent(Identifier, {value: value.value})),
-    onBlur = ($event: any) => emits('blur', $event, createLktEvent(Identifier, {value: value.value})),
+    onFocus = ($event: any) => (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value})),
+    onBlur = ($event: any) => (focusing.value = false) && emits('blur', $event, createLktEvent(Identifier, {value: value.value})),
     onClick = ($event: any) => emits('click', $event, createLktEvent(Identifier, {value: value.value})),
     onClickInfo = ($event: any) => emits('click-info', $event, createLktEvent(Identifier, {value: value.value})),
     onClickError = ($event: any) => emits('click-error', $event, createLktEvent(Identifier, {value: value.value})),
-    onClickShowPassword = ($event: any) => showPasswordIcon.value = !showPasswordIcon.value;
+    onClickShowPassword = ($event: any) => showPasswordIcon.value = !showPasswordIcon.value,
+    onClickSwitchEdition = ($event: any) => {
+        editable.value = !editable.value;
+        if (editable.value) focus();
+    };
 
 defineExpose({
     Identifier,
@@ -138,52 +152,66 @@ defineExpose({
          v-bind:data-show-ui="showInfoUi"
          v-bind:data-labeled="!!!slots.label"
     >
-        <slot name="prefix"></slot>
-        <template v-if="placeholder">
-            <input v-model="value"
-                   :ref="(el:any) => inputElement = el"
-                   v-bind:type="type"
-                   v-bind:name="name"
-                   v-bind:id="Identifier"
-                   v-bind:disabled="disabled"
-                   v-bind:readonly="readonly"
-                   v-bind:placeholder="placeholder"
-                   v-bind:tabindex="tabindex"
-                   v-on:keyup="onKeyUp"
-                   v-on:keydown="onKeyDown"
-                   v-on:focus="onFocus"
-                   v-on:blur="onBlur"
-                   v-on:click="onClick"
-            >
-        </template>
-        <template v-else>
-            <input v-model="value"
-                   :ref="(el:any) => inputElement = el"
-                   v-bind:type="type"
-                   v-bind:name="name"
-                   v-bind:id="Identifier"
-                   v-bind:disabled="disabled"
-                   v-bind:readonly="readonly"
-                   v-bind:tabindex="tabindex"
-                   v-on:keyup="onKeyUp"
-                   v-on:keydown="onKeyDown"
-                   v-on:focus="onFocus"
-                   v-on:blur="onBlur"
-                   v-on:click="onClick">
-        </template>
         <slot v-if="!!slots.label" name="label"></slot>
         <label v-if="!!!slots.label" :for="Identifier" v-html="label"></label>
 
-        <div class="lkt-field__state" v-if="showInfoUi">
-            <i v-if="props.errorMessage" class="lkt-field__error-icon" :title="props.errorMessage"
-               v-on:click="onClickError"></i>
-            <i v-if="props.infoMessage" class="lkt-field__info-icon" :title="props.infoMessage"
-               v-on:click="onClickInfo"></i>
-            <i v-if="props.isPassword && props.showPassword" :class="passwordIcon"
-               :title="props.showPasswordMessage"
-               v-on:click="onClickShowPassword"></i>
-            <i v-if="props.reset" class="lkt-field__reset-icon" :title="resetText" v-on:click="reset"></i>
-            <i v-if="props.mandatory" class="lkt-field__mandatory-icon" :title="props.mandatoryMessage"></i>
+        <div v-if="editable" class="lkt-field-text__main">
+            <template v-if="placeholder">
+                <input v-model="value"
+                       :ref="(el:any) => inputElement = el"
+                       v-bind:type="type"
+                       v-bind:name="name"
+                       v-bind:id="Identifier"
+                       v-bind:disabled="disabled"
+                       v-bind:readonly="readonly"
+                       v-bind:placeholder="placeholder"
+                       v-bind:tabindex="tabindex"
+                       v-bind:autocomplete="autocompleteText"
+                       v-on:keyup="onKeyUp"
+                       v-on:keydown="onKeyDown"
+                       v-on:focus="onFocus"
+                       v-on:blur="onBlur"
+                       v-on:click="onClick"
+                >
+            </template>
+            <template v-else>
+                <input v-model="value"
+                       :ref="(el:any) => inputElement = el"
+                       v-bind:type="type"
+                       v-bind:name="name"
+                       v-bind:id="Identifier"
+                       v-bind:disabled="disabled"
+                       v-bind:readonly="readonly"
+                       v-bind:tabindex="tabindex"
+                       v-bind:autocomplete="autocompleteText"
+                       v-on:keyup="onKeyUp"
+                       v-on:keydown="onKeyDown"
+                       v-on:focus="onFocus"
+                       v-on:blur="onBlur"
+                       v-on:click="onClick">
+            </template>
+
+            <div class="lkt-field__state" v-if="showInfoUi">
+                <i v-if="props.errorMessage" class="lkt-field__error-icon" :title="props.errorMessage"
+                   v-on:click="onClickError"></i>
+                <i v-if="props.infoMessage" class="lkt-field__info-icon" :title="props.infoMessage"
+                   v-on:click="onClickInfo"></i>
+                <i v-if="props.isPassword && props.showPassword && isFilled" :class="passwordIcon"
+                   :title="props.showPasswordMessage"
+                   v-on:click="onClickShowPassword"></i>
+                <i v-if="props.reset && isFilled" class="lkt-field__reset-icon" :title="resetText" v-on:click="reset"></i>
+                <i v-if="props.mandatory" class="lkt-field__mandatory-icon" :title="props.mandatoryMessage"></i>
+                <i  v-if="allowReadModeSwitch" class="lkt-field__edit-icon" :title="props.switchEditionMessage"
+                   v-on:click="onClickSwitchEdition"></i>
+            </div>
+        </div>
+
+        <div v-if="!editable" class="lkt-field-text__read">
+            <div class="lkt-field-text__read-value" v-html="value" :title="value"></div>
+            <div v-if="allowReadModeSwitch" class="lkt-field__state">
+                <i class="lkt-field__edit-icon" :title="props.switchEditionMessage"
+                   v-on:click="onClickSwitchEdition"></i>
+            </div>
         </div>
     </div>
 </template>
