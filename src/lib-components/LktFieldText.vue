@@ -40,6 +40,7 @@ const props = defineProps({
     isTel: {type: Boolean, default: false},
     isEmail: {type: Boolean, default: false},
     isPassword: {type: Boolean, default: false},
+    isSearch: {type: Boolean, default: false},
 });
 
 // Constant data
@@ -91,6 +92,7 @@ const isValid = computed(() => {
         if (props.isEmail) return 'email';
         if (props.isPassword) return 'password';
         if (props.isTel) return 'tel';
+        if (props.isSearch) return 'search';
         return 'text';
     }),
     classes = computed(() => {
