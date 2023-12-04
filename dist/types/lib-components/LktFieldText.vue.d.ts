@@ -1,7 +1,7 @@
 declare const _default: {
     new (...args: any[]): import("vue").CreateComponentPublicInstance<Readonly<import("vue").ExtractPropTypes<{
         modelValue: {
-            type: (StringConstructor | NumberConstructor | ArrayConstructor)[];
+            type: (StringConstructor | NumberConstructor)[];
             default: string;
         };
         placeholder: {
@@ -93,6 +93,10 @@ declare const _default: {
             default: boolean;
         };
         isPassword: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        isSearch: {
             type: BooleanConstructor;
             default: boolean;
         };
@@ -107,13 +111,13 @@ declare const _default: {
         "onClick-error"?: (...args: any[]) => any;
     }, {
         Identifier: string;
-        reset: () => string | number | unknown[];
+        reset: () => string | number;
         focus: () => void;
-        value: () => string | number | unknown[];
+        value: () => string | number;
         isMandatory: () => boolean;
     }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("blur" | "click" | "focus" | "keydown" | "keyup" | "update:modelValue" | "click-info" | "click-error")[], import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps & Readonly<import("vue").ExtractPropTypes<{
         modelValue: {
-            type: (StringConstructor | NumberConstructor | ArrayConstructor)[];
+            type: (StringConstructor | NumberConstructor)[];
             default: string;
         };
         placeholder: {
@@ -205,6 +209,10 @@ declare const _default: {
             default: boolean;
         };
         isPassword: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        isSearch: {
             type: BooleanConstructor;
             default: boolean;
         };
@@ -227,7 +235,7 @@ declare const _default: {
         mandatory: boolean;
         placeholder: string;
         tabindex: number;
-        modelValue: string | number | unknown[];
+        modelValue: string | number;
         palette: string;
         valid: boolean;
         readMode: boolean;
@@ -242,6 +250,7 @@ declare const _default: {
         isTel: boolean;
         isEmail: boolean;
         isPassword: boolean;
+        isSearch: boolean;
     }, true, {}, {}, {
         P: {};
         B: {};
@@ -251,7 +260,7 @@ declare const _default: {
         Defaults: {};
     }, Readonly<import("vue").ExtractPropTypes<{
         modelValue: {
-            type: (StringConstructor | NumberConstructor | ArrayConstructor)[];
+            type: (StringConstructor | NumberConstructor)[];
             default: string;
         };
         placeholder: {
@@ -346,6 +355,10 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        isSearch: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
     }>> & {
         onFocus?: (...args: any[]) => any;
         onBlur?: (...args: any[]) => any;
@@ -357,9 +370,9 @@ declare const _default: {
         "onClick-error"?: (...args: any[]) => any;
     }, {
         Identifier: string;
-        reset: () => string | number | unknown[];
+        reset: () => string | number;
         focus: () => void;
-        value: () => string | number | unknown[];
+        value: () => string | number;
         isMandatory: () => boolean;
     }, {}, {}, {}, {
         name: string;
@@ -371,7 +384,7 @@ declare const _default: {
         mandatory: boolean;
         placeholder: string;
         tabindex: number;
-        modelValue: string | number | unknown[];
+        modelValue: string | number;
         palette: string;
         valid: boolean;
         readMode: boolean;
@@ -386,13 +399,14 @@ declare const _default: {
         isTel: boolean;
         isEmail: boolean;
         isPassword: boolean;
+        isSearch: boolean;
     }>;
     __isFragment?: never;
     __isTeleport?: never;
     __isSuspense?: never;
 } & import("vue").ComponentOptionsBase<Readonly<import("vue").ExtractPropTypes<{
     modelValue: {
-        type: (StringConstructor | NumberConstructor | ArrayConstructor)[];
+        type: (StringConstructor | NumberConstructor)[];
         default: string;
     };
     placeholder: {
@@ -487,6 +501,10 @@ declare const _default: {
         type: BooleanConstructor;
         default: boolean;
     };
+    isSearch: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
 }>> & {
     onFocus?: (...args: any[]) => any;
     onBlur?: (...args: any[]) => any;
@@ -498,9 +516,9 @@ declare const _default: {
     "onClick-error"?: (...args: any[]) => any;
 }, {
     Identifier: string;
-    reset: () => string | number | unknown[];
+    reset: () => string | number;
     focus: () => void;
-    value: () => string | number | unknown[];
+    value: () => string | number;
     isMandatory: () => boolean;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("blur" | "click" | "focus" | "keydown" | "keyup" | "update:modelValue" | "click-info" | "click-error")[], "blur" | "click" | "focus" | "keydown" | "keyup" | "update:modelValue" | "click-info" | "click-error", {
     name: string;
@@ -512,7 +530,7 @@ declare const _default: {
     mandatory: boolean;
     placeholder: string;
     tabindex: number;
-    modelValue: string | number | unknown[];
+    modelValue: string | number;
     palette: string;
     valid: boolean;
     readMode: boolean;
@@ -527,6 +545,7 @@ declare const _default: {
     isTel: boolean;
     isEmail: boolean;
     isPassword: boolean;
+    isSearch: boolean;
 }, {}, string, {}> & import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps & (new () => {
     $slots: {
         label: (_: {}) => any;

@@ -15,7 +15,7 @@ const slots = useSlots();
 
 // Props
 const props = defineProps({
-    modelValue: {type: [String, Number, Array], default: ''},
+    modelValue: {type: [String, Number], default: ''},
 
     placeholder: {type: String, default: ''},
     label: {type: String, default: ''},
@@ -110,6 +110,10 @@ const isValid = computed(() => {
         r.push(!!props.modelValue ? 'is-filled' : 'is-empty');
 
         return r.join(' ');
+    }),
+    readModeTitle = computed(() => {
+        if (typeof value.value === 'number') return value.value.toString();
+        return value.value;
     });
 
 const focus = () => {
@@ -147,6 +151,8 @@ defineExpose({
     value: getValue,
     isMandatory: () => props.mandatory
 });
+
+reset();
 </script>
 
 <template>
@@ -161,6 +167,7 @@ defineExpose({
             <template v-if="placeholder">
                 <input v-model="value"
                        :ref="(el:any) => inputElement = el"
+                       v-bind:value="value"
                        v-bind:type="type"
                        v-bind:name="name"
                        v-bind:id="Identifier"
@@ -179,6 +186,7 @@ defineExpose({
             <template v-else>
                 <input v-model="value"
                        :ref="(el:any) => inputElement = el"
+                       v-bind:value="value"
                        v-bind:type="type"
                        v-bind:name="name"
                        v-bind:id="Identifier"
@@ -209,7 +217,7 @@ defineExpose({
         </div>
 
         <div v-if="!editable" class="lkt-field-text__read">
-            <div class="lkt-field-text__read-value" v-html="value" :title="value"></div>
+            <div class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
             <div v-if="allowReadModeSwitch" class="lkt-field__state">
                 <i class="lkt-field__edit-icon" :title="props.switchEditionMessage"
                    v-on:click="onClickSwitchEdition"></i>
