@@ -126,6 +126,7 @@ const focus = () => {
 
 
 // Watch data
+watch(() => props.readMode, (v) => editable.value = !v)
 watch(() => props.modelValue, (v) => value.value = v)
 watch(value, (v) => emits('update:modelValue', v))
 
