@@ -84,6 +84,18 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
+        min: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: any;
+        };
+        max: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: any;
+        };
+        step: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: number;
+        };
         isTel: {
             type: BooleanConstructor;
             default: boolean;
@@ -97,6 +109,14 @@ declare const _default: {
             default: boolean;
         };
         isSearch: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        isNumber: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        enableAutoNumberFix: {
             type: BooleanConstructor;
             default: boolean;
         };
@@ -200,6 +220,18 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
+        min: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: any;
+        };
+        max: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: any;
+        };
+        step: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: number;
+        };
         isTel: {
             type: BooleanConstructor;
             default: boolean;
@@ -216,6 +248,14 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        isNumber: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        enableAutoNumberFix: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
     }>> & {
         onFocus?: (...args: any[]) => any;
         onBlur?: (...args: any[]) => any;
@@ -226,6 +266,7 @@ declare const _default: {
         "onClick-info"?: (...args: any[]) => any;
         "onClick-error"?: (...args: any[]) => any;
     }, {
+        max: string | number;
         name: string;
         label: string;
         reset: boolean;
@@ -233,8 +274,10 @@ declare const _default: {
         disabled: boolean;
         readonly: boolean;
         mandatory: boolean;
+        step: string | number;
         placeholder: string;
         tabindex: number;
+        min: string | number;
         modelValue: string | number;
         palette: string;
         valid: boolean;
@@ -251,6 +294,8 @@ declare const _default: {
         isEmail: boolean;
         isPassword: boolean;
         isSearch: boolean;
+        isNumber: boolean;
+        enableAutoNumberFix: boolean;
     }, true, {}, {}, {
         P: {};
         B: {};
@@ -343,6 +388,18 @@ declare const _default: {
             type: StringConstructor;
             default: string;
         };
+        min: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: any;
+        };
+        max: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: any;
+        };
+        step: {
+            type: (StringConstructor | NumberConstructor)[];
+            default: number;
+        };
         isTel: {
             type: BooleanConstructor;
             default: boolean;
@@ -356,6 +413,14 @@ declare const _default: {
             default: boolean;
         };
         isSearch: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        isNumber: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
+        enableAutoNumberFix: {
             type: BooleanConstructor;
             default: boolean;
         };
@@ -375,6 +440,7 @@ declare const _default: {
         value: () => string | number;
         isMandatory: () => boolean;
     }, {}, {}, {}, {
+        max: string | number;
         name: string;
         label: string;
         reset: boolean;
@@ -382,8 +448,10 @@ declare const _default: {
         disabled: boolean;
         readonly: boolean;
         mandatory: boolean;
+        step: string | number;
         placeholder: string;
         tabindex: number;
+        min: string | number;
         modelValue: string | number;
         palette: string;
         valid: boolean;
@@ -400,6 +468,8 @@ declare const _default: {
         isEmail: boolean;
         isPassword: boolean;
         isSearch: boolean;
+        isNumber: boolean;
+        enableAutoNumberFix: boolean;
     }>;
     __isFragment?: never;
     __isTeleport?: never;
@@ -489,6 +559,18 @@ declare const _default: {
         type: StringConstructor;
         default: string;
     };
+    min: {
+        type: (StringConstructor | NumberConstructor)[];
+        default: any;
+    };
+    max: {
+        type: (StringConstructor | NumberConstructor)[];
+        default: any;
+    };
+    step: {
+        type: (StringConstructor | NumberConstructor)[];
+        default: number;
+    };
     isTel: {
         type: BooleanConstructor;
         default: boolean;
@@ -502,6 +584,14 @@ declare const _default: {
         default: boolean;
     };
     isSearch: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    isNumber: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    enableAutoNumberFix: {
         type: BooleanConstructor;
         default: boolean;
     };
@@ -521,6 +611,7 @@ declare const _default: {
     value: () => string | number;
     isMandatory: () => boolean;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("blur" | "click" | "focus" | "keydown" | "keyup" | "update:modelValue" | "click-info" | "click-error")[], "blur" | "click" | "focus" | "keydown" | "keyup" | "update:modelValue" | "click-info" | "click-error", {
+    max: string | number;
     name: string;
     label: string;
     reset: boolean;
@@ -528,8 +619,10 @@ declare const _default: {
     disabled: boolean;
     readonly: boolean;
     mandatory: boolean;
+    step: string | number;
     placeholder: string;
     tabindex: number;
+    min: string | number;
     modelValue: string | number;
     palette: string;
     valid: boolean;
@@ -546,6 +639,8 @@ declare const _default: {
     isEmail: boolean;
     isPassword: boolean;
     isSearch: boolean;
+    isNumber: boolean;
+    enableAutoNumberFix: boolean;
 }, {}, string, {}> & import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps & (new () => {
     $slots: {
         label: (_: {}) => any;

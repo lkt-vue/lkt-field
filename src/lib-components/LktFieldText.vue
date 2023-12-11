@@ -37,10 +37,15 @@ const props = defineProps({
     errorMessage: {type: String, default: ''},
     showPasswordMessage: {type: String, default: ''},
     switchEditionMessage: {type: String, default: ''},
+    min: {type: [Number, String, undefined], default: undefined},
+    max: {type: [Number, String, undefined], default: undefined},
+    step: {type: [Number, String], default: 1},
     isTel: {type: Boolean, default: false},
     isEmail: {type: Boolean, default: false},
     isPassword: {type: Boolean, default: false},
     isSearch: {type: Boolean, default: false},
+    isNumber: {type: Boolean, default: false},
+    enableAutoNumberFix: {type: Boolean, default: true},
 });
 
 // Constant data
@@ -91,6 +96,7 @@ const isValid = computed(() => {
         if (props.isPassword && showPasswordIcon.value === true) return 'text';
         if (props.isEmail) return 'email';
         if (props.isPassword) return 'password';
+        if (props.isNumber) return 'number';
         if (props.isTel) return 'tel';
         if (props.isSearch) return 'search';
         return 'text';
@@ -114,6 +120,16 @@ const isValid = computed(() => {
     readModeTitle = computed(() => {
         if (typeof value.value === 'number') return value.value.toString();
         return value.value;
+    }),
+    MinimumValue = computed(() => {
+        if (typeof props.min === 'string') return parseFloat(props.min);
+        if (typeof props.min === 'number') return props.min;
+        return false;
+    }),
+    MaximumValue = computed(() => {
+        if (typeof props.max === 'string') return parseFloat(props.max);
+        if (typeof props.max === 'number') return props.max;
+        return false;
     });
 
 const focus = () => {
@@ -127,7 +143,12 @@ const focus = () => {
 
 // Watch data
 watch(() => props.readMode, (v) => editable.value = !v)
-watch(() => props.modelValue, (v) => value.value = v)
+watch(() => props.modelValue, (v) => {
+    if (props.isNumber) {
+        return reAssignNumericValue(v);
+    }
+    value.value = v
+})
 watch(value, (v) => emits('update:modelValue', v))
 
 const reset = () => value.value = originalValue.value,
@@ -143,6 +164,29 @@ const reset = () => value.value = originalValue.value,
     onClickSwitchEdition = ($event: any) => {
         editable.value = !editable.value;
         if (editable.value) focus();
+    },
+    reAssignNumericValue = (n: string | number) => {
+
+        if (!props.enableAutoNumberFix) return false;
+
+        let N = Number(n),
+            reAssign = false;
+
+        if (MinimumValue.value !== false && N < MinimumValue.value) {
+            N = MinimumValue.value;
+            reAssign = true;
+        }
+
+        if (MaximumValue.value !== false && N > MaximumValue.value) {
+            N = MaximumValue.value;
+            reAssign = true;
+        }
+
+        if (reAssign === true) {
+            value.value = N;
+            return true;
+        }
+        return false;
     };
 
 defineExpose({
@@ -177,6 +221,9 @@ reset();
                        v-bind:placeholder="placeholder"
                        v-bind:tabindex="tabindex"
                        v-bind:autocomplete="autocompleteText"
+                       v-bind:min="MinimumValue"
+                       v-bind:max="MaximumValue"
+                       v-bind:step="step"
                        v-on:keyup="onKeyUp"
                        v-on:keydown="onKeyDown"
                        v-on:focus="onFocus"
@@ -195,6 +242,9 @@ reset();
                        v-bind:readonly="readonly"
                        v-bind:tabindex="tabindex"
                        v-bind:autocomplete="autocompleteText"
+                       v-bind:min="MinimumValue"
+                       v-bind:max="MaximumValue"
+                       v-bind:step="step"
                        v-on:keyup="onKeyUp"
                        v-on:keydown="onKeyDown"
                        v-on:focus="onFocus"
@@ -210,9 +260,10 @@ reset();
                 <i v-if="props.isPassword && props.showPassword && isFilled" :class="passwordIcon"
                    :title="props.showPasswordMessage"
                    v-on:click="onClickShowPassword"></i>
-                <i v-if="props.reset && isFilled" class="lkt-field__reset-icon" :title="resetText" v-on:click="reset"></i>
+                <i v-if="props.reset && isFilled" class="lkt-field__reset-icon" :title="resetText"
+                   v-on:click="reset"></i>
                 <i v-if="props.mandatory" class="lkt-field__mandatory-icon" :title="props.mandatoryMessage"></i>
-                <i  v-if="allowReadModeSwitch" class="lkt-field__edit-icon" :title="props.switchEditionMessage"
+                <i v-if="allowReadModeSwitch" class="lkt-field__edit-icon" :title="props.switchEditionMessage"
                    v-on:click="onClickSwitchEdition"></i>
             </div>
         </div>
