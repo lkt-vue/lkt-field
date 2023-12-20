@@ -269,7 +269,9 @@ reset();
         </div>
 
         <div v-if="!editable" class="lkt-field-text__read">
-            <div class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
+            <a v-if="isEmail" class="lkt-field-text__read-value" :title="readModeTitle" :href="'mail:' + value">{{value}}</a>
+            <a v-else-if="isTel" class="lkt-field-text__read-value" :title="readModeTitle" :href="'tel:' + value">{{value}}</a>
+            <div v-else class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
             <div v-if="allowReadModeSwitch" class="lkt-field__state">
                 <i class="lkt-field__edit-icon" :title="props.switchEditionMessage"
                    v-on:click="onClickSwitchEdition"></i>
