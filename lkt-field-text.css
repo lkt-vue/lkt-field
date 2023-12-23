@@ -26,9 +26,6 @@
 .lkt-field-text input {
     height: var(--input-height);
     line-height: var(--input-line-height);
-}
-
-.lkt-field-text input {
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
