@@ -121,14 +121,16 @@ const isValid = computed(() => {
         if (typeof value.value === 'number') return value.value.toString();
         return value.value;
     }),
-    MinimumValue = computed(() => {
+    MinimumValue = computed(() :number => {
         if (typeof props.min === 'string') return parseFloat(props.min);
         if (typeof props.min === 'number') return props.min;
+        //@ts-ignore
         return false;
     }),
-    MaximumValue = computed(() => {
+    MaximumValue = computed((): number => {
         if (typeof props.max === 'string') return parseFloat(props.max);
         if (typeof props.max === 'number') return props.max;
+        //@ts-ignore
         return false;
     });
 
@@ -172,11 +174,13 @@ const reset = () => value.value = originalValue.value,
         let N = Number(n),
             reAssign = false;
 
+        // @ts-ignore
         if (MinimumValue.value !== false && N < MinimumValue.value) {
             N = MinimumValue.value;
             reAssign = true;
         }
 
+        // @ts-ignore
         if (MaximumValue.value !== false && N > MaximumValue.value) {
             N = MaximumValue.value;
             reAssign = true;
