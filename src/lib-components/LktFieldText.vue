@@ -7,6 +7,7 @@ export default {name: "LktFieldText", inheritAttrs: false}
 import {generateRandomString} from "lkt-string-tools";
 import {computed, nextTick, ref, useSlots, watch} from "vue";
 import {createLktEvent} from "lkt-events";
+import {Settings} from "../settings/Settings";
 
 const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error']);
 
@@ -46,6 +47,9 @@ const props = defineProps({
     isSearch: {type: Boolean, default: false},
     isNumber: {type: Boolean, default: false},
     enableAutoNumberFix: {type: Boolean, default: true},
+
+    valueSlot: {type: String, default: ''},
+    editSlot: {type: String, default: ''},
 });
 
 // Constant data
@@ -202,6 +206,11 @@ defineExpose({
 });
 
 reset();
+
+const hasCustomValueSlot = computed(() => props.valueSlot !== '' && typeof Settings.customValueSlots[props.valueSlot] !== 'undefined'),
+    customValueSlot = computed(() => Settings.customValueSlots[props.valueSlot]),
+    hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
+    customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 </script>
 
 <template>
@@ -212,8 +221,19 @@ reset();
         <slot v-if="!!slots.label" name="label"></slot>
         <label v-if="!!!slots.label" :for="Identifier" v-html="label"></label>
 
-        <div v-if="editable" class="lkt-field-text__main">
-            <template v-if="placeholder">
+        <template v-if="editable">
+            <template v-if="slots['edit']">
+                <div v-on:click="onClick">
+                    <slot name="edit" v-bind:value="value" :title="readModeTitle"></slot>
+                </div>
+            </template>
+            <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
+                <component  v-bind:is="customEditSlot"
+                       v-bind:value="value" :title="readModeTitle"></component>
+            </div>
+
+            <template v-else-if="placeholder">
+                <div class="lkt-field-text__main">
                 <input v-model="value"
                        :ref="(el:any) => inputElement = el"
                        v-bind:value="value"
@@ -234,8 +254,10 @@ reset();
                        v-on:blur="onBlur"
                        v-on:click="onClick"
                 >
+                </div>
             </template>
             <template v-else>
+                <div class="lkt-field-text__main">
                 <input v-model="value"
                        :ref="(el:any) => inputElement = el"
                        v-bind:value="value"
@@ -254,6 +276,7 @@ reset();
                        v-on:focus="onFocus"
                        v-on:blur="onBlur"
                        v-on:click="onClick">
+                </div>
             </template>
 
             <div class="lkt-field__state" v-if="showInfoUi">
@@ -270,12 +293,21 @@ reset();
                 <i v-if="allowReadModeSwitch" class="lkt-field__edit-icon" :title="props.switchEditionMessage"
                    v-on:click="onClickSwitchEdition"></i>
             </div>
-        </div>
+        </template>
 
-        <div v-if="!editable" class="lkt-field-text__read">
-            <a v-if="isEmail" class="lkt-field-text__read-value" :title="readModeTitle" :href="'mail:' + value">{{value}}</a>
-            <a v-else-if="isTel" class="lkt-field-text__read-value" :title="readModeTitle" :href="'tel:' + value">{{value}}</a>
-            <div v-else class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
+        <div v-if="!editable" class="lkt-field-text__read" v-on:click="onClick">
+
+            <template v-if="slots['value']">
+                <slot name="value" v-bind:value="value" :title="readModeTitle"></slot>
+            </template>
+            <component v-else-if="hasCustomValueSlot" v-bind:is="customValueSlot"
+                       v-bind:value="value" :title="readModeTitle"></component>
+            <template v-else>
+                <a v-if="isEmail" class="lkt-field-text__read-value" :title="readModeTitle" :href="'mail:' + value">{{value}}</a>
+                <a v-else-if="isTel" class="lkt-field-text__read-value" :title="readModeTitle" :href="'tel:' + value">{{value}}</a>
+                <div v-else class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
+            </template>
+
             <div v-if="allowReadModeSwitch" class="lkt-field__state">
                 <i class="lkt-field__edit-icon" :title="props.switchEditionMessage"
                    v-on:click="onClickSwitchEdition"></i>

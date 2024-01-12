@@ -120,6 +120,14 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        valueSlot: {
+            type: StringConstructor;
+            default: string;
+        };
+        editSlot: {
+            type: StringConstructor;
+            default: string;
+        };
     }>> & {
         onFocus?: (...args: any[]) => any;
         onBlur?: (...args: any[]) => any;
@@ -256,6 +264,14 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        valueSlot: {
+            type: StringConstructor;
+            default: string;
+        };
+        editSlot: {
+            type: StringConstructor;
+            default: string;
+        };
     }>> & {
         onFocus?: (...args: any[]) => any;
         onBlur?: (...args: any[]) => any;
@@ -296,6 +312,8 @@ declare const _default: {
         isSearch: boolean;
         isNumber: boolean;
         enableAutoNumberFix: boolean;
+        valueSlot: string;
+        editSlot: string;
     }, true, {}, {}, {
         P: {};
         B: {};
@@ -424,6 +442,14 @@ declare const _default: {
             type: BooleanConstructor;
             default: boolean;
         };
+        valueSlot: {
+            type: StringConstructor;
+            default: string;
+        };
+        editSlot: {
+            type: StringConstructor;
+            default: string;
+        };
     }>> & {
         onFocus?: (...args: any[]) => any;
         onBlur?: (...args: any[]) => any;
@@ -470,6 +496,8 @@ declare const _default: {
         isSearch: boolean;
         isNumber: boolean;
         enableAutoNumberFix: boolean;
+        valueSlot: string;
+        editSlot: string;
     }>;
     __isFragment?: never;
     __isTeleport?: never;
@@ -595,6 +623,14 @@ declare const _default: {
         type: BooleanConstructor;
         default: boolean;
     };
+    valueSlot: {
+        type: StringConstructor;
+        default: string;
+    };
+    editSlot: {
+        type: StringConstructor;
+        default: string;
+    };
 }>> & {
     onFocus?: (...args: any[]) => any;
     onBlur?: (...args: any[]) => any;
@@ -641,9 +677,19 @@ declare const _default: {
     isSearch: boolean;
     isNumber: boolean;
     enableAutoNumberFix: boolean;
+    valueSlot: string;
+    editSlot: string;
 }, {}, string, {}> & import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps & (new () => {
     $slots: {
         label: (_: {}) => any;
+        edit: (_: {
+            value: string | number;
+            title: string;
+        }) => any;
+        value: (_: {
+            value: string | number;
+            title: string;
+        }) => any;
     };
 });
 export default _default;
