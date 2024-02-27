@@ -15,41 +15,71 @@ const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'bl
 const slots = useSlots();
 
 // Props
-const props = defineProps({
-    modelValue: {type: [String, Number], default: ''},
-
-    placeholder: {type: String, default: ''},
-    label: {type: String, default: ''},
-    palette: {type: String, default: ''},
-    name: {type: String, default: generateRandomString(16)},
-    valid: {type: Boolean, default: false},
-    autocomplete: {type: Boolean, default: true},
-    disabled: {type: Boolean, default: false},
-    readonly: {type: Boolean, default: false},
-    readMode: {type: Boolean, default: false},
-    allowReadModeSwitch: {type: Boolean, default: false},
-    tabindex: {type: Number, default: undefined},
-    mandatory: {type: Boolean, default: false},
-    showPassword: {type: Boolean, default: false},
-    reset: {type: Boolean, default: false},
-    resetMessage: {type: String, default: ''},
-    mandatoryMessage: {type: String, default: ''},
-    infoMessage: {type: String, default: ''},
-    errorMessage: {type: String, default: ''},
-    showPasswordMessage: {type: String, default: ''},
-    switchEditionMessage: {type: String, default: ''},
-    min: {type: [Number, String, undefined], default: undefined},
-    max: {type: [Number, String, undefined], default: undefined},
-    step: {type: [Number, String], default: 1},
-    isTel: {type: Boolean, default: false},
-    isEmail: {type: Boolean, default: false},
-    isPassword: {type: Boolean, default: false},
-    isSearch: {type: Boolean, default: false},
-    isNumber: {type: Boolean, default: false},
-    enableAutoNumberFix: {type: Boolean, default: true},
-
-    valueSlot: {type: String, default: ''},
-    editSlot: {type: String, default: ''},
+const props = withDefaults(defineProps<{
+    modelValue: string|number
+    placeholder?: string
+    label?: string
+    palette?: string
+    name?: string
+    valid?: boolean
+    autocomplete?: boolean
+    disabled?: boolean
+    readonly?: boolean
+    readMode?: boolean
+    allowReadModeSwitch?: boolean
+    tabindex?: number
+    mandatory?: boolean
+    showPassword?: boolean
+    reset?: boolean
+    resetMessage?: string
+    mandatoryMessage?: string
+    infoMessage?: string
+    errorMessage?: string
+    switchEditionMessage?: string
+    min?: number|string|undefined
+    max?: number|string|undefined
+    step?: number|string
+    isTel?: boolean
+    isEmail?: boolean
+    isPassword?: boolean
+    isSearch?: boolean
+    isNumber?: boolean
+    enableAutoNumberFix?: boolean
+    valueSlot?: string
+    editSlot?: string
+}>(), {
+    modelValue: '',
+    placeholder: '',
+    label: '',
+    palette: '',
+    name: generateRandomString(16),
+    valid: false,
+    autocomplete: true,
+    disabled: false,
+    readonly: false,
+    readMode: false,
+    allowReadModeSwitch: false,
+    tabindex: undefined,
+    mandatory: false,
+    showPassword: false,
+    reset: false,
+    resetMessage: '',
+    mandatoryMessage: '',
+    infoMessage: '',
+    errorMessage: '',
+    showPasswordMessage: '',
+    switchEditionMessage: '',
+    min: undefined,
+    max: undefined,
+    step: 1,
+    isTel: false,
+    isEmail: false,
+    isPassword: false,
+    isSearch: false,
+    isNumber: false,
+    enableAutoNumberFix: true,
+    valueSlot: '',
+    editSlot: '',
 });
 
 // Constant data
@@ -141,6 +171,7 @@ const isValid = computed(() => {
 const focus = () => {
     nextTick(() => {
         if (inputElement.value) {
+            //@ts-ignore
             inputElement.value.focus();
         }
     });

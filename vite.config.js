@@ -1,7 +1,7 @@
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 const src = resolve(__dirname, 'src');
-const outDir = resolve(__dirname, 'dist');
+const outDir = resolve(__dirname, 'build');
 const test = resolve(__dirname, 'test');
 const snapshots = resolve(__dirname, 'snapshots');
 
@@ -14,12 +14,22 @@ export default {
         lib: {
             entry: `${ src }/index.ts`,
             name: 'LktFieldText',
-            fileName: (format) => `lkt-field-text.${ format }.js`
+            fileName: 'build',
+            formats: ['es']
         },
         outDir,
         minify: true,
         rollupOptions: {
-            external: [ 'vue', 'lkt-tools', 'lkt-events', 'lkt-button', 'lkt-http-client', 'lkt-string-tools', 'axios', 'lkt-data-state' ],
+            external: [
+                'vue',
+                'lkt-tools',
+                'lkt-events',
+                'lkt-button',
+                'lkt-http-client',
+                'lkt-string-tools',
+                'axios',
+                'lkt-data-state'
+            ],
             output: {
                 globals: {
                     vue: 'Vue',
