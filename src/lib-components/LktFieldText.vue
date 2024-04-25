@@ -1,13 +1,10 @@
-<script lang="ts">
-export default {name: "LktFieldText", inheritAttrs: false}
-</script>
-
 <script lang="ts" setup>
 // Emits
 import {generateRandomString} from "lkt-string-tools";
 import {computed, nextTick, ref, useSlots, watch} from "vue";
 import {createLktEvent} from "lkt-events";
 import {Settings} from "../settings/Settings";
+import {LktObject} from "lkt-ts-interfaces";
 
 const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error']);
 
@@ -47,6 +44,7 @@ const props = withDefaults(defineProps<{
     enableAutoNumberFix?: boolean
     valueSlot?: string
     editSlot?: string
+    slotData?: LktObject
 }>(), {
     modelValue: '',
     placeholder: '',
@@ -80,6 +78,7 @@ const props = withDefaults(defineProps<{
     enableAutoNumberFix: true,
     valueSlot: '',
     editSlot: '',
+    slotData: () => ({}),
 });
 
 // Constant data
@@ -255,12 +254,12 @@ const hasCustomValueSlot = computed(() => props.valueSlot !== '' && typeof Setti
         <template v-if="editable">
             <template v-if="slots['edit']">
                 <div v-on:click="onClick">
-                    <slot name="edit" v-bind:value="value" :title="readModeTitle"></slot>
+                    <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
                 </div>
             </template>
             <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
                 <component  v-bind:is="customEditSlot"
-                       v-bind:value="value" :title="readModeTitle"></component>
+                       v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
             </div>
 
             <template v-else-if="placeholder">
@@ -329,7 +328,7 @@ const hasCustomValueSlot = computed(() => props.valueSlot !== '' && typeof Setti
         <div v-if="!editable" class="lkt-field-text__read" v-on:click="onClick">
 
             <template v-if="slots['value']">
-                <slot name="value" v-bind:value="value" :title="readModeTitle"></slot>
+                <slot name="value" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
             </template>
             <component v-else-if="hasCustomValueSlot" v-bind:is="customValueSlot"
                        v-bind:value="value" :title="readModeTitle"></component>

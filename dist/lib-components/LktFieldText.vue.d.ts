@@ -1,3 +1,4 @@
+import { LktObject } from "lkt-ts-interfaces";
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<{
     modelValue: string | number;
     placeholder?: string | undefined;
@@ -19,8 +20,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     infoMessage?: string | undefined;
     errorMessage?: string | undefined;
     switchEditionMessage?: string | undefined;
-    min?: number | string | undefined;
-    max?: number | string | undefined;
+    min?: string | number | undefined;
+    max?: string | number | undefined;
     step?: string | number | undefined;
     isTel?: boolean | undefined;
     isEmail?: boolean | undefined;
@@ -30,6 +31,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     enableAutoNumberFix?: boolean | undefined;
     valueSlot?: string | undefined;
     editSlot?: string | undefined;
+    slotData?: LktObject | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -63,6 +65,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     enableAutoNumberFix: boolean;
     valueSlot: string;
     editSlot: string;
+    slotData: () => {};
 }>, {
     Identifier: string;
     reset: () => string | number;
@@ -99,8 +102,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     infoMessage?: string | undefined;
     errorMessage?: string | undefined;
     switchEditionMessage?: string | undefined;
-    min?: number | string | undefined;
-    max?: number | string | undefined;
+    min?: string | number | undefined;
+    max?: string | number | undefined;
     step?: string | number | undefined;
     isTel?: boolean | undefined;
     isEmail?: boolean | undefined;
@@ -110,6 +113,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     enableAutoNumberFix?: boolean | undefined;
     valueSlot?: string | undefined;
     editSlot?: string | undefined;
+    slotData?: LktObject | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -143,6 +147,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     enableAutoNumberFix: boolean;
     valueSlot: string;
     editSlot: string;
+    slotData: () => {};
 }>>> & {
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
@@ -162,7 +167,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     disabled: boolean;
     readonly: boolean;
     mandatory: boolean;
-    step: number | string;
+    step: string | number;
     placeholder: string;
     tabindex: number;
     modelValue: string | number;
@@ -184,15 +189,18 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     enableAutoNumberFix: boolean;
     valueSlot: string;
     editSlot: string;
+    slotData: LktObject;
 }, {}>, {
     label?(_: {}): any;
     edit?(_: {
         value: string | number;
         title: string;
+        data: LktObject;
     }): any;
     value?(_: {
         value: string | number;
         title: string;
+        data: LktObject;
     }): any;
 }>;
 export default _default;
