@@ -1,6 +1,6 @@
-declare namespace Ae {
-    function install(r: any): void;
+declare namespace Ue {
+    function install(f: any): void;
 }
-declare function Ke(r: any, h: any): boolean;
-declare function Ie(r: any, h: any): boolean;
-export { Ae as default, Ke as setTextEditSlot, Ie as setTextValueSlot };
+declare function He(f: any, h: any): boolean;
+declare function Ae(f: any, h: any): boolean;
+export { Ue as default, He as setTextEditSlot, Ae as setTextValueSlot };

@@ -5,8 +5,10 @@ import {computed, nextTick, ref, useSlots, watch} from "vue";
 import {createLktEvent} from "lkt-events";
 import {Settings} from "../settings/Settings";
 import {LktObject} from "lkt-ts-interfaces";
+//@ts-ignore
+import {httpCall, HTTPResponse} from "lkt-http-client";
 
-const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error']);
+const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation']);
 
 // Slots
 const slots = useSlots();
@@ -45,6 +47,8 @@ const props = withDefaults(defineProps<{
     valueSlot?: string
     editSlot?: string
     slotData?: LktObject
+    validationResource?: string
+    validationResourceData?: LktObject
 }>(), {
     modelValue: '',
     placeholder: '',
@@ -79,6 +83,8 @@ const props = withDefaults(defineProps<{
     valueSlot: '',
     editSlot: '',
     slotData: () => ({}),
+    validationResource: '',
+    validationResourceData: () => ({}),
 });
 
 // Constant data
@@ -176,16 +182,24 @@ const focus = () => {
     });
 };
 
+const doRemoteValidation = async () => {
+    if (props.validationResource) {
+        const response: HTTPResponse = await httpCall(props.validationResource, props.validationResourceData);
+        emits('validation', response);
+    }
+}
+
 
 // Watch data
 watch(() => props.readMode, (v) => editable.value = !v)
 watch(() => props.modelValue, (v) => {
-    if (props.isNumber) {
-        return reAssignNumericValue(v);
-    }
+    if (props.isNumber) return reAssignNumericValue(v);
     value.value = v
 })
-watch(value, (v) => emits('update:modelValue', v))
+watch(value, (v) => {
+    emits('update:modelValue', v);
+    doRemoteValidation();
+})
 
 const reset = () => value.value = originalValue.value,
     getValue = () => value.value,

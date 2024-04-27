@@ -32,6 +32,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     valueSlot?: string | undefined;
     editSlot?: string | undefined;
     slotData?: LktObject | undefined;
+    validationResource?: string | undefined;
+    validationResourceData?: LktObject | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -66,6 +68,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     valueSlot: string;
     editSlot: string;
     slotData: () => {};
+    validationResource: string;
+    validationResourceData: () => {};
 }>, {
     Identifier: string;
     reset: () => string | number;
@@ -81,6 +85,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     "update:modelValue": (...args: any[]) => void;
     "click-info": (...args: any[]) => void;
     "click-error": (...args: any[]) => void;
+    validation: (...args: any[]) => void;
 }, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<{
     modelValue: string | number;
     placeholder?: string | undefined;
@@ -114,6 +119,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     valueSlot?: string | undefined;
     editSlot?: string | undefined;
     slotData?: LktObject | undefined;
+    validationResource?: string | undefined;
+    validationResourceData?: LktObject | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -148,6 +155,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     valueSlot: string;
     editSlot: string;
     slotData: () => {};
+    validationResource: string;
+    validationResourceData: () => {};
 }>>> & {
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
@@ -157,6 +166,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     "onClick-info"?: ((...args: any[]) => any) | undefined;
     "onClick-error"?: ((...args: any[]) => any) | undefined;
+    onValidation?: ((...args: any[]) => any) | undefined;
 }, {
     max: string | number;
     name: string;
@@ -190,6 +200,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     valueSlot: string;
     editSlot: string;
     slotData: LktObject;
+    validationResource: string;
+    validationResourceData: LktObject;
 }, {}>, {
     label?(_: {}): any;
     edit?(_: {
