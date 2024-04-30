@@ -12,10 +12,10 @@ const ke = ["data-show-ui", "data-labeled"], he = ["for", "innerHTML"], we = {
 }, _e = ["value", "type", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete", "min", "max", "step"], be = {
   key: 3,
   class: "lkt-field-text__main"
-}, Me = ["value", "type", "name", "id", "disabled", "readonly", "tabindex", "autocomplete", "min", "max", "step"], Se = {
+}, Me = ["value", "type", "name", "id", "disabled", "readonly", "tabindex", "autocomplete", "min", "max", "step"], ge = {
   key: 4,
   class: "lkt-field__state"
-}, ge = ["title"], Ve = ["title"], Be = ["title"], Ee = ["title"], Ce = ["title"], xe = ["title"], Te = ["title", "href"], Pe = ["title", "href"], De = ["innerHTML", "title"], Ne = {
+}, Se = ["title"], Ve = ["title"], Be = ["title"], Ee = ["title"], Ce = ["title"], xe = ["title"], Te = ["title", "href"], Pe = ["title", "href"], De = ["innerHTML", "title"], Ne = {
   key: 3,
   class: "lkt-field__state"
 }, Re = ["title"], Fe = /* @__PURE__ */ ce({
@@ -56,22 +56,23 @@ const ke = ["data-show-ui", "data-labeled"], he = ["for", "innerHTML"], we = {
     validationResource: { default: "" },
     validationResourceData: { default: () => ({}) }
   },
-  emits: ["update:modelValue", "keyup", "keydown", "focus", "blur", "click", "click-info", "click-error", "validation"],
+  emits: ["update:modelValue", "keyup", "keydown", "focus", "blur", "click", "click-info", "click-error", "validation", "validating"],
   setup(f, { expose: h, emit: X }) {
-    const r = X, w = me(), l = f, u = W(16), S = k(null), D = k(l.modelValue), t = k(l.modelValue), g = k(!1), E = k(!1), y = k(!l.readMode), Y = s(() => typeof l.valid == "function" ? l.valid() : l.valid), Z = s(() => t.value !== D.value), N = s(() => l.reset || l.infoMessage !== "" || l.errorMessage !== "" || l.isPassword && l.showPassword), R = s(() => {
+    const d = X, w = me(), l = f, u = W(16), g = k(null), D = k(l.modelValue), t = k(l.modelValue), S = k(!1), E = k(!1), y = k(!l.readMode), Y = s(() => typeof l.valid == "function" ? l.valid() : l.valid), Z = s(() => t.value !== D.value), N = s(() => l.reset || l.infoMessage !== "" || l.errorMessage !== "" || l.isPassword && l.showPassword), R = s(() => {
       let e = 0;
       return l.reset && ++e, l.infoMessage && ++e, l.isPassword && l.showPassword && ++e, e;
-    }), ee = s(() => l.resetMessage !== "" ? l.resetMessage : ""), le = s(() => g.value === !0 ? "lkt-field__hide-password-icon" : "lkt-field__show-password-icon"), F = s(() => l.autocomplete === !0 ? "on" : "off"), $ = s(() => t.value !== ""), V = s(() => l.isPassword && g.value === !0 ? "text" : l.isEmail ? "email" : l.isPassword ? "password" : l.isNumber ? "number" : l.isTel ? "tel" : l.isSearch ? "search" : "text"), te = s(() => {
+    }), ee = s(() => l.resetMessage !== "" ? l.resetMessage : ""), le = s(() => S.value === !0 ? "lkt-field__hide-password-icon" : "lkt-field__show-password-icon"), F = s(() => l.autocomplete === !0 ? "on" : "off"), $ = s(() => t.value !== ""), V = s(() => l.isPassword && S.value === !0 ? "text" : l.isEmail ? "email" : l.isPassword ? "password" : l.isNumber ? "number" : l.isTel ? "tel" : l.isSearch ? "search" : "text"), te = s(() => {
       const e = ["lkt-field", "lkt-field-text"];
       return l.palette && e.push(`lkt-field--${l.palette}`), V && e.push(`is-${V.value}`), Z.value && e.push("is-changed"), l.disabled && e.push("is-disabled"), E.value && e.push("has-focus"), R.value > 0 && e.push("has-icons", `has-icons-${R.value}`), e.push(Y.value ? "is-valid" : "is-error"), e.push(l.modelValue ? "is-filled" : "is-empty"), e.join(" ");
     }), m = s(() => typeof t.value == "number" ? t.value.toString() : t.value), _ = s(() => typeof l.min == "string" ? parseFloat(l.min) : typeof l.min == "number" ? l.min : !1), b = s(() => typeof l.max == "string" ? parseFloat(l.max) : typeof l.max == "number" ? l.max : !1), L = () => {
       pe(() => {
-        S.value && S.value.focus();
+        g.value && g.value.focus();
       });
     }, ae = async () => {
       if (l.validationResource) {
-        const e = await ye(l.validationResource, l.validationResourceData);
-        r("validation", e);
+        d("validating");
+        const e = await ye(l.validationResource, { ...l.validationResourceData, value: t.value });
+        d("validation", e);
       }
     };
     x(() => l.readMode, (e) => y.value = !e), x(() => l.modelValue, (e) => {
@@ -79,15 +80,15 @@ const ke = ["data-show-ui", "data-labeled"], he = ["for", "innerHTML"], we = {
         return ne(e);
       t.value = e;
     }), x(t, (e) => {
-      r("update:modelValue", e), ae();
+      d("update:modelValue", e), ae();
     });
-    const C = () => t.value = D.value, oe = () => t.value, I = (e) => r("keyup", e, p(u, { value: t.value })), K = (e) => r("keydown", e, p(u, { value: t.value })), A = (e) => (E.value = !0) && r("focus", e, p(u, { value: t.value })), H = (e) => (E.value = !1) && r("blur", e, p(u, { value: t.value })), M = (e) => r("click", e, p(u, { value: t.value })), se = (e) => r("click-info", e, p(u, { value: t.value })), ie = (e) => r("click-error", e, p(u, { value: t.value })), ue = (e) => g.value = !g.value, U = (e) => {
+    const C = () => t.value = D.value, oe = () => t.value, I = (e) => d("keyup", e, p(u, { value: t.value })), K = (e) => d("keydown", e, p(u, { value: t.value })), A = (e) => (E.value = !0) && d("focus", e, p(u, { value: t.value })), H = (e) => (E.value = !1) && d("blur", e, p(u, { value: t.value })), M = (e) => d("click", e, p(u, { value: t.value })), se = (e) => d("click-info", e, p(u, { value: t.value })), ie = (e) => d("click-error", e, p(u, { value: t.value })), ue = (e) => S.value = !S.value, U = (e) => {
       y.value = !y.value, y.value && L();
     }, ne = (e) => {
       if (!l.enableAutoNumberFix)
         return !1;
-      let d = Number(e), n = !1;
-      return _.value !== !1 && d < _.value && (d = _.value, n = !0), b.value !== !1 && d > b.value && (d = b.value, n = !0), n === !0 ? (t.value = d, !0) : !1;
+      let r = Number(e), n = !1;
+      return _.value !== !1 && r < _.value && (r = _.value, n = !0), b.value !== !1 && r > b.value && (r = b.value, n = !0), n === !0 ? (t.value = r, !0) : !1;
     };
     h({
       Identifier: u,
@@ -97,7 +98,7 @@ const ke = ["data-show-ui", "data-labeled"], he = ["for", "innerHTML"], we = {
       isMandatory: () => l.mandatory
     }), C();
     const de = s(() => l.valueSlot !== "" && typeof c.customValueSlots[l.valueSlot] < "u"), re = s(() => c.customValueSlots[l.valueSlot]), fe = s(() => l.editSlot !== "" && typeof c.customEditSlots[l.editSlot] < "u"), ve = s(() => c.customEditSlots[l.editSlot]);
-    return (e, d) => (a(), o("div", {
+    return (e, r) => (a(), o("div", {
       class: j(te.value),
       "data-show-ui": N.value,
       "data-labeled": !v(w).label
@@ -129,8 +130,8 @@ const ke = ["data-show-ui", "data-labeled"], he = ["for", "innerHTML"], we = {
           }, null, 8, ["value", "title", "data"]))
         ])) : e.placeholder ? (a(), o("div", we, [
           G(P("input", {
-            "onUpdate:modelValue": d[0] || (d[0] = (n) => t.value = n),
-            ref: (n) => S.value = n,
+            "onUpdate:modelValue": r[0] || (r[0] = (n) => t.value = n),
+            ref: (n) => g.value = n,
             value: t.value,
             type: V.value,
             name: e.name,
@@ -153,8 +154,8 @@ const ke = ["data-show-ui", "data-labeled"], he = ["for", "innerHTML"], we = {
           ])
         ])) : (a(), o("div", be, [
           G(P("input", {
-            "onUpdate:modelValue": d[1] || (d[1] = (n) => t.value = n),
-            ref: (n) => S.value = n,
+            "onUpdate:modelValue": r[1] || (r[1] = (n) => t.value = n),
+            ref: (n) => g.value = n,
             value: t.value,
             type: V.value,
             name: e.name,
@@ -175,13 +176,13 @@ const ke = ["data-show-ui", "data-labeled"], he = ["for", "innerHTML"], we = {
             [J, t.value]
           ])
         ])),
-        N.value ? (a(), o("div", Se, [
+        N.value ? (a(), o("div", ge, [
           l.errorMessage ? (a(), o("i", {
             key: 0,
             class: "lkt-field__error-icon",
             title: l.errorMessage,
             onClick: ie
-          }, null, 8, ge)) : i("", !0),
+          }, null, 8, Se)) : i("", !0),
           l.infoMessage ? (a(), o("i", {
             key: 1,
             class: "lkt-field__info-icon",

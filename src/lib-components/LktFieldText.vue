@@ -8,7 +8,7 @@ import {LktObject} from "lkt-ts-interfaces";
 //@ts-ignore
 import {httpCall, HTTPResponse} from "lkt-http-client";
 
-const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation']);
+const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
 // Slots
 const slots = useSlots();
@@ -184,7 +184,8 @@ const focus = () => {
 
 const doRemoteValidation = async () => {
     if (props.validationResource) {
-        const response: HTTPResponse = await httpCall(props.validationResource, props.validationResourceData);
+        emits('validating');
+        const response: HTTPResponse = await httpCall(props.validationResource, {...props.validationResourceData, value: value.value});
         emits('validation', response);
     }
 }

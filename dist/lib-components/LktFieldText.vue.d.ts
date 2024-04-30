@@ -86,6 +86,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     "click-info": (...args: any[]) => void;
     "click-error": (...args: any[]) => void;
     validation: (...args: any[]) => void;
+    validating: (...args: any[]) => void;
 }, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<{
     modelValue: string | number;
     placeholder?: string | undefined;
@@ -167,6 +168,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     "onClick-info"?: ((...args: any[]) => any) | undefined;
     "onClick-error"?: ((...args: any[]) => any) | undefined;
     onValidation?: ((...args: any[]) => any) | undefined;
+    onValidating?: ((...args: any[]) => any) | undefined;
 }, {
     max: string | number;
     name: string;
