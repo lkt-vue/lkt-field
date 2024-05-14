@@ -44,6 +44,7 @@ const props = withDefaults(defineProps<{
     isSearch?: boolean
     isNumber?: boolean
     enableAutoNumberFix?: boolean
+    emptyValueSlot?: string
     valueSlot?: string
     editSlot?: string
     slotData?: LktObject
@@ -80,6 +81,7 @@ const props = withDefaults(defineProps<{
     isSearch: false,
     isNumber: false,
     enableAutoNumberFix: true,
+    emptyValueSlot: '',
     valueSlot: '',
     editSlot: '',
     slotData: () => ({}),
@@ -252,8 +254,19 @@ defineExpose({
 
 reset();
 
-const hasCustomValueSlot = computed(() => props.valueSlot !== '' && typeof Settings.customValueSlots[props.valueSlot] !== 'undefined'),
-    customValueSlot = computed(() => Settings.customValueSlots[props.valueSlot]),
+const hasCustomValueSlot = computed(() => {
+        if (value.value === '') {
+            return (props.emptyValueSlot !== '' && typeof Settings.customValueSlots[props.emptyValueSlot] !== 'undefined') || (Settings.defaultEmptyValueSlot && typeof Settings.customValueSlots[Settings.defaultEmptyValueSlot] !== 'undefined');
+        }
+        return props.valueSlot !== '' && typeof Settings.customValueSlots[props.valueSlot] !== 'undefined';
+    }),
+    customValueSlot = computed(() => {
+        if (value.value === '') {
+            return Settings.customValueSlots[props.emptyValueSlot] ?? Settings.customValueSlots[Settings.defaultEmptyValueSlot];
+        }
+
+        return Settings.customValueSlots[props.valueSlot];
+    }),
     hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
     customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 </script>

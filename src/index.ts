@@ -1,10 +1,11 @@
-import { App, Plugin } from 'vue';
+import {App, Component, Plugin} from 'vue';
 
 import { default as textField } from './lib-components/LktFieldText.vue';
 
 export {setTextValueSlot, setTextEditSlot} from './functions/settings-functions';
 
 import "./../lkt-field-text.css";
+import {Settings} from "./settings/Settings";
 
 const LktFieldText: Plugin = {
   install: (app: App) => {
@@ -14,3 +15,9 @@ const LktFieldText: Plugin = {
 };
 
 export default LktFieldText;
+
+export const setDefaultTextEmptyValueSlot = (str: string, component?: string|Component) => {
+  Settings.defaultEmptyValueSlot = str;
+
+  if (component) Settings.customValueSlots[str] = component;
+}

@@ -1,5 +1,6 @@
 import { LktObject } from "lkt-ts-interfaces";
-export declare class Settings {
-    static customValueSlots: LktObject;
-    static customEditSlots: LktObject;
-}
+export declare const Settings: {
+    defaultEmptyValueSlot: string;
+    customValueSlots: LktObject;
+    customEditSlots: LktObject;
+};

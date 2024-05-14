@@ -29,6 +29,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     isSearch?: boolean | undefined;
     isNumber?: boolean | undefined;
     enableAutoNumberFix?: boolean | undefined;
+    emptyValueSlot?: string | undefined;
     valueSlot?: string | undefined;
     editSlot?: string | undefined;
     slotData?: LktObject | undefined;
@@ -65,6 +66,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     isSearch: boolean;
     isNumber: boolean;
     enableAutoNumberFix: boolean;
+    emptyValueSlot: string;
     valueSlot: string;
     editSlot: string;
     slotData: () => {};
@@ -117,6 +119,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     isSearch?: boolean | undefined;
     isNumber?: boolean | undefined;
     enableAutoNumberFix?: boolean | undefined;
+    emptyValueSlot?: string | undefined;
     valueSlot?: string | undefined;
     editSlot?: string | undefined;
     slotData?: LktObject | undefined;
@@ -153,6 +156,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     isSearch: boolean;
     isNumber: boolean;
     enableAutoNumberFix: boolean;
+    emptyValueSlot: string;
     valueSlot: string;
     editSlot: string;
     slotData: () => {};
@@ -199,6 +203,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     isSearch: boolean;
     isNumber: boolean;
     enableAutoNumberFix: boolean;
+    emptyValueSlot: string;
     valueSlot: string;
     editSlot: string;
     slotData: LktObject;
