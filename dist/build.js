@@ -1,25 +1,25 @@
-import { defineComponent as ve, useSlots as ce, ref as h, computed as u, watch as x, openBlock as a, createElementBlock as o, normalizeClass as U, unref as m, renderSlot as C, createCommentVNode as i, Fragment as j, createBlock as z, resolveDynamicComponent as O, withDirectives as q, createElementVNode as T, vModelDynamic as G, toDisplayString as J, nextTick as me } from "vue";
+import { defineComponent as ve, useSlots as ce, ref as h, computed as u, watch as x, openBlock as a, createElementBlock as o, normalizeClass as U, unref as m, renderSlot as C, createCommentVNode as r, Fragment as j, createBlock as z, resolveDynamicComponent as O, withDirectives as q, createElementVNode as T, vModelDynamic as G, toDisplayString as J, nextTick as me } from "vue";
 import { generateRandomString as Q } from "lkt-string-tools";
-import { createLktEvent as y } from "lkt-events";
+import { createLktEvent as k } from "lkt-events";
 import { httpCall as pe } from "lkt-http-client";
 let ye = {}, ke = {};
 const s = {
   defaultEmptyValueSlot: "",
   customValueSlots: ye,
   customEditSlots: ke
-}, he = ["data-show-ui", "data-labeled"], Se = ["for", "innerHTML"], _e = {
+}, he = ["data-show-ui", "data-labeled"], Se = ["for", "innerHTML"], we = {
   key: 2,
   class: "lkt-field-text__main"
-}, we = ["value", "type", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete", "min", "max", "step"], be = {
+}, _e = ["value", "type", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete", "min", "max", "step"], be = {
   key: 3,
   class: "lkt-field-text__main"
 }, Ve = ["value", "type", "name", "id", "disabled", "readonly", "tabindex", "autocomplete", "min", "max", "step"], ge = {
   key: 4,
   class: "lkt-field__state"
-}, Me = ["title"], Ee = ["title"], Be = ["title"], xe = ["title"], Ce = ["title"], Te = ["title"], Pe = ["title", "href"], De = ["title", "href"], Ne = ["innerHTML", "title"], Re = {
+}, Me = ["title"], Ee = ["title"], Be = ["title"], xe = ["title"], Ce = ["title"], Te = ["title", "href"], Pe = ["title", "href"], De = ["innerHTML", "title"], Ne = {
   key: 3,
   class: "lkt-field__state"
-}, Fe = ["title"], $e = /* @__PURE__ */ ve({
+}, Re = ["title"], Fe = /* @__PURE__ */ ve({
   __name: "LktFieldText",
   props: {
     modelValue: { default: "" },
@@ -59,67 +59,67 @@ const s = {
     validationResourceData: { default: () => ({}) }
   },
   emits: ["update:modelValue", "keyup", "keydown", "focus", "blur", "click", "click-info", "click-error", "validation", "validating"],
-  setup(n, { expose: c, emit: W }) {
-    const f = W, S = ce(), e = n, d = Q(16), V = h(null), P = h(e.modelValue), t = h(e.modelValue), g = h(!1), E = h(!1), k = h(!e.readMode), X = u(() => typeof e.valid == "function" ? e.valid() : e.valid), Y = u(() => t.value !== P.value), D = u(() => e.reset || e.infoMessage !== "" || e.errorMessage !== "" || e.isPassword && e.showPassword), N = u(() => {
-      let l = 0;
-      return e.reset && ++l, e.infoMessage && ++l, e.isPassword && e.showPassword && ++l, l;
-    }), Z = u(() => e.resetMessage !== "" ? e.resetMessage : ""), ee = u(() => g.value === !0 ? "lkt-field__hide-password-icon" : "lkt-field__show-password-icon"), R = u(() => e.autocomplete === !0 ? "on" : "off"), F = u(() => t.value !== ""), M = u(() => e.isPassword && g.value === !0 ? "text" : e.isEmail ? "email" : e.isPassword ? "password" : e.isNumber ? "number" : e.isTel ? "tel" : e.isSearch ? "search" : "text"), le = u(() => {
-      const l = ["lkt-field", "lkt-field-text"];
-      return e.palette && l.push(`lkt-field--${e.palette}`), M && l.push(`is-${M.value}`), Y.value && l.push("is-changed"), e.disabled && l.push("is-disabled"), E.value && l.push("has-focus"), N.value > 0 && l.push("has-icons", `has-icons-${N.value}`), l.push(X.value ? "is-valid" : "is-error"), l.push(e.modelValue ? "is-filled" : "is-empty"), l.join(" ");
-    }), p = u(() => typeof t.value == "number" ? t.value.toString() : t.value), _ = u(() => typeof e.min == "string" ? parseFloat(e.min) : typeof e.min == "number" ? e.min : !1), w = u(() => typeof e.max == "string" ? parseFloat(e.max) : typeof e.max == "number" ? e.max : !1), $ = () => {
+  setup(i, { expose: c, emit: W }) {
+    const f = W, S = ce(), l = i, n = Q(16), V = h(null), P = h(l.modelValue), t = h(l.modelValue), g = h(!1), E = h(!1), p = h(!l.readMode), X = u(() => typeof l.valid == "function" ? l.valid() : l.valid), Y = u(() => t.value !== P.value), D = u(() => l.reset || l.infoMessage !== "" || l.errorMessage !== "" || l.isPassword && l.showPassword), N = u(() => {
+      let e = 0;
+      return l.reset && ++e, l.infoMessage && ++e, l.isPassword && l.showPassword && ++e, e;
+    }), Z = u(() => l.resetMessage !== "" ? l.resetMessage : ""), ee = u(() => g.value === !0 ? "lkt-field__hide-password-icon" : "lkt-field__show-password-icon"), R = u(() => l.autocomplete === !0 ? "on" : "off"), F = u(() => t.value !== ""), M = u(() => l.isPassword && g.value === !0 ? "text" : l.isEmail ? "email" : l.isPassword ? "password" : l.isNumber ? "number" : l.isTel ? "tel" : l.isSearch ? "search" : "text"), le = u(() => {
+      const e = ["lkt-field", "lkt-field-text"];
+      return l.palette && e.push(`lkt-field--${l.palette}`), M && e.push(`is-${M.value}`), Y.value && e.push("is-changed"), l.disabled && e.push("is-disabled"), l.mandatory && p.value && e.push("is-mandatory-field"), E.value && e.push("has-focus"), N.value > 0 && e.push("has-icons", `has-icons-${N.value}`), e.push(X.value ? "is-valid" : "is-error"), e.push(l.modelValue ? "is-filled" : "is-empty"), e.join(" ");
+    }), y = u(() => typeof t.value == "number" ? t.value.toString() : t.value), w = u(() => typeof l.min == "string" ? parseFloat(l.min) : typeof l.min == "number" ? l.min : !1), _ = u(() => typeof l.max == "string" ? parseFloat(l.max) : typeof l.max == "number" ? l.max : !1), $ = () => {
       me(() => {
         V.value && V.value.focus();
       });
     }, te = async () => {
-      if (e.validationResource) {
+      if (l.validationResource) {
         f("validating");
-        const l = await pe(e.validationResource, { ...e.validationResourceData, value: t.value });
-        f("validation", l);
+        const e = await pe(l.validationResource, { ...l.validationResourceData, value: t.value });
+        f("validation", e);
       }
     };
-    x(() => e.readMode, (l) => k.value = !l), x(() => e.modelValue, (l) => {
-      if (e.isNumber)
-        return ie(l);
-      t.value = l;
-    }), x(t, (l) => {
-      f("update:modelValue", l), te();
+    x(() => l.readMode, (e) => p.value = !e), x(() => l.modelValue, (e) => {
+      if (l.isNumber)
+        return ie(e);
+      t.value = e;
+    }), x(t, (e) => {
+      f("update:modelValue", e), te();
     });
-    const B = () => t.value = P.value, ae = () => t.value, L = (l) => f("keyup", l, y(d, { value: t.value })), I = (l) => f("keydown", l, y(d, { value: t.value })), K = (l) => (E.value = !0) && f("focus", l, y(d, { value: t.value })), A = (l) => (E.value = !1) && f("blur", l, y(d, { value: t.value })), b = (l) => f("click", l, y(d, { value: t.value })), oe = (l) => f("click-info", l, y(d, { value: t.value })), ue = (l) => f("click-error", l, y(d, { value: t.value })), se = (l) => g.value = !g.value, H = (l) => {
-      k.value = !k.value, k.value && $();
-    }, ie = (l) => {
-      if (!e.enableAutoNumberFix)
+    const B = () => t.value = P.value, ae = () => t.value, L = (e) => f("keyup", e, k(n, { value: t.value })), I = (e) => f("keydown", e, k(n, { value: t.value })), K = (e) => (E.value = !0) && f("focus", e, k(n, { value: t.value })), A = (e) => (E.value = !1) && f("blur", e, k(n, { value: t.value })), b = (e) => f("click", e, k(n, { value: t.value })), oe = (e) => f("click-info", e, k(n, { value: t.value })), ue = (e) => f("click-error", e, k(n, { value: t.value })), se = (e) => g.value = !g.value, H = (e) => {
+      p.value = !p.value, p.value && $();
+    }, ie = (e) => {
+      if (!l.enableAutoNumberFix)
         return !1;
-      let v = Number(l), r = !1;
-      return _.value !== !1 && v < _.value && (v = _.value, r = !0), w.value !== !1 && v > w.value && (v = w.value, r = !0), r === !0 ? (t.value = v, !0) : !1;
+      let v = Number(e), d = !1;
+      return w.value !== !1 && v < w.value && (v = w.value, d = !0), _.value !== !1 && v > _.value && (v = _.value, d = !0), d === !0 ? (t.value = v, !0) : !1;
     };
     c({
-      Identifier: d,
+      Identifier: n,
       reset: B,
       focus: $,
       value: ae,
-      isMandatory: () => e.mandatory
+      isMandatory: () => l.mandatory
     }), B();
-    const ne = u(() => t.value === "" ? e.emptyValueSlot !== "" && typeof s.customValueSlots[e.emptyValueSlot] < "u" || s.defaultEmptyValueSlot && typeof s.customValueSlots[s.defaultEmptyValueSlot] < "u" : e.valueSlot !== "" && typeof s.customValueSlots[e.valueSlot] < "u"), de = u(() => t.value === "" ? s.customValueSlots[e.emptyValueSlot] ?? s.customValueSlots[s.defaultEmptyValueSlot] : s.customValueSlots[e.valueSlot]), re = u(() => e.editSlot !== "" && typeof s.customEditSlots[e.editSlot] < "u"), fe = u(() => s.customEditSlots[e.editSlot]);
-    return (l, v) => (a(), o("div", {
+    const ne = u(() => t.value === "" ? l.emptyValueSlot !== "" && typeof s.customValueSlots[l.emptyValueSlot] < "u" || s.defaultEmptyValueSlot && typeof s.customValueSlots[s.defaultEmptyValueSlot] < "u" : l.valueSlot !== "" && typeof s.customValueSlots[l.valueSlot] < "u"), de = u(() => t.value === "" ? s.customValueSlots[l.emptyValueSlot] ?? s.customValueSlots[s.defaultEmptyValueSlot] : s.customValueSlots[l.valueSlot]), re = u(() => l.editSlot !== "" && typeof s.customEditSlots[l.editSlot] < "u"), fe = u(() => s.customEditSlots[l.editSlot]);
+    return (e, v) => (a(), o("div", {
       class: U(le.value),
       "data-show-ui": D.value,
       "data-labeled": !m(S).label
     }, [
-      m(S).label ? C(l.$slots, "label", { key: 0 }) : i("", !0),
-      m(S).label ? i("", !0) : (a(), o("label", {
+      m(S).label ? C(e.$slots, "label", { key: 0 }) : r("", !0),
+      m(S).label ? r("", !0) : (a(), o("label", {
         key: 1,
-        for: m(d),
-        innerHTML: l.label
+        for: m(n),
+        innerHTML: e.label
       }, null, 8, Se)),
-      k.value ? (a(), o(j, { key: 2 }, [
+      p.value ? (a(), o(j, { key: 2 }, [
         m(S).edit ? (a(), o("div", {
           key: 0,
           onClick: b
         }, [
-          C(l.$slots, "edit", {
+          C(e.$slots, "edit", {
             value: t.value,
-            title: p.value,
-            data: l.slotData
+            title: y.value,
+            data: e.slotData
           })
         ])) : re.value ? (a(), o("div", {
           key: 1,
@@ -127,48 +127,48 @@ const s = {
         }, [
           (a(), z(O(fe.value), {
             value: t.value,
-            title: p.value,
-            data: l.slotData
+            title: y.value,
+            data: e.slotData
           }, null, 8, ["value", "title", "data"]))
-        ])) : l.placeholder ? (a(), o("div", _e, [
+        ])) : e.placeholder ? (a(), o("div", we, [
           q(T("input", {
-            "onUpdate:modelValue": v[0] || (v[0] = (r) => t.value = r),
-            ref: (r) => V.value = r,
+            "onUpdate:modelValue": v[0] || (v[0] = (d) => t.value = d),
+            ref: (d) => V.value = d,
             value: t.value,
             type: M.value,
-            name: l.name,
-            id: m(d),
-            disabled: l.disabled,
-            readonly: l.readonly,
-            placeholder: l.placeholder,
-            tabindex: l.tabindex,
+            name: e.name,
+            id: m(n),
+            disabled: e.disabled,
+            readonly: e.readonly,
+            placeholder: e.placeholder,
+            tabindex: e.tabindex,
             autocomplete: R.value,
-            min: _.value,
-            max: w.value,
-            step: l.step,
+            min: w.value,
+            max: _.value,
+            step: e.step,
             onKeyup: L,
             onKeydown: I,
             onFocus: K,
             onBlur: A,
             onClick: b
-          }, null, 40, we), [
+          }, null, 40, _e), [
             [G, t.value]
           ])
         ])) : (a(), o("div", be, [
           q(T("input", {
-            "onUpdate:modelValue": v[1] || (v[1] = (r) => t.value = r),
-            ref: (r) => V.value = r,
+            "onUpdate:modelValue": v[1] || (v[1] = (d) => t.value = d),
+            ref: (d) => V.value = d,
             value: t.value,
             type: M.value,
-            name: l.name,
-            id: m(d),
-            disabled: l.disabled,
-            readonly: l.readonly,
-            tabindex: l.tabindex,
+            name: e.name,
+            id: m(n),
+            disabled: e.disabled,
+            readonly: e.readonly,
+            tabindex: e.tabindex,
             autocomplete: R.value,
-            min: _.value,
-            max: w.value,
-            step: l.step,
+            min: w.value,
+            max: _.value,
+            step: e.step,
             onKeyup: L,
             onKeydown: I,
             onFocus: K,
@@ -179,95 +179,90 @@ const s = {
           ])
         ])),
         D.value ? (a(), o("div", ge, [
-          e.errorMessage ? (a(), o("i", {
+          l.errorMessage ? (a(), o("i", {
             key: 0,
             class: "lkt-field__error-icon",
-            title: e.errorMessage,
+            title: l.errorMessage,
             onClick: ue
-          }, null, 8, Me)) : i("", !0),
-          e.infoMessage ? (a(), o("i", {
+          }, null, 8, Me)) : r("", !0),
+          l.infoMessage ? (a(), o("i", {
             key: 1,
             class: "lkt-field__info-icon",
-            title: e.infoMessage,
+            title: l.infoMessage,
             onClick: oe
-          }, null, 8, Ee)) : i("", !0),
-          e.isPassword && e.showPassword && F.value ? (a(), o("i", {
+          }, null, 8, Ee)) : r("", !0),
+          l.isPassword && l.showPassword && F.value ? (a(), o("i", {
             key: 2,
             class: U(ee.value),
-            title: e.showPasswordMessage,
+            title: l.showPasswordMessage,
             onClick: se
-          }, null, 10, Be)) : i("", !0),
-          e.reset && F.value ? (a(), o("i", {
+          }, null, 10, Be)) : r("", !0),
+          l.reset && F.value ? (a(), o("i", {
             key: 3,
             class: "lkt-field__reset-icon",
             title: Z.value,
             onClick: B
-          }, null, 8, xe)) : i("", !0),
-          e.mandatory ? (a(), o("i", {
+          }, null, 8, xe)) : r("", !0),
+          e.allowReadModeSwitch ? (a(), o("i", {
             key: 4,
-            class: "lkt-field__mandatory-icon",
-            title: e.mandatoryMessage
-          }, null, 8, Ce)) : i("", !0),
-          l.allowReadModeSwitch ? (a(), o("i", {
-            key: 5,
             class: "lkt-field__edit-icon",
-            title: e.switchEditionMessage,
+            title: l.switchEditionMessage,
             onClick: H
-          }, null, 8, Te)) : i("", !0)
-        ])) : i("", !0)
-      ], 64)) : i("", !0),
-      k.value ? i("", !0) : (a(), o("div", {
+          }, null, 8, Ce)) : r("", !0)
+        ])) : r("", !0)
+      ], 64)) : r("", !0),
+      p.value ? r("", !0) : (a(), o("div", {
         key: 3,
         class: "lkt-field-text__read",
         onClick: b
       }, [
-        m(S).value ? C(l.$slots, "value", {
+        m(S).value ? C(e.$slots, "value", {
           key: 0,
           value: t.value,
-          title: p.value,
-          data: l.slotData
+          title: y.value,
+          data: e.slotData
         }) : ne.value ? (a(), z(O(de.value), {
           key: 1,
           value: t.value,
-          title: p.value
+          title: y.value
         }, null, 8, ["value", "title"])) : (a(), o(j, { key: 2 }, [
-          l.isEmail ? (a(), o("a", {
+          e.isEmail ? (a(), o("a", {
             key: 0,
             class: "lkt-field-text__read-value",
-            title: p.value,
+            title: y.value,
             href: "mail:" + t.value
-          }, J(t.value), 9, Pe)) : l.isTel ? (a(), o("a", {
+          }, J(t.value), 9, Te)) : e.isTel ? (a(), o("a", {
             key: 1,
             class: "lkt-field-text__read-value",
-            title: p.value,
+            title: y.value,
             href: "tel:" + t.value
-          }, J(t.value), 9, De)) : (a(), o("div", {
+          }, J(t.value), 9, Pe)) : (a(), o("div", {
             key: 2,
             class: "lkt-field-text__read-value",
             innerHTML: t.value,
-            title: p.value
-          }, null, 8, Ne))
+            title: y.value
+          }, null, 8, De))
         ], 64)),
-        l.allowReadModeSwitch ? (a(), o("div", Re, [
+        e.allowReadModeSwitch ? (a(), o("div", Ne, [
           T("i", {
             class: "lkt-field__edit-icon",
-            title: e.switchEditionMessage,
+            title: l.switchEditionMessage,
             onClick: H
-          }, null, 8, Fe)
-        ])) : i("", !0)
+          }, null, 8, Re)
+        ])) : r("", !0)
       ]))
     ], 10, he));
   }
-}), He = (n, c) => (s.customValueSlots[n] = c, !0), Ue = (n, c) => (s.customEditSlots[n] = c, !0), je = {
-  install: (n) => {
-    n.component("lkt-field-text") === void 0 && n.component("lkt-field-text", $e);
+}), Ae = (i, c) => (s.customValueSlots[i] = c, !0), He = (i, c) => (s.customEditSlots[i] = c, !0), Ue = {
+  install: (i) => {
+    i.component("lkt-field-text") === void 0 && i.component("lkt-field-text", Fe);
   }
-}, ze = (n, c) => {
-  s.defaultEmptyValueSlot = n, c && (s.customValueSlots[n] = c);
+}, je = (i, c) => {
+  s.defaultEmptyValueSlot = i, c && (s.customValueSlots[i] = c);
 };
 export {
-  je as default,
-  ze as setDefaultTextEmptyValueSlot,
-  Ue as setTextEditSlot,
-  He as setTextValueSlot
+  Ue as default,
+  je as setDefaultTextEmptyValueSlot,
+  He as setTextEditSlot,
+  Ae as setTextValueSlot
 };

@@ -149,6 +149,7 @@ const isValid = computed(() => {
         if (type) r.push(`is-${type.value}`);
         if (changed.value) r.push('is-changed');
         if (props.disabled) r.push('is-disabled');
+        if (props.mandatory && editable.value) r.push('is-mandatory-field');
         if (focusing.value) r.push('has-focus');
 
         if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
@@ -347,7 +348,7 @@ const hasCustomValueSlot = computed(() => {
                    v-on:click="onClickShowPassword"></i>
                 <i v-if="props.reset && isFilled" class="lkt-field__reset-icon" :title="resetText"
                    v-on:click="reset"></i>
-                <i v-if="props.mandatory" class="lkt-field__mandatory-icon" :title="props.mandatoryMessage"></i>
+<!--                <i v-if="props.mandatory" class="lkt-field__mandatory-icon" :title="props.mandatoryMessage"></i>-->
                 <i v-if="allowReadModeSwitch" class="lkt-field__edit-icon" :title="props.switchEditionMessage"
                    v-on:click="onClickSwitchEdition"></i>
             </div>
