@@ -360,7 +360,7 @@ const hasCustomValueSlot = computed(() => {
                 <slot name="value" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
             </template>
             <component v-else-if="hasCustomValueSlot" v-bind:is="customValueSlot"
-                       v-bind:value="value" :title="readModeTitle"></component>
+                       v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
             <template v-else>
                 <a v-if="isEmail" class="lkt-field-text__read-value" :title="readModeTitle" :href="'mail:' + value">{{value}}</a>
                 <a v-else-if="isTel" class="lkt-field-text__read-value" :title="readModeTitle" :href="'tel:' + value">{{value}}</a>
