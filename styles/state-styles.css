@@ -1,0 +1,115 @@
+.lkt-field__state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--input-height);
+    gap: var(--field-state-gap);
+    position: relative;
+    padding-right: var(--field-state-right);
+    margin-left: auto;
+}
+
+.lkt-field__add-icon:before {
+    content: '\002B';
+}
+
+.lkt-field__info-icon:before {
+    content: '\2139';
+}
+
+.lkt-field__show-password-icon:before {
+    content: '\1F441';
+}
+
+.lkt-field__hide-password-icon:before {
+    content: '\1F441';
+}
+
+.lkt-field__hide-password-icon:after {
+    content: '';
+    display: block;
+    width: 2px;
+    height: var(--field-state-icon-size);
+    background: var(--text-color);
+    transform-origin: center center;
+    transform: translate(-50%, -50%) rotate(45deg);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.lkt-field__edit-icon:before {
+    content: '\270F';
+    transform: rotate(135deg);
+}
+
+.lkt-field__mandatory-icon:before {
+    content: '\002A';
+}
+
+.lkt-field__warn-icon:before {
+    content: '\26A0';
+}
+
+.lkt-field__error-icon:before {
+    content: '\274C';
+}
+
+.lkt-field__log-icon:before {
+    content: '\003F';
+}
+
+.lkt-field__reset-icon:before {
+    content: '\00d7';
+}
+
+.lkt-field__open-icon:before {
+    content: '\21F1';
+    transform: rotate(90deg);
+    display: block;
+}
+
+.lkt-field__link-icon:before {
+    content: '\21B5';
+    transform: rotate(180deg);
+    display: block;
+    margin-top: -5px;
+}
+
+.lkt-field__add-icon,
+.lkt-field__open-icon,
+.lkt-field__show-password-icon,
+.lkt-field__link-icon,
+.lkt-field__mandatory-icon,
+.lkt-field__info-icon,
+.lkt-field__warn-icon,
+.lkt-field__error-icon,
+.lkt-field__reset-icon,
+.lkt-field__edit-icon,
+.lkt-field__undo-icon,
+.lkt-field__log-icon {
+    font-family: arial, serif;
+    font-style: normal;
+    font-size: var(--field-state-icon-size);
+    cursor: help;
+    width: var(--field-state-icon-size);
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lkt-field__add-icon,
+.lkt-field__open-icon {
+    cursor: pointer;
+}
+
+.lkt-field__link-icon {
+    cursor: alias;
+}
+
+.is-mandatory-field label:after {
+    content: '*';
+    display: inline-block;
+    margin-left: 5px;
+}

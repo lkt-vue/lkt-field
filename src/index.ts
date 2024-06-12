@@ -4,7 +4,10 @@ import { default as textField } from './lib-components/LktFieldText.vue';
 
 export {setTextValueSlot, setTextEditSlot} from './functions/settings-functions';
 
-import "../style.css";
+import "../styles/common-styles.css";
+import "../styles/read-mode-styles.css";
+import "../styles/palette-styles.css";
+import "../styles/state-styles.css";
 import {Settings} from "./settings/Settings";
 
 const LktFieldText: Plugin = {

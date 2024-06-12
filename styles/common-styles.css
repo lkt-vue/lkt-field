@@ -1,0 +1,109 @@
+.lkt-field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    color: var(--text-color);
+    width: 100%;
+
+    --lkt-field-large-field-min-height: calc(var(--input-height) * 2 + var(--gap) + var(--field-label-line-height));
+    --lkt-field-large-field-max-height: calc(var(--input-height) * 4 + var(--gap) * 3 + var(--field-label-line-height) * 3);
+}
+.lkt-field-switch {
+    width: auto;
+}
+
+.lkt-field-text__main,
+.lkt-field-file__main,
+.lkt-field-textarea__main,
+.lkt-field-editor__main {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+    background-color: var(--field-background-color);
+    border: var(--field-border-width) var(--field-border-style) var(--field-border-color);
+    box-shadow: var(--field-shadow);
+    border-radius: var(--field-border-radius);
+}
+
+.lkt-field.has-focus .lkt-field-text__main,
+.lkt-field.has-focus .lkt-field-file__main,
+.lkt-field.has-focus .lkt-field-textarea__main,
+.lkt-field.has-focus .lkt-field-editor__main {
+    outline: 0;
+    border: var(--field-border-width) var(--field-border-style) var(--focus-color);
+    box-shadow: 0 0 0 2px var(--focus-color);
+}
+
+.lkt-field input:-webkit-autofill,
+.lkt-field input:-webkit-autofill:hover,
+.lkt-field input:-webkit-autofill:focus,
+.lkt-field input:-webkit-autofill:active,
+.lkt-field textarea:-webkit-autofill,
+.lkt-field textarea:-webkit-autofill:hover,
+.lkt-field textarea:-webkit-autofill:focus,
+.lkt-field textarea:-webkit-autofill:active  {
+    box-shadow: none;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.lkt-field input:-internal-autofill-selected,
+.lkt-field textarea:-internal-autofill-selected {
+    background-color: var(--field-background-color) !important;
+}
+.lkt-field input:-webkit-autofill,
+.lkt-field textarea:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-color);
+}
+
+.lkt-field label {
+    display: block;
+    font-weight: var(--field-label-font-weight);
+    font-size: var(--field-label-font-size);
+    line-height: var(--field-label-line-height);
+    margin: var(--field-label-margin);
+}
+
+.lkt-field-switch label {
+    padding-left: 50px;
+}
+
+.lkt-field input[type="text"],
+.lkt-field input[type="email"],
+.lkt-field input[type="tel"] {
+    height: calc(var(--input-height) - 2 * var(--field-border-width));
+    line-height: var(--input-line-height);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    border: none;
+    padding: var(--field-padding);
+    transition: var(--field-transition);
+    font-size: var(--field-font-size);
+    border-radius: var(--field-border-radius);
+    background-color: var(--field-background-color);
+}
+
+.lkt-field-date input {
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.lkt-field textarea {
+    height: var(--lkt-field-large-field-min-height);
+    min-height: var(--lkt-field-large-field-min-height);
+    max-height: var(--lkt-field-large-field-max-height);
+    resize: vertical;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    border: var(--field-border-width) var(--field-border-style) var(--field-border-color);
+    box-shadow: var(--field-shadow);
+    padding: var(--field-textarea-padding);
+    transition: var(--field-transition);
+    font-size: var(--field-font-size);
+    border-radius: var(--field-border-radius);
+    background-color: var(--field-background-color);
+}

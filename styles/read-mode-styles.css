@@ -1,0 +1,37 @@
+.lkt-field-text .lkt-field-text__read,
+.lkt-field-textarea .lkt-field-textarea__read {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+}
+
+.lkt-field-text .lkt-field-text__read-value {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    border: none;
+    font-size: var(--field-font-size);
+    padding-right: var(--field-state-right);
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: var(--input-height);
+}
+
+.lkt-field-textarea .lkt-field-textarea__read-value,
+.lkt-field-editor .lkt-field-editor__read-value {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    border: none;
+    font-size: var(--field-font-size);
+    padding-right: var(--field-state-right);
+    line-height: var(--input-height);
+    max-height: calc(var(--input-height) * 4 + var(--gap) * 3);
+    overflow-y: auto;
+    /*resize: vertical;*/
+    white-space: break-spaces;
+}
