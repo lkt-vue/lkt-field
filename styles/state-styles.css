@@ -2,10 +2,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: var(--input-height);
-    gap: var(--field-state-gap);
+    height: var(--lkt-field-input-height);
+    gap: var(--lkt-field-gap-state);
     position: relative;
-    padding-right: var(--field-state-right);
+    padding-right: var(--lkt-field-right-state);
     margin-left: auto;
 }
 
@@ -29,8 +29,8 @@
     content: '';
     display: block;
     width: 2px;
-    height: var(--field-state-icon-size);
-    background: var(--text-color);
+    height: var(--lkt-field-font-size-state);
+    background: var(--lkt-field-color);
     transform-origin: center center;
     transform: translate(-50%, -50%) rotate(45deg);
     position: absolute;
@@ -90,9 +90,9 @@
 .lkt-field__log-icon {
     font-family: arial, serif;
     font-style: normal;
-    font-size: var(--field-state-icon-size);
+    font-size: var(--lkt-field-font-size-state);
     cursor: help;
-    width: var(--field-state-icon-size);
+    width: var(--lkt-field-font-size-state);
     text-align: center;
     display: inline-flex;
     align-items: center;

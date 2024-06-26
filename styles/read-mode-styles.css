@@ -12,12 +12,12 @@
     max-width: 100%;
     outline: 0;
     border: none;
-    font-size: var(--field-font-size);
-    padding-right: var(--field-state-right);
+    font-size: var(--lkt-field-font-size);
+    padding-right: var(--lkt-field-right-state);
     text-wrap: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-height: var(--input-height);
+    line-height: var(--lkt-field-input-height);
 }
 
 .lkt-field-textarea .lkt-field-textarea__read-value,
@@ -27,10 +27,10 @@
     max-width: 100%;
     outline: 0;
     border: none;
-    font-size: var(--field-font-size);
-    padding-right: var(--field-state-right);
-    line-height: var(--input-height);
-    max-height: calc(var(--input-height) * 4 + var(--gap) * 3);
+    font-size: var(--lkt-field-font-size);
+    padding-right: var(--lkt-field-right-state);
+    line-height: var(--lkt-field-input-height);
+    max-height: var(--lkt-field-large-field-max-height);
     overflow-y: auto;
     /*resize: vertical;*/
     white-space: break-spaces;

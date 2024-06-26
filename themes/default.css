@@ -1,0 +1,51 @@
+:root {
+    --lkt-field-color: #444444;
+
+    --lkt-field-font-size: 16px;
+
+    --lkt-field-right-state: 5px;
+    --lkt-field-gap-state: 10px;
+    --lkt-field-font-size-state: 40px;
+
+
+    --lkt-field-font-size-label: 16px;
+    --lkt-field-font-weight-label: 600;
+    --lkt-field-line-height-label: 40px;
+
+
+    --lkt-field-font-size-input: 16px;
+    --lkt-field-font-weight-input: 400;
+    --lkt-field-input-height: 40px;
+    --lkt-field-line-height-input: 40px;
+    --lkt-field-padding-input: 10px;
+    --lkt-field-padding-textarea: 10px;
+    --lkt-field-transition-input: all linear 150ms;
+    --lkt-field-border-radius-input: 0px;
+    --lkt-field-bg-input: transparent;
+    --lkt-field-bg-input-disabled: transparent;
+
+    --lkt-field-gap: 15px;
+
+    --lkt-field-bg: transparent;
+    --lkt-field-bg-invalid: transparent;
+    --lkt-field-bg-valid: transparent;
+
+    --lkt-field-border-width: 1px;
+    --lkt-field-border-width-valid: 1px;
+    --lkt-field-border-width-invalid: 1px;
+    --lkt-field-border-style: solid;
+    --lkt-field-border-color: #444444;
+    --lkt-field-border-color-focus: #444444;
+    --lkt-field-border-color-disabled: #dddddd;
+    --lkt-field-border-color-invalid: #ff0000;
+    --lkt-field-border-color-valid: green;
+    --lkt-field-border-radius: 0px;
+
+
+    --lkt-field-shadow: none;
+    --lkt-field-shadow-focus: 0 0 0 2px #444444;
+    --lkt-field-shadow-invalid: 0 0 0 2px #ff0000;
+    --lkt-field-shadow-valid: 0 0 0 2px green;
+
+    --lkt-field-margin-label: 0px;
+}

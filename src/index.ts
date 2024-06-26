@@ -1,4 +1,5 @@
 import {App, Component, Plugin} from 'vue';
+import LktFieldValidation from 'lkt-field-validation';
 
 import { default as textField } from './lib-components/LktFieldText.vue';
 
@@ -14,6 +15,7 @@ const LktFieldText: Plugin = {
   install: (app: App) => {
     // Register plugin components
     if (app.component('lkt-field-text') === undefined) app.component('lkt-field-text', textField);
+    if (app.component('lkt-field-validations') === undefined) app.use(LktFieldValidation);
   },
 };
 

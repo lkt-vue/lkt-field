@@ -22,8 +22,10 @@ export default {
         rollupOptions: {
             external: [
                 'vue',
+                'lkt-i18n',
                 'lkt-tools',
                 'lkt-events',
+                'lkt-field-validation',
                 'lkt-button',
                 'lkt-http-client',
                 'lkt-string-tools',

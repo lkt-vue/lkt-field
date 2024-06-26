@@ -1,7 +1,7 @@
-declare namespace Ue {
-    function install(i: any): void;
+declare namespace tl {
+    function install(n: any): void;
 }
-declare function je(i: any, c: any): void;
-declare function He(i: any, c: any): boolean;
-declare function Ae(i: any, c: any): boolean;
-export { Ue as default, je as setDefaultTextEmptyValueSlot, He as setTextEditSlot, Ae as setTextValueSlot };
+declare function al(n: any, p: any): void;
+declare function ll(n: any, p: any): boolean;
+declare function el(n: any, p: any): boolean;
+export { tl as default, al as setDefaultTextEmptyValueSlot, ll as setTextEditSlot, el as setTextValueSlot };

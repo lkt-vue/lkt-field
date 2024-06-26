@@ -35,6 +35,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     slotData?: LktObject | undefined;
     validationResource?: string | undefined;
     validationResourceData?: LktObject | undefined;
+    autoValidation?: boolean | undefined;
+    validationStack?: string | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -72,6 +74,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     slotData: () => {};
     validationResource: string;
     validationResourceData: () => {};
+    autoValidation: boolean;
+    validationStack: string;
 }>, {
     Identifier: string;
     reset: () => string | number;
@@ -125,6 +129,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     slotData?: LktObject | undefined;
     validationResource?: string | undefined;
     validationResourceData?: LktObject | undefined;
+    autoValidation?: boolean | undefined;
+    validationStack?: string | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -162,6 +168,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     slotData: () => {};
     validationResource: string;
     validationResourceData: () => {};
+    autoValidation: boolean;
+    validationStack: string;
 }>>> & {
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
@@ -209,6 +217,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     slotData: LktObject;
     validationResource: string;
     validationResourceData: LktObject;
+    autoValidation: boolean;
+    validationStack: string;
 }, {}>, {
     label?(_: {}): any;
     edit?(_: {

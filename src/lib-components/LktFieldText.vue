@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 // Emits
-import {generateRandomString} from "lkt-string-tools";
+import {generateRandomString, isEmail} from "lkt-string-tools";
 import {computed, nextTick, ref, useSlots, watch} from "vue";
 import {createLktEvent} from "lkt-events";
 import {Settings} from "../settings/Settings";
 import {LktObject} from "lkt-ts-interfaces";
 //@ts-ignore
 import {httpCall, HTTPResponse} from "lkt-http-client";
+import {__} from "lkt-i18n";
+import {ValidationCode} from "../types/ValidationCode";
 
 const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -50,6 +52,8 @@ const props = withDefaults(defineProps<{
     slotData?: LktObject
     validationResource?: string
     validationResourceData?: LktObject
+    autoValidation?: boolean
+    validationStack?: string
 }>(), {
     modelValue: '',
     placeholder: '',
@@ -87,6 +91,8 @@ const props = withDefaults(defineProps<{
     slotData: () => ({}),
     validationResource: '',
     validationResourceData: () => ({}),
+    autoValidation: false,
+    validationStack: 'default',
 });
 
 // Constant data
@@ -101,6 +107,9 @@ const originalValue = ref(props.modelValue),
     value = ref(props.modelValue),
     showPasswordIcon = ref(false),
     focusing = ref(false),
+    hadFirstBlur = ref(false),
+    hadFirstFocus = ref(false),
+    localValidationStatus = ref(<ValidationCode>[]),
     editable = ref(!props.readMode);
 
 
@@ -152,6 +161,11 @@ const isValid = computed(() => {
         if (props.mandatory && editable.value) r.push('is-mandatory-field');
         if (focusing.value) r.push('has-focus');
 
+        if (props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
+            if (localValidationStatus.value.length > 0) r.push('is-invalid');
+            else r.push('is-valid');
+        }
+
         if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
 
         r.push(isValid.value ? 'is-valid' : 'is-error');
@@ -174,6 +188,18 @@ const isValid = computed(() => {
         if (typeof props.max === 'number') return props.max;
         //@ts-ignore
         return false;
+    }),
+    computedLabel = computed(() => {
+        if (props.label.startsWith('__:')) {
+            return __(props.label.substring(3));
+        }
+        return props.label;
+    }),
+    computedPlaceholder = computed(() => {
+        if (props.placeholder.startsWith('__:')) {
+            return __(props.placeholder.substring(3));
+        }
+        return props.placeholder;
     });
 
 const focus = () => {
@@ -203,15 +229,63 @@ watch(() => props.modelValue, (v) => {
 watch(value, (v) => {
     emits('update:modelValue', v);
     doRemoteValidation();
+    doLocalValidation();
 })
+
+const doLocalValidation = () => {
+    if (!hadFirstBlur.value || !hadFirstFocus.value) {
+        return;
+    }
+
+    localValidationStatus.value = [];
+
+    let min = Number(props.min);
+    if (min > 0) {
+        if (!props.isNumber && value.value.length < min) {
+            localValidationStatus.value.push('ko-min-str');
+
+        } else if (value.value < min) {
+            localValidationStatus.value.push('ko-min-num');
+        }
+    }
+
+    let max = Number(props.max);
+    if (max > 0) {
+        if (!props.isNumber && value.value.length > max) {
+            localValidationStatus.value.push('ko-max-str');
+
+        } else if (value.value > max) {
+            localValidationStatus.value.push('ko-max-num');
+        }
+    }
+
+    if (props.isEmail && !isEmail(value.value)) {
+        localValidationStatus.value.push('ko-email');
+    }
+}
 
 const reset = () => value.value = originalValue.value,
     getValue = () => value.value,
-    onKeyUp = ($event: any) => emits('keyup', $event, createLktEvent(Identifier, {value: value.value})),
+    onKeyUp = ($event: any) => {
+        doLocalValidation();
+        emits('keyup', $event, createLktEvent(Identifier, {value: value.value}))
+    },
     onKeyDown = ($event: any) => emits('keydown', $event, createLktEvent(Identifier, {value: value.value})),
-    onFocus = ($event: any) => (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value})),
-    onBlur = ($event: any) => (focusing.value = false) && emits('blur', $event, createLktEvent(Identifier, {value: value.value})),
-    onClick = ($event: any) => emits('click', $event, createLktEvent(Identifier, {value: value.value})),
+    onFocus = ($event: any) => {
+        hadFirstFocus.value = true;
+        (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value}))
+    },
+    onChange = ($event: any) => {
+        // (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value}))
+    },
+    onBlur = ($event: any) => {
+        hadFirstBlur.value = true;
+        doLocalValidation();
+        (focusing.value = false) && emits('blur', $event, createLktEvent(Identifier, {value: value.value}))
+    },
+    onClick = ($event: any) => {
+        emits('click', $event, createLktEvent(Identifier, {value: value.value}))
+    },
     onClickInfo = ($event: any) => emits('click-info', $event, createLktEvent(Identifier, {value: value.value})),
     onClickError = ($event: any) => emits('click-error', $event, createLktEvent(Identifier, {value: value.value})),
     onClickShowPassword = ($event: any) => showPasswordIcon.value = !showPasswordIcon.value,
@@ -278,7 +352,7 @@ const hasCustomValueSlot = computed(() => {
          v-bind:data-labeled="!!!slots.label"
     >
         <slot v-if="!!slots.label" name="label"></slot>
-        <label v-if="!!!slots.label" :for="Identifier" v-html="label"></label>
+        <label v-if="!!!slots.label" :for="Identifier" v-html="computedLabel"></label>
 
         <template v-if="editable">
             <template v-if="slots['edit']">
@@ -291,8 +365,8 @@ const hasCustomValueSlot = computed(() => {
                        v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
             </div>
 
-            <template v-else-if="placeholder">
-                <div class="lkt-field-text__main">
+            <template v-else-if="computedPlaceholder">
+                <div class="lkt-field-main">
                 <input v-model="value"
                        :ref="(el:any) => inputElement = el"
                        v-bind:value="value"
@@ -301,7 +375,7 @@ const hasCustomValueSlot = computed(() => {
                        v-bind:id="Identifier"
                        v-bind:disabled="disabled"
                        v-bind:readonly="readonly"
-                       v-bind:placeholder="placeholder"
+                       v-bind:placeholder="computedPlaceholder"
                        v-bind:tabindex="tabindex"
                        v-bind:autocomplete="autocompleteText"
                        v-bind:min="MinimumValue"
@@ -312,11 +386,12 @@ const hasCustomValueSlot = computed(() => {
                        v-on:focus="onFocus"
                        v-on:blur="onBlur"
                        v-on:click="onClick"
+                       v-on:change="onChange"
                 >
                 </div>
             </template>
             <template v-else>
-                <div class="lkt-field-text__main">
+                <div class="lkt-field-main">
                 <input v-model="value"
                        :ref="(el:any) => inputElement = el"
                        v-bind:value="value"
@@ -334,7 +409,8 @@ const hasCustomValueSlot = computed(() => {
                        v-on:keydown="onKeyDown"
                        v-on:focus="onFocus"
                        v-on:blur="onBlur"
-                       v-on:click="onClick">
+                       v-on:click="onClick"
+                       v-on:change="onChange">
                 </div>
             </template>
 
@@ -372,5 +448,7 @@ const hasCustomValueSlot = computed(() => {
                    v-on:click="onClickSwitchEdition"></i>
             </div>
         </div>
+
+        <lkt-field-validations v-if="autoValidation && localValidationStatus.length > 0" :items="localValidationStatus" :stack="validationStack"/>
     </div>
 </template>

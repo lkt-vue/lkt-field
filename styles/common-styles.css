@@ -2,37 +2,37 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    color: var(--text-color);
+    color: var(--lkt-field-color);
     width: 100%;
 
-    --lkt-field-large-field-min-height: calc(var(--input-height) * 2 + var(--gap) + var(--field-label-line-height));
-    --lkt-field-large-field-max-height: calc(var(--input-height) * 4 + var(--gap) * 3 + var(--field-label-line-height) * 3);
+    --lkt-field-large-field-min-height: calc(var(--lkt-field-input-height) * 2 + var(--lkt-field-gap) + var(--lkt-field-line-height-label));
+    --lkt-field-large-field-max-height: calc(var(--lkt-field-input-height) * 4 + var(--lkt-field-gap) * 3 + var(--lkt-field-line-height-label) * 3);
 }
 .lkt-field-switch {
     width: auto;
 }
 
-.lkt-field-text__main,
+.lkt-field-main,
 .lkt-field-file__main,
-.lkt-field-textarea__main,
 .lkt-field-editor__main {
     display: flex;
     flex-direction: row;
     position: relative;
     width: 100%;
-    background-color: var(--field-background-color);
-    border: var(--field-border-width) var(--field-border-style) var(--field-border-color);
-    box-shadow: var(--field-shadow);
-    border-radius: var(--field-border-radius);
+    background-color: var(--lkt-field-bg);
+    border-width: var(--lkt-field-border-width);
+    border-style: var(--lkt-field-border-style);
+    border-color: var(--lkt-field-border-color);
+    box-shadow: var(--lkt-field-shadow);
+    border-radius: var(--lkt-field-border-radius);
 }
 
-.lkt-field.has-focus .lkt-field-text__main,
+.lkt-field.has-focus .lkt-field-main,
 .lkt-field.has-focus .lkt-field-file__main,
-.lkt-field.has-focus .lkt-field-textarea__main,
 .lkt-field.has-focus .lkt-field-editor__main {
     outline: 0;
-    border: var(--field-border-width) var(--field-border-style) var(--focus-color);
-    box-shadow: 0 0 0 2px var(--focus-color);
+    border-color: var(--lkt-field-border-color-focus);
+    box-shadow: var(--lkt-field-shadow-focus);
 }
 
 .lkt-field input:-webkit-autofill,
@@ -49,19 +49,19 @@
 
 .lkt-field input:-internal-autofill-selected,
 .lkt-field textarea:-internal-autofill-selected {
-    background-color: var(--field-background-color) !important;
+    background-color: var(--lkt-field-bg) !important;
 }
 .lkt-field input:-webkit-autofill,
 .lkt-field textarea:-webkit-autofill {
-    -webkit-text-fill-color: var(--text-color);
+    -webkit-text-fill-color: var(--lkt-field-color);
 }
 
 .lkt-field label {
     display: block;
-    font-weight: var(--field-label-font-weight);
-    font-size: var(--field-label-font-size);
-    line-height: var(--field-label-line-height);
-    margin: var(--field-label-margin);
+    font-weight: var(--lkt-field-font-weight-label);
+    font-size: var(--lkt-field-font-size-label);
+    line-height: var(--lkt-field-line-height-label);
+    margin: var(--lkt-field-margin-label);
 }
 
 .lkt-field-switch label {
@@ -70,19 +70,26 @@
 
 .lkt-field input[type="text"],
 .lkt-field input[type="email"],
-.lkt-field input[type="tel"] {
-    height: calc(var(--input-height) - 2 * var(--field-border-width));
-    line-height: var(--input-line-height);
+.lkt-field input[type="tel"],
+.lkt-field textarea {
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
     outline: 0;
     border: none;
-    padding: var(--field-padding);
-    transition: var(--field-transition);
-    font-size: var(--field-font-size);
-    border-radius: var(--field-border-radius);
-    background-color: var(--field-background-color);
+    transition: var(--lkt-field-transition-input);
+    font-size: var(--lkt-field-font-size-input);
+    font-weight: var(--lkt-field-font-weight-input);
+    border-radius: var(--lkt-field-border-radius-input);
+    background-color: var(--lkt-field-bg-input);
+}
+
+.lkt-field input[type="text"],
+.lkt-field input[type="email"],
+.lkt-field input[type="tel"] {
+    height: calc(var(--lkt-field-input-height) - 2 * var(--lkt-field-border-width));
+    line-height: var(--lkt-field-line-height-input);
+    padding: var(--lkt-field-padding-input);
 }
 
 .lkt-field-date input {
@@ -94,16 +101,6 @@
     height: var(--lkt-field-large-field-min-height);
     min-height: var(--lkt-field-large-field-min-height);
     max-height: var(--lkt-field-large-field-max-height);
+    padding: var(--lkt-field-padding-textarea);
     resize: vertical;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
-    outline: 0;
-    border: var(--field-border-width) var(--field-border-style) var(--field-border-color);
-    box-shadow: var(--field-shadow);
-    padding: var(--field-textarea-padding);
-    transition: var(--field-transition);
-    font-size: var(--field-font-size);
-    border-radius: var(--field-border-radius);
-    background-color: var(--field-background-color);
 }
