@@ -239,29 +239,43 @@ const doLocalValidation = () => {
 
     localValidationStatus.value = [];
 
-    let min = Number(props.min);
-    if (min > 0) {
-        if (!props.isNumber && value.value.length < min) {
-            localValidationStatus.value.push('ko-min-str');
+    nextTick(() => {
 
-        } else if (value.value < min) {
-            localValidationStatus.value.push('ko-min-num');
+        if (!props.isNumber && !props.isEmail && props.mandatory && value.value === '') {
+            localValidationStatus.value.push('ko-empty');
+
+        } else if (!props.isEmail) {
+
+            let min = Number(props.min);
+            if (min > 0) {
+                if (!props.isNumber && value.value.length < min) {
+                    localValidationStatus.value.push('ko-min-str');
+
+                } else if (value.value < min) {
+                    localValidationStatus.value.push('ko-min-num');
+                }
+            }
         }
-    }
 
-    let max = Number(props.max);
-    if (max > 0) {
-        if (!props.isNumber && value.value.length > max) {
-            localValidationStatus.value.push('ko-max-str');
+        let max = Number(props.max);
+        if (max > 0) {
+            if (!props.isNumber && value.value.length > max) {
+                localValidationStatus.value.push('ko-max-str');
 
-        } else if (value.value > max) {
-            localValidationStatus.value.push('ko-max-num');
+            } else if (value.value > max) {
+                localValidationStatus.value.push('ko-max-num');
+            }
         }
-    }
 
-    if (props.isEmail && !isEmail(value.value)) {
-        localValidationStatus.value.push('ko-email');
-    }
+        if (props.isEmail && props.mandatory && value.value === '') {
+            localValidationStatus.value.push('ko-empty');
+
+        } else if (props.isEmail && !isEmail(value.value)) {
+            localValidationStatus.value.push('ko-email');
+        }
+
+        console.log('doLocalValidation', localValidationStatus.value);
+    })
 }
 
 const reset = () => value.value = originalValue.value,
@@ -273,6 +287,7 @@ const reset = () => value.value = originalValue.value,
     onKeyDown = ($event: any) => emits('keydown', $event, createLktEvent(Identifier, {value: value.value})),
     onFocus = ($event: any) => {
         hadFirstFocus.value = true;
+        doLocalValidation();
         (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value}))
     },
     onChange = ($event: any) => {
@@ -352,7 +367,7 @@ const hasCustomValueSlot = computed(() => {
          v-bind:data-labeled="!!!slots.label"
     >
         <slot v-if="!!slots.label" name="label"></slot>
-        <label v-if="!!!slots.label" :for="Identifier" v-html="computedLabel"></label>
+        <label v-if="!!!slots.label && computedLabel !== ''" :for="Identifier" v-html="computedLabel"></label>
 
         <template v-if="editable">
             <template v-if="slots['edit']">
@@ -424,7 +439,6 @@ const hasCustomValueSlot = computed(() => {
                    v-on:click="onClickShowPassword"></i>
                 <i v-if="props.reset && isFilled" class="lkt-field__reset-icon" :title="resetText"
                    v-on:click="reset"></i>
-<!--                <i v-if="props.mandatory" class="lkt-field__mandatory-icon" :title="props.mandatoryMessage"></i>-->
                 <i v-if="allowReadModeSwitch" class="lkt-field__edit-icon" :title="props.switchEditionMessage"
                    v-on:click="onClickSwitchEdition"></i>
             </div>
