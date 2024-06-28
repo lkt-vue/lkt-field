@@ -2,6 +2,7 @@
     --lkt-field-color: #444444;
 
     --lkt-field-font-size: 16px;
+    --lkt-field-font-weight: 400;
 
     --lkt-field-right-state: 5px;
     --lkt-field-gap-state: 10px;
@@ -29,6 +30,16 @@
     --lkt-field-bg: transparent;
     --lkt-field-bg-invalid: transparent;
     --lkt-field-bg-valid: transparent;
+    --lkt-field-bg-opt-active: transparent;
+    --lkt-field-bg-opt-odd: transparent;
+    --lkt-field-bg-opt-odd-hover: transparent;
+    --lkt-field-bg-opt-even: transparent;
+    --lkt-field-bg-opt-even-hover: transparent;
+
+    --lkt-field-color-opt-active: #444;
+    --lkt-field-color-opt-odd-hover: #444;
+    --lkt-field-color-opt-even-hover: #444;
+    --lkt-field-max-height-dropdown: 200px;
 
     --lkt-field-border-width: 1px;
     --lkt-field-border-width-valid: 1px;
@@ -48,4 +59,14 @@
     --lkt-field-shadow-valid: 0 0 0 2px green;
 
     --lkt-field-margin-label: 0px;
+
+
+    --lkt-field-tag-border-width: 1px;
+    --lkt-field-tag-border-style: solid;
+    --lkt-field-tag-border-color: #444;
+    --lkt-field-tag-border-radius: 0;
+    --lkt-field-tag-padding: 5px;
+    --lkt-field-tag-bg: #fff;
+    --lkt-field-tag-color: #444;
+    --lkt-field-tag-font-weight: 600;
 }

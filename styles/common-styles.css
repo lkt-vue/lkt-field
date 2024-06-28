@@ -3,6 +3,8 @@
     flex-direction: column;
     position: relative;
     color: var(--lkt-field-color);
+    font-size: var(--lkt-field-font-size);
+    font-weight: var(--lkt-field-font-weight);
     width: 100%;
 
     --lkt-field-large-field-min-height: calc(var(--lkt-field-input-height) * 2 + var(--lkt-field-gap) + var(--lkt-field-line-height-label));
@@ -17,14 +19,18 @@
 .lkt-field-editor__main {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     position: relative;
     width: 100%;
+    max-width: 100%;
+    outline: 0;
     background-color: var(--lkt-field-bg);
     border-width: var(--lkt-field-border-width);
     border-style: var(--lkt-field-border-style);
     border-color: var(--lkt-field-border-color);
     box-shadow: var(--lkt-field-shadow);
     border-radius: var(--lkt-field-border-radius);
+    transition: var(--lkt-field-transition-input);
 }
 
 .lkt-field.has-focus .lkt-field-main,
