@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // Emits
-import {generateRandomString, isEmail} from "lkt-string-tools";
+import {generateRandomString, isEmail as checkIsEmail} from "lkt-string-tools";
 import {computed, nextTick, ref, useSlots, watch} from "vue";
 import {createLktEvent} from "lkt-events";
 import {Settings} from "../settings/Settings";
@@ -8,7 +8,6 @@ import {LktObject} from "lkt-ts-interfaces";
 //@ts-ignore
 import {httpCall, HTTPResponse} from "lkt-http-client";
 import {__} from "lkt-i18n";
-import {ValidationCode} from "../types/ValidationCode";
 
 const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -102,6 +101,8 @@ const Identifier = generateRandomString(16);
 // Components refs
 const inputElement = ref(null);
 
+let baseValidationStatus: string[] = [];
+
 // Reactive data
 const originalValue = ref(props.modelValue),
     value = ref(props.modelValue),
@@ -109,7 +110,7 @@ const originalValue = ref(props.modelValue),
     focusing = ref(false),
     hadFirstBlur = ref(false),
     hadFirstFocus = ref(false),
-    localValidationStatus = ref(<ValidationCode>[]),
+    localValidationStatus = ref(baseValidationStatus),
     editable = ref(!props.readMode);
 
 
@@ -270,7 +271,7 @@ const doLocalValidation = () => {
         if (props.isEmail && props.mandatory && value.value === '') {
             localValidationStatus.value.push('ko-empty');
 
-        } else if (props.isEmail && !isEmail(value.value)) {
+        } else if (props.isEmail && !checkIsEmail(value.value)) {
             localValidationStatus.value.push('ko-email');
         }
 

@@ -70,6 +70,7 @@
 
 .lkt-field input[type="text"],
 .lkt-field input[type="email"],
+.lkt-field input[type="number"],
 .lkt-field input[type="tel"],
 .lkt-field textarea {
     box-sizing: border-box;
@@ -85,6 +86,7 @@
 }
 
 .lkt-field input[type="text"],
+.lkt-field input[type="number"],
 .lkt-field input[type="email"],
 .lkt-field input[type="tel"] {
     height: calc(var(--lkt-field-input-height) - 2 * var(--lkt-field-border-width));
