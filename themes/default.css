@@ -36,6 +36,13 @@
     --lkt-field-bg-opt-even: transparent;
     --lkt-field-bg-opt-even-hover: transparent;
 
+    --lkt-field-bg-switch-off: #cccccc;
+    --lkt-field-bg-switch-on: #cccccc;
+    --lkt-field-bg-switch-disabled: #cacaca;
+    --lkt-field-bg-switch-dot-off: #ffffff;
+    --lkt-field-bg-switch-dot-on: green;
+    --lkt-field-bg-switch-dot-disabled: #ffffff;
+
     --lkt-field-color-opt-active: #444;
     --lkt-field-color-opt-odd-hover: #444;
     --lkt-field-color-opt-even-hover: #444;
@@ -51,6 +58,7 @@
     --lkt-field-border-color-invalid: #ff0000;
     --lkt-field-border-color-valid: green;
     --lkt-field-border-radius: 0px;
+    --lkt-field-border-radius-switch: 100%;
 
 
     --lkt-field-shadow: none;
@@ -69,4 +77,11 @@
     --lkt-field-tag-bg: #fff;
     --lkt-field-tag-color: #444;
     --lkt-field-tag-font-weight: 600;
+
+
+    --lkt-field-switch-width: 42px;
+    --lkt-field-switch-height: 22px;
+    --lkt-field-switch-dot-size: 18px;
+    --lkt-field-switch-dot-left-start: 2px;
+    --lkt-field-switch-dot-left-end: 22px;
 }
