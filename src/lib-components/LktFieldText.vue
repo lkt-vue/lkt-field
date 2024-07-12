@@ -274,8 +274,6 @@ const doLocalValidation = () => {
         } else if (props.isEmail && !checkIsEmail(value.value)) {
             localValidationStatus.value.push('ko-email');
         }
-
-        console.log('doLocalValidation', localValidationStatus.value);
     })
 }
 

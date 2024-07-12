@@ -1,7 +1,7 @@
-declare namespace tl {
+declare namespace al {
     function install(n: any): void;
 }
-declare function ol(n: any, c: any): void;
-declare function al(n: any, c: any): boolean;
+declare function ul(n: any, c: any): void;
+declare function tl(n: any, c: any): boolean;
 declare function ll(n: any, c: any): boolean;
-export { tl as default, ol as setDefaultTextEmptyValueSlot, al as setTextEditSlot, ll as setTextValueSlot };
+export { al as default, ul as setDefaultTextEmptyValueSlot, tl as setTextEditSlot, ll as setTextValueSlot };
