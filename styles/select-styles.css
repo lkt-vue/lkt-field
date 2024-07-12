@@ -52,7 +52,7 @@
     text-overflow: ellipsis;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: var(--lkt-field-padding-input);
+    /*padding: var(--lkt-field-padding-input);*/
     align-items: baseline;
 }
 
@@ -136,6 +136,8 @@
     display: inline-flex;
     max-width: 100%;
     flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
 }
 
 .lkt-field-select-read--inline li {
