@@ -74,6 +74,12 @@
     padding-left: 50px;
 }
 
+.lkt-field input[type="file"] {
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+}
+
 .lkt-field input[type="text"],
 .lkt-field input[type="email"],
 .lkt-field input[type="number"],

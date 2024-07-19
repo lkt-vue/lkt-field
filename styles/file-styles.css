@@ -1,0 +1,85 @@
+.lkt-field-file-preview {
+    --preview-size: calc(var(--lkt-field-input-height) * 2 + var(--lkt-field-gap) * 2 + var(--lkt-field-border-width) * 10);
+    height: var(--preview-size);
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+    outline: 0;
+    border-width: var(--lkt-field-border-width);
+    border-style: var(--lkt-field-border-style);
+    border-color: var(--lkt-field-border-color);
+    box-shadow: var(--lkt-field-shadow);
+    padding: var(--lkt-field-padding-input);
+    transition: var(--lkt-field-transition-input);
+    font-size: var(--lkt-field-font-size-label);
+    border-radius: var(--lkt-field-border-radius);
+    background-color: var(--lkt-field-bg);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lkt-field-file-preview-img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+}
+
+.lkt-field-upload-button {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform: translateY(100%);
+    transition: all linear 125ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lkt-field-file-preview-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lkt-field-file-preview:hover .lkt-field-upload-button {
+    transform: translateY(0);
+}
+
+.lkt-field-file-preview-txt {
+    display: block;
+    font-weight: var(--lkt-field-font-weight-label);
+    font-size: var(--lkt-field-font-size-label);
+    line-height: var(--lkt-field-line-height-label);
+    text-transform: uppercase;
+}
+
+/* Read mode */
+.lkt-field-file .lkt-field-file__read {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+}
+
+.lkt-field-file .lkt-field-file__read-value {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    border: none;
+    font-size: var(--lkt-field-font-size-input);
+    padding-right: var(--lkt-field-right-state);
+    line-height: var(--lkt-field-input-height);
+    max-height: calc(var(--lkt-field-input-height) * 4 + var(--lkt-field-gap) * 3);
+    overflow-y: auto;
+    white-space: break-spaces;
+}
