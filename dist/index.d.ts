@@ -1,5 +1,6 @@
 import { Component, Plugin } from 'vue';
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
+import "../fonts/fontello/css/lkt-fields.css";
 import "../styles/common-styles.css";
 import "../styles/select-styles.css";
 import "../styles/switch-styles.css";
