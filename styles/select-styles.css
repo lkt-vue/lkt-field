@@ -103,6 +103,7 @@
     margin: 0;
     max-height: var(--lkt-field-max-height-dropdown);
     overflow-y: auto;
+    border-radius: var(--lkt-field-border-radius-input);
 }
 
 /* Read mode */
