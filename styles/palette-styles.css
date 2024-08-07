@@ -25,6 +25,13 @@
     box-shadow: var(--lkt-field-shadow-focus);
 }
 
+.lkt-field.is-invalid.has-focus input:focus {
+    box-shadow: var(--lkt-field-shadow-invalid);
+}
+.lkt-field.is-valid.has-focus input:focus {
+    border-color: var(--lkt-field-border-color-valid);
+}
+
 .lkt-field input[disabled],
 .lkt-field input[readonly],
 .lkt-field textarea[disabled],
