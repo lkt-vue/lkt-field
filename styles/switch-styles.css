@@ -72,6 +72,14 @@
     background: var(--lkt-field-bg-switch-dot-disabled);
 }
 
+.lkt-field-switch input:checked:disabled + label:before {
+    background-color: var(--lkt-field-bg-switch-on-disabled);
+}
+
+.lkt-field-switch input:checked:disabled + label:after {
+    background: var(--lkt-field-bg-switch-dot-on-disabled);
+}
+
 /* Check mode */
 .lkt-field-switch.is-checkbox input[type="checkbox"] {
     display: flex;

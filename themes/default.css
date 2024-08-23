@@ -40,9 +40,11 @@
     --lkt-field-bg-switch-off: #cccccc;
     --lkt-field-bg-switch-on: #cccccc;
     --lkt-field-bg-switch-disabled: #cacaca;
+    --lkt-field-bg-switch-on-disabled: #cccccc;
     --lkt-field-bg-switch-dot-off: #ffffff;
     --lkt-field-bg-switch-dot-on: green;
     --lkt-field-bg-switch-dot-disabled: #ffffff;
+    --lkt-field-bg-switch-dot-on-disabled: #ffffff;
 
     --lkt-field-color-opt-active: #444;
     --lkt-field-color-opt-odd-hover: #444;
