@@ -52,6 +52,7 @@ const props = withDefaults(defineProps<{
     validationResource?: string
     validationResourceData?: LktObject
     autoValidation?: boolean
+    autoValidationType?: 'focus' | 'blur' | 'always'
     validationStack?: string
 }>(), {
     modelValue: '',
@@ -91,6 +92,7 @@ const props = withDefaults(defineProps<{
     validationResource: '',
     validationResourceData: () => ({}),
     autoValidation: false,
+    autoValidationType: 'blur',
     validationStack: 'default',
 });
 
@@ -234,7 +236,7 @@ watch(value, (v) => {
 })
 
 const doLocalValidation = () => {
-    if (!hadFirstBlur.value || !hadFirstFocus.value) {
+    if (props.autoValidationType === 'blur' && (!hadFirstBlur.value || !hadFirstFocus.value)) {
         return;
     }
 
@@ -242,12 +244,21 @@ const doLocalValidation = () => {
 
     nextTick(() => {
 
+        let min = Number(props.min),
+            max = Number(props.max);
+
+        if (props.isNumber && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
+            if (value.value < min || value.value > max) {
+                localValidationStatus.value.push('ko-num-between');
+                return;
+            }
+        }
+
         if (!props.isNumber && !props.isEmail && props.mandatory && value.value === '') {
             localValidationStatus.value.push('ko-empty');
 
         } else if (!props.isEmail) {
 
-            let min = Number(props.min);
             if (min > 0) {
                 if (!props.isNumber && value.value.length < min) {
                     localValidationStatus.value.push('ko-min-str');
@@ -258,7 +269,6 @@ const doLocalValidation = () => {
             }
         }
 
-        let max = Number(props.max);
         if (max > 0) {
             if (!props.isNumber && value.value.length > max) {
                 localValidationStatus.value.push('ko-max-str');
@@ -462,6 +472,6 @@ const hasCustomValueSlot = computed(() => {
             </div>
         </div>
 
-        <lkt-field-validations v-if="autoValidation && localValidationStatus.length > 0" :items="localValidationStatus" :stack="validationStack"/>
+        <lkt-field-validations v-if="autoValidation && localValidationStatus.length > 0" :items="localValidationStatus" :stack="validationStack" :min="min" :max="max"/>
     </div>
 </template>

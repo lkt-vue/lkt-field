@@ -75,12 +75,15 @@
 .lkt-field__select-options li {
     padding: var(--lkt-field-padding-option);
     transition: var(--lkt-field-transition-input);
+    color: var(--lkt-field-color-opt);
 }
 .lkt-field__select-options li:nth-child(odd) {
     background: var(--lkt-field-bg-opt-odd);
+    color: var(--lkt-field-color-opt-odd);
 }
 .lkt-field__select-options li:nth-child(even) {
     background: var(--lkt-field-bg-opt-even);
+    color: var(--lkt-field-color-opt-even);
 }
 .lkt-field__select-options li:nth-child(odd):hover {
     background: var(--lkt-field-bg-opt-odd-hover);

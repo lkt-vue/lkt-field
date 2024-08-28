@@ -12,6 +12,7 @@
     --lkt-field-font-size-label: 16px;
     --lkt-field-font-weight-label: 600;
     --lkt-field-line-height-label: 40px;
+    --lkt-field-textarea-read-mode-line-height: 40px;
 
 
     --lkt-field-font-size-input: 16px;
@@ -46,6 +47,9 @@
     --lkt-field-bg-switch-dot-disabled: #ffffff;
     --lkt-field-bg-switch-dot-on-disabled: #ffffff;
 
+    --lkt-field-color-opt: #444;
+    --lkt-field-color-opt-odd: #444;
+    --lkt-field-color-opt-even: #444;
     --lkt-field-color-opt-active: #444;
     --lkt-field-color-opt-odd-hover: #444;
     --lkt-field-color-opt-even-hover: #444;

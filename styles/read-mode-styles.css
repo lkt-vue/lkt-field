@@ -29,7 +29,7 @@
     border: none;
     font-size: var(--lkt-field-font-size);
     padding-right: var(--lkt-field-right-state);
-    line-height: var(--lkt-field-input-height);
+    line-height: var(--lkt-field-textarea-read-mode-line-height);
     max-height: var(--lkt-field-large-field-max-height);
     overflow-y: auto;
     /*resize: vertical;*/
