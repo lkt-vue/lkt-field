@@ -9,7 +9,7 @@ import {LktObject} from "lkt-ts-interfaces";
 import {httpCall, HTTPResponse} from "lkt-http-client";
 import {__} from "lkt-i18n";
 
-const emits = defineEmits(['update:modelValue', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
+const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
 // Slots
 const slots = useSlots();
@@ -17,11 +17,13 @@ const slots = useSlots();
 // Props
 const props = withDefaults(defineProps<{
     modelValue: string|number
+    valid?: boolean
     placeholder?: string
     label?: string
+    labelIcon?: string
+    labelIconAtEnd?: boolean
     palette?: string
     name?: string
-    valid?: boolean
     autocomplete?: boolean
     disabled?: boolean
     readonly?: boolean
@@ -54,6 +56,16 @@ const props = withDefaults(defineProps<{
     autoValidation?: boolean
     autoValidationType?: 'focus' | 'blur' | 'always'
     validationStack?: string
+    minNumbers: number|string|undefined,
+    maxNumbers: number|string|undefined,
+    minChars: number|string|undefined,
+    maxChars: number|string|undefined,
+    minUpperChars: number|string|undefined,
+    maxUpperChars: number|string|undefined,
+    minLowerChars: number|string|undefined,
+    maxLowerChars: number|string|undefined,
+    minSpecialChars: number|string|undefined,
+    maxSpecialChars: number|string|undefined,
 }>(), {
     modelValue: '',
     placeholder: '',
@@ -94,6 +106,16 @@ const props = withDefaults(defineProps<{
     autoValidation: false,
     autoValidationType: 'blur',
     validationStack: 'default',
+    minNumbers: undefined,
+    maxNumbers: undefined,
+    minChars: undefined,
+    maxChars: undefined,
+    minUpperChars: undefined,
+    maxUpperChars: undefined,
+    minLowerChars: undefined,
+    maxLowerChars: undefined,
+    minSpecialChars: undefined,
+    maxSpecialChars: undefined,
 });
 
 // Constant data
@@ -108,6 +130,7 @@ let baseValidationStatus: string[] = [];
 // Reactive data
 const originalValue = ref(props.modelValue),
     value = ref(props.modelValue),
+    isValid = ref(props.valid),
     showPasswordIcon = ref(false),
     focusing = ref(false),
     hadFirstBlur = ref(false),
@@ -116,12 +139,7 @@ const originalValue = ref(props.modelValue),
     editable = ref(!props.readMode);
 
 
-const isValid = computed(() => {
-        // @ts-ignore
-        if (typeof props.valid === 'function') return props.valid();
-        return props.valid;
-    }),
-    changed = computed(() => value.value !== originalValue.value),
+const changed = computed(() => value.value !== originalValue.value),
     showInfoUi = computed(() => {
         return props.reset || props.infoMessage !== '' || props.errorMessage !== '' || (props.isPassword && props.showPassword);
     }),
@@ -193,10 +211,24 @@ const isValid = computed(() => {
         return false;
     }),
     computedLabel = computed(() => {
+
+        let label = '';
         if (props.label.startsWith('__:')) {
-            return __(props.label.substring(3));
+            label = __(props.label.substring(3));
+        } else {
+            label = props.label;
         }
-        return props.label;
+
+        if (props.labelIcon) {
+            let icon = '<i class="' + props.labelIcon + '"></i>'
+            if (props.labelIconAtEnd) {
+                label += icon;
+            } else {
+                label = icon + label;
+            }
+        }
+
+        return label;
     }),
     computedPlaceholder = computed(() => {
         if (props.placeholder.startsWith('__:')) {
@@ -225,6 +257,7 @@ const doRemoteValidation = async () => {
 
 // Watch data
 watch(() => props.readMode, (v) => editable.value = !v)
+watch(() => props.valid, (v) => isValid.value = v)
 watch(() => props.modelValue, (v) => {
     if (props.isNumber) return reAssignNumericValue(v);
     value.value = v
@@ -233,6 +266,9 @@ watch(value, (v) => {
     emits('update:modelValue', v);
     doRemoteValidation();
     doLocalValidation();
+})
+watch(isValid, (v) => {
+    emits('update:valid', v);
 })
 
 const doLocalValidation = () => {
@@ -244,12 +280,13 @@ const doLocalValidation = () => {
 
     nextTick(() => {
 
-        let min = Number(props.min),
-            max = Number(props.max);
+        let min = typeof props.min === 'undefined' ? 0 : parseInt(props.min),
+            max = typeof props.max === 'undefined' ? 0 : parseInt(props.max);
 
         if (props.isNumber && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
             if (value.value < min || value.value > max) {
                 localValidationStatus.value.push('ko-num-between');
+                isValid.value = false;
                 return;
             }
         }
@@ -284,6 +321,100 @@ const doLocalValidation = () => {
         } else if (props.isEmail && !checkIsEmail(value.value)) {
             localValidationStatus.value.push('ko-email');
         }
+
+        if (!props.isNumber) {
+            if (typeof props.minNumbers !== 'undefined') {
+                let constraint = parseInt(props.minNumbers),
+                    val = value.value.replace(/\D+/g, '');
+
+                if (val.length < constraint) {
+                    localValidationStatus.value.push('ko-min-numbers');
+                }
+            }
+
+            if (typeof props.maxNumbers !== 'undefined') {
+                let constraint = parseInt(props.maxNumbers),
+                    val = value.value.replace(/\D+/g, '');
+
+                if (val.length > constraint) {
+                    localValidationStatus.value.push('ko-max-numbers');
+                }
+            }
+
+            if (typeof props.minUpperChars !== 'undefined') {
+                let constraint = parseInt(props.minUpperChars),
+                    val = value.value.replace(/[^A-Z]+/g, "");
+
+                if (val.length < constraint) {
+                    localValidationStatus.value.push('ko-min-upper-chars');
+                }
+            }
+
+            if (typeof props.maxUpperChars !== 'undefined') {
+                let constraint = parseInt(props.maxUpperChars),
+                    val = value.value.replace(/[^A-Z]+/g, "");
+
+                if (val.length > constraint) {
+                    localValidationStatus.value.push('ko-max-upper-chars');
+                }
+            }
+
+            if (typeof props.minLowerChars !== 'undefined') {
+                let constraint = parseInt(props.minLowerChars),
+                    val = value.value.replace(/[A-Z]+/g, "");
+
+                if (val.length < constraint) {
+                    localValidationStatus.value.push('ko-min-lower-chars');
+                }
+            }
+
+            if (typeof props.maxLowerChars !== 'undefined') {
+                let constraint = parseInt(props.maxLowerChars),
+                    val = value.value.replace(/[A-Z]+/g, "");
+
+                if (val.length > constraint) {
+                    localValidationStatus.value.push('ko-max-lower-chars');
+                }
+            }
+
+            if (typeof props.minChars !== 'undefined') {
+                let constraint = parseInt(props.minChars),
+                    val = value.value.replace(/\d+/g, "");
+
+                if (val.length < constraint) {
+                    localValidationStatus.value.push('ko-min-chars');
+                }
+            }
+
+            if (typeof props.maxChars !== 'undefined') {
+                let constraint = parseInt(props.maxChars),
+                    val = value.value.replace(/\d+/g, "");
+
+                if (val.length > constraint) {
+                    localValidationStatus.value.push('ko-max-chars');
+                }
+            }
+
+            if (typeof props.minSpecialChars !== 'undefined') {
+                let constraint = parseInt(props.minSpecialChars),
+                    val = value.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
+
+                if (val.length < constraint) {
+                    localValidationStatus.value.push('ko-min-special-chars');
+                }
+            }
+
+            if (typeof props.maxSpecialChars !== 'undefined') {
+                let constraint = parseInt(props.maxSpecialChars),
+                    val = value.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
+
+                if (val.length > constraint) {
+                    localValidationStatus.value.push('ko-max-special-chars');
+                }
+            }
+        }
+
+        isValid.value = localValidationStatus.value.length === 0;
     })
 }
 

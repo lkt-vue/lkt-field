@@ -1,11 +1,13 @@
 import { LktObject } from "lkt-ts-interfaces";
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<{
     modelValue: string | number;
+    valid?: boolean | undefined;
     placeholder?: string | undefined;
     label?: string | undefined;
+    labelIcon?: string | undefined;
+    labelIconAtEnd?: boolean | undefined;
     palette?: string | undefined;
     name?: string | undefined;
-    valid?: boolean | undefined;
     autocomplete?: boolean | undefined;
     disabled?: boolean | undefined;
     readonly?: boolean | undefined;
@@ -38,6 +40,16 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     autoValidation?: boolean | undefined;
     autoValidationType?: "blur" | "focus" | "always" | undefined;
     validationStack?: string | undefined;
+    minNumbers: string | number | undefined;
+    maxNumbers: string | number | undefined;
+    minChars: string | number | undefined;
+    maxChars: string | number | undefined;
+    minUpperChars: string | number | undefined;
+    maxUpperChars: string | number | undefined;
+    minLowerChars: string | number | undefined;
+    maxLowerChars: string | number | undefined;
+    minSpecialChars: string | number | undefined;
+    maxSpecialChars: string | number | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -78,6 +90,16 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     autoValidation: boolean;
     autoValidationType: string;
     validationStack: string;
+    minNumbers: undefined;
+    maxNumbers: undefined;
+    minChars: undefined;
+    maxChars: undefined;
+    minUpperChars: undefined;
+    maxUpperChars: undefined;
+    minLowerChars: undefined;
+    maxLowerChars: undefined;
+    minSpecialChars: undefined;
+    maxSpecialChars: undefined;
 }>, {
     Identifier: string;
     reset: () => string | number;
@@ -91,17 +113,20 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     keydown: (...args: any[]) => void;
     keyup: (...args: any[]) => void;
     "update:modelValue": (...args: any[]) => void;
+    "update:valid": (...args: any[]) => void;
     "click-info": (...args: any[]) => void;
     "click-error": (...args: any[]) => void;
     validation: (...args: any[]) => void;
     validating: (...args: any[]) => void;
 }, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<{
     modelValue: string | number;
+    valid?: boolean | undefined;
     placeholder?: string | undefined;
     label?: string | undefined;
+    labelIcon?: string | undefined;
+    labelIconAtEnd?: boolean | undefined;
     palette?: string | undefined;
     name?: string | undefined;
-    valid?: boolean | undefined;
     autocomplete?: boolean | undefined;
     disabled?: boolean | undefined;
     readonly?: boolean | undefined;
@@ -134,6 +159,16 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     autoValidation?: boolean | undefined;
     autoValidationType?: "blur" | "focus" | "always" | undefined;
     validationStack?: string | undefined;
+    minNumbers: string | number | undefined;
+    maxNumbers: string | number | undefined;
+    minChars: string | number | undefined;
+    maxChars: string | number | undefined;
+    minUpperChars: string | number | undefined;
+    maxUpperChars: string | number | undefined;
+    minLowerChars: string | number | undefined;
+    maxLowerChars: string | number | undefined;
+    minSpecialChars: string | number | undefined;
+    maxSpecialChars: string | number | undefined;
 }>, {
     modelValue: string;
     placeholder: string;
@@ -174,6 +209,16 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     autoValidation: boolean;
     autoValidationType: string;
     validationStack: string;
+    minNumbers: undefined;
+    maxNumbers: undefined;
+    minChars: undefined;
+    maxChars: undefined;
+    minUpperChars: undefined;
+    maxUpperChars: undefined;
+    minLowerChars: undefined;
+    maxLowerChars: undefined;
+    minSpecialChars: undefined;
+    maxSpecialChars: undefined;
 }>>> & {
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
@@ -181,6 +226,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     onKeyup?: ((...args: any[]) => any) | undefined;
     onClick?: ((...args: any[]) => any) | undefined;
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:valid"?: ((...args: any[]) => any) | undefined;
     "onClick-info"?: ((...args: any[]) => any) | undefined;
     "onClick-error"?: ((...args: any[]) => any) | undefined;
     onValidation?: ((...args: any[]) => any) | undefined;
@@ -199,8 +245,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     placeholder: string;
     tabindex: number;
     modelValue: string | number;
-    palette: string;
     valid: boolean;
+    palette: string;
     readMode: boolean;
     allowReadModeSwitch: boolean;
     showPassword: boolean;
@@ -224,6 +270,16 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     autoValidation: boolean;
     autoValidationType: "blur" | "focus" | "always";
     validationStack: string;
+    minNumbers: string | number | undefined;
+    maxNumbers: string | number | undefined;
+    minChars: string | number | undefined;
+    maxChars: string | number | undefined;
+    minUpperChars: string | number | undefined;
+    maxUpperChars: string | number | undefined;
+    minLowerChars: string | number | undefined;
+    maxLowerChars: string | number | undefined;
+    minSpecialChars: string | number | undefined;
+    maxSpecialChars: string | number | undefined;
 }, {}>, {
     label?(_: {}): any;
     edit?(_: {
