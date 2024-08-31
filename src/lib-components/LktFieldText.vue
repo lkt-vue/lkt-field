@@ -8,6 +8,7 @@ import {LktObject} from "lkt-ts-interfaces";
 //@ts-ignore
 import {httpCall, HTTPResponse} from "lkt-http-client";
 import {__} from "lkt-i18n";
+import {FieldValidation} from "lkt-field-validation";
 
 const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -66,6 +67,7 @@ const props = withDefaults(defineProps<{
     maxLowerChars: number|string|undefined,
     minSpecialChars: number|string|undefined,
     maxSpecialChars: number|string|undefined,
+    checkEqualTo: number|string|undefined,
 }>(), {
     modelValue: '',
     placeholder: '',
@@ -116,6 +118,7 @@ const props = withDefaults(defineProps<{
     maxLowerChars: undefined,
     minSpecialChars: undefined,
     maxSpecialChars: undefined,
+    checkEqualTo: undefined,
 });
 
 // Constant data
@@ -256,6 +259,7 @@ const doRemoteValidation = async () => {
 
 
 // Watch data
+watch(() => props.checkEqualTo, (v) => doLocalValidation());
 watch(() => props.readMode, (v) => editable.value = !v)
 watch(() => props.valid, (v) => isValid.value = v)
 watch(() => props.modelValue, (v) => {
@@ -285,41 +289,41 @@ const doLocalValidation = () => {
 
         if (props.isNumber && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
             if (value.value < min || value.value > max) {
-                localValidationStatus.value.push('ko-num-between');
+                localValidationStatus.value.push(FieldValidation.createNumBetween(min, max, 'ko'));
                 isValid.value = false;
                 return;
             }
         }
 
         if (!props.isNumber && !props.isEmail && props.mandatory && value.value === '') {
-            localValidationStatus.value.push('ko-empty');
+            localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
 
         } else if (!props.isEmail) {
 
             if (min > 0) {
                 if (!props.isNumber && value.value.length < min) {
-                    localValidationStatus.value.push('ko-min-str');
+                    localValidationStatus.value.push(FieldValidation.createMinStr(min, 'ko'));
 
                 } else if (value.value < min) {
-                    localValidationStatus.value.push('ko-min-num');
+                    localValidationStatus.value.push(FieldValidation.createMinNum(min, 'ko'));
                 }
             }
         }
 
         if (max > 0) {
             if (!props.isNumber && value.value.length > max) {
-                localValidationStatus.value.push('ko-max-str');
+                localValidationStatus.value.push(FieldValidation.createMaxStr(max, 'ko'));
 
             } else if (value.value > max) {
-                localValidationStatus.value.push('ko-max-num');
+                localValidationStatus.value.push(FieldValidation.createMaxNum(max, 'ko'));
             }
         }
 
         if (props.isEmail && props.mandatory && value.value === '') {
-            localValidationStatus.value.push('ko-empty');
+            localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
 
         } else if (props.isEmail && !checkIsEmail(value.value)) {
-            localValidationStatus.value.push('ko-email');
+            localValidationStatus.value.push(FieldValidation.createEmail('ko'));
         }
 
         if (!props.isNumber) {
@@ -328,7 +332,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/\D+/g, '');
 
                 if (val.length < constraint) {
-                    localValidationStatus.value.push('ko-min-numbers');
+                    localValidationStatus.value.push(FieldValidation.createMinNumbers(constraint, 'ko'));
                 }
             }
 
@@ -337,7 +341,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/\D+/g, '');
 
                 if (val.length > constraint) {
-                    localValidationStatus.value.push('ko-max-numbers');
+                    localValidationStatus.value.push(FieldValidation.createMaxNumbers(constraint, 'ko'));
                 }
             }
 
@@ -346,7 +350,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/[^A-Z]+/g, "");
 
                 if (val.length < constraint) {
-                    localValidationStatus.value.push('ko-min-upper-chars');
+                    localValidationStatus.value.push(FieldValidation.createMinUpperChars(constraint, 'ko'));
                 }
             }
 
@@ -355,7 +359,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/[^A-Z]+/g, "");
 
                 if (val.length > constraint) {
-                    localValidationStatus.value.push('ko-max-upper-chars');
+                    localValidationStatus.value.push(FieldValidation.createMaxUpperChars(constraint, 'ko'));
                 }
             }
 
@@ -364,7 +368,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/[A-Z]+/g, "");
 
                 if (val.length < constraint) {
-                    localValidationStatus.value.push('ko-min-lower-chars');
+                    localValidationStatus.value.push(FieldValidation.createMinLowerChars(constraint, 'ko'));
                 }
             }
 
@@ -373,7 +377,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/[A-Z]+/g, "");
 
                 if (val.length > constraint) {
-                    localValidationStatus.value.push('ko-max-lower-chars');
+                    localValidationStatus.value.push(FieldValidation.createMaxLowerChars(constraint, 'ko'));
                 }
             }
 
@@ -382,7 +386,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/\d+/g, "");
 
                 if (val.length < constraint) {
-                    localValidationStatus.value.push('ko-min-chars');
+                    localValidationStatus.value.push(FieldValidation.createMinChars(constraint, 'ko'));
                 }
             }
 
@@ -391,7 +395,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/\d+/g, "");
 
                 if (val.length > constraint) {
-                    localValidationStatus.value.push('ko-max-chars');
+                    localValidationStatus.value.push(FieldValidation.createMaxChars(constraint, 'ko'));
                 }
             }
 
@@ -400,7 +404,7 @@ const doLocalValidation = () => {
                     val = value.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
 
                 if (val.length < constraint) {
-                    localValidationStatus.value.push('ko-min-special-chars');
+                    localValidationStatus.value.push(FieldValidation.createMinSpecialChars(constraint, 'ko'));
                 }
             }
 
@@ -409,9 +413,13 @@ const doLocalValidation = () => {
                     val = value.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
 
                 if (val.length > constraint) {
-                    localValidationStatus.value.push('ko-max-special-chars');
+                    localValidationStatus.value.push(FieldValidation.createMaxSpecialChars(constraint, 'ko'));
                 }
             }
+        }
+
+        if (props.checkEqualTo && value.value !== props.checkEqualTo) {
+            localValidationStatus.value.push(FieldValidation.createEqualTo(props.checkEqualTo, 'ko'));
         }
 
         isValid.value = localValidationStatus.value.length === 0;
