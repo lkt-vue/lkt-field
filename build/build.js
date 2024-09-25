@@ -1,27 +1,30 @@
-import Ee, { FieldValidation as s } from "lkt-field-validation";
-import { defineComponent as Ne, useSlots as Te, ref as h, computed as n, watch as C, nextTick as ee, resolveComponent as ae, openBlock as u, createElementBlock as r, normalizeClass as le, unref as k, renderSlot as U, createCommentVNode as v, Fragment as te, createBlock as T, resolveDynamicComponent as ie, withDirectives as ue, createElementVNode as R, vModelDynamic as oe, withCtx as se, createTextVNode as ne, toDisplayString as re } from "vue";
-import { generateRandomString as de, isEmail as Be } from "lkt-string-tools";
-import { createLktEvent as w } from "lkt-events";
-import { httpCall as Ie } from "lkt-http-client";
-import { __ as fe } from "lkt-i18n";
-let Le = {}, De = {};
-const d = {
+import Pe, { FieldValidation as s } from "lkt-field-validation";
+import { defineComponent as De, useSlots as Ae, ref as c, computed as n, watch as C, nextTick as W, resolveComponent as se, openBlock as o, createElementBlock as r, normalizeClass as ne, unref as k, renderSlot as j, createCommentVNode as h, Fragment as re, createBlock as D, resolveDynamicComponent as de, createElementVNode as _, normalizeStyle as Fe, toDisplayString as O, withDirectives as F, vModelDynamic as G, vModelText as Ue, withCtx as fe, createTextVNode as ve } from "vue";
+import { generateRandomString as pe, isEmail as Re } from "lkt-string-tools";
+import { createLktEvent as x } from "lkt-events";
+import { httpCall as $e } from "lkt-http-client";
+import { __ as me } from "lkt-i18n";
+let qe = {}, Ke = {};
+const f = {
   defaultEmptyValueSlot: "",
-  customValueSlots: Le,
-  customEditSlots: De
-}, Fe = ["data-show-ui", "data-labeled"], Pe = ["for", "innerHTML"], Ae = {
+  customValueSlots: qe,
+  customEditSlots: Ke
+}, Ze = ["data-show-ui", "data-labeled"], ze = ["for", "innerHTML"], He = {
   key: 2,
   class: "lkt-field-main"
-}, Ue = ["value", "type", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete", "min", "max", "step"], Re = {
+}, We = ["value", "type", "name", "id", "disabled", "readonly", "tabindex", "autocomplete"], je = {
   key: 3,
   class: "lkt-field-main"
-}, $e = ["value", "type", "name", "id", "disabled", "readonly", "tabindex", "autocomplete", "min", "max", "step"], qe = {
+}, Oe = ["value", "type", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete", "min", "max", "step"], Ge = {
   key: 4,
+  class: "lkt-field-main"
+}, Je = ["value", "type", "name", "id", "disabled", "readonly", "tabindex", "autocomplete", "min", "max", "step"], Qe = {
+  key: 5,
   class: "lkt-field__state"
-}, Ke = ["title"], Ze = ["title"], He = ["title"], ze = ["title"], We = ["title"], je = ["innerHTML", "title"], Oe = {
+}, Xe = ["title"], Ye = ["title"], ea = ["title"], aa = ["title"], la = ["title"], ta = ["innerHTML", "title"], ia = {
   key: 3,
   class: "lkt-field__state"
-}, Ge = ["title"], Je = /* @__PURE__ */ Ne({
+}, ua = ["title"], oa = /* @__PURE__ */ De({
   __name: "LktFieldText",
   props: {
     modelValue: { default: "" },
@@ -31,7 +34,7 @@ const d = {
     labelIcon: {},
     labelIconAtEnd: { type: Boolean },
     palette: { default: "" },
-    name: { default: de(16) },
+    name: { default: pe(16) },
     autocomplete: { type: Boolean, default: !0 },
     disabled: { type: Boolean, default: !1 },
     readonly: { type: Boolean, default: !1 },
@@ -54,6 +57,7 @@ const d = {
     isPassword: { type: Boolean, default: !1 },
     isSearch: { type: Boolean, default: !1 },
     isNumber: { type: Boolean, default: !1 },
+    isColor: { type: Boolean },
     enableAutoNumberFix: { type: Boolean, default: !0 },
     emptyValueSlot: { default: "" },
     valueSlot: { default: "" },
@@ -77,302 +81,358 @@ const d = {
     checkEqualTo: { default: void 0 }
   },
   emits: ["update:modelValue", "update:valid", "keyup", "keydown", "focus", "blur", "click", "click-info", "click-error", "validation", "validating"],
-  setup(f, { expose: y, emit: ve }) {
-    const c = ve, V = Te(), e = f, m = de(16), B = h(null);
-    let ce = [];
-    const $ = h(e.modelValue), l = h(e.modelValue), _ = h(e.valid), I = h(!1), D = h(!1), F = h(!1), P = h(!1), i = h(ce), b = h(!e.readMode), me = n(() => l.value !== $.value), q = n(() => e.reset || e.infoMessage !== "" || e.errorMessage !== "" || e.isPassword && e.showPassword), K = n(() => {
+  setup(p, { expose: b, emit: ce }) {
+    const y = ce, E = Ae(), e = p, m = pe(16), S = c(null);
+    let he = [];
+    const ye = (a) => (e.isColor && (a.length === 9 ? (g.value = a.substring(1, 7), M.value = parseInt(+("0x" + a.substring(7, 9)), 10)) : a.length === 7 && (g.value = a.substring(1, 7))), a), J = c(e.modelValue), l = c(ye(e.modelValue)), g = c(""), M = c(255), N = c(e.valid), A = c(!1), U = c(!1), R = c(!1), $ = c(!1), u = c(he), w = c(!e.readMode), ke = n(() => l.value !== J.value), Q = n(() => e.reset || e.infoMessage !== "" || e.errorMessage !== "" || e.isPassword && e.showPassword), X = n(() => {
       let a = 0;
       return e.reset && ++a, e.infoMessage && ++a, e.isPassword && e.showPassword && ++a, a;
-    }), pe = n(() => e.resetMessage !== "" ? e.resetMessage : ""), he = n(() => I.value === !0 ? "lkt-field__hide-password-icon" : "lkt-field__show-password-icon"), Z = n(() => e.autocomplete === !0 ? "on" : "off"), H = n(() => l.value !== ""), L = n(() => e.isPassword && I.value === !0 ? "text" : e.isEmail ? "email" : e.isPassword ? "password" : e.isNumber ? "number" : e.isTel ? "tel" : e.isSearch ? "search" : "text"), ye = n(() => {
+    }), be = n(() => e.resetMessage !== "" ? e.resetMessage : ""), ge = n(() => A.value === !0 ? "lkt-field__hide-password-icon" : "lkt-field__show-password-icon"), q = n(() => e.autocomplete === !0 ? "on" : "off"), Y = n(() => l.value !== ""), I = n(() => e.isPassword && A.value === !0 ? "text" : e.isEmail ? "email" : e.isPassword ? "password" : e.isNumber ? "number" : e.isTel ? "tel" : e.isSearch ? "search" : e.isColor ? "color" : "text"), Ce = n(() => {
       const a = ["lkt-field", "lkt-field-text"];
-      return e.palette && a.push(`lkt-field--${e.palette}`), L && a.push(`is-${L.value}`), me.value && a.push("is-changed"), e.disabled && a.push("is-disabled"), e.mandatory && b.value && a.push("is-mandatory-field"), D.value && a.push("has-focus"), e.autoValidation && P.value && F.value && (i.value.length > 0 ? a.push("is-invalid") : a.push("is-valid")), K.value > 0 && a.push("has-icons", `has-icons-${K.value}`), a.push(_.value ? "is-valid" : "is-error"), a.push(e.modelValue ? "is-filled" : "is-empty"), a.join(" ");
-    }), g = n(() => typeof l.value == "number" ? l.value.toString() : l.value), M = n(() => typeof e.min == "string" ? parseFloat(e.min) : typeof e.min == "number" ? e.min : !1), x = n(() => typeof e.max == "string" ? parseFloat(e.max) : typeof e.max == "number" ? e.max : !1), z = n(() => {
+      return e.palette && a.push(`lkt-field--${e.palette}`), I && a.push(`is-${I.value}`), ke.value && a.push("is-changed"), e.disabled && a.push("is-disabled"), e.mandatory && w.value && a.push("is-mandatory-field"), U.value && a.push("has-focus"), e.autoValidation && $.value && R.value && (u.value.length > 0 ? a.push("is-invalid") : a.push("is-valid")), X.value > 0 && a.push("has-icons", `has-icons-${X.value}`), a.push(N.value ? "is-valid" : "is-error"), a.push(e.modelValue ? "is-filled" : "is-empty"), a.join(" ");
+    }), V = n(() => typeof l.value == "number" ? l.value.toString() : l.value), T = n(() => typeof e.min == "string" ? parseFloat(e.min) : typeof e.min == "number" ? e.min : !1), B = n(() => typeof e.max == "string" ? parseFloat(e.max) : typeof e.max == "number" ? e.max : !1), ee = n(() => {
       let a = "";
-      if (e.label.startsWith("__:") ? a = fe(e.label.substring(3)) : a = e.label, e.labelIcon) {
-        let o = '<i class="' + e.labelIcon + '"></i>';
-        e.labelIconAtEnd ? a += o : a = o + a;
+      if (e.label.startsWith("__:") ? a = me(e.label.substring(3)) : a = e.label, e.labelIcon) {
+        let i = '<i class="' + e.labelIcon + '"></i>';
+        e.labelIconAtEnd ? a += i : a = i + a;
       }
       return a;
-    }), W = n(() => e.placeholder.startsWith("__:") ? fe(e.placeholder.substring(3)) : e.placeholder), j = () => {
-      ee(() => {
-        B.value && B.value.focus();
+    }), ae = n(() => e.placeholder.startsWith("__:") ? me(e.placeholder.substring(3)) : e.placeholder), le = () => {
+      W(() => {
+        S.value && S.value.focus();
       });
-    }, ke = async () => {
+    }, Se = () => {
+      W(() => {
+        S.value && S.value.click();
+      });
+    }, we = async () => {
       if (e.validationResource) {
-        c("validating");
-        const a = await Ie(e.validationResource, { ...e.validationResourceData, value: l.value });
-        c("validation", a);
+        y("validating");
+        const a = await $e(e.validationResource, {
+          ...e.validationResourceData,
+          value: l.value
+        });
+        y("validation", a);
       }
     };
-    C(() => e.checkEqualTo, (a) => E()), C(() => e.readMode, (a) => b.value = !a), C(() => e.valid, (a) => _.value = a), C(() => e.modelValue, (a) => {
-      if (e.isNumber) return Ce(a);
+    C(() => e.checkEqualTo, (a) => L()), C(() => e.readMode, (a) => w.value = !a), C(() => e.valid, (a) => N.value = a), C(() => e.modelValue, (a) => {
+      if (e.isNumber) return Ee(a);
       l.value = a;
     }), C(l, (a) => {
-      c("update:modelValue", a), ke(), E();
-    }), C(_, (a) => {
-      c("update:valid", a);
+      y("update:modelValue", a), we(), L();
+    }), C(N, (a) => {
+      y("update:valid", a);
     });
-    const E = () => {
-      e.autoValidationType === "blur" && (!F.value || !P.value) || (i.value = [], ee(() => {
-        let a = typeof e.min > "u" ? 0 : parseInt(e.min), o = typeof e.max > "u" ? 0 : parseInt(e.max);
-        if (e.isNumber && typeof e.min < "u" && typeof e.max < "u" && (l.value < a || l.value > o)) {
-          i.value.push(s.createNumBetween(a, o, "ko")), _.value = !1;
+    const L = () => {
+      e.autoValidationType === "blur" && (!R.value || !$.value) || (u.value = [], W(() => {
+        let a = typeof e.min > "u" ? 0 : parseInt(e.min), i = typeof e.max > "u" ? 0 : parseInt(e.max);
+        if (e.isNumber && typeof e.min < "u" && typeof e.max < "u" && (l.value < a || l.value > i)) {
+          u.value.push(s.createNumBetween(a, i, "ko")), N.value = !1;
           return;
         }
-        if (!e.isNumber && !e.isEmail && e.mandatory && l.value === "" ? i.value.push(s.createEmpty("ko")) : e.isEmail || a > 0 && (!e.isNumber && l.value.length < a ? i.value.push(s.createMinStr(a, "ko")) : l.value < a && i.value.push(s.createMinNum(a, "ko"))), o > 0 && (!e.isNumber && l.value.length > o ? i.value.push(s.createMaxStr(o, "ko")) : l.value > o && i.value.push(s.createMaxNum(o, "ko"))), e.isEmail && e.mandatory && l.value === "" ? i.value.push(s.createEmpty("ko")) : e.isEmail && !Be(l.value) && i.value.push(s.createEmail("ko")), !e.isNumber) {
+        if (!e.isNumber && !e.isEmail && e.mandatory && l.value === "" ? u.value.push(s.createEmpty("ko")) : e.isEmail || a > 0 && (!e.isNumber && l.value.length < a ? u.value.push(s.createMinStr(a, "ko")) : l.value < a && u.value.push(s.createMinNum(a, "ko"))), i > 0 && (!e.isNumber && l.value.length > i ? u.value.push(s.createMaxStr(i, "ko")) : l.value > i && u.value.push(s.createMaxNum(i, "ko"))), e.isEmail && e.mandatory && l.value === "" ? u.value.push(s.createEmpty("ko")) : e.isEmail && !Re(l.value) && u.value.push(s.createEmail("ko")), !e.isNumber) {
           if (typeof e.minNumbers < "u") {
             let t = parseInt(e.minNumbers);
-            l.value.replace(/\D+/g, "").length < t && i.value.push(s.createMinNumbers(t, "ko"));
+            l.value.replace(/\D+/g, "").length < t && u.value.push(s.createMinNumbers(t, "ko"));
           }
           if (typeof e.maxNumbers < "u") {
             let t = parseInt(e.maxNumbers);
-            l.value.replace(/\D+/g, "").length > t && i.value.push(s.createMaxNumbers(t, "ko"));
+            l.value.replace(/\D+/g, "").length > t && u.value.push(s.createMaxNumbers(t, "ko"));
           }
           if (typeof e.minUpperChars < "u") {
             let t = parseInt(e.minUpperChars);
-            l.value.replace(/[^A-Z]+/g, "").length < t && i.value.push(s.createMinUpperChars(t, "ko"));
+            l.value.replace(/[^A-Z]+/g, "").length < t && u.value.push(s.createMinUpperChars(t, "ko"));
           }
           if (typeof e.maxUpperChars < "u") {
             let t = parseInt(e.maxUpperChars);
-            l.value.replace(/[^A-Z]+/g, "").length > t && i.value.push(s.createMaxUpperChars(t, "ko"));
+            l.value.replace(/[^A-Z]+/g, "").length > t && u.value.push(s.createMaxUpperChars(t, "ko"));
           }
           if (typeof e.minLowerChars < "u") {
             let t = parseInt(e.minLowerChars);
-            l.value.replace(/[A-Z]+/g, "").length < t && i.value.push(s.createMinLowerChars(t, "ko"));
+            l.value.replace(/[A-Z]+/g, "").length < t && u.value.push(s.createMinLowerChars(t, "ko"));
           }
           if (typeof e.maxLowerChars < "u") {
             let t = parseInt(e.maxLowerChars);
-            l.value.replace(/[A-Z]+/g, "").length > t && i.value.push(s.createMaxLowerChars(t, "ko"));
+            l.value.replace(/[A-Z]+/g, "").length > t && u.value.push(s.createMaxLowerChars(t, "ko"));
           }
           if (typeof e.minChars < "u") {
             let t = parseInt(e.minChars);
-            l.value.replace(/\d+/g, "").length < t && i.value.push(s.createMinChars(t, "ko"));
+            l.value.replace(/\d+/g, "").length < t && u.value.push(s.createMinChars(t, "ko"));
           }
           if (typeof e.maxChars < "u") {
             let t = parseInt(e.maxChars);
-            l.value.replace(/\d+/g, "").length > t && i.value.push(s.createMaxChars(t, "ko"));
+            l.value.replace(/\d+/g, "").length > t && u.value.push(s.createMaxChars(t, "ko"));
           }
           if (typeof e.minSpecialChars < "u") {
             let t = parseInt(e.minSpecialChars);
-            l.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length < t && i.value.push(s.createMinSpecialChars(t, "ko"));
+            l.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length < t && u.value.push(s.createMinSpecialChars(t, "ko"));
           }
           if (typeof e.maxSpecialChars < "u") {
             let t = parseInt(e.maxSpecialChars);
-            l.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length > t && i.value.push(s.createMaxSpecialChars(t, "ko"));
+            l.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length > t && u.value.push(s.createMaxSpecialChars(t, "ko"));
           }
         }
-        e.checkEqualTo && l.value !== e.checkEqualTo && i.value.push(s.createEqualTo(e.checkEqualTo, "ko")), _.value = i.value.length === 0;
+        e.checkEqualTo && l.value !== e.checkEqualTo && u.value.push(s.createEqualTo(e.checkEqualTo, "ko")), N.value = u.value.length === 0;
       }));
-    }, A = () => l.value = $.value, be = () => l.value, O = (a) => {
-      E(), c("keyup", a, w(m, { value: l.value }));
-    }, G = (a) => c("keydown", a, w(m, { value: l.value })), J = (a) => {
-      P.value = !0, E(), (D.value = !0) && c("focus", a, w(m, { value: l.value }));
-    }, Q = (a) => {
-    }, X = (a) => {
-      F.value = !0, E(), (D.value = !1) && c("blur", a, w(m, { value: l.value }));
-    }, N = (a) => {
-      c("click", a, w(m, { value: l.value }));
-    }, ge = (a) => c("click-info", a, w(m, { value: l.value })), Se = (a) => c("click-error", a, w(m, { value: l.value })), we = (a) => I.value = !I.value, Y = (a) => {
-      b.value = !b.value, b.value && j();
-    }, Ce = (a) => {
+    }, K = () => l.value = J.value, Ve = () => l.value, te = (a) => {
+      L(), y("keyup", a, x(m, { value: l.value }));
+    }, ie = (a) => y("keydown", a, x(m, { value: l.value })), Z = (a) => {
+      $.value = !0, L(), (U.value = !0) && y("focus", a, x(m, { value: l.value }));
+    }, z = (a) => {
+    }, H = (a) => {
+      R.value = !0, L(), (U.value = !1) && y("blur", a, x(m, { value: l.value }));
+    }, P = (a) => {
+      y("click", a, x(m, { value: l.value }));
+    }, xe = (a) => y("click-info", a, x(m, { value: l.value })), Me = (a) => y("click-error", a, x(m, { value: l.value })), _e = (a) => A.value = !A.value, ue = (a) => {
+      w.value = !w.value, w.value && le();
+    }, Ee = (a) => {
       if (!e.enableAutoNumberFix) return !1;
-      let o = Number(a), t = !1;
-      return M.value !== !1 && o < M.value && (o = M.value, t = !0), x.value !== !1 && o > x.value && (o = x.value, t = !0), t === !0 ? (l.value = o, !0) : !1;
+      let i = Number(a), t = !1;
+      return T.value !== !1 && i < T.value && (i = T.value, t = !0), B.value !== !1 && i > B.value && (i = B.value, t = !0), t === !0 ? (l.value = i, !0) : !1;
     };
-    y({
+    b({
       Identifier: m,
-      reset: A,
-      focus: j,
-      value: be,
+      reset: K,
+      focus: le,
+      value: Ve,
       isMandatory: () => e.mandatory
-    }), A();
-    const Ve = n(() => l.value === "" ? e.emptyValueSlot !== "" && typeof d.customValueSlots[e.emptyValueSlot] < "u" || d.defaultEmptyValueSlot && typeof d.customValueSlots[d.defaultEmptyValueSlot] < "u" : e.valueSlot !== "" && typeof d.customValueSlots[e.valueSlot] < "u"), _e = n(() => l.value === "" ? d.customValueSlots[e.emptyValueSlot] ?? d.customValueSlots[d.defaultEmptyValueSlot] : d.customValueSlots[e.valueSlot]), Me = n(() => e.editSlot !== "" && typeof d.customEditSlots[e.editSlot] < "u"), xe = n(() => d.customEditSlots[e.editSlot]);
-    return (a, o) => {
-      const t = ae("lkt-anchor"), p = ae("lkt-field-validations");
-      return u(), r("div", {
-        class: le(ye.value),
-        "data-show-ui": q.value,
-        "data-labeled": !k(V).label
+    }), K();
+    const Ne = n(() => l.value === "" ? e.emptyValueSlot !== "" && typeof f.customValueSlots[e.emptyValueSlot] < "u" || f.defaultEmptyValueSlot && typeof f.customValueSlots[f.defaultEmptyValueSlot] < "u" : e.valueSlot !== "" && typeof f.customValueSlots[e.valueSlot] < "u"), Ie = n(() => l.value === "" ? f.customValueSlots[e.emptyValueSlot] ?? f.customValueSlots[f.defaultEmptyValueSlot] : f.customValueSlots[e.valueSlot]), Te = n(() => e.editSlot !== "" && typeof f.customEditSlots[e.editSlot] < "u"), Be = n(() => f.customEditSlots[e.editSlot]), oe = (a, i) => {
+      if (a === "") return "";
+      if (i == 255)
+        return a;
+      let t = parseInt(i).toString(16).padStart(2, "0");
+      return a + t;
+    }, Le = n(() => {
+      if (!e.isColor) return "";
+      let a = g.value, i = a.substring(1, 3), t = a.substring(3, 5), d = a.substring(5, 7);
+      return i = parseInt(+("0x" + i), 10), t = parseInt(+("0x" + t), 10), d = parseInt(+("0x" + d), 10), (0.299 * i + 0.587 * t + 0.114 * d) / M.value > 0.5 ? "#000000" : "#ffffff";
+    });
+    return C(g, (a) => {
+      l.value = oe(a, M.value);
+    }), C(M, (a) => {
+      l.value = oe(g.value, a);
+    }), (a, i) => {
+      const t = se("lkt-anchor"), d = se("lkt-field-validations");
+      return o(), r("div", {
+        class: ne(Ce.value),
+        "data-show-ui": Q.value,
+        "data-labeled": !k(E).label
       }, [
-        k(V).label ? U(a.$slots, "label", { key: 0 }) : v("", !0),
-        !k(V).label && z.value !== "" ? (u(), r("label", {
+        k(E).label ? j(a.$slots, "label", { key: 0 }) : h("", !0),
+        !k(E).label && ee.value !== "" ? (o(), r("label", {
           key: 1,
           for: k(m),
-          innerHTML: z.value
-        }, null, 8, Pe)) : v("", !0),
-        b.value ? (u(), r(te, { key: 2 }, [
-          k(V).edit ? (u(), r("div", {
+          innerHTML: ee.value
+        }, null, 8, ze)) : h("", !0),
+        w.value ? (o(), r(re, { key: 2 }, [
+          k(E).edit ? (o(), r("div", {
             key: 0,
-            onClick: N
+            onClick: P
           }, [
-            U(a.$slots, "edit", {
+            j(a.$slots, "edit", {
               value: l.value,
-              title: g.value,
+              title: V.value,
               data: a.slotData
             })
-          ])) : Me.value ? (u(), r("div", {
+          ])) : Te.value ? (o(), r("div", {
             key: 1,
-            onClick: N
+            onClick: P
           }, [
-            (u(), T(ie(xe.value), {
+            (o(), D(de(Be.value), {
               value: l.value,
-              title: g.value,
+              title: V.value,
               data: a.slotData
             }, null, 8, ["value", "title", "data"]))
-          ])) : W.value ? (u(), r("div", Ae, [
-            ue(R("input", {
-              "onUpdate:modelValue": o[0] || (o[0] = (S) => l.value = S),
-              ref: (S) => B.value = S,
-              value: l.value,
-              type: L.value,
+          ])) : a.isColor ? (o(), r("div", He, [
+            _("div", {
+              class: "lkt-field-color-view",
+              style: Fe("background: " + l.value + "; color: " + Le.value),
+              onClick: Se
+            }, O(l.value), 5),
+            F(_("input", {
+              "onUpdate:modelValue": i[0] || (i[0] = (v) => g.value = v),
+              ref: (v) => S.value = v,
+              value: g.value,
+              type: I.value,
               name: a.name,
               id: k(m),
               disabled: a.disabled,
               readonly: a.readonly,
-              placeholder: W.value,
               tabindex: a.tabindex,
-              autocomplete: Z.value,
-              min: M.value,
-              max: x.value,
-              step: a.step,
-              onKeyup: O,
-              onKeydown: G,
-              onFocus: J,
-              onBlur: X,
-              onClick: N,
-              onChange: Q
-            }, null, 40, Ue), [
-              [oe, l.value]
+              autocomplete: q.value,
+              onFocus: Z,
+              onBlur: H,
+              onChange: z,
+              style: { height: "100%", opacity: "0", width: "0", border: "none", overflow: "hidden", padding: "0", position: "absolute", left: "0", top: "0" }
+            }, null, 40, We), [
+              [G, g.value]
+            ]),
+            F(_("input", {
+              "onUpdate:modelValue": i[1] || (i[1] = (v) => M.value = v),
+              ref: "alphaColorPicker",
+              type: "range",
+              min: "0",
+              max: "255",
+              step: "1",
+              value: "255"
+            }, null, 512), [
+              [Ue, M.value]
             ])
-          ])) : (u(), r("div", Re, [
-            ue(R("input", {
-              "onUpdate:modelValue": o[1] || (o[1] = (S) => l.value = S),
-              ref: (S) => B.value = S,
+          ])) : ae.value ? (o(), r("div", je, [
+            F(_("input", {
+              "onUpdate:modelValue": i[2] || (i[2] = (v) => l.value = v),
+              ref: (v) => S.value = v,
               value: l.value,
-              type: L.value,
+              type: I.value,
+              name: a.name,
+              id: k(m),
+              disabled: a.disabled,
+              readonly: a.readonly,
+              placeholder: ae.value,
+              tabindex: a.tabindex,
+              autocomplete: q.value,
+              min: T.value,
+              max: B.value,
+              step: a.step,
+              onKeyup: te,
+              onKeydown: ie,
+              onFocus: Z,
+              onBlur: H,
+              onClick: P,
+              onChange: z
+            }, null, 40, Oe), [
+              [G, l.value]
+            ])
+          ])) : (o(), r("div", Ge, [
+            F(_("input", {
+              "onUpdate:modelValue": i[3] || (i[3] = (v) => l.value = v),
+              ref: (v) => S.value = v,
+              value: l.value,
+              type: I.value,
               name: a.name,
               id: k(m),
               disabled: a.disabled,
               readonly: a.readonly,
               tabindex: a.tabindex,
-              autocomplete: Z.value,
-              min: M.value,
-              max: x.value,
+              autocomplete: q.value,
+              min: T.value,
+              max: B.value,
               step: a.step,
-              onKeyup: O,
-              onKeydown: G,
-              onFocus: J,
-              onBlur: X,
-              onClick: N,
-              onChange: Q
-            }, null, 40, $e), [
-              [oe, l.value]
+              onKeyup: te,
+              onKeydown: ie,
+              onFocus: Z,
+              onBlur: H,
+              onClick: P,
+              onChange: z
+            }, null, 40, Je), [
+              [G, l.value]
             ])
           ])),
-          q.value ? (u(), r("div", qe, [
-            e.errorMessage ? (u(), r("i", {
+          Q.value ? (o(), r("div", Qe, [
+            e.errorMessage ? (o(), r("i", {
               key: 0,
               class: "lkt-field__error-icon",
               title: e.errorMessage,
-              onClick: Se
-            }, null, 8, Ke)) : v("", !0),
-            e.infoMessage ? (u(), r("i", {
+              onClick: Me
+            }, null, 8, Xe)) : h("", !0),
+            e.infoMessage ? (o(), r("i", {
               key: 1,
               class: "lkt-field__info-icon",
               title: e.infoMessage,
-              onClick: ge
-            }, null, 8, Ze)) : v("", !0),
-            e.isPassword && e.showPassword && H.value ? (u(), r("i", {
+              onClick: xe
+            }, null, 8, Ye)) : h("", !0),
+            e.isPassword && e.showPassword && Y.value ? (o(), r("i", {
               key: 2,
-              class: le(he.value),
+              class: ne(ge.value),
               title: e.showPasswordMessage,
-              onClick: we
-            }, null, 10, He)) : v("", !0),
-            e.reset && H.value ? (u(), r("i", {
+              onClick: _e
+            }, null, 10, ea)) : h("", !0),
+            e.reset && Y.value ? (o(), r("i", {
               key: 3,
               class: "lkt-field__reset-icon",
-              title: pe.value,
-              onClick: A
-            }, null, 8, ze)) : v("", !0),
-            a.allowReadModeSwitch ? (u(), r("i", {
+              title: be.value,
+              onClick: K
+            }, null, 8, aa)) : h("", !0),
+            a.allowReadModeSwitch ? (o(), r("i", {
               key: 4,
               class: "lkt-field__edit-icon",
               title: e.switchEditionMessage,
-              onClick: Y
-            }, null, 8, We)) : v("", !0)
-          ])) : v("", !0)
-        ], 64)) : v("", !0),
-        b.value ? v("", !0) : (u(), r("div", {
+              onClick: ue
+            }, null, 8, la)) : h("", !0)
+          ])) : h("", !0)
+        ], 64)) : h("", !0),
+        w.value ? h("", !0) : (o(), r("div", {
           key: 3,
           class: "lkt-field-text__read",
-          onClick: N
+          onClick: P
         }, [
-          k(V).value ? U(a.$slots, "value", {
+          k(E).value ? j(a.$slots, "value", {
             key: 0,
             value: l.value,
-            title: g.value,
+            title: V.value,
             data: a.slotData
-          }) : Ve.value ? (u(), T(ie(_e.value), {
+          }) : Ne.value ? (o(), D(de(Ie.value), {
             key: 1,
             value: l.value,
-            title: g.value,
+            title: V.value,
             data: a.slotData
-          }, null, 8, ["value", "title", "data"])) : (u(), r(te, { key: 2 }, [
-            a.isEmail ? (u(), T(t, {
+          }, null, 8, ["value", "title", "data"])) : (o(), r(re, { key: 2 }, [
+            a.isEmail ? (o(), D(t, {
               key: 0,
               class: "lkt-field-text__read-value",
-              title: g.value,
+              title: V.value,
               to: "mail:" + l.value
             }, {
-              default: se(() => [
-                ne(re(l.value), 1)
+              default: fe(() => [
+                ve(O(l.value), 1)
               ]),
               _: 1
-            }, 8, ["title", "to"])) : a.isTel ? (u(), T(t, {
+            }, 8, ["title", "to"])) : a.isTel ? (o(), D(t, {
               key: 1,
               class: "lkt-field-text__read-value",
-              title: g.value,
+              title: V.value,
               to: "tel:" + l.value
             }, {
-              default: se(() => [
-                ne(re(l.value), 1)
+              default: fe(() => [
+                ve(O(l.value), 1)
               ]),
               _: 1
-            }, 8, ["title", "to"])) : (u(), r("div", {
+            }, 8, ["title", "to"])) : (o(), r("div", {
               key: 2,
               class: "lkt-field-text__read-value",
               innerHTML: l.value,
-              title: g.value
-            }, null, 8, je))
+              title: V.value
+            }, null, 8, ta))
           ], 64)),
-          a.allowReadModeSwitch ? (u(), r("div", Oe, [
-            R("i", {
+          a.allowReadModeSwitch ? (o(), r("div", ia, [
+            _("i", {
               class: "lkt-field__edit-icon",
               title: e.switchEditionMessage,
-              onClick: Y
-            }, null, 8, Ge)
-          ])) : v("", !0)
+              onClick: ue
+            }, null, 8, ua)
+          ])) : h("", !0)
         ])),
-        a.autoValidation && i.value.length > 0 ? (u(), T(p, {
+        a.autoValidation && u.value.length > 0 ? (o(), D(d, {
           key: 4,
-          items: i.value,
+          items: u.value,
           stack: a.validationStack,
           min: a.min,
           max: a.max
-        }, null, 8, ["items", "stack", "min", "max"])) : v("", !0)
-      ], 10, Fe);
+        }, null, 8, ["items", "stack", "min", "max"])) : h("", !0)
+      ], 10, Ze);
     };
   }
-}), ta = (f, y) => (d.customValueSlots[f] = y, !0), ia = (f, y) => (d.customEditSlots[f] = y, !0), ua = {
-  install: (f) => {
-    f.component("lkt-field-text") === void 0 && f.component("lkt-field-text", Je), f.component("lkt-field-validations") === void 0 && f.use(Ee);
+}), pa = (p, b) => (f.customValueSlots[p] = b, !0), ma = (p, b) => (f.customEditSlots[p] = b, !0), ca = {
+  install: (p) => {
+    p.component("lkt-field-text") === void 0 && p.component("lkt-field-text", oa), p.component("lkt-field-validations") === void 0 && p.use(Pe);
   }
-}, oa = (f, y) => {
-  d.defaultEmptyValueSlot = f, y && (d.customValueSlots[f] = y);
+}, ha = (p, b) => {
+  f.defaultEmptyValueSlot = p, b && (f.customValueSlots[p] = b);
 };
 export {
-  ua as default,
-  oa as setDefaultTextEmptyValueSlot,
-  ia as setTextEditSlot,
-  ta as setTextValueSlot
+  ca as default,
+  ha as setDefaultTextEmptyValueSlot,
+  ma as setTextEditSlot,
+  pa as setTextValueSlot
 };

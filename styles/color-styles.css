@@ -1,0 +1,22 @@
+.lkt-field .lkt-field-color-view {
+    height: var(--lkt-field-input-height);
+    width: 240px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lkt-field.is-empty .lkt-field-color-view {
+    background: repeating-linear-gradient(
+            -45deg,
+            #606dbc,
+            #606dbc 10px,
+            #465298 10px,
+            #465298 20px
+    );
+}
+
+.lkt-field.is-color .lkt-field-main {
+    justify-content: flex-start;
+    gap: 15px;
+}

@@ -85,6 +85,7 @@
 .lkt-field input[type="number"],
 .lkt-field input[type="tel"],
 .lkt-field input[type="password"],
+.lkt-field input[type="search"],
 .lkt-field textarea {
     box-sizing: border-box;
     width: 100%;
@@ -102,6 +103,7 @@
 .lkt-field input[type="number"],
 .lkt-field input[type="email"],
 .lkt-field input[type="password"],
+.lkt-field input[type="search"],
 .lkt-field input[type="tel"] {
     height: calc(var(--lkt-field-input-height) - 2 * var(--lkt-field-border-width));
     line-height: var(--lkt-field-line-height-input);

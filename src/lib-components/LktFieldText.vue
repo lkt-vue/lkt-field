@@ -17,7 +17,7 @@ const slots = useSlots();
 
 // Props
 const props = withDefaults(defineProps<{
-    modelValue: string|number
+    modelValue: string | number
     valid?: boolean
     placeholder?: string
     label?: string
@@ -39,14 +39,15 @@ const props = withDefaults(defineProps<{
     infoMessage?: string
     errorMessage?: string
     switchEditionMessage?: string
-    min?: number|string|undefined
-    max?: number|string|undefined
-    step?: number|string
+    min?: number | string | undefined
+    max?: number | string | undefined
+    step?: number | string
     isTel?: boolean
     isEmail?: boolean
     isPassword?: boolean
     isSearch?: boolean
     isNumber?: boolean
+    isColor?: boolean
     enableAutoNumberFix?: boolean
     emptyValueSlot?: string
     valueSlot?: string
@@ -57,17 +58,17 @@ const props = withDefaults(defineProps<{
     autoValidation?: boolean
     autoValidationType?: 'focus' | 'blur' | 'always'
     validationStack?: string
-    minNumbers: number|string|undefined,
-    maxNumbers: number|string|undefined,
-    minChars: number|string|undefined,
-    maxChars: number|string|undefined,
-    minUpperChars: number|string|undefined,
-    maxUpperChars: number|string|undefined,
-    minLowerChars: number|string|undefined,
-    maxLowerChars: number|string|undefined,
-    minSpecialChars: number|string|undefined,
-    maxSpecialChars: number|string|undefined,
-    checkEqualTo: number|string|undefined,
+    minNumbers: number | string | undefined,
+    maxNumbers: number | string | undefined,
+    minChars: number | string | undefined,
+    maxChars: number | string | undefined,
+    minUpperChars: number | string | undefined,
+    maxUpperChars: number | string | undefined,
+    minLowerChars: number | string | undefined,
+    maxLowerChars: number | string | undefined,
+    minSpecialChars: number | string | undefined,
+    maxSpecialChars: number | string | undefined,
+    checkEqualTo: number | string | undefined,
 }>(), {
     modelValue: '',
     placeholder: '',
@@ -130,9 +131,23 @@ const inputElement = ref(null);
 
 let baseValidationStatus: string[] = [];
 
+const decodeColor = (value) => {
+    if (props.isColor) {
+        if (value.length === 9) {
+            pickedColor.value = value.substring(1, 7);
+            pickedColorAlpha.value = parseInt(Number('0x'+value.substring(7, 9)), 10);
+        } else if (value.length === 7) {
+            pickedColor.value = value.substring(1, 7);
+        }
+    }
+    return value;
+}
+
 // Reactive data
 const originalValue = ref(props.modelValue),
-    value = ref(props.modelValue),
+    value = ref(decodeColor(props.modelValue)),
+    pickedColor = ref(''),
+    pickedColorAlpha = ref(255),
     isValid = ref(props.valid),
     showPasswordIcon = ref(false),
     focusing = ref(false),
@@ -173,6 +188,7 @@ const changed = computed(() => value.value !== originalValue.value),
         if (props.isNumber) return 'number';
         if (props.isTel) return 'tel';
         if (props.isSearch) return 'search';
+        if (props.isColor) return 'color';
         return 'text';
     }),
     classes = computed(() => {
@@ -201,7 +217,7 @@ const changed = computed(() => value.value !== originalValue.value),
         if (typeof value.value === 'number') return value.value.toString();
         return value.value;
     }),
-    MinimumValue = computed(() :number => {
+    MinimumValue = computed((): number => {
         if (typeof props.min === 'string') return parseFloat(props.min);
         if (typeof props.min === 'number') return props.min;
         //@ts-ignore
@@ -249,10 +265,22 @@ const focus = () => {
     });
 };
 
+const onClickColorPreview = () => {
+    nextTick(() => {
+        if (inputElement.value) {
+            //@ts-ignore
+            inputElement.value.click();
+        }
+    });
+};
+
 const doRemoteValidation = async () => {
     if (props.validationResource) {
         emits('validating');
-        const response: HTTPResponse = await httpCall(props.validationResource, {...props.validationResourceData, value: value.value});
+        const response: HTTPResponse = await httpCall(props.validationResource, {
+            ...props.validationResourceData,
+            value: value.value
+        });
         emits('validation', response);
     }
 }
@@ -507,6 +535,45 @@ const hasCustomValueSlot = computed(() => {
     }),
     hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
     customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
+
+const updateColorValue = (color, alpha) => {
+    if (color === '') return '';
+
+    if (alpha == 255) {
+        return color;
+    }
+
+    let castedAlpha = parseInt(alpha).toString(16).padStart(2, '0');
+    return color + castedAlpha;
+}
+
+const computedComplementaryColor = computed(() => {
+    if (!props.isColor) return '';
+
+    let color = pickedColor.value;
+    let red = color.substring(1, 3);
+    let green = color.substring(3, 5);
+    let blue = color.substring(5, 7);
+
+    red = parseInt(Number('0x'+red), 10)
+    green = parseInt(Number('0x'+green), 10)
+    blue = parseInt(Number('0x'+blue), 10)
+
+    // Counting the perceptive luminance - human eye favors green color...
+    let luminance = (0.299 * red + 0.587 * green + 0.114 * blue)/pickedColorAlpha.value;
+
+    if (luminance > 0.5) return '#000000'; // bright colors - black font
+
+    return '#ffffff'; // dark colors - white font
+})
+
+watch(pickedColor, color => {
+    value.value = updateColorValue(color, pickedColorAlpha.value);
+})
+
+watch(pickedColorAlpha, alpha => {
+    value.value = updateColorValue(pickedColor.value, alpha);
+})
 </script>
 
 <template>
@@ -524,56 +591,93 @@ const hasCustomValueSlot = computed(() => {
                 </div>
             </template>
             <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
-                <component  v-bind:is="customEditSlot"
-                       v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
+                <component v-bind:is="customEditSlot"
+                           v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
             </div>
+
+            <template v-else-if="isColor">
+                <div class="lkt-field-main">
+
+                    <div class="lkt-field-color-view"
+                         :style="'background: ' + value + '; color: ' + computedComplementaryColor"
+                         @click="onClickColorPreview"
+                    >
+                        {{value}}
+                    </div>
+
+                    <input
+                        v-model="pickedColor"
+                        :ref="(el:any) => inputElement = el"
+                        v-bind:value="pickedColor"
+                        v-bind:type="type"
+                        v-bind:name="name"
+                        v-bind:id="Identifier"
+                        v-bind:disabled="disabled"
+                        v-bind:readonly="readonly"
+                        v-bind:tabindex="tabindex"
+                        v-bind:autocomplete="autocompleteText"
+                        v-on:focus="onFocus"
+                        v-on:blur="onBlur"
+                        v-on:change="onChange"
+                        style="height: 100%; opacity: 0; width: 0; border: none; overflow: hidden; padding: 0; position: absolute; left: 0; top: 0;">
+
+                    <input
+                        v-model="pickedColorAlpha"
+                        ref="alphaColorPicker"
+                        type="range"
+                        min="0"
+                        max="255"
+                        step="1"
+                        value="255"/>
+                </div>
+            </template>
 
             <template v-else-if="computedPlaceholder">
                 <div class="lkt-field-main">
-                <input v-model="value"
-                       :ref="(el:any) => inputElement = el"
-                       v-bind:value="value"
-                       v-bind:type="type"
-                       v-bind:name="name"
-                       v-bind:id="Identifier"
-                       v-bind:disabled="disabled"
-                       v-bind:readonly="readonly"
-                       v-bind:placeholder="computedPlaceholder"
-                       v-bind:tabindex="tabindex"
-                       v-bind:autocomplete="autocompleteText"
-                       v-bind:min="MinimumValue"
-                       v-bind:max="MaximumValue"
-                       v-bind:step="step"
-                       v-on:keyup="onKeyUp"
-                       v-on:keydown="onKeyDown"
-                       v-on:focus="onFocus"
-                       v-on:blur="onBlur"
-                       v-on:click="onClick"
-                       v-on:change="onChange"
-                >
+                    <input v-model="value"
+                           :ref="(el:any) => inputElement = el"
+                           v-bind:value="value"
+                           v-bind:type="type"
+                           v-bind:name="name"
+                           v-bind:id="Identifier"
+                           v-bind:disabled="disabled"
+                           v-bind:readonly="readonly"
+                           v-bind:placeholder="computedPlaceholder"
+                           v-bind:tabindex="tabindex"
+                           v-bind:autocomplete="autocompleteText"
+                           v-bind:min="MinimumValue"
+                           v-bind:max="MaximumValue"
+                           v-bind:step="step"
+                           v-on:keyup="onKeyUp"
+                           v-on:keydown="onKeyDown"
+                           v-on:focus="onFocus"
+                           v-on:blur="onBlur"
+                           v-on:click="onClick"
+                           v-on:change="onChange"
+                    >
                 </div>
             </template>
             <template v-else>
                 <div class="lkt-field-main">
-                <input v-model="value"
-                       :ref="(el:any) => inputElement = el"
-                       v-bind:value="value"
-                       v-bind:type="type"
-                       v-bind:name="name"
-                       v-bind:id="Identifier"
-                       v-bind:disabled="disabled"
-                       v-bind:readonly="readonly"
-                       v-bind:tabindex="tabindex"
-                       v-bind:autocomplete="autocompleteText"
-                       v-bind:min="MinimumValue"
-                       v-bind:max="MaximumValue"
-                       v-bind:step="step"
-                       v-on:keyup="onKeyUp"
-                       v-on:keydown="onKeyDown"
-                       v-on:focus="onFocus"
-                       v-on:blur="onBlur"
-                       v-on:click="onClick"
-                       v-on:change="onChange">
+                    <input v-model="value"
+                           :ref="(el:any) => inputElement = el"
+                           v-bind:value="value"
+                           v-bind:type="type"
+                           v-bind:name="name"
+                           v-bind:id="Identifier"
+                           v-bind:disabled="disabled"
+                           v-bind:readonly="readonly"
+                           v-bind:tabindex="tabindex"
+                           v-bind:autocomplete="autocompleteText"
+                           v-bind:min="MinimumValue"
+                           v-bind:max="MaximumValue"
+                           v-bind:step="step"
+                           v-on:keyup="onKeyUp"
+                           v-on:keydown="onKeyDown"
+                           v-on:focus="onFocus"
+                           v-on:blur="onBlur"
+                           v-on:click="onClick"
+                           v-on:change="onChange">
                 </div>
             </template>
 
@@ -600,8 +704,12 @@ const hasCustomValueSlot = computed(() => {
             <component v-else-if="hasCustomValueSlot" v-bind:is="customValueSlot"
                        v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
             <template v-else>
-                <lkt-anchor v-if="isEmail" class="lkt-field-text__read-value" :title="readModeTitle" :to="'mail:' + value">{{value}}</lkt-anchor>
-                <lkt-anchor v-else-if="isTel" class="lkt-field-text__read-value" :title="readModeTitle" :to="'tel:' + value">{{value}}</lkt-anchor>
+                <lkt-anchor v-if="isEmail" class="lkt-field-text__read-value" :title="readModeTitle"
+                            :to="'mail:' + value">{{ value }}
+                </lkt-anchor>
+                <lkt-anchor v-else-if="isTel" class="lkt-field-text__read-value" :title="readModeTitle"
+                            :to="'tel:' + value">{{ value }}
+                </lkt-anchor>
                 <div v-else class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
             </template>
 
@@ -611,6 +719,7 @@ const hasCustomValueSlot = computed(() => {
             </div>
         </div>
 
-        <lkt-field-validations v-if="autoValidation && localValidationStatus.length > 0" :items="localValidationStatus" :stack="validationStack" :min="min" :max="max"/>
+        <lkt-field-validations v-if="autoValidation && localValidationStatus.length > 0" :items="localValidationStatus"
+                               :stack="validationStack" :min="min" :max="max"/>
     </div>
 </template>

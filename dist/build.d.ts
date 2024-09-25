@@ -1,7 +1,7 @@
-declare namespace ua {
-    function install(f: any): void;
+declare namespace ca {
+    function install(p: any): void;
 }
-declare function oa(f: any, y: any): void;
-declare function ia(f: any, y: any): boolean;
-declare function ta(f: any, y: any): boolean;
-export { ua as default, oa as setDefaultTextEmptyValueSlot, ia as setTextEditSlot, ta as setTextValueSlot };
+declare function ha(p: any, b: any): void;
+declare function ma(p: any, b: any): boolean;
+declare function pa(p: any, b: any): boolean;
+export { ca as default, ha as setDefaultTextEmptyValueSlot, ma as setTextEditSlot, pa as setTextValueSlot };
