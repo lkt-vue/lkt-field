@@ -1,4 +1,4 @@
-.lkt-field.is-invalid .lkt-field-main,
+.lkt-field.is-invalid > .lkt-field-main,
 .lkt-field.is-invalid.lkt-field-date input,
 .lkt-field.is-invalid.lkt-field-editor i.lkt-field-editor__main,
 .lkt-field.is-invalid.lkt-field-file i.lkt-field-file__main,
@@ -9,7 +9,7 @@
     box-shadow: var(--lkt-field-shadow-invalid);
 }
 
-.lkt-field.is-valid .lkt-field-main,
+.lkt-field.is-valid > .lkt-field-main,
 .lkt-field.is-valid.lkt-field-date input,
 .lkt-field.is-valid.lkt-field-editor i.lkt-field-editor__main,
 .lkt-field.is-valid.lkt-field-file i.lkt-field-file__main,

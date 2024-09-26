@@ -1,10 +1,13 @@
 .lkt-field .lkt-field-color-view {
     height: var(--lkt-field-input-height);
-    width: 240px;
+    width: 100%;
+    max-width: 240px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-top-left-radius: var(--lkt-field-border-radius);
+    border-bottom-left-radius: var(--lkt-field-border-radius);
 }
 .lkt-field.is-empty .lkt-field-color-view {
     background: repeating-linear-gradient(
@@ -16,7 +19,45 @@
     );
 }
 
-.lkt-field.is-color .lkt-field-main {
+.lkt-field.is-color > .lkt-field-main {
     justify-content: flex-start;
-    gap: 15px;
+    overflow: hidden;
+}
+
+.lkt-field.is-color > .lkt-field-main .lkt-button-container {
+    width: 100%;
+}
+
+.lkt-field .lkt-field-color--alpha--tooltip {
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, .4);
+    --lkt-tooltip-width: 300px;
+    --lkt-tooltip-max-width: 100vw;
+}
+
+.lkt-field .lkt-field-color--alpha--toggle-button {
+    --lkt-btn-bg: transparent;
+    --lkt-btn-border-width: 0;
+    --lkt-btn-border-width-hover: 0;
+    --lkt-btn-border-width-focus: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+}
+
+.lkt-field .lkt-field-color--tooltip--numeric-input-container,
+.lkt-field .lkt-field-color--tooltip--hex-input-container
+{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.lkt-field .lkt-field-color--tooltip--rgba-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.lkt-field .lkt-field-color--tooltip--numeric-input-container > .lkt-field {
+    width: 70px;
 }

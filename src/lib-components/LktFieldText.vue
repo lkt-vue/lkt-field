@@ -48,6 +48,7 @@ const props = withDefaults(defineProps<{
     isSearch?: boolean
     isNumber?: boolean
     isColor?: boolean
+    isRange?: boolean
     enableAutoNumberFix?: boolean
     emptyValueSlot?: string
     valueSlot?: string
@@ -99,6 +100,8 @@ const props = withDefaults(defineProps<{
     isPassword: false,
     isSearch: false,
     isNumber: false,
+    isRange: false,
+    isColor: false,
     enableAutoNumberFix: true,
     emptyValueSlot: '',
     valueSlot: '',
@@ -131,23 +134,47 @@ const inputElement = ref(null);
 
 let baseValidationStatus: string[] = [];
 
-const decodeColor = (value) => {
+const decodeColor = (value: string) => {
     if (props.isColor) {
-        if (value.length === 9) {
-            pickedColor.value = value.substring(1, 7);
-            pickedColorAlpha.value = parseInt(Number('0x'+value.substring(7, 9)), 10);
-        } else if (value.length === 7) {
-            pickedColor.value = value.substring(1, 7);
+        if ([0, 1].includes(value.length)) {
+            pickedColorRed.value = 0;
+            pickedColorGreen.value = 0;
+            pickedColorBlue.value = 0;
+            pickedColorAlpha.value = 255;
+        }
+
+        else if ([7, 9].includes(value.length)) {
+            let decoded = decodeHexColor(value);
+
+            pickedColorRed.value = decoded.r;
+            pickedColorGreen.value = decoded.g;
+            pickedColorBlue.value = decoded.b;
+            pickedColorAlpha.value = decoded.a;
         }
     }
     return value;
 }
 
+const decodeHexColor = (color: string) => {
+    let r = parseInt(Number('0x'+color.substring(1, 3)), 10);
+    let g = parseInt(Number('0x'+color.substring(3, 5)), 10);
+    let b = parseInt(Number('0x'+color.substring(5, 7)), 10);
+    let a = 255;
+
+    if (color.length === 9) {
+        a = parseInt(Number('0x'+color.substring(5, 7)), 10);
+    }
+
+    return {r,g,b,a};
+}
+
 // Reactive data
 const originalValue = ref(props.modelValue),
-    value = ref(decodeColor(props.modelValue)),
-    pickedColor = ref(''),
+    pickedColorRed = ref(255),
+    pickedColorGreen = ref(255),
+    pickedColorBlue = ref(255),
     pickedColorAlpha = ref(255),
+    value = ref(decodeColor(props.modelValue)),
     isValid = ref(props.valid),
     showPasswordIcon = ref(false),
     focusing = ref(false),
@@ -189,6 +216,7 @@ const changed = computed(() => value.value !== originalValue.value),
         if (props.isTel) return 'tel';
         if (props.isSearch) return 'search';
         if (props.isColor) return 'color';
+        if (props.isRange) return 'range';
         return 'text';
     }),
     classes = computed(() => {
@@ -201,15 +229,17 @@ const changed = computed(() => value.value !== originalValue.value),
         if (props.mandatory && editable.value) r.push('is-mandatory-field');
         if (focusing.value) r.push('has-focus');
 
-        if (props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
+        if (!props.isRange && props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
             if (localValidationStatus.value.length > 0) r.push('is-invalid');
             else r.push('is-valid');
         }
 
         if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
 
-        r.push(isValid.value ? 'is-valid' : 'is-error');
-        r.push(!!props.modelValue ? 'is-filled' : 'is-empty');
+        if (!props.isRange) {
+            r.push(isValid.value ? 'is-valid' : 'is-error');
+            r.push(!!props.modelValue ? 'is-filled' : 'is-empty');
+        }
 
         return r.join(' ');
     }),
@@ -291,8 +321,8 @@ watch(() => props.checkEqualTo, (v) => doLocalValidation());
 watch(() => props.readMode, (v) => editable.value = !v)
 watch(() => props.valid, (v) => isValid.value = v)
 watch(() => props.modelValue, (v) => {
-    if (props.isNumber) return reAssignNumericValue(v);
     value.value = v
+    if (props.isNumber) reAssignNumericValue(v);
 })
 watch(value, (v) => {
     emits('update:modelValue', v);
@@ -307,6 +337,8 @@ const doLocalValidation = () => {
     if (props.autoValidationType === 'blur' && (!hadFirstBlur.value || !hadFirstFocus.value)) {
         return;
     }
+
+    if (props.isRange) return;
 
     localValidationStatus.value = [];
 
@@ -536,43 +568,81 @@ const hasCustomValueSlot = computed(() => {
     hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
     customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
-const updateColorValue = (color, alpha) => {
-    if (color === '') return '';
+const calculateColorValue = (r, g, b, a) => {
+    let red = parseInt(r).toString(16).padStart(2, '0').toUpperCase(),
+        green = parseInt(g).toString(16).padStart(2, '0').toUpperCase(),
+        blue = parseInt(b).toString(16).padStart(2, '0').toUpperCase(),
+        color = '#' + red + green + blue
+    ;
 
-    if (alpha == 255) {
-        return color;
-    }
+    if (a == 255) return color;
 
-    let castedAlpha = parseInt(alpha).toString(16).padStart(2, '0');
-    return color + castedAlpha;
+    let alpha = parseInt(a).toString(16).padStart(2, '0').toUpperCase();
+    return color + alpha;
 }
 
 const computedComplementaryColor = computed(() => {
     if (!props.isColor) return '';
 
-    let color = pickedColor.value;
-    let red = color.substring(1, 3);
-    let green = color.substring(3, 5);
-    let blue = color.substring(5, 7);
-
-    red = parseInt(Number('0x'+red), 10)
-    green = parseInt(Number('0x'+green), 10)
-    blue = parseInt(Number('0x'+blue), 10)
+    let color = decodeHexColor(value.value);
 
     // Counting the perceptive luminance - human eye favors green color...
-    let luminance = (0.299 * red + 0.587 * green + 0.114 * blue)/pickedColorAlpha.value;
+    let luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b)/color.a;
 
     if (luminance > 0.5) return '#000000'; // bright colors - black font
 
     return '#ffffff'; // dark colors - white font
 })
 
-watch(pickedColor, color => {
-    value.value = updateColorValue(color, pickedColorAlpha.value);
+const onRgbaChanged = ($event) => {
+    value.value = calculateColorValue(
+        pickedColorRed.value,
+        pickedColorGreen.value,
+        pickedColorBlue.value,
+        pickedColorAlpha.value
+    );
+}
+
+const onColorChange = ($event) => {
+    decodeColor(value.value);
+}
+
+watch(pickedColorRed, onRgbaChanged);
+watch(pickedColorGreen, onRgbaChanged);
+watch(pickedColorBlue, onRgbaChanged);
+watch(pickedColorAlpha, onRgbaChanged);
+
+const computedColorStyles = computed(() => {
+    if (!props.isColor) return {};
+
+    if (value.value === '' || value.value === '#') {
+        return {};
+    }
+
+    let r = {
+        background: value.value,
+        '--lkt-btn-bg': value.value,
+
+        color: computedComplementaryColor.value,
+        '--lkt-btn-color': computedComplementaryColor.value,
+    }
+
+    return r;
 })
 
-watch(pickedColorAlpha, alpha => {
-    value.value = updateColorValue(pickedColor.value, alpha);
+const computedColorStylesHex = computed(() => {
+    if (!props.isColor) return {};
+
+    if (value.value === '' || value.value === '#') {
+        return {};
+    }
+
+    let r = {
+        '--lkt-field-bg-input': value.value,
+        '--lkt-field-color': computedComplementaryColor.value,
+    }
+
+    return r;
 })
 </script>
 
@@ -598,37 +668,113 @@ watch(pickedColorAlpha, alpha => {
             <template v-else-if="isColor">
                 <div class="lkt-field-main">
 
-                    <div class="lkt-field-color-view"
-                         :style="'background: ' + value + '; color: ' + computedComplementaryColor"
-                         @click="onClickColorPreview"
+                    <lkt-button
+                        class="lkt-field-color--alpha--toggle-button"
+                        :style="computedColorStyles"
+                        :text="value"
+                        tooltip
+                        tooltip-class="lkt-field-color--alpha--tooltip"
+                        tooltip-location-y="bottom"
+                        tooltip-location-x="left-corner"
                     >
-                        {{value}}
-                    </div>
+                        <template #tooltip="{doClose}">
+                            <div class="lkt-grid-1">
+                                <div class="lkt-field-color--tooltip--rgba-container">
+                                    <div class="lkt-field-color--tooltip--hex-input-container">
+                                        <label class="like-lkt-field-label">HEX</label>
+                                        <lkt-field-text
+                                            v-model="value"
+                                            :style="computedColorStylesHex"
+                                            @change="onColorChange"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="lkt-field-color--tooltip--rgba-container">
+                                    <div class="lkt-field-color--tooltip--numeric-input-container">
+                                        <label class="like-lkt-field-label">R</label>
+                                        <lkt-field-text
+                                            v-model="pickedColorRed"
+                                            is-number
+                                            min="0"
+                                            max="255"
+                                            step="1"
+                                        />
+                                    </div>
+                                    <lkt-field-text
+                                        class="color-range color-range--red"
+                                        v-model="pickedColorRed"
+                                        is-range
+                                        min="0"
+                                        max="255"
+                                        step="1"
+                                    />
+                                </div>
 
-                    <input
-                        v-model="pickedColor"
-                        :ref="(el:any) => inputElement = el"
-                        v-bind:value="pickedColor"
-                        v-bind:type="type"
-                        v-bind:name="name"
-                        v-bind:id="Identifier"
-                        v-bind:disabled="disabled"
-                        v-bind:readonly="readonly"
-                        v-bind:tabindex="tabindex"
-                        v-bind:autocomplete="autocompleteText"
-                        v-on:focus="onFocus"
-                        v-on:blur="onBlur"
-                        v-on:change="onChange"
-                        style="height: 100%; opacity: 0; width: 0; border: none; overflow: hidden; padding: 0; position: absolute; left: 0; top: 0;">
+                                <div class="lkt-field-color--tooltip--rgba-container">
+                                    <div class="lkt-field-color--tooltip--numeric-input-container">
+                                        <label class="like-lkt-field-label">G</label>
+                                        <lkt-field-text
+                                            v-model="pickedColorGreen"
+                                            is-number
+                                            min="0"
+                                            max="255"
+                                            step="1"
+                                        />
+                                    </div>
+                                    <lkt-field-text
+                                        class="color-range color-range--green"
+                                        v-model="pickedColorGreen"
+                                        is-range
+                                        min="0"
+                                        max="255"
+                                        step="1"
+                                    />
+                                </div>
 
-                    <input
-                        v-model="pickedColorAlpha"
-                        ref="alphaColorPicker"
-                        type="range"
-                        min="0"
-                        max="255"
-                        step="1"
-                        value="255"/>
+                                <div class="lkt-field-color--tooltip--rgba-container">
+                                    <div class="lkt-field-color--tooltip--numeric-input-container">
+                                        <label class="like-lkt-field-label">B</label>
+                                        <lkt-field-text
+                                            v-model="pickedColorBlue"
+                                            is-number
+                                            min="0"
+                                            max="255"
+                                            step="1"
+                                        />
+                                    </div>
+                                    <lkt-field-text
+                                        class="color-range color-range--blue"
+                                        v-model="pickedColorBlue"
+                                        is-range
+                                        min="0"
+                                        max="255"
+                                        step="1"
+                                    />
+                                </div>
+
+                                <div class="lkt-field-color--tooltip--rgba-container">
+                                    <div class="lkt-field-color--tooltip--numeric-input-container">
+                                        <label class="like-lkt-field-label">A</label>
+                                        <lkt-field-text
+                                            v-model="pickedColorAlpha"
+                                            is-number
+                                            min="0"
+                                            max="255"
+                                            step="1"
+                                        />
+                                    </div>
+                                    <lkt-field-text
+                                        class="color-range color-range--alpha"
+                                        v-model="pickedColorAlpha"
+                                        is-range
+                                        min="0"
+                                        max="255"
+                                        step="1"
+                                    />
+                                </div>
+                            </div>
+                        </template>
+                    </lkt-button>
                 </div>
             </template>
 

@@ -11,6 +11,7 @@ import "../styles/select-styles.css";
 import "../styles/switch-styles.css";
 import "../styles/file-styles.css";
 import "../styles/color-styles.css";
+import "../styles/range-styles.css";
 import "../styles/read-mode-styles.css";
 import "../styles/palette-styles.css";
 import "../styles/state-styles.css";

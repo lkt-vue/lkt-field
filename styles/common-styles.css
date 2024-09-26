@@ -92,6 +92,7 @@
     max-width: 100%;
     outline: 0;
     border: none;
+    color: var(--lkt-field-color);
     transition: var(--lkt-field-transition-input);
     font-size: var(--lkt-field-font-size-input);
     font-weight: var(--lkt-field-font-weight-input);
@@ -99,11 +100,23 @@
     background-color: var(--lkt-field-bg-input);
 }
 
+.lkt-field input[type="range"] {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    border: none;
+    border-radius: var(--lkt-field-border-radius-input);
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    background: transparent; /* Otherwise white in Chrome */
+}
+
 .lkt-field input[type="text"],
 .lkt-field input[type="number"],
 .lkt-field input[type="email"],
 .lkt-field input[type="password"],
 .lkt-field input[type="search"],
+.lkt-field input[type="range"],
 .lkt-field input[type="tel"] {
     height: calc(var(--lkt-field-input-height) - 2 * var(--lkt-field-border-width));
     line-height: var(--lkt-field-line-height-input);
