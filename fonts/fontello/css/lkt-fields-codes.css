@@ -1,2 +1,15 @@
 
+.lkt-field-icon-pencil:before { content: '\e800'; } /* '' */
+.lkt-field-icon-info:before { content: '\e801'; } /* '' */
+.lkt-field-icon-warning:before { content: '\e802'; } /* '' */
+.lkt-field-icon-cancel:before { content: '\e803'; } /* '' */
+.lkt-field-icon-lock:before { content: '\e804'; } /* '' */
+.lkt-field-icon-lock-open:before { content: '\e805'; } /* '' */
+.lkt-field-icon-language:before { content: '\e806'; } /* '' */
+.lkt-field-icon-undo:before { content: '\e807'; } /* '' */
+.lkt-field-icon-eye:before { content: '\e808'; } /* '' */
+.lkt-field-icon-cog:before { content: '\e809'; } /* '' */
+.lkt-field-icon-eye-off:before { content: '\e80a'; } /* '' */
 .lkt-field-icon-angle-down:before { content: '\f107'; } /* '' */
+.lkt-field-icon-ellipsis:before { content: '\f141'; } /* '' */
+.lkt-field-icon-ellipsis-vert:before { content: '\f142'; } /* '' */

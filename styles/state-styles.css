@@ -125,13 +125,63 @@
     height: var(--lkt-field-input-height);
 }
 
-.lkt-field--atn-btn {
+.lkt-field--info-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    height: var(--lkt-field-input-height);
+}
+
+.lkt-field--atn-btn,
+.lkt-field--info-btn {
     --lkt-btn-min-height: var(--lkt-field-input-height);
     --lkt-btn-width: var(--lkt-field-input-height);
     --lkt-btn-border-radius: var(--lkt-field-border-radius);
     --lkt-btn-border-radius-hover: var(--lkt-field-border-radius);
 }
 
+.lkt-field--atn-btn,
+.lkt-field--atn-btn:hover {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.lkt-field--info-btn {
+    --lkt-btn-bg: transparent;
+}
+
+.lkt-field--info-btn,
+.lkt-field--info-btn:hover {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.lkt-field--info-split-btn {
+    --lkt-btn-bg: transparent;
+    --lkt-btn-border-color: transparent;
+}
+
+.lkt-field--info-nav .lkt-button-container:not(:last-child) .lkt-field--info-btn,
+.lkt-field--info-nav .lkt-button-container:not(:last-child) .lkt-field--info-btn:hover {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
 .lkt-field.with-atn-btn .lkt-field-main {
     padding-left: var(--lkt-field-input-height);
+}
+
+.lkt-field.with-atn-btn .lkt-field-main > input[type="text"],
+.lkt-field.with-atn-btn .lkt-field-main > input[type="email"],
+.lkt-field.with-atn-btn .lkt-field-main > input[type="number"],
+.lkt-field.with-atn-btn .lkt-field-main > input[type="tel"],
+.lkt-field.with-atn-btn .lkt-field-main > input[type="password"],
+.lkt-field.with-atn-btn .lkt-field-main > input[type="search"] {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }

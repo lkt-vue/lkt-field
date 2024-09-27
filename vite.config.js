@@ -27,6 +27,8 @@ export default {
                 'lkt-events',
                 'lkt-field-validation',
                 'lkt-button',
+                'lkt-modal',
+                'lkt-tooltip',
                 'lkt-http-client',
                 'lkt-string-tools',
                 'axios',

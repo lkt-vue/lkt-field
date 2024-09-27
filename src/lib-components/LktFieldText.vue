@@ -9,6 +9,12 @@ import {LktObject} from "lkt-ts-interfaces";
 import {httpCall, HTTPResponse} from "lkt-http-client";
 import {__} from "lkt-i18n";
 import {FieldValidation} from "lkt-field-validation";
+import UndoButton from "../components/buttons/UndoButton.vue";
+import ClearButton from "../components/buttons/ClearButton.vue";
+import PasswordButton from "../components/buttons/PasswordButton.vue";
+import EditionButton from "../components/buttons/EditionButton.vue";
+import EllipsisActionsButton from "../components/buttons/EllipsisActionsButton.vue";
+import I18nButton from "../components/buttons/I18nButton.vue";
 
 const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -18,6 +24,7 @@ const slots = useSlots();
 // Props
 const props = withDefaults(defineProps<{
     modelValue: string | number
+    languageValues?: LktObject
     valid?: boolean
     placeholder?: string
     label?: string
@@ -33,12 +40,12 @@ const props = withDefaults(defineProps<{
     tabindex?: number
     mandatory?: boolean
     showPassword?: boolean
-    reset?: boolean
-    resetMessage?: string
+    canClear?: boolean
+    canUndo?: boolean
+    canI18n?: boolean
     mandatoryMessage?: string
     infoMessage?: string
     errorMessage?: string
-    switchEditionMessage?: string
     min?: number | string | undefined
     max?: number | string | undefined
     step?: number | string
@@ -70,9 +77,11 @@ const props = withDefaults(defineProps<{
     minSpecialChars: number | string | undefined,
     maxSpecialChars: number | string | undefined,
     checkEqualTo: number | string | undefined,
-    actionButtonIcon?: string
+    featuredButton?: string
+    infoButtonEllipsis?: boolean
 }>(), {
     modelValue: '',
+    languageValues: () => ({}),
     placeholder: '',
     label: '',
     palette: '',
@@ -86,13 +95,10 @@ const props = withDefaults(defineProps<{
     tabindex: undefined,
     mandatory: false,
     showPassword: false,
-    reset: false,
-    resetMessage: '',
+    canClear: false,
     mandatoryMessage: '',
     infoMessage: '',
     errorMessage: '',
-    showPasswordMessage: '',
-    switchEditionMessage: '',
     min: undefined,
     max: undefined,
     step: 1,
@@ -124,7 +130,8 @@ const props = withDefaults(defineProps<{
     minSpecialChars: undefined,
     maxSpecialChars: undefined,
     checkEqualTo: undefined,
-    actionButtonIcon: '',
+    featuredButton: '',
+    infoButtonEllipsis: false,
 });
 
 // Constant data
@@ -143,9 +150,7 @@ const decodeColor = (value: string) => {
             pickedColorGreen.value = 0;
             pickedColorBlue.value = 0;
             pickedColorAlpha.value = 255;
-        }
-
-        else if ([7, 9].includes(value.length)) {
+        } else if ([7, 9].includes(value.length)) {
             let decoded = decodeHexColor(value);
 
             pickedColorRed.value = decoded.r;
@@ -158,16 +163,16 @@ const decodeColor = (value: string) => {
 }
 
 const decodeHexColor = (color: string) => {
-    let r = parseInt(Number('0x'+color.substring(1, 3)), 10);
-    let g = parseInt(Number('0x'+color.substring(3, 5)), 10);
-    let b = parseInt(Number('0x'+color.substring(5, 7)), 10);
+    let r = parseInt(Number('0x' + color.substring(1, 3)), 10);
+    let g = parseInt(Number('0x' + color.substring(3, 5)), 10);
+    let b = parseInt(Number('0x' + color.substring(5, 7)), 10);
     let a = 255;
 
     if (color.length === 9) {
-        a = parseInt(Number('0x'+color.substring(5, 7)), 10);
+        a = parseInt(Number('0x' + color.substring(5, 7)), 10);
     }
 
-    return {r,g,b,a};
+    return {r, g, b, a};
 }
 
 // Reactive data
@@ -177,6 +182,7 @@ const originalValue = ref(props.modelValue),
     pickedColorBlue = ref(255),
     pickedColorAlpha = ref(255),
     value = ref(decodeColor(props.modelValue)),
+    translations = ref(props.languageValues),
     isValid = ref(props.valid),
     showPasswordIcon = ref(false),
     focusing = ref(false),
@@ -188,28 +194,17 @@ const originalValue = ref(props.modelValue),
 
 const changed = computed(() => value.value !== originalValue.value),
     showInfoUi = computed(() => {
-        return props.reset || props.infoMessage !== '' || props.errorMessage !== '' || (props.isPassword && props.showPassword);
+        return props.canClear || props.infoMessage !== '' || props.errorMessage !== '' || (props.isPassword && props.showPassword);
     }),
     amountOfIcons = computed(() => {
         let r = 0;
-        if (props.reset) ++r;
+        if (props.canClear) ++r;
         if (props.infoMessage) ++r;
         if (props.isPassword && props.showPassword) ++r;
         return r;
     }),
-    resetText = computed(() => {
-        if (props.resetMessage !== '') return props.resetMessage;
-        return '';
-    }),
-    passwordIcon = computed(() => {
-        return showPasswordIcon.value === true ? 'lkt-field__hide-password-icon' : 'lkt-field__show-password-icon';
-    }),
-    autocompleteText = computed(() => {
-        return props.autocomplete === true ? 'on' : 'off';
-    }),
-    isFilled = computed(() => {
-        return value.value !== '';
-    }),
+    autocompleteText = computed(() => props.autocomplete === true ? 'on' : 'off'),
+    isFilled = computed(() => value.value !== ''),
     type = computed(() => {
         if (props.isPassword && showPasswordIcon.value === true) return 'text';
         if (props.isEmail) return 'email';
@@ -228,7 +223,7 @@ const changed = computed(() => value.value !== originalValue.value),
         if (type) r.push(`is-${type.value}`);
         if (changed.value) r.push('is-changed');
         if (props.disabled) r.push('is-disabled');
-        if (props.actionButtonIcon) r.push('with-atn-btn');
+        if (props.featuredButton) r.push('with-atn-btn');
         if (props.mandatory && editable.value) r.push('is-mandatory-field');
         if (focusing.value) r.push('has-focus');
 
@@ -287,7 +282,11 @@ const changed = computed(() => value.value !== originalValue.value),
             return __(props.placeholder.substring(3));
         }
         return props.placeholder;
-    });
+    }),
+
+    computedShowUndo = computed(() => props.canUndo && changed.value),
+    computedShowClear = computed(() => props.canClear && isFilled.value),
+    computedShowPasswordReveal = computed(() => props.isPassword && props.showPassword && isFilled.value);
 
 const focus = () => {
     nextTick(() => {
@@ -489,7 +488,9 @@ const doLocalValidation = () => {
     })
 }
 
-const reset = () => value.value = originalValue.value,
+const
+    doUndo = () => value.value = originalValue.value,
+    doClear = () => value.value = '',
     getValue = () => value.value,
     onKeyUp = ($event: any) => {
         doLocalValidation();
@@ -514,9 +515,7 @@ const reset = () => value.value = originalValue.value,
     },
     onClickInfo = ($event: any) => emits('click-info', $event, createLktEvent(Identifier, {value: value.value})),
     onClickError = ($event: any) => emits('click-error', $event, createLktEvent(Identifier, {value: value.value})),
-    onClickShowPassword = ($event: any) => showPasswordIcon.value = !showPasswordIcon.value,
     onClickSwitchEdition = ($event: any) => {
-        editable.value = !editable.value;
         if (editable.value) focus();
     },
     reAssignNumericValue = (n: string | number) => {
@@ -547,13 +546,13 @@ const reset = () => value.value = originalValue.value,
 
 defineExpose({
     Identifier,
-    reset,
+    reset: doUndo,
     focus,
     value: getValue,
     isMandatory: () => props.mandatory
 });
 
-reset();
+doUndo();
 
 const hasCustomValueSlot = computed(() => {
         if (value.value === '') {
@@ -590,7 +589,7 @@ const computedComplementaryColor = computed(() => {
     let color = decodeHexColor(value.value);
 
     // Counting the perceptive luminance - human eye favors green color...
-    let luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b)/color.a;
+    let luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / color.a;
 
     if (luminance > 0.5) return '#000000'; // bright colors - black font
 
@@ -658,11 +657,14 @@ const computedColorStylesHex = computed(() => {
         <label v-if="!!!slots.label && computedLabel !== ''" :for="Identifier" v-html="computedLabel"></label>
 
         <template v-if="editable">
-            <div v-if="actionButtonIcon" class="lkt-field--atn-btn-container">
-                <lkt-button
-                    class="lkt-field--atn-btn"
-                    :icon="actionButtonIcon"
+            <div v-if="featuredButton" class="lkt-field--atn-btn-container">
+                <password-button
+                    v-if="featuredButton === 'password' && computedShowPasswordReveal"
+                    v-model="showPasswordIcon"
+                    is-featured
                 />
+
+                <i18n-button v-if="featuredButton === 'i18n' && canI18n" v-model="translations" is-featured/>
             </div>
             <template v-if="slots['edit']">
                 <div v-on:click="onClick">
@@ -836,18 +838,56 @@ const computedColorStylesHex = computed(() => {
                 </div>
             </template>
 
-            <div class="lkt-field__state" v-if="showInfoUi">
-                <i v-if="props.errorMessage" class="lkt-field__error-icon" :title="props.errorMessage"
-                   v-on:click="onClickError"></i>
-                <i v-if="props.infoMessage" class="lkt-field__info-icon" :title="props.infoMessage"
-                   v-on:click="onClickInfo"></i>
-                <i v-if="props.isPassword && props.showPassword && isFilled" :class="passwordIcon"
-                   :title="props.showPasswordMessage"
-                   v-on:click="onClickShowPassword"></i>
-                <i v-if="props.reset && isFilled" class="lkt-field__reset-icon" :title="resetText"
-                   v-on:click="reset"></i>
-                <i v-if="allowReadModeSwitch" class="lkt-field__edit-icon" :title="props.switchEditionMessage"
-                   v-on:click="onClickSwitchEdition"></i>
+            <div v-if="showInfoUi" class="lkt-field--info-nav">
+                <undo-button v-if="!infoButtonEllipsis && computedShowUndo" @click="doUndo"/>
+                <clear-button v-if="!infoButtonEllipsis && computedShowClear" @click="doClear"/>
+
+                <lkt-button
+                    v-if="errorMessage"
+                    :title="errorMessage"
+                    class="lkt-field--info-btn"
+                    icon="lkt-field-icon-warning"
+                    @click="onClickError"
+                />
+                <lkt-button
+                    v-if="infoMessage"
+                    class="lkt-field--info-btn"
+                    icon="lkt-field-icon-info"
+                    @click="onClickInfo"
+                    tooltip
+                    show-tooltip-on-hover
+                    :show-tooltip-on-hover-delay="500"
+                    hide-tooltip-on-leave
+                >
+                    <template #tooltip>
+                        {{infoMessage}}
+                    </template>
+                </lkt-button>
+
+                <password-button
+                    v-if="!infoButtonEllipsis && computedShowPasswordReveal && featuredButton !== 'password'"
+                    v-model="showPasswordIcon"
+                />
+
+                <i18n-button v-if="!infoButtonEllipsis && canI18n && featuredButton !== 'i18n'" v-model="translations"/>
+
+                <edition-button
+                    v-if="!infoButtonEllipsis && allowReadModeSwitch"
+                    v-model="editable"
+                    @click="onClickSwitchEdition"
+                />
+
+                <ellipsis-actions-button
+                    v-if="infoButtonEllipsis"
+                    :show-undo="computedShowUndo"
+                    :show-clear="computedShowClear"
+                    :show-password="computedShowPasswordReveal"
+                    :show-edition="allowReadModeSwitch"
+                    v-model:show-password-check="showPasswordIcon"
+                    v-model:show-edition-check="editable"
+                    @undo="doUndo"
+                    @clear="doClear"
+                />
             </div>
         </template>
 
@@ -868,13 +908,18 @@ const computedColorStylesHex = computed(() => {
                 <div v-else class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
             </template>
 
-            <div v-if="allowReadModeSwitch" class="lkt-field__state">
-                <i class="lkt-field__edit-icon" :title="props.switchEditionMessage"
-                   v-on:click="onClickSwitchEdition"></i>
+            <div v-if="allowReadModeSwitch" class="lkt-field--info-nav">
+                <edition-button
+                    v-if="allowReadModeSwitch"
+                    v-model="editable"
+                    @click="onClickSwitchEdition"
+                />
             </div>
         </div>
 
-        <lkt-field-validations v-if="autoValidation && localValidationStatus.length > 0" :items="localValidationStatus"
-                               :stack="validationStack" :min="min" :max="max"/>
+        <lkt-field-validations
+            v-if="autoValidation && localValidationStatus.length > 0"
+            :items="localValidationStatus"
+            :stack="validationStack" :min="min" :max="max"/>
     </div>
 </template>

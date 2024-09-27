@@ -53,11 +53,14 @@
     "node": ">=18"
   },
   "dependencies": {
+    "lkt-button": "^1.2.3",
     "lkt-events": "^1.0.2",
     "lkt-field-validation": "^1.0.0",
     "lkt-http-client": "^1.0.29",
     "lkt-i18n": "^1.0.4",
+    "lkt-modal": "^1.1.7",
     "lkt-string-tools": "^1.0.3",
+    "lkt-tooltip": "^1.0.3",
     "lkt-ts-interfaces": "^1.0.5",
     "process": "^0.11.10",
     "sass": "^1.57.1",
