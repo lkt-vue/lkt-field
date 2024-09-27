@@ -113,3 +113,25 @@
     display: inline-block;
     margin-left: 5px;
 }
+
+.lkt-field--atn-btn-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    height: var(--lkt-field-input-height);
+}
+
+.lkt-field--atn-btn {
+    --lkt-btn-min-height: var(--lkt-field-input-height);
+    --lkt-btn-width: var(--lkt-field-input-height);
+    --lkt-btn-border-radius: var(--lkt-field-border-radius);
+    --lkt-btn-border-radius-hover: var(--lkt-field-border-radius);
+}
+
+.lkt-field.with-atn-btn .lkt-field-main {
+    padding-left: var(--lkt-field-input-height);
+}

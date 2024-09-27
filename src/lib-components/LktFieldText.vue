@@ -70,6 +70,7 @@ const props = withDefaults(defineProps<{
     minSpecialChars: number | string | undefined,
     maxSpecialChars: number | string | undefined,
     checkEqualTo: number | string | undefined,
+    actionButtonIcon?: string
 }>(), {
     modelValue: '',
     placeholder: '',
@@ -123,6 +124,7 @@ const props = withDefaults(defineProps<{
     minSpecialChars: undefined,
     maxSpecialChars: undefined,
     checkEqualTo: undefined,
+    actionButtonIcon: '',
 });
 
 // Constant data
@@ -226,6 +228,7 @@ const changed = computed(() => value.value !== originalValue.value),
         if (type) r.push(`is-${type.value}`);
         if (changed.value) r.push('is-changed');
         if (props.disabled) r.push('is-disabled');
+        if (props.actionButtonIcon) r.push('with-atn-btn');
         if (props.mandatory && editable.value) r.push('is-mandatory-field');
         if (focusing.value) r.push('has-focus');
 
@@ -655,6 +658,12 @@ const computedColorStylesHex = computed(() => {
         <label v-if="!!!slots.label && computedLabel !== ''" :for="Identifier" v-html="computedLabel"></label>
 
         <template v-if="editable">
+            <div v-if="actionButtonIcon" class="lkt-field--atn-btn-container">
+                <lkt-button
+                    class="lkt-field--atn-btn"
+                    :icon="actionButtonIcon"
+                />
+            </div>
             <template v-if="slots['edit']">
                 <div v-on:click="onClick">
                     <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
