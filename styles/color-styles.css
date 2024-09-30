@@ -24,8 +24,9 @@
     overflow: hidden;
 }
 
-.lkt-field.is-color > .lkt-field-main .lkt-button-container {
+.lkt-field .lkt-field-main > .lkt-button-container {
     width: 100%;
+    border-radius: var(--lkt-field-border-radius);
 }
 
 .lkt-field .lkt-field-color--alpha--tooltip {
@@ -34,14 +35,20 @@
     --lkt-tooltip-max-width: 100vw;
 }
 
-.lkt-field .lkt-field-color--alpha--toggle-button {
+.lkt-field .lkt-field-color--alpha--toggle-button,
+.lkt-field .lkt-field--date--toggle-button {
     --lkt-btn-bg: transparent;
     --lkt-btn-border-width: 0;
     --lkt-btn-border-width-hover: 0;
     --lkt-btn-border-width-focus: 0;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
 
+.lkt-field .lkt-field--date--toggle-button {
+    justify-content: flex-start;
+    --lkt-btn-font-size: var(--lkt-field-font-size);
+    --lkt-btn-color: var(--lkt-field-color);
 }
 
 .lkt-field .lkt-field-color--tooltip--numeric-input-container,

@@ -91,4 +91,7 @@
     --lkt-field-switch-dot-size: 18px;
     --lkt-field-switch-dot-left-start: 2px;
     --lkt-field-switch-dot-left-end: 22px;
+
+
+    --lkt-field--html-floating-gap: 2px;
 }

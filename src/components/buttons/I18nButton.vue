@@ -3,11 +3,13 @@ import {computed, ref, watch} from "vue";
 import {Settings} from "../../settings/Settings";
 import HoverTooltip from "../HoverTooltip.vue";
 import {LktObject} from "lkt-ts-interfaces";
+import {ValidFieldType} from "../../types/ValidFieldType";
 
 const emit = defineEmits(['click', 'update:modelValue']);
 
 const props = withDefaults(defineProps<{
     modelValue: LktObject
+    type: ValidFieldType
     insideEllipsis?: boolean
     isFeatured?: boolean
 }>(), {
@@ -22,7 +24,7 @@ watch(() => props.modelValue, v => translations.value = v, {deep: true});
 watch(translations, v => emit('update:modelValue', v), {deep: true});
 
 const computedText = computed(() => {
-        return Settings.clearText
+        return Settings.i18nText
     }),
     computedClass = computed(() => {
         if (props.isFeatured) return 'lkt-field--atn-btn';
@@ -38,6 +40,6 @@ const computedText = computed(() => {
         :class="computedClass"
         icon="lkt-field-icon-language"
         modal="lkt-field-language-edit"
-        :modal-data="{translations}"
+        :modal-data="{translations, type}"
     />
 </template>

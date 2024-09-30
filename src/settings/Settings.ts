@@ -7,6 +7,7 @@ export class Settings {
 
     static undoText: string = '';
     static clearText: string = '';
+    static i18nText: string = '';
     static switchEditionOnText: string = '';
     static switchEditionOffText: string = '';
     static showPasswordOnText: string = '';

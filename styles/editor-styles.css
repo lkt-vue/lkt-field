@@ -1,0 +1,37 @@
+.lkt-field .sun-editor {
+    border: none;
+}
+
+.lkt-field .sun-editor-editable {
+    color: var(--lkt-field-color);
+    padding: var(--lkt-field-padding-textarea);
+}
+
+.lkt-field .sun-editor .se-wrapper {
+    border-radius: var(--lkt-field-border-radius);
+}
+
+.lkt-field .sun-editor .se-wrapper .se-wrapper-inner {
+    min-height: var(--lkt-field-large-field-min-height);
+}
+
+.lkt-field .sun-editor .se-toolbar {
+    position: absolute;
+    bottom: calc(100% + var(--lkt-field-border-width) + var(--lkt-field--html-floating-gap));
+    outline: var(--lkt-field-border-width) var(--lkt-field-border-style) var(--lkt-field-border-color);
+    display: none;
+}
+
+.lkt-field .sun-editor .se-resizing-bar {
+    position: absolute;
+    top: calc(100% + var(--lkt-field-border-width) + var(--lkt-field--html-floating-gap));
+    width: 100%;
+    z-index: 2;
+    display: none;
+    border-top: none;
+}
+
+.lkt-field.has-focus .sun-editor .se-toolbar,
+.lkt-field.has-focus .sun-editor .se-resizing-bar {
+    display: block;
+}

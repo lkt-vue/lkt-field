@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 // Emits
-import {generateRandomString, isEmail as checkIsEmail} from "lkt-string-tools";
-import {computed, nextTick, ref, useSlots, watch} from "vue";
+import {generateRandomString, isEmail as checkIsEmail, stripTags} from "lkt-string-tools";
+import {computed, nextTick, onMounted, ref, useSlots, watch} from "vue";
 import {createLktEvent} from "lkt-events";
 import {Settings} from "../settings/Settings";
 import {LktObject} from "lkt-ts-interfaces";
 //@ts-ignore
 import {httpCall, HTTPResponse} from "lkt-http-client";
-import {__} from "lkt-i18n";
+import {__, currentLanguage} from "lkt-i18n";
 import {FieldValidation} from "lkt-field-validation";
 import UndoButton from "../components/buttons/UndoButton.vue";
 import ClearButton from "../components/buttons/ClearButton.vue";
@@ -15,6 +15,20 @@ import PasswordButton from "../components/buttons/PasswordButton.vue";
 import EditionButton from "../components/buttons/EditionButton.vue";
 import EllipsisActionsButton from "../components/buttons/EllipsisActionsButton.vue";
 import I18nButton from "../components/buttons/I18nButton.vue";
+import {ValidFieldType} from "../types/ValidFieldType";
+import {FieldType} from "../enums/FieldType";
+import {calculateColorValue, decodeHexColor, getContrastFontColor} from "../functions/color-functions";
+import {ensureNumberBetween} from "../functions/numeric-functions";
+
+
+import suneditor from 'suneditor';
+import plugins from 'suneditor/src/plugins';
+
+// How to import language files (default: en)
+import * as lang from 'suneditor/src/lang';
+import {editorOptions} from "../constants/editor-constants";
+import {ValidFieldValue} from "../types/ValidFieldValue";
+import LktCalendar from "../components/calendar/LktCalendar.vue";
 
 const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -23,8 +37,8 @@ const slots = useSlots();
 
 // Props
 const props = withDefaults(defineProps<{
-    modelValue: string | number
-    languageValues?: LktObject
+    modelValue: ValidFieldValue
+    type: ValidFieldType
     valid?: boolean
     placeholder?: string
     label?: string
@@ -81,7 +95,7 @@ const props = withDefaults(defineProps<{
     infoButtonEllipsis?: boolean
 }>(), {
     modelValue: '',
-    languageValues: () => ({}),
+    type: 'text',
     placeholder: '',
     label: '',
     palette: '',
@@ -137,6 +151,16 @@ const props = withDefaults(defineProps<{
 // Constant data
 const Identifier = generateRandomString(16);
 
+const Type = ref(props.type);
+if (Type.value === FieldType.Text) {
+    if (props.isEmail) Type.value = FieldType.Email;
+    else if (props.isTel) Type.value = FieldType.Tel;
+    else if (props.isPassword) Type.value = FieldType.Password;
+    else if (props.isSearch) Type.value = FieldType.Search;
+    else if (props.isNumber) Type.value = FieldType.Number;
+    else if (props.isColor) Type.value = FieldType.Color;
+    else if (props.isRange) Type.value = FieldType.Range;
+}
 
 // Components refs
 const inputElement = ref(null);
@@ -144,7 +168,7 @@ const inputElement = ref(null);
 let baseValidationStatus: string[] = [];
 
 const decodeColor = (value: string) => {
-    if (props.isColor) {
+    if (Type.value === FieldType.Color) {
         if ([0, 1].includes(value.length)) {
             pickedColorRed.value = 0;
             pickedColorGreen.value = 0;
@@ -162,79 +186,100 @@ const decodeColor = (value: string) => {
     return value;
 }
 
-const decodeHexColor = (color: string) => {
-    let r = parseInt(Number('0x' + color.substring(1, 3)), 10);
-    let g = parseInt(Number('0x' + color.substring(3, 5)), 10);
-    let b = parseInt(Number('0x' + color.substring(5, 7)), 10);
-    let a = 255;
-
-    if (color.length === 9) {
-        a = parseInt(Number('0x' + color.substring(5, 7)), 10);
-    }
-
-    return {r, g, b, a};
-}
-
 // Reactive data
 const originalValue = ref(props.modelValue),
     pickedColorRed = ref(255),
     pickedColorGreen = ref(255),
     pickedColorBlue = ref(255),
     pickedColorAlpha = ref(255),
+    pickedDate = ref(new Date(props.modelValue)),
     value = ref(decodeColor(props.modelValue)),
-    translations = ref(props.languageValues),
     isValid = ref(props.valid),
     showPasswordIcon = ref(false),
     focusing = ref(false),
     hadFirstBlur = ref(false),
     hadFirstFocus = ref(false),
+    editor = ref(null),
+    editorTimeout = ref(undefined),
     localValidationStatus = ref(baseValidationStatus),
     editable = ref(!props.readMode);
 
+const computedLang = computed(() => currentLanguage.value);
 
-const changed = computed(() => value.value !== originalValue.value),
-    showInfoUi = computed(() => {
-        return props.canClear || props.infoMessage !== '' || props.errorMessage !== '' || (props.isPassword && props.showPassword);
-    }),
+const assignEditableValue = () => {
+    if (typeof value.value === 'object') return value.value[computedLang.value];
+    return value.value;
+}
+
+const editableValue = ref(assignEditableValue());
+const originalEditableValue = ref(assignEditableValue());
+
+const computedIsColor = computed(() => Type.value === FieldType.Color);
+const computedIsDate = computed(() => Type.value === FieldType.Date);
+
+const computedInputElement = computed(() => {
+    if (Type.value === FieldType.Textarea) return 'textarea';
+    if (Type.value === FieldType.Html) return 'textarea';
+    return 'input';
+})
+
+
+const changed = computed(() => editableValue.value !== originalEditableValue.value),
     amountOfIcons = computed(() => {
         let r = 0;
-        if (props.canClear) ++r;
-        if (props.infoMessage) ++r;
-        if (props.isPassword && props.showPassword) ++r;
+
+        if (computedShowUndoInNav.value) ++r;
+        if (computedShowClearInNav.value) ++r;
+        if (computedShowPasswordRevealInNav.value) ++r;
+        if (computedShowI18nInNav.value) ++r;
+        if (computedShowSwitchEditionInNav.value) ++r;
+
+        if (r > 0 && Type.value === FieldType.Textarea) return 1;
+        if (r > 0 && Type.value === FieldType.Html) return 1;
+        if (r > 0 && props.infoButtonEllipsis) return 1;
+
         return r;
     }),
+    computedHasFeaturedButton = computed(() => {
+        return computedShowI18n.value && props.featuredButton === 'i18n'
+            || computedShowPasswordReveal.value && props.featuredButton === 'password';
+    }),
+    showInfoUi = computed(() => {
+        return amountOfIcons.value > 0;
+    }),
     autocompleteText = computed(() => props.autocomplete === true ? 'on' : 'off'),
-    isFilled = computed(() => value.value !== ''),
-    type = computed(() => {
-        if (props.isPassword && showPasswordIcon.value === true) return 'text';
-        if (props.isEmail) return 'email';
-        if (props.isPassword) return 'password';
-        if (props.isNumber) return 'number';
-        if (props.isTel) return 'tel';
-        if (props.isSearch) return 'search';
-        if (props.isColor) return 'color';
-        if (props.isRange) return 'range';
+    isFilled = computed(() => editableValue.value !== ''),
+    computedInputType = computed(() => {
+        if (Type.value === FieldType.Password && showPasswordIcon.value === true) return 'text';
+        if (Type.value === FieldType.Email) return 'email';
+        if (Type.value === FieldType.Password) return 'password';
+        if (Type.value === FieldType.Number) return 'number';
+        if (Type.value === FieldType.Tel) return 'tel';
+        if (Type.value === FieldType.Search) return 'search';
+        if (Type.value === FieldType.Color) return 'color';
+        if (Type.value === FieldType.Range) return 'range';
         return 'text';
     }),
     classes = computed(() => {
         const r = ['lkt-field', 'lkt-field-text'];
 
+        r.push(`is-${Type.value}`);
         if (props.palette) r.push(`lkt-field--${props.palette}`);
-        if (type) r.push(`is-${type.value}`);
         if (changed.value) r.push('is-changed');
         if (props.disabled) r.push('is-disabled');
-        if (props.featuredButton) r.push('with-atn-btn');
+        if (computedHasFeaturedButton.value) r.push('with-atn-btn');
+        if (showInfoUi.value) r.push('with-info-btn');
         if (props.mandatory && editable.value) r.push('is-mandatory-field');
         if (focusing.value) r.push('has-focus');
 
-        if (!props.isRange && props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
+        if (Type.value !== FieldType.Range && props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
             if (localValidationStatus.value.length > 0) r.push('is-invalid');
             else r.push('is-valid');
         }
 
         if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
 
-        if (!props.isRange) {
+        if (Type.value !== FieldType.Range) {
             r.push(isValid.value ? 'is-valid' : 'is-error');
             r.push(!!props.modelValue ? 'is-filled' : 'is-empty');
         }
@@ -242,8 +287,8 @@ const changed = computed(() => value.value !== originalValue.value),
         return r.join(' ');
     }),
     readModeTitle = computed(() => {
-        if (typeof value.value === 'number') return value.value.toString();
-        return value.value;
+        if (typeof editableValue.value === 'number') return editableValue.value.toString();
+        return editableValue.value;
     }),
     MinimumValue = computed((): number => {
         if (typeof props.min === 'string') return parseFloat(props.min);
@@ -284,9 +329,20 @@ const changed = computed(() => value.value !== originalValue.value),
         return props.placeholder;
     }),
 
+    computedShowError = computed(() => props.errorMessage),
+    computedShowInfo = computed(() => props.infoMessage),
+
     computedShowUndo = computed(() => props.canUndo && changed.value),
     computedShowClear = computed(() => props.canClear && isFilled.value),
-    computedShowPasswordReveal = computed(() => props.isPassword && props.showPassword && isFilled.value);
+    computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object'),
+    computedShowPasswordReveal = computed(() => Type.value === FieldType.Password && props.showPassword && isFilled.value),
+
+    computedShowUndoInNav = computed(() => computedShowUndo.value && !props.infoButtonEllipsis),
+    computedShowClearInNav = computed(() => computedShowClear.value && !props.infoButtonEllipsis),
+    computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && props.featuredButton !== 'password'),
+    computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && props.featuredButton !== 'i18n'),
+    computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis)
+;
 
 const focus = () => {
     nextTick(() => {
@@ -297,21 +353,12 @@ const focus = () => {
     });
 };
 
-const onClickColorPreview = () => {
-    nextTick(() => {
-        if (inputElement.value) {
-            //@ts-ignore
-            inputElement.value.click();
-        }
-    });
-};
-
 const doRemoteValidation = async () => {
     if (props.validationResource) {
         emits('validating');
         const response: HTTPResponse = await httpCall(props.validationResource, {
             ...props.validationResourceData,
-            value: value.value
+            value: editableValue.value
         });
         emits('validation', response);
     }
@@ -324,13 +371,25 @@ watch(() => props.readMode, (v) => editable.value = !v)
 watch(() => props.valid, (v) => isValid.value = v)
 watch(() => props.modelValue, (v) => {
     value.value = v
-    if (props.isNumber) reAssignNumericValue(v);
+    editableValue.value = assignEditableValue();
+})
+watch(editableValue, (v) => {
+    console.log('updated editableValue: ', v, value.value);
+    if (typeof value.value === 'object') {
+        value.value[computedLang.value] = v;
+    } else {
+        value.value = v;
+    }
+
+    if (Type.value === FieldType.Number) reAssignNumericValue(v);
 })
 watch(value, (v) => {
+    console.log('updated value: ', v);
     emits('update:modelValue', v);
+    editableValue.value = assignEditableValue();
     doRemoteValidation();
     doLocalValidation();
-})
+}, {deep: true})
 watch(isValid, (v) => {
     emits('update:valid', v);
 })
@@ -340,7 +399,7 @@ const doLocalValidation = () => {
         return;
     }
 
-    if (props.isRange) return;
+    if (Type.value === FieldType.Range) return;
 
     localValidationStatus.value = [];
 
@@ -349,49 +408,49 @@ const doLocalValidation = () => {
         let min = typeof props.min === 'undefined' ? 0 : parseInt(props.min),
             max = typeof props.max === 'undefined' ? 0 : parseInt(props.max);
 
-        if (props.isNumber && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
-            if (value.value < min || value.value > max) {
+        if (Type.value === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
+            if (editableValue.value < min || editableValue.value > max) {
                 localValidationStatus.value.push(FieldValidation.createNumBetween(min, max, 'ko'));
                 isValid.value = false;
                 return;
             }
         }
 
-        if (!props.isNumber && !props.isEmail && props.mandatory && value.value === '') {
+        if (![FieldType.Number, FieldType.Email].includes(Type.value) && props.mandatory && editableValue.value === '') {
             localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
 
-        } else if (!props.isEmail) {
+        } else if (Type.value !== FieldType.Email) {
 
             if (min > 0) {
-                if (!props.isNumber && value.value.length < min) {
+                if (Type.value !== FieldType.Number && editableValue.value.length < min) {
                     localValidationStatus.value.push(FieldValidation.createMinStr(min, 'ko'));
 
-                } else if (value.value < min) {
+                } else if (editableValue.value < min) {
                     localValidationStatus.value.push(FieldValidation.createMinNum(min, 'ko'));
                 }
             }
         }
 
         if (max > 0) {
-            if (!props.isNumber && value.value.length > max) {
+            if (Type.value !== FieldType.Number && editableValue.value.length > max) {
                 localValidationStatus.value.push(FieldValidation.createMaxStr(max, 'ko'));
 
-            } else if (value.value > max) {
+            } else if (editableValue.value > max) {
                 localValidationStatus.value.push(FieldValidation.createMaxNum(max, 'ko'));
             }
         }
 
-        if (props.isEmail && props.mandatory && value.value === '') {
+        if (Type.value === FieldType.Email && props.mandatory && editableValue.value === '') {
             localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
 
-        } else if (props.isEmail && !checkIsEmail(value.value)) {
+        } else if (Type.value === FieldType.Email && !checkIsEmail(editableValue.value)) {
             localValidationStatus.value.push(FieldValidation.createEmail('ko'));
         }
 
-        if (!props.isNumber) {
+        if (Type.value !== FieldType.Number) {
             if (typeof props.minNumbers !== 'undefined') {
                 let constraint = parseInt(props.minNumbers),
-                    val = value.value.replace(/\D+/g, '');
+                    val = editableValue.value.replace(/\D+/g, '');
 
                 if (val.length < constraint) {
                     localValidationStatus.value.push(FieldValidation.createMinNumbers(constraint, 'ko'));
@@ -400,7 +459,7 @@ const doLocalValidation = () => {
 
             if (typeof props.maxNumbers !== 'undefined') {
                 let constraint = parseInt(props.maxNumbers),
-                    val = value.value.replace(/\D+/g, '');
+                    val = editableValue.value.replace(/\D+/g, '');
 
                 if (val.length > constraint) {
                     localValidationStatus.value.push(FieldValidation.createMaxNumbers(constraint, 'ko'));
@@ -409,7 +468,7 @@ const doLocalValidation = () => {
 
             if (typeof props.minUpperChars !== 'undefined') {
                 let constraint = parseInt(props.minUpperChars),
-                    val = value.value.replace(/[^A-Z]+/g, "");
+                    val = editableValue.value.replace(/[^A-Z]+/g, "");
 
                 if (val.length < constraint) {
                     localValidationStatus.value.push(FieldValidation.createMinUpperChars(constraint, 'ko'));
@@ -418,7 +477,7 @@ const doLocalValidation = () => {
 
             if (typeof props.maxUpperChars !== 'undefined') {
                 let constraint = parseInt(props.maxUpperChars),
-                    val = value.value.replace(/[^A-Z]+/g, "");
+                    val = editableValue.value.replace(/[^A-Z]+/g, "");
 
                 if (val.length > constraint) {
                     localValidationStatus.value.push(FieldValidation.createMaxUpperChars(constraint, 'ko'));
@@ -427,7 +486,7 @@ const doLocalValidation = () => {
 
             if (typeof props.minLowerChars !== 'undefined') {
                 let constraint = parseInt(props.minLowerChars),
-                    val = value.value.replace(/[A-Z]+/g, "");
+                    val = editableValue.value.replace(/[A-Z]+/g, "");
 
                 if (val.length < constraint) {
                     localValidationStatus.value.push(FieldValidation.createMinLowerChars(constraint, 'ko'));
@@ -436,7 +495,7 @@ const doLocalValidation = () => {
 
             if (typeof props.maxLowerChars !== 'undefined') {
                 let constraint = parseInt(props.maxLowerChars),
-                    val = value.value.replace(/[A-Z]+/g, "");
+                    val = editableValue.value.replace(/[A-Z]+/g, "");
 
                 if (val.length > constraint) {
                     localValidationStatus.value.push(FieldValidation.createMaxLowerChars(constraint, 'ko'));
@@ -445,7 +504,7 @@ const doLocalValidation = () => {
 
             if (typeof props.minChars !== 'undefined') {
                 let constraint = parseInt(props.minChars),
-                    val = value.value.replace(/\d+/g, "");
+                    val = editableValue.value.replace(/\d+/g, "");
 
                 if (val.length < constraint) {
                     localValidationStatus.value.push(FieldValidation.createMinChars(constraint, 'ko'));
@@ -454,7 +513,7 @@ const doLocalValidation = () => {
 
             if (typeof props.maxChars !== 'undefined') {
                 let constraint = parseInt(props.maxChars),
-                    val = value.value.replace(/\d+/g, "");
+                    val = editableValue.value.replace(/\d+/g, "");
 
                 if (val.length > constraint) {
                     localValidationStatus.value.push(FieldValidation.createMaxChars(constraint, 'ko'));
@@ -463,7 +522,7 @@ const doLocalValidation = () => {
 
             if (typeof props.minSpecialChars !== 'undefined') {
                 let constraint = parseInt(props.minSpecialChars),
-                    val = value.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
+                    val = editableValue.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
 
                 if (val.length < constraint) {
                     localValidationStatus.value.push(FieldValidation.createMinSpecialChars(constraint, 'ko'));
@@ -472,7 +531,7 @@ const doLocalValidation = () => {
 
             if (typeof props.maxSpecialChars !== 'undefined') {
                 let constraint = parseInt(props.maxSpecialChars),
-                    val = value.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
+                    val = editableValue.value.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "");
 
                 if (val.length > constraint) {
                     localValidationStatus.value.push(FieldValidation.createMaxSpecialChars(constraint, 'ko'));
@@ -480,7 +539,7 @@ const doLocalValidation = () => {
             }
         }
 
-        if (props.checkEqualTo && value.value !== props.checkEqualTo) {
+        if (props.checkEqualTo && editableValue.value !== props.checkEqualTo) {
             localValidationStatus.value.push(FieldValidation.createEqualTo(props.checkEqualTo, 'ko'));
         }
 
@@ -489,18 +548,34 @@ const doLocalValidation = () => {
 }
 
 const
-    doUndo = () => value.value = originalValue.value,
-    doClear = () => value.value = '',
-    getValue = () => value.value,
+    doUndo = () => {
+        if (Type.value === FieldType.Html) {
+            if (editor.value) {
+                editor.value.setContents(originalEditableValue.value);
+            }
+            return;
+        }
+        editableValue.value = originalEditableValue.value
+    },
+    doClear = () => {
+        if (Type.value === FieldType.Html) {
+            if (editor.value) {
+                editor.value.setContents('');
+            }
+            return;
+        }
+        editableValue.value = ''
+    },
+    getValue = () => editableValue.value,
     onKeyUp = ($event: any) => {
         doLocalValidation();
-        emits('keyup', $event, createLktEvent(Identifier, {value: value.value}))
+        emits('keyup', $event, createLktEvent(Identifier, {value: editableValue.value}))
     },
-    onKeyDown = ($event: any) => emits('keydown', $event, createLktEvent(Identifier, {value: value.value})),
+    onKeyDown = ($event: any) => emits('keydown', $event, createLktEvent(Identifier, {value: editableValue.value})),
     onFocus = ($event: any) => {
         hadFirstFocus.value = true;
         doLocalValidation();
-        (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value}))
+        (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: editableValue.value}))
     },
     onChange = ($event: any) => {
         // (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value}))
@@ -508,13 +583,13 @@ const
     onBlur = ($event: any) => {
         hadFirstBlur.value = true;
         doLocalValidation();
-        (focusing.value = false) && emits('blur', $event, createLktEvent(Identifier, {value: value.value}))
+        (focusing.value = false) && emits('blur', $event, createLktEvent(Identifier, {value: editableValue.value}))
     },
     onClick = ($event: any) => {
-        emits('click', $event, createLktEvent(Identifier, {value: value.value}))
+        emits('click', $event, createLktEvent(Identifier, {value: editableValue.value}))
     },
-    onClickInfo = ($event: any) => emits('click-info', $event, createLktEvent(Identifier, {value: value.value})),
-    onClickError = ($event: any) => emits('click-error', $event, createLktEvent(Identifier, {value: value.value})),
+    onClickInfo = ($event: any) => emits('click-info', $event, createLktEvent(Identifier, {value: editableValue.value})),
+    onClickError = ($event: any) => emits('click-error', $event, createLktEvent(Identifier, {value: editableValue.value})),
     onClickSwitchEdition = ($event: any) => {
         if (editable.value) focus();
     },
@@ -525,23 +600,31 @@ const
         let N = Number(n),
             reAssign = false;
 
-        // @ts-ignore
-        if (MinimumValue.value !== false && N < MinimumValue.value) {
-            N = MinimumValue.value;
-            reAssign = true;
-        }
+        let ensured = ensureNumberBetween(N, MinimumValue.value, MaximumValue.value);
 
-        // @ts-ignore
-        if (MaximumValue.value !== false && N > MaximumValue.value) {
-            N = MaximumValue.value;
-            reAssign = true;
-        }
-
-        if (reAssign === true) {
-            value.value = N;
+        if (N !== ensured) {
+            editableValue.value = ensured;
             return true;
         }
         return false;
+
+        // // @ts-ignore
+        // if (MinimumValue.value !== false && N < MinimumValue.value) {
+        //     N = MinimumValue.value;
+        //     reAssign = true;
+        // }
+        //
+        // // @ts-ignore
+        // if (MaximumValue.value !== false && N > MaximumValue.value) {
+        //     N = MaximumValue.value;
+        //     reAssign = true;
+        // }
+        //
+        // if (reAssign) {
+        //     value.value = N;
+        //     return true;
+        // }
+        // return false;
     };
 
 defineExpose({
@@ -552,16 +635,14 @@ defineExpose({
     isMandatory: () => props.mandatory
 });
 
-doUndo();
-
 const hasCustomValueSlot = computed(() => {
-        if (value.value === '') {
+        if (editableValue.value === '') {
             return (props.emptyValueSlot !== '' && typeof Settings.customValueSlots[props.emptyValueSlot] !== 'undefined') || (Settings.defaultEmptyValueSlot && typeof Settings.customValueSlots[Settings.defaultEmptyValueSlot] !== 'undefined');
         }
         return props.valueSlot !== '' && typeof Settings.customValueSlots[props.valueSlot] !== 'undefined';
     }),
     customValueSlot = computed(() => {
-        if (value.value === '') {
+        if (editableValue.value === '') {
             return Settings.customValueSlots[props.emptyValueSlot] ?? Settings.customValueSlots[Settings.defaultEmptyValueSlot];
         }
 
@@ -570,34 +651,13 @@ const hasCustomValueSlot = computed(() => {
     hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
     customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
-const calculateColorValue = (r, g, b, a) => {
-    let red = parseInt(r).toString(16).padStart(2, '0').toUpperCase(),
-        green = parseInt(g).toString(16).padStart(2, '0').toUpperCase(),
-        blue = parseInt(b).toString(16).padStart(2, '0').toUpperCase(),
-        color = '#' + red + green + blue
-    ;
-
-    if (a == 255) return color;
-
-    let alpha = parseInt(a).toString(16).padStart(2, '0').toUpperCase();
-    return color + alpha;
-}
-
 const computedComplementaryColor = computed(() => {
-    if (!props.isColor) return '';
-
-    let color = decodeHexColor(value.value);
-
-    // Counting the perceptive luminance - human eye favors green color...
-    let luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / color.a;
-
-    if (luminance > 0.5) return '#000000'; // bright colors - black font
-
-    return '#ffffff'; // dark colors - white font
+    if (!computedIsColor.value) return '';
+    return getContrastFontColor(decodeHexColor(editableValue.value));
 })
 
 const onRgbaChanged = ($event) => {
-    value.value = calculateColorValue(
+    editableValue.value = calculateColorValue(
         pickedColorRed.value,
         pickedColorGreen.value,
         pickedColorBlue.value,
@@ -606,7 +666,7 @@ const onRgbaChanged = ($event) => {
 }
 
 const onColorChange = ($event) => {
-    decodeColor(value.value);
+    decodeColor(editableValue.value);
 }
 
 watch(pickedColorRed, onRgbaChanged);
@@ -615,36 +675,71 @@ watch(pickedColorBlue, onRgbaChanged);
 watch(pickedColorAlpha, onRgbaChanged);
 
 const computedColorStyles = computed(() => {
-    if (!props.isColor) return {};
+    if (!computedIsColor.value) return {};
 
-    if (value.value === '' || value.value === '#') {
+    if (editableValue.value === '' || editableValue.value === '#') {
         return {};
     }
 
-    let r = {
-        background: value.value,
-        '--lkt-btn-bg': value.value,
+    return {
+        background: editableValue.value,
+        '--lkt-btn-bg': editableValue.value,
 
         color: computedComplementaryColor.value,
         '--lkt-btn-color': computedComplementaryColor.value,
     }
-
-    return r;
 })
 
 const computedColorStylesHex = computed(() => {
-    if (!props.isColor) return {};
+    if (!computedIsColor.value) return {};
 
-    if (value.value === '' || value.value === '#') {
+    if (editableValue.value === '' || editableValue.value === '#') {
         return {};
     }
 
-    let r = {
-        '--lkt-field-bg-input': value.value,
+    return {
+        '--lkt-field-bg-input': editableValue.value,
         '--lkt-field-color': computedComplementaryColor.value,
     }
+})
 
-    return r;
+onMounted(() => {
+    if (Type.value === FieldType.Html) {
+        let options = {
+            ...editorOptions, ...{
+                plugins,
+                lang: lang[computedLang.value] ? lang[computedLang.value] : lang.en
+            }
+        };
+
+        editor.value = suneditor.create(Identifier, options);
+
+        editor.value.onChange = (content) => {
+            if (editorTimeout.value) clearTimeout(editorTimeout.value);
+
+            editorTimeout.value = setTimeout(() => {
+                let strippedContent = stripTags(content);
+                if (strippedContent === '') editableValue.value = '';
+                else editableValue.value = content
+            }, 100);
+
+            if (props.disabled) editor.value.disabled();
+            else editor.value.enabled();
+        }
+
+        editor.value.onBlur = () => {
+            focusing.value = false;
+            if (editorTimeout.value) clearTimeout(editorTimeout.value);
+        }
+
+        editor.value.onKeyUp = () => {
+            if (editorTimeout.value) clearTimeout(editorTimeout.value);
+        }
+
+        editor.value.onClick = () => {
+            focusing.value = true;
+        }
+    }
 })
 </script>
 
@@ -656,201 +751,293 @@ const computedColorStylesHex = computed(() => {
         <slot v-if="!!slots.label" name="label"></slot>
         <label v-if="!!!slots.label && computedLabel !== ''" :for="Identifier" v-html="computedLabel"></label>
 
-        <template v-if="editable">
-            <div v-if="featuredButton" class="lkt-field--atn-btn-container">
+        <div class="lkt-field-content">
+
+            <div v-if="computedHasFeaturedButton" class="lkt-field--atn-btn-container">
                 <password-button
                     v-if="featuredButton === 'password' && computedShowPasswordReveal"
                     v-model="showPasswordIcon"
                     is-featured
                 />
 
-                <i18n-button v-if="featuredButton === 'i18n' && canI18n" v-model="translations" is-featured/>
-            </div>
-            <template v-if="slots['edit']">
-                <div v-on:click="onClick">
-                    <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
-                </div>
-            </template>
-            <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
-                <component v-bind:is="customEditSlot"
-                           v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
+                <i18n-button v-if="computedShowI18n && featuredButton === 'i18n' && canI18n" v-model="value" is-featured
+                             :type="Type"/>
             </div>
 
-            <template v-else-if="isColor">
-                <div class="lkt-field-main">
+            <div class="lkt-field-main">
+                <template v-if="editable">
+                    <template v-if="slots['edit']">
+                        <div v-on:click="onClick">
+                            <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
+                        </div>
+                    </template>
+                    <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
+                        <component v-bind:is="customEditSlot"
+                                   v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
+                    </div>
 
-                    <lkt-button
-                        class="lkt-field-color--alpha--toggle-button"
-                        :style="computedColorStyles"
-                        :text="value"
-                        tooltip
-                        tooltip-class="lkt-field-color--alpha--tooltip"
-                        tooltip-location-y="bottom"
-                        tooltip-location-x="left-corner"
-                    >
-                        <template #tooltip="{doClose}">
-                            <div class="lkt-grid-1">
-                                <div class="lkt-field-color--tooltip--rgba-container">
-                                    <div class="lkt-field-color--tooltip--hex-input-container">
-                                        <label class="like-lkt-field-label">HEX</label>
-                                        <lkt-field-text
-                                            v-model="value"
-                                            :style="computedColorStylesHex"
-                                            @change="onColorChange"
-                                        />
+                    <template v-else-if="computedIsColor">
+                        <lkt-button
+                            class="lkt-field-color--alpha--toggle-button"
+                            :style="computedColorStyles"
+                            :text="editableValue"
+                            tooltip
+                            tooltip-class="lkt-field-color--alpha--tooltip"
+                            tooltip-location-y="bottom"
+                            tooltip-location-x="left-corner"
+                        >
+                            <template #tooltip="{doClose}">
+                                <div class="lkt-grid-1">
+                                    <div class="lkt-field-color--tooltip--rgba-container">
+                                        <div class="lkt-field-color--tooltip--hex-input-container">
+                                            <label class="like-lkt-field-label">HEX</label>
+                                            <lkt-field-text
+                                                v-model="editableValue"
+                                                :style="computedColorStylesHex"
+                                                @change="onColorChange"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="lkt-field-color--tooltip--rgba-container">
-                                    <div class="lkt-field-color--tooltip--numeric-input-container">
-                                        <label class="like-lkt-field-label">R</label>
+                                    <div class="lkt-field-color--tooltip--rgba-container">
+                                        <div class="lkt-field-color--tooltip--numeric-input-container">
+                                            <label class="like-lkt-field-label">R</label>
+                                            <lkt-field-text
+                                                v-model="pickedColorRed"
+                                                is-number
+                                                min="0"
+                                                max="255"
+                                                step="1"
+                                            />
+                                        </div>
                                         <lkt-field-text
+                                            class="color-range color-range--red"
                                             v-model="pickedColorRed"
-                                            is-number
+                                            is-range
                                             min="0"
                                             max="255"
                                             step="1"
                                         />
                                     </div>
-                                    <lkt-field-text
-                                        class="color-range color-range--red"
-                                        v-model="pickedColorRed"
-                                        is-range
-                                        min="0"
-                                        max="255"
-                                        step="1"
-                                    />
-                                </div>
 
-                                <div class="lkt-field-color--tooltip--rgba-container">
-                                    <div class="lkt-field-color--tooltip--numeric-input-container">
-                                        <label class="like-lkt-field-label">G</label>
+                                    <div class="lkt-field-color--tooltip--rgba-container">
+                                        <div class="lkt-field-color--tooltip--numeric-input-container">
+                                            <label class="like-lkt-field-label">G</label>
+                                            <lkt-field-text
+                                                v-model="pickedColorGreen"
+                                                is-number
+                                                min="0"
+                                                max="255"
+                                                step="1"
+                                            />
+                                        </div>
                                         <lkt-field-text
+                                            class="color-range color-range--green"
                                             v-model="pickedColorGreen"
-                                            is-number
+                                            is-range
                                             min="0"
                                             max="255"
                                             step="1"
                                         />
                                     </div>
-                                    <lkt-field-text
-                                        class="color-range color-range--green"
-                                        v-model="pickedColorGreen"
-                                        is-range
-                                        min="0"
-                                        max="255"
-                                        step="1"
-                                    />
-                                </div>
 
-                                <div class="lkt-field-color--tooltip--rgba-container">
-                                    <div class="lkt-field-color--tooltip--numeric-input-container">
-                                        <label class="like-lkt-field-label">B</label>
+                                    <div class="lkt-field-color--tooltip--rgba-container">
+                                        <div class="lkt-field-color--tooltip--numeric-input-container">
+                                            <label class="like-lkt-field-label">B</label>
+                                            <lkt-field-text
+                                                v-model="pickedColorBlue"
+                                                is-number
+                                                min="0"
+                                                max="255"
+                                                step="1"
+                                            />
+                                        </div>
                                         <lkt-field-text
+                                            class="color-range color-range--blue"
                                             v-model="pickedColorBlue"
-                                            is-number
+                                            is-range
                                             min="0"
                                             max="255"
                                             step="1"
                                         />
                                     </div>
-                                    <lkt-field-text
-                                        class="color-range color-range--blue"
-                                        v-model="pickedColorBlue"
-                                        is-range
-                                        min="0"
-                                        max="255"
-                                        step="1"
-                                    />
-                                </div>
 
-                                <div class="lkt-field-color--tooltip--rgba-container">
-                                    <div class="lkt-field-color--tooltip--numeric-input-container">
-                                        <label class="like-lkt-field-label">A</label>
+                                    <div class="lkt-field-color--tooltip--rgba-container">
+                                        <div class="lkt-field-color--tooltip--numeric-input-container">
+                                            <label class="like-lkt-field-label">A</label>
+                                            <lkt-field-text
+                                                v-model="pickedColorAlpha"
+                                                is-number
+                                                min="0"
+                                                max="255"
+                                                step="1"
+                                            />
+                                        </div>
                                         <lkt-field-text
+                                            class="color-range color-range--alpha"
                                             v-model="pickedColorAlpha"
-                                            is-number
+                                            is-range
                                             min="0"
                                             max="255"
                                             step="1"
                                         />
                                     </div>
-                                    <lkt-field-text
-                                        class="color-range color-range--alpha"
-                                        v-model="pickedColorAlpha"
-                                        is-range
-                                        min="0"
-                                        max="255"
-                                        step="1"
-                                    />
                                 </div>
-                            </div>
-                        </template>
-                    </lkt-button>
-                </div>
-            </template>
+                            </template>
+                        </lkt-button>
+                    </template>
 
-            <template v-else-if="computedPlaceholder">
-                <div class="lkt-field-main">
-                    <input v-model="value"
-                           :ref="(el:any) => inputElement = el"
-                           v-bind:value="value"
-                           v-bind:type="type"
-                           v-bind:name="name"
-                           v-bind:id="Identifier"
-                           v-bind:disabled="disabled"
-                           v-bind:readonly="readonly"
-                           v-bind:placeholder="computedPlaceholder"
-                           v-bind:tabindex="tabindex"
-                           v-bind:autocomplete="autocompleteText"
-                           v-bind:min="MinimumValue"
-                           v-bind:max="MaximumValue"
-                           v-bind:step="step"
-                           v-on:keyup="onKeyUp"
-                           v-on:keydown="onKeyDown"
-                           v-on:focus="onFocus"
-                           v-on:blur="onBlur"
-                           v-on:click="onClick"
-                           v-on:change="onChange"
-                    >
-                </div>
-            </template>
-            <template v-else>
-                <div class="lkt-field-main">
-                    <input v-model="value"
-                           :ref="(el:any) => inputElement = el"
-                           v-bind:value="value"
-                           v-bind:type="type"
-                           v-bind:name="name"
-                           v-bind:id="Identifier"
-                           v-bind:disabled="disabled"
-                           v-bind:readonly="readonly"
-                           v-bind:tabindex="tabindex"
-                           v-bind:autocomplete="autocompleteText"
-                           v-bind:min="MinimumValue"
-                           v-bind:max="MaximumValue"
-                           v-bind:step="step"
-                           v-on:keyup="onKeyUp"
-                           v-on:keydown="onKeyDown"
-                           v-on:focus="onFocus"
-                           v-on:blur="onBlur"
-                           v-on:click="onClick"
-                           v-on:change="onChange">
-                </div>
-            </template>
+                    <template v-else-if="computedIsDate">
+                        <lkt-button
+                            class="lkt-field--date--toggle-button"
+                            :text="editableValue"
+                            tooltip
+                            tooltip-class="lkt-field--date--tooltip"
+                            tooltip-location-y="bottom"
+                            tooltip-location-x="left-corner"
+                        >
+                            <template #tooltip="{doClose}">
+                                <lkt-calendar/>
+                            </template>
+                        </lkt-button>
+                    </template>
+
+
+                    <template v-else-if="computedPlaceholder">
+                        <input
+                            v-if="computedInputElement === 'input'"
+                            v-model="editableValue"
+                            :ref="(el:any) => inputElement = el"
+                            :value="editableValue"
+                            :type="computedInputType"
+                            :name="name"
+                            :id="Identifier"
+                            :disabled="disabled"
+                            :readonly="readonly"
+                            :placeholder="computedPlaceholder"
+                            :tabindex="tabindex"
+                            :autocomplete="autocompleteText"
+                            :min="MinimumValue"
+                            :max="MaximumValue"
+                            :step="step"
+                            v-on:keyup="onKeyUp"
+                            v-on:keydown="onKeyDown"
+                            v-on:focus="onFocus"
+                            v-on:blur="onBlur"
+                            v-on:click="onClick"
+                            v-on:change="onChange"
+                        />
+                        <textarea
+                            v-else-if="computedInputElement === 'textarea'"
+                            v-model="editableValue"
+                            :ref="(el:any) => inputElement = el"
+                            :value="editableValue"
+                            :name="name"
+                            :id="Identifier"
+                            :disabled="disabled"
+                            :readonly="readonly"
+                            :placeholder="computedPlaceholder"
+                            :tabindex="tabindex"
+                            :autocomplete="autocompleteText"
+                            v-on:keyup="onKeyUp"
+                            v-on:keydown="onKeyDown"
+                            v-on:focus="onFocus"
+                            v-on:blur="onBlur"
+                            v-on:click="onClick"
+                            v-on:change="onChange"
+                        />
+                    </template>
+                    <template v-else>
+                        <input
+                            v-if="computedInputElement === 'input'"
+                            v-model="editableValue"
+                            :ref="(el:any) => inputElement = el"
+                            :value="editableValue"
+                            :type="computedInputType"
+                            :name="name"
+                            :id="Identifier"
+                            :disabled="disabled"
+                            :readonly="readonly"
+                            :tabindex="tabindex"
+                            :autocomplete="autocompleteText"
+                            :min="MinimumValue"
+                            :max="MaximumValue"
+                            :step="step"
+                            v-on:keyup="onKeyUp"
+                            v-on:keydown="onKeyDown"
+                            v-on:focus="onFocus"
+                            v-on:blur="onBlur"
+                            v-on:click="onClick"
+                            v-on:change="onChange"/>
+                        <textarea
+                            v-else-if="computedInputElement === 'textarea'"
+                            v-model="editableValue"
+                            :ref="(el:any) => inputElement = el"
+                            :value="editableValue"
+                            :name="name"
+                            :id="Identifier"
+                            :disabled="disabled"
+                            :readonly="readonly"
+                            :tabindex="tabindex"
+                            :autocomplete="autocompleteText"
+                            v-on:keyup="onKeyUp"
+                            v-on:keydown="onKeyDown"
+                            v-on:focus="onFocus"
+                            v-on:blur="onBlur"
+                            v-on:click="onClick"
+                            v-on:change="onChange"/>
+                    </template>
+                </template>
+            </div>
+
+            <div v-if="!editable" class="lkt-field-text__read" v-on:click="onClick">
+
+                <template v-if="slots['value']">
+                    <slot
+                        name="value"
+                        v-bind:value="value"
+                        :title="readModeTitle"
+                        :data="slotData"/>
+                </template>
+                <component
+                    v-else-if="hasCustomValueSlot"
+                    v-bind:is="customValueSlot"
+                    v-bind:value="value"
+                    :title="readModeTitle"
+                    :data="slotData"/>
+
+                <template v-else>
+                    <lkt-anchor
+                        v-if="isEmail"
+                        class="lkt-field-text__read-value"
+                        :title="readModeTitle"
+                        :to="'mail:' + value">{{ value }}
+                    </lkt-anchor>
+                    <lkt-anchor
+                        v-else-if="isTel"
+                        class="lkt-field-text__read-value"
+                        :title="readModeTitle"
+                        :to="'tel:' + value">{{ value }}
+                    </lkt-anchor>
+                    <div
+                        v-else
+                        class="lkt-field-text__read-value"
+                        v-html="value" :title="readModeTitle"></div>
+                </template>
+            </div>
 
             <div v-if="showInfoUi" class="lkt-field--info-nav">
-                <undo-button v-if="!infoButtonEllipsis && computedShowUndo" @click="doUndo"/>
-                <clear-button v-if="!infoButtonEllipsis && computedShowClear" @click="doClear"/>
+                <undo-button v-if="computedShowUndoInNav" @click="doUndo"/>
+                <clear-button v-if="computedShowClearInNav" @click="doClear"/>
 
                 <lkt-button
-                    v-if="errorMessage"
+                    v-if="computedShowError"
                     :title="errorMessage"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-warning"
                     @click="onClickError"
                 />
                 <lkt-button
-                    v-if="infoMessage"
+                    v-if="computedShowInfo"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-info"
                     @click="onClickInfo"
@@ -860,19 +1047,21 @@ const computedColorStylesHex = computed(() => {
                     hide-tooltip-on-leave
                 >
                     <template #tooltip>
-                        {{infoMessage}}
+                        {{ infoMessage }}
                     </template>
                 </lkt-button>
 
                 <password-button
-                    v-if="!infoButtonEllipsis && computedShowPasswordReveal && featuredButton !== 'password'"
+                    v-if="computedShowPasswordRevealInNav"
                     v-model="showPasswordIcon"
                 />
 
-                <i18n-button v-if="!infoButtonEllipsis && canI18n && featuredButton !== 'i18n'" v-model="translations"/>
+                <i18n-button v-if="computedShowI18nInNav"
+                             v-model="value" :type="Type"
+                />
 
                 <edition-button
-                    v-if="!infoButtonEllipsis && allowReadModeSwitch"
+                    v-if="computedShowSwitchEditionInNav"
                     v-model="editable"
                     @click="onClickSwitchEdition"
                 />
@@ -887,32 +1076,6 @@ const computedColorStylesHex = computed(() => {
                     v-model:show-edition-check="editable"
                     @undo="doUndo"
                     @clear="doClear"
-                />
-            </div>
-        </template>
-
-        <div v-if="!editable" class="lkt-field-text__read" v-on:click="onClick">
-
-            <template v-if="slots['value']">
-                <slot name="value" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
-            </template>
-            <component v-else-if="hasCustomValueSlot" v-bind:is="customValueSlot"
-                       v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
-            <template v-else>
-                <lkt-anchor v-if="isEmail" class="lkt-field-text__read-value" :title="readModeTitle"
-                            :to="'mail:' + value">{{ value }}
-                </lkt-anchor>
-                <lkt-anchor v-else-if="isTel" class="lkt-field-text__read-value" :title="readModeTitle"
-                            :to="'tel:' + value">{{ value }}
-                </lkt-anchor>
-                <div v-else class="lkt-field-text__read-value" v-html="value" :title="readModeTitle"></div>
-            </template>
-
-            <div v-if="allowReadModeSwitch" class="lkt-field--info-nav">
-                <edition-button
-                    v-if="allowReadModeSwitch"
-                    v-model="editable"
-                    @click="onClickSwitchEdition"
                 />
             </div>
         </div>

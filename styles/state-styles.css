@@ -118,20 +118,21 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    position: absolute;
-    left: 0;
-    bottom: 0;
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*top: 0;*/
     z-index: 1;
     height: var(--lkt-field-input-height);
+    width: var(--lkt-field-input-height);
 }
 
 .lkt-field--info-nav {
     display: flex;
     flex-direction: row;
     align-items: center;
-    position: absolute;
-    right: 0;
-    bottom: 0;
+    /*position: absolute;*/
+    /*right: 0;*/
+    /*top: 0;*/
     z-index: 1;
     height: var(--lkt-field-input-height);
 }
@@ -172,8 +173,30 @@
     border-right: none;
 }
 
-.lkt-field.with-atn-btn .lkt-field-main {
-    padding-left: var(--lkt-field-input-height);
+/*.lkt-field.with-atn-btn .lkt-field-main {*/
+/*    padding-left: var(--lkt-field-input-height);*/
+/*}*/
+
+.lkt-field.has-icons .lkt-field-main {
+    --lkt-field--info-nav-icons: 1;
+    --lkt-field--info-nav--required-space: calc(var(--lkt-field--info-nav-icons) * var(--lkt-field-input-height));
+    /*padding-right: var(--lkt-field--info-nav--required-space);*/
+}
+
+.lkt-field.has-icons.has-icons-2 .lkt-field-main {
+    --lkt-field--info-nav-icons: 2;
+}
+
+.lkt-field.has-icons.has-icons-3 .lkt-field-main {
+    --lkt-field--info-nav-icons: 3;
+}
+
+.lkt-field.has-icons.has-icons-4 .lkt-field-main {
+    --lkt-field--info-nav-icons: 4;
+}
+
+.lkt-field.has-icons.has-icons-5 .lkt-field-main {
+    --lkt-field--info-nav-icons: 5;
 }
 
 .lkt-field.with-atn-btn .lkt-field-main > input[type="text"],
@@ -184,4 +207,35 @@
 .lkt-field.with-atn-btn .lkt-field-main > input[type="search"] {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+.lkt-field.has-icons .lkt-field-main > input[type="text"],
+.lkt-field.has-icons .lkt-field-main > input[type="email"],
+.lkt-field.has-icons .lkt-field-main > input[type="number"],
+.lkt-field.has-icons .lkt-field-main > input[type="tel"],
+.lkt-field.has-icons .lkt-field-main > input[type="password"],
+.lkt-field.has-icons .lkt-field-main > input[type="search"] {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.lkt-field.is-textarea .lkt-field--atn-btn-container,
+.lkt-field.is-textarea .lkt-field--info-nav,
+.lkt-field.is-html .lkt-field--atn-btn-container,
+.lkt-field.is-html .lkt-field--info-nav {
+    flex-direction: column;
+}
+
+.lkt-field.is-textarea .lkt-field--atn-btn,
+.lkt-field.is-textarea .lkt-field--atn-btn:hover,
+.lkt-field.is-html .lkt-field--atn-btn,
+.lkt-field.is-html .lkt-field--atn-btn:hover {
+    border-bottom-left-radius: 0;
+}
+
+.lkt-field.is-textarea .lkt-field--info-btn,
+.lkt-field.is-textarea .lkt-field--info-btn:hover,
+.lkt-field.is-html .lkt-field--info-btn,
+.lkt-field.is-html .lkt-field--info-btn:hover {
+    border-bottom-right-radius: 0;
 }

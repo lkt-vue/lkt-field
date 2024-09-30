@@ -14,7 +14,31 @@
     width: auto;
 }
 
-.lkt-field-main,
+.lkt-field-content {
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    background-color: var(--lkt-field-bg);
+    border-width: var(--lkt-field-border-width);
+    border-style: var(--lkt-field-border-style);
+    border-color: var(--lkt-field-border-color);
+    box-shadow: var(--lkt-field-shadow);
+    border-radius: var(--lkt-field-border-radius);
+    transition: var(--lkt-field-transition-input);
+}
+
+.lkt-field-main {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+}
+
+.lkt-field-select .lkt-field-main,
+.lkt-field-date .lkt-field-main,
 .lkt-field-file__main,
 .lkt-field-editor__main {
     display: flex;
@@ -33,7 +57,9 @@
     transition: var(--lkt-field-transition-input);
 }
 
-.lkt-field.has-focus .lkt-field-main,
+.lkt-field.has-focus .lkt-field-content,
+.lkt-field-select.has-focus .lkt-field-main,
+.lkt-field-date.has-focus .lkt-field-main,
 .lkt-field.has-focus .lkt-field-file__main,
 .lkt-field.has-focus .lkt-field-editor__main {
     outline: 0;
@@ -118,7 +144,7 @@
 .lkt-field input[type="search"],
 .lkt-field input[type="range"],
 .lkt-field input[type="tel"] {
-    height: calc(var(--lkt-field-input-height) - 2 * var(--lkt-field-border-width));
+    height: var(--lkt-field-input-height);
     line-height: var(--lkt-field-line-height-input);
     padding: var(--lkt-field-padding-input);
 }
@@ -139,4 +165,10 @@
 .lkt-field-editor .sun-editor .se-toolbar,
 .lkt-field-editor .sun-editor .se-toolbar-cover {
     z-index: initial;
+}
+
+.lkt-field-content {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
 }

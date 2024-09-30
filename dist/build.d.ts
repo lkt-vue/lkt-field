@@ -1,13 +1,14 @@
-declare namespace et {
-    function install(i: any): void;
+declare namespace Pn {
+    function install(e: any): void;
 }
-declare function lt(i: any, y: any): void;
-declare function at(i: any): any;
-declare function st(i: any): any;
-declare function nt(i: any): any;
-declare function it(i: any): any;
-declare function ot(i: any): any;
-declare function tt(i: any): any;
-declare function Yl(i: any, y: any): boolean;
-declare function Ql(i: any, y: any): boolean;
-export { et as default, lt as setDefaultTextEmptyValueSlot, at as setFieldClearText, st as setFieldShowPasswordOffText, nt as setFieldShowPasswordOnText, it as setFieldSwitchEditionOffText, ot as setFieldSwitchEditionOnText, tt as setFieldUndoText, Yl as setTextEditSlot, Ql as setTextValueSlot };
+declare function Un(e: any, t: any): void;
+declare function Zn(e: any): any;
+declare function qn(e: any): any;
+declare function Yn(e: any): any;
+declare function $n(e: any): any;
+declare function Gn(e: any): any;
+declare function jn(e: any): any;
+declare function Wn(e: any): any;
+declare function Fn(e: any, t: any): boolean;
+declare function Vn(e: any, t: any): boolean;
+export { Pn as default, Un as setDefaultTextEmptyValueSlot, Zn as setFieldClearText, qn as setFieldI18nText, Yn as setFieldShowPasswordOffText, $n as setFieldShowPasswordOnText, Gn as setFieldSwitchEditionOffText, jn as setFieldSwitchEditionOnText, Wn as setFieldUndoText, Fn as setTextEditSlot, Vn as setTextValueSlot };

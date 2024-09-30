@@ -31,6 +31,7 @@ export default {
                 'lkt-tooltip',
                 'lkt-http-client',
                 'lkt-string-tools',
+                'lkt-date-tools',
                 'axios',
                 'lkt-data-state'
             ],

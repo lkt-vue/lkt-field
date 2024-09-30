@@ -3,11 +3,13 @@ import {computed} from "vue";
 import LktFieldText from "../../lib-components/LktFieldText.vue";
 import {LktObject} from "lkt-ts-interfaces";
 import {availableLanguages, currentLanguage} from "lkt-i18n";
+import {ValidFieldType} from "../../types/ValidFieldType";
 
 const props = withDefaults(defineProps<{
     modalName: string
     modalKey: string
     zIndex: number
+    type: ValidFieldType
     translations: LktObject
 }>(), {
     modalName: '',
@@ -31,6 +33,7 @@ const computedAvailableLanguages = computed(() => {
     >
         <div class="lkt-grid-1">
             <lkt-field-text
+                :type="type"
                 label="Idioma actual (ES)"
                 v-model="translations['es']"
                 can-clear
@@ -38,6 +41,7 @@ const computedAvailableLanguages = computed(() => {
             />
 
             <lkt-field-text
+                :type="type"
                 v-for="lang in computedAvailableLanguages"
                 :label="'Idioma (' + lang+')'"
                 v-model="translations[lang]"

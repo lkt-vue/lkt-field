@@ -28,6 +28,7 @@ const onClick = () => emit('click');
         :text="insideEllipsis ? computedText : ''"
         :title="computedText"
         :class="computedClass"
+        class="lkt-field--btn-undo"
         icon="lkt-field-icon-undo"
         @click="onClick"
     />

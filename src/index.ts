@@ -8,6 +8,7 @@ export {setTextValueSlot, setTextEditSlot} from './functions/settings-functions'
 import "../fonts/fontello/css/lkt-fields.css";
 import "../styles/common-styles.css";
 import "../styles/select-styles.css";
+import "../styles/editor-styles.css";
 import "../styles/switch-styles.css";
 import "../styles/file-styles.css";
 import "../styles/color-styles.css";
@@ -21,6 +22,7 @@ import LktModal, {addModal} from "lkt-modal";
 import LktButton from "lkt-button";
 import LktTooltip from "lkt-tooltip";
 import LktTextLanguageEditModal from "./components/modals/LktTextLanguageEditModal.vue";
+import {LktObject} from "lkt-ts-interfaces";
 
 const LktFieldText: Plugin = {
   install: (app: App) => {
@@ -48,6 +50,7 @@ export const setDefaultTextEmptyValueSlot = (str: string, component?: string|Com
 
 export const setFieldUndoText = (text: string) => Settings.undoText = text;
 export const setFieldClearText = (text: string) => Settings.clearText = text;
+export const setFieldI18nText = (text: string) => Settings.i18nText = text;
 export const setFieldSwitchEditionOnText = (text: string) => Settings.switchEditionOnText = text;
 export const setFieldSwitchEditionOffText = (text: string) => Settings.switchEditionOffText = text;
 export const setFieldShowPasswordOnText = (text: string) => Settings.showPasswordOnText = text;
