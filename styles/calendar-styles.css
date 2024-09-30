@@ -1,0 +1,36 @@
+.lkt-calendar {
+    width: calc(7 * var(--lkt-field-input-height) + 6 * 7px);
+}
+
+.lkt-calendar--day-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.lkt-calendar--header-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.lkt-calendar--header-text {
+    width: calc(5 * var(--lkt-field-input-height) + 4 * 7px);
+}
+
+.lkt-calendar--filling-day {
+}
+
+.lkt-calendar--day {
+    width: var(--lkt-field-input-height);
+    height: var(--lkt-field-input-height);
+    --lkt-btn-width: var(--lkt-field-input-height);
+    --lkt-btn-height: var(--lkt-field-input-height);
+    --lkt-btn-bg: transparent;
+    --lkt-btn-bg-hover: #dedede;
+    --lkt-btn-border-width: 0;
+    --lkt-btn-border-width-hover: 0;
+    --lkt-btn-border-width-focus: 0;
+}

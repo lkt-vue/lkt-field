@@ -14,6 +14,7 @@ import "../styles/file-styles.css";
 import "../styles/color-styles.css";
 import "../styles/range-styles.css";
 import "../styles/read-mode-styles.css";
+import "../styles/calendar-styles.css";
 import "../styles/palette-styles.css";
 import "../styles/state-styles.css";
 import "../styles/helper-styles.css";
@@ -22,7 +23,6 @@ import LktModal, {addModal} from "lkt-modal";
 import LktButton from "lkt-button";
 import LktTooltip from "lkt-tooltip";
 import LktTextLanguageEditModal from "./components/modals/LktTextLanguageEditModal.vue";
-import {LktObject} from "lkt-ts-interfaces";
 
 const LktFieldText: Plugin = {
   install: (app: App) => {
