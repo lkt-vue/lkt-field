@@ -29,6 +29,7 @@ import * as lang from 'suneditor/src/lang';
 import {editorOptions} from "../constants/editor-constants";
 import {ValidFieldValue} from "../types/ValidFieldValue";
 import LktCalendar from "../components/calendar/LktCalendar.vue";
+import {date} from "lkt-date-tools";
 
 const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -390,9 +391,14 @@ watch(value, (v) => {
     doRemoteValidation();
     doLocalValidation();
 }, {deep: true})
+
 watch(isValid, (v) => {
     emits('update:valid', v);
 })
+watch(pickedDate, (v) => {
+    console.log('updated pickedDate: ', v);
+    value.value = date('Y-m-d', v);
+}, {deep: true})
 
 const doLocalValidation = () => {
     if (props.autoValidationType === 'blur' && (!hadFirstBlur.value || !hadFirstFocus.value)) {
@@ -896,7 +902,7 @@ onMounted(() => {
                             tooltip-location-x="left-corner"
                         >
                             <template #tooltip="{doClose}">
-                                <lkt-calendar/>
+                                <lkt-calendar v-model="pickedDate"/>
                             </template>
                         </lkt-button>
                     </template>

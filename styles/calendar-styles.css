@@ -34,3 +34,9 @@
     --lkt-btn-border-width-hover: 0;
     --lkt-btn-border-width-focus: 0;
 }
+
+.lkt-calendar--day.is-picked {
+    --lkt-btn-border-width: 1px;
+    --lkt-btn-border-width-hover: 1px;
+    --lkt-btn-border-width-focus: 1px;
+}

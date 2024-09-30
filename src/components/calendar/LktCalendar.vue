@@ -1,8 +1,18 @@
 <script setup lang="ts">
 
-
-import {computed, nextTick, ref} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import {date} from "lkt-date-tools";
+
+const emit = defineEmits(['update:modelValue']);
+
+const props = withDefaults(defineProps<{
+    modelValue: Date
+}>(), {
+});
+
+const pickedDate = ref(props.modelValue);
+watch(() => props.modelValue, v => pickedDate.value = v, {deep: true});
+watch(pickedDate, v => emit('update:modelValue', v));
 
 const visibleDate = ref(new Date());
 const visibleYear = ref(visibleDate.value.getFullYear());
@@ -27,9 +37,9 @@ const onClickNext = () => {
 
         visibleMonth.value += 1;
         visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
+        visibleDate.value = new Date(visibleDate.value);
         visibleText.value = date('Y-m', visibleDate.value);
-        refreshing.value = true;
-        nextTick(() => refreshing.value = false);
+        doRefresh();
     },
     onClickPrev = () => {
         if (visibleMonth.value < 0) {
@@ -39,9 +49,29 @@ const onClickNext = () => {
 
         visibleMonth.value -= 1;
         visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
+        visibleDate.value = new Date(visibleDate.value);
         visibleText.value = date('Y-m', visibleDate.value);
-        refreshing.value = true;
-        nextTick(() => refreshing.value = false);
+        doRefresh();
+    },
+    dayIsPicked = (day: number) => {
+        if (pickedDate.value.getFullYear() !== visibleYear.value) return false;
+        if (pickedDate.value.getMonth() !== visibleMonth.value) return false;
+        return pickedDate.value.getDate() === day;
+    },
+    getDayClasses = (day: number) => {
+        return {
+            'is-picked': dayIsPicked(day)
+        }
+    },
+    onClickDay = (day: number) => {
+    console.log('onClickDay: ', day)
+        pickedDate.value.setFullYear(visibleYear.value, visibleMonth.value, day);
+        pickedDate.value = new Date(pickedDate.value);
+        doRefresh();
+    },
+    doRefresh = () => {
+        // refreshing.value = true;
+        // nextTick(() => refreshing.value = false);
     }
 
 </script>
@@ -71,7 +101,9 @@ const onClickNext = () => {
                 <lkt-button
                     v-for="day in computedNumberOfDays"
                     class="lkt-calendar--day"
+                    :class="getDayClasses(day)"
                     :text="day.toString()"
+                    @click="() => onClickDay(day)"
                 />
             </div>
         </div>
