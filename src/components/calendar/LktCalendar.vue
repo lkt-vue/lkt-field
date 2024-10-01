@@ -6,7 +6,7 @@ import {date} from "lkt-date-tools";
 const emit = defineEmits(['update:modelValue']);
 
 const props = withDefaults(defineProps<{
-    modelValue: Date
+    modelValue: Date|undefined
 }>(), {
 });
 
@@ -54,6 +54,7 @@ const onClickNext = () => {
         doRefresh();
     },
     dayIsPicked = (day: number) => {
+        if (typeof pickedDate.value === 'undefined') return false;
         if (pickedDate.value.getFullYear() !== visibleYear.value) return false;
         if (pickedDate.value.getMonth() !== visibleMonth.value) return false;
         return pickedDate.value.getDate() === day;
@@ -64,7 +65,6 @@ const onClickNext = () => {
         }
     },
     onClickDay = (day: number) => {
-    console.log('onClickDay: ', day)
         pickedDate.value.setFullYear(visibleYear.value, visibleMonth.value, day);
         pickedDate.value = new Date(pickedDate.value);
         doRefresh();

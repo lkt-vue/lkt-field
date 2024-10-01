@@ -10,4 +10,6 @@ export enum FieldType {
     Textarea = 'textarea',
     Html = 'html',
     Date = 'date',
+    File = 'file',
+    Image = 'image',
 }

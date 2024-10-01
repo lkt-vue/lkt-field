@@ -83,3 +83,27 @@
     overflow-y: auto;
     white-space: break-spaces;
 }
+
+.lkt-field .lkt-field--toggle-button .lkt-image {
+    --lkt-image-padding: 0;
+    --lkt-image-border-width: 0;
+    --lkt-image-border-radius: var(--lkt-field-border-radius);
+}
+
+.lkt-field .lkt-field--toggle-button .lkt-image.lkt-field--image-main img {
+    max-height: var(--lkt-field-height);
+}
+.lkt-field--image-cover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    filter: blur(30px);
+    -webkit-filter: blur(30px);
+    --lkt-image-width: 100%;
+    --lkt-image-min-height: 100%;
+}
+.lkt-field--image-main {
+    z-index: 2;
+}

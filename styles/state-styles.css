@@ -153,6 +153,18 @@
 .lkt-field--info-btn:hover {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+}
+
+.lkt-field.is-lg .lkt-field--info-btn,
+.lkt-field.is-lg .lkt-field--info-btn:hover,
+.lkt-field.is-xl .lkt-field--info-btn,
+.lkt-field.is-xl .lkt-field--info-btn:hover
+{
+    border-bottom-width: var(--lkt-field-border-width);
+    border-bottom-right-radius: 0;
 }
 
 .lkt-field--info-split-btn {

@@ -12,4 +12,14 @@ export class Settings {
     static switchEditionOffText: string = '';
     static showPasswordOnText: string = '';
     static showPasswordOffText: string = '';
+
+    static langDateReadFormat = {
+        en: 'Y-m-d',
+        es: 'd/m/Y',
+    }
+
+    static acceptTypes = {
+        file: '*/*',
+        image: 'image/*',
+    }
 }

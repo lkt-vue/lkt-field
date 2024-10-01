@@ -76,6 +76,8 @@ const props = withDefaults(defineProps<{
     valueSlot?: string
     editSlot?: string
     slotData?: LktObject
+    resource?: string
+    resourceData?: LktObject
     validationResource?: string
     validationResourceData?: LktObject
     autoValidation?: boolean
@@ -94,6 +96,7 @@ const props = withDefaults(defineProps<{
     checkEqualTo: number | string | undefined,
     featuredButton?: string
     infoButtonEllipsis?: boolean
+    fileName?: string
 }>(), {
     modelValue: '',
     type: 'text',
@@ -129,6 +132,8 @@ const props = withDefaults(defineProps<{
     valueSlot: '',
     editSlot: '',
     slotData: () => ({}),
+    resource: '',
+    resourceData: () => ({}),
     validationResource: '',
     validationResourceData: () => ({}),
     autoValidation: false,
@@ -147,6 +152,7 @@ const props = withDefaults(defineProps<{
     checkEqualTo: undefined,
     featuredButton: '',
     infoButtonEllipsis: false,
+    fileName: '',
 });
 
 // Constant data
@@ -193,7 +199,7 @@ const originalValue = ref(props.modelValue),
     pickedColorGreen = ref(255),
     pickedColorBlue = ref(255),
     pickedColorAlpha = ref(255),
-    pickedDate = ref(new Date(props.modelValue)),
+    pickedDate = ref(undefined),
     value = ref(decodeColor(props.modelValue)),
     isValid = ref(props.valid),
     showPasswordIcon = ref(false),
@@ -203,9 +209,17 @@ const originalValue = ref(props.modelValue),
     editor = ref(null),
     editorTimeout = ref(undefined),
     localValidationStatus = ref(baseValidationStatus),
-    editable = ref(!props.readMode);
+    editable = ref(!props.readMode),
+    originalFileName = ref(props.fileName),
+    visibleFileName = ref(props.fileName);
 
 const computedLang = computed(() => currentLanguage.value);
+const computedDateReadFormat = computed(() => {
+    if (Settings.langDateReadFormat[computedLang.value]) return Settings.langDateReadFormat[computedLang.value];
+    return 'Y-m-d';
+});
+
+const visibleDateValue = ref('');
 
 const assignEditableValue = () => {
     if (typeof value.value === 'object') return value.value[computedLang.value];
@@ -217,6 +231,8 @@ const originalEditableValue = ref(assignEditableValue());
 
 const computedIsColor = computed(() => Type.value === FieldType.Color);
 const computedIsDate = computed(() => Type.value === FieldType.Date);
+const computedIsFile = computed(() => Type.value === FieldType.File);
+const computedIsImage = computed(() => Type.value === FieldType.Image);
 
 const computedInputElement = computed(() => {
     if (Type.value === FieldType.Textarea) return 'textarea';
@@ -225,7 +241,12 @@ const computedInputElement = computed(() => {
 })
 
 
-const changed = computed(() => editableValue.value !== originalEditableValue.value),
+const changed = computed(() => {
+        if (Type.value === FieldType.Date) {
+            return value.value !== originalValue.value;
+        }
+        return editableValue.value !== originalEditableValue.value;
+    }),
     amountOfIcons = computed(() => {
         let r = 0;
 
@@ -249,7 +270,12 @@ const changed = computed(() => editableValue.value !== originalEditableValue.val
         return amountOfIcons.value > 0;
     }),
     autocompleteText = computed(() => props.autocomplete === true ? 'on' : 'off'),
-    isFilled = computed(() => editableValue.value !== ''),
+    isFilled = computed(() => {
+        if (Type.value === FieldType.Date) {
+            return value.value !== '';
+        }
+        return editableValue.value !== '';
+    }),
     computedInputType = computed(() => {
         if (Type.value === FieldType.Password && showPasswordIcon.value === true) return 'text';
         if (Type.value === FieldType.Email) return 'email';
@@ -278,11 +304,15 @@ const changed = computed(() => editableValue.value !== originalEditableValue.val
             else r.push('is-valid');
         }
 
+        if ([FieldType.Textarea, FieldType.Html].includes(Type.value)) r.push('is-lg');
+        if ([FieldType.Image].includes(Type.value)) r.push('is-xl');
+
         if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
+        r.push(editable.value ? 'is-editable' : 'is-read');
 
         if (Type.value !== FieldType.Range) {
             r.push(isValid.value ? 'is-valid' : 'is-error');
-            r.push(!!props.modelValue ? 'is-filled' : 'is-empty');
+            r.push(isFilled.value ? 'is-filled' : 'is-empty');
         }
 
         return r.join(' ');
@@ -330,13 +360,19 @@ const changed = computed(() => editableValue.value !== originalEditableValue.val
         return props.placeholder;
     }),
 
+    computedAccept = computed(() => {
+        if (Type.value === FieldType.File) return Settings.acceptTypes.file;
+        if (Type.value === FieldType.Image) return Settings.acceptTypes.image;
+        return '';
+    }),
+
     computedShowError = computed(() => props.errorMessage),
     computedShowInfo = computed(() => props.infoMessage),
 
-    computedShowUndo = computed(() => props.canUndo && changed.value),
-    computedShowClear = computed(() => props.canClear && isFilled.value),
-    computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object'),
-    computedShowPasswordReveal = computed(() => Type.value === FieldType.Password && props.showPassword && isFilled.value),
+    computedShowUndo = computed(() => props.canUndo && changed.value && editable.value),
+    computedShowClear = computed(() => props.canClear && isFilled.value && editable.value),
+    computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object' && editable.value),
+    computedShowPasswordReveal = computed(() => Type.value === FieldType.Password && props.showPassword && isFilled.value && editable.value),
 
     computedShowUndoInNav = computed(() => computedShowUndo.value && !props.infoButtonEllipsis),
     computedShowClearInNav = computed(() => computedShowClear.value && !props.infoButtonEllipsis),
@@ -371,8 +407,10 @@ watch(() => props.checkEqualTo, (v) => doLocalValidation());
 watch(() => props.readMode, (v) => editable.value = !v)
 watch(() => props.valid, (v) => isValid.value = v)
 watch(() => props.modelValue, (v) => {
-    value.value = v
-    editableValue.value = assignEditableValue();
+    value.value = v;
+    if (Type.value !== FieldType.Date) {
+        editableValue.value = assignEditableValue();
+    }
 })
 watch(editableValue, (v) => {
     console.log('updated editableValue: ', v, value.value);
@@ -387,7 +425,18 @@ watch(editableValue, (v) => {
 watch(value, (v) => {
     console.log('updated value: ', v);
     emits('update:modelValue', v);
-    editableValue.value = assignEditableValue();
+    if (Type.value === FieldType.Date) {
+        let date = new Date(v);
+
+        if (!(Object.prototype.toString.call(date) === "[object Date]" && isNaN(date))) {
+            pickedDate.value = date;
+        } else {
+            value.value = '';
+        }
+
+    } else {
+        editableValue.value = assignEditableValue();
+    }
     doRemoteValidation();
     doLocalValidation();
 }, {deep: true})
@@ -396,9 +445,30 @@ watch(isValid, (v) => {
     emits('update:valid', v);
 })
 watch(pickedDate, (v) => {
-    console.log('updated pickedDate: ', v);
-    value.value = date('Y-m-d', v);
+    if (typeof v === 'undefined') {
+        value.value = '';
+
+    } else {
+        value.value = date('Y-m-d', v);
+    }
+    setVisibleDateValue();
 }, {deep: true})
+
+const setVisibleDateValue = () => {
+    if (Object.prototype.toString.call(pickedDate.value) === "[object Date]") {
+        // it is a date
+        if (isNaN(pickedDate.value)) { // d.getTime() or d.valueOf() will also work
+            // date object is not valid
+            visibleDateValue.value = '';
+        } else {
+            // date object is valid
+            visibleDateValue.value = date(computedDateReadFormat.value, pickedDate.value);
+        }
+    } else {
+        // not a date object
+        visibleDateValue.value = '';
+    }
+}
 
 const doLocalValidation = () => {
     if (props.autoValidationType === 'blur' && (!hadFirstBlur.value || !hadFirstFocus.value)) {
@@ -561,7 +631,16 @@ const
             }
             return;
         }
-        editableValue.value = originalEditableValue.value
+        else if (Type.value === FieldType.Date) {
+            pickedDate.value = new Date(originalValue.value);
+            return;
+        }
+        else if (Type.value === FieldType.File) {
+            value.value = originalValue.value;
+            visibleFileName.value = originalFileName.value;
+            return;
+        }
+        editableValue.value = originalEditableValue.value;
     },
     doClear = () => {
         if (Type.value === FieldType.Html) {
@@ -570,7 +649,17 @@ const
             }
             return;
         }
-        editableValue.value = ''
+        else if (Type.value === FieldType.Date) {
+            pickedDate.value = undefined;
+            value.value = '';
+            return;
+        }
+        else if (Type.value === FieldType.File) {
+            value.value = '';
+            visibleFileName.value = '';
+            return;
+        }
+        editableValue.value = '';
     },
     getValue = () => editableValue.value,
     onKeyUp = ($event: any) => {
@@ -584,6 +673,38 @@ const
         (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: editableValue.value}))
     },
     onChange = ($event: any) => {
+        if (computedIsFile.value || computedIsImage.value) {
+            let input = $event.target;
+            // @ts-ignore
+            if (input.files && input.files[0]) {
+                visibleFileName.value = input.files[0].name;
+                const reader = new FileReader();
+                reader.onload = (event: ProgressEvent) => {
+                    // @ts-ignore
+                    value.value = event.target.result;
+                    if (props.resource) {
+                        uploading.value = true;
+                        emits('uploading');
+                        let params = JSON.parse(JSON.stringify(props.resourceData));
+                        // @ts-ignore
+                        params.files = input.files[0];
+
+                        httpCall(props.resource, params).then((r: HTTPResponse) => {
+                            // @todo check with uploaded file
+                            // @ts-ignore
+                            value.value = r.data;
+                            uploading.value = false;
+                            emits('upload-success', r);
+                        }).catch(r => {
+                            uploading.value = false;
+                            emits('upload-error', r);
+                        })
+                    }
+                };
+                // @ts-ignore
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
         // (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value}))
     },
     onBlur = ($event: any) => {
@@ -710,7 +831,12 @@ const computedColorStylesHex = computed(() => {
 })
 
 onMounted(() => {
-    if (Type.value === FieldType.Html) {
+    if (Type.value === FieldType.Date) {
+        pickedDate.value = new Date(value.value);
+        setVisibleDateValue();
+    }
+
+    else if (Type.value === FieldType.Html) {
         let options = {
             ...editorOptions, ...{
                 plugins,
@@ -770,7 +896,7 @@ onMounted(() => {
                              :type="Type"/>
             </div>
 
-            <div class="lkt-field-main">
+            <div class="lkt-field-main" v-if="editable">
                 <template v-if="editable">
                     <template v-if="slots['edit']">
                         <div v-on:click="onClick">
@@ -784,7 +910,7 @@ onMounted(() => {
 
                     <template v-else-if="computedIsColor">
                         <lkt-button
-                            class="lkt-field-color--alpha--toggle-button"
+                            class="lkt-field--toggle-button"
                             :style="computedColorStyles"
                             :text="editableValue"
                             tooltip
@@ -892,10 +1018,40 @@ onMounted(() => {
                         </lkt-button>
                     </template>
 
+                    <template v-else-if="computedIsFile || computedIsImage">
+                        <input type="file"
+                               v-bind:ref="(el:any) => inputElement = el"
+                               v-bind:name="name"
+                               v-bind:id="Identifier"
+                               v-bind:disabled="disabled || !editable"
+                               v-bind:readonly="readonly || !editable"
+                               v-bind:placeholder="placeholder"
+                               v-bind:accept="computedAccept"
+                               v-on:change="onChange"
+                        >
+
+                        <lkt-button
+                            class="lkt-field--toggle-button"
+                            :click-ref="inputElement"
+                            :text="computedIsFile ? visibleFileName : ''"
+                        >
+                            <lkt-image
+                                v-if="computedIsImage"
+                                :src="value"
+                                class="lkt-field--image-cover"
+                            />
+                            <lkt-image
+                                v-if="computedIsImage"
+                                :src="value"
+                                class="lkt-field--image-main"
+                            />
+                        </lkt-button>
+                    </template>
+
                     <template v-else-if="computedIsDate">
                         <lkt-button
-                            class="lkt-field--date--toggle-button"
-                            :text="editableValue"
+                            class="lkt-field--toggle-button"
+                            :text="visibleDateValue"
                             tooltip
                             tooltip-class="lkt-field--date--tooltip"
                             tooltip-location-y="bottom"
@@ -1012,8 +1168,27 @@ onMounted(() => {
                     :data="slotData"/>
 
                 <template v-else>
+                    <template v-if="computedIsFile || computedIsImage">
+                        <div class="lkt-field-main">
+                            <lkt-button
+                                class="lkt-field--toggle-button"
+                                :text="computedIsFile ? visibleFileName : ''"
+                            >
+                                <lkt-image
+                                    v-if="computedIsImage"
+                                    :src="value"
+                                    class="lkt-field--image-cover"
+                                />
+                                <lkt-image
+                                    v-if="computedIsImage"
+                                    :src="value"
+                                    class="lkt-field--image-main"
+                                />
+                            </lkt-button>
+                        </div>
+                    </template>
                     <lkt-anchor
-                        v-if="isEmail"
+                        v-else-if="isEmail"
                         class="lkt-field-text__read-value"
                         :title="readModeTitle"
                         :to="'mail:' + value">{{ value }}

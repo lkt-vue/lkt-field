@@ -1,3 +1,9 @@
+:root {
+    --lkt-field-height: var(--lkt-field-input-height);
+    --lkt-field-large-field-min-height: calc(var(--lkt-field-height) * 2 + var(--lkt-field-gap) + var(--lkt-field-line-height-label));
+    --lkt-field-large-field-max-height: calc(var(--lkt-field-height) * 4 + var(--lkt-field-gap) * 3 + var(--lkt-field-line-height-label) * 3);
+}
+
 .lkt-field {
     display: flex;
     flex-direction: column;
@@ -6,18 +12,29 @@
     font-size: var(--lkt-field-font-size);
     font-weight: var(--lkt-field-font-weight);
     width: 100%;
-
-    --lkt-field-large-field-min-height: calc(var(--lkt-field-input-height) * 2 + var(--lkt-field-gap) + var(--lkt-field-line-height-label));
-    --lkt-field-large-field-max-height: calc(var(--lkt-field-input-height) * 4 + var(--lkt-field-gap) * 3 + var(--lkt-field-line-height-label) * 3);
 }
+
+.lkt-field.is-lg {
+    --lkt-field-height: var(--lkt-field-large-field-min-height);
+}
+.lkt-field.is-xl {
+    --lkt-field-height: var(--lkt-field-large-field-max-height);
+}
+
 .lkt-field-switch {
     width: auto;
 }
 
 .lkt-field-content {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
     width: 100%;
     max-width: 100%;
     outline: 0;
+}
+
+.lkt-field.is-editable .lkt-field-content {
     background-color: var(--lkt-field-bg);
     border-width: var(--lkt-field-border-width);
     border-style: var(--lkt-field-border-style);
@@ -103,6 +120,7 @@
 .lkt-field input[type="file"] {
     visibility: hidden;
     height: 0;
+    width: 0;
     opacity: 0;
 }
 
@@ -165,10 +183,4 @@
 .lkt-field-editor .sun-editor .se-toolbar,
 .lkt-field-editor .sun-editor .se-toolbar-cover {
     z-index: initial;
-}
-
-.lkt-field-content {
-    position: relative;
-    display: flex;
-    align-items: flex-start;
 }

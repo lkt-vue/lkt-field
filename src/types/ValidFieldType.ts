@@ -12,4 +12,6 @@ export type ValidFieldType =
     | FieldType.Textarea
     | FieldType.Html
     | FieldType.Date
+    | FieldType.File
+    | FieldType.Image
 ;
