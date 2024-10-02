@@ -1,4 +1,4 @@
-import {App, Component, Plugin} from 'vue';
+import {App, Component, defineCustomElement, Plugin} from 'vue';
 import LktFieldValidation from 'lkt-field-validation';
 
 import { default as textField } from './lib-components/LktFieldText.vue';

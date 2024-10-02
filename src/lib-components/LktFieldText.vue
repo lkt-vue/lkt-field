@@ -181,6 +181,7 @@ const decodeColor = (value: string) => {
             pickedColorGreen.value = 0;
             pickedColorBlue.value = 0;
             pickedColorAlpha.value = 255;
+
         } else if ([7, 9].includes(value.length)) {
             let decoded = decodeHexColor(value);
 
@@ -236,7 +237,7 @@ const computedIsImage = computed(() => Type.value === FieldType.Image);
 
 const computedInputElement = computed(() => {
     if (Type.value === FieldType.Textarea) return 'textarea';
-    if (Type.value === FieldType.Html) return 'textarea';
+    if (Type.value === FieldType.Html) return 'div';
     return 'input';
 })
 
@@ -413,7 +414,6 @@ watch(() => props.modelValue, (v) => {
     }
 })
 watch(editableValue, (v) => {
-    console.log('updated editableValue: ', v, value.value);
     if (typeof value.value === 'object') {
         value.value[computedLang.value] = v;
     } else {
@@ -423,8 +423,6 @@ watch(editableValue, (v) => {
     if (Type.value === FieldType.Number) reAssignNumericValue(v);
 })
 watch(value, (v) => {
-    console.log('updated value: ', v);
-    emits('update:modelValue', v);
     if (Type.value === FieldType.Date) {
         let date = new Date(v);
 
@@ -432,11 +430,11 @@ watch(value, (v) => {
             pickedDate.value = date;
         } else {
             value.value = '';
+            return;
         }
 
-    } else {
-        editableValue.value = assignEditableValue();
     }
+    emits('update:modelValue', v);
     doRemoteValidation();
     doLocalValidation();
 }, {deep: true})
@@ -837,16 +835,8 @@ onMounted(() => {
     }
 
     else if (Type.value === FieldType.Html) {
-        let options = {
-            ...editorOptions, ...{
-                plugins,
-                lang: lang[computedLang.value] ? lang[computedLang.value] : lang.en
-            }
-        };
 
-        editor.value = suneditor.create(Identifier, options);
-
-        editor.value.onChange = (content) => {
+        const updateValueFromEditor = (content) => {
             if (editorTimeout.value) clearTimeout(editorTimeout.value);
 
             editorTimeout.value = setTimeout(() => {
@@ -854,18 +844,40 @@ onMounted(() => {
                 if (strippedContent === '') editableValue.value = '';
                 else editableValue.value = content
             }, 100);
+        }
+
+        let options = {
+            ...editorOptions,
+            ...{
+                plugins,
+                lang: lang[computedLang.value] ? lang[computedLang.value] : lang.en
+            },
+        };
+
+        editor.value = suneditor.create(Identifier, options);
+
+        editor.value.onChange = (content) => {
+            updateValueFromEditor(content);
 
             if (props.disabled) editor.value.disabled();
             else editor.value.enabled();
         }
 
-        editor.value.onBlur = () => {
-            focusing.value = false;
-            if (editorTimeout.value) clearTimeout(editorTimeout.value);
+        editor.value.onKeyUp = (event, core) => {
+            updateValueFromEditor(core.getContents());
+            // if (editorTimeout.value) clearTimeout(editorTimeout.value);
+            //
+            // editorTimeout.value = setTimeout(() => {
+            //     let content = core.getContents();
+            //     let strippedContent = stripTags(content);
+            //     if (strippedContent === '') editableValue.value = '';
+            //     else editableValue.value = content
+            // }, 100);
         }
 
-        editor.value.onKeyUp = () => {
-            if (editorTimeout.value) clearTimeout(editorTimeout.value);
+        editor.value.onBlur = () => {
+            focusing.value = false;
+            // if (editorTimeout.value) clearTimeout(editorTimeout.value);
         }
 
         editor.value.onClick = () => {
@@ -1063,91 +1075,61 @@ onMounted(() => {
                         </lkt-button>
                     </template>
 
-
-                    <template v-else-if="computedPlaceholder">
-                        <input
-                            v-if="computedInputElement === 'input'"
-                            v-model="editableValue"
-                            :ref="(el:any) => inputElement = el"
-                            :value="editableValue"
-                            :type="computedInputType"
-                            :name="name"
-                            :id="Identifier"
-                            :disabled="disabled"
-                            :readonly="readonly"
-                            :placeholder="computedPlaceholder"
-                            :tabindex="tabindex"
-                            :autocomplete="autocompleteText"
-                            :min="MinimumValue"
-                            :max="MaximumValue"
-                            :step="step"
-                            v-on:keyup="onKeyUp"
-                            v-on:keydown="onKeyDown"
-                            v-on:focus="onFocus"
-                            v-on:blur="onBlur"
-                            v-on:click="onClick"
-                            v-on:change="onChange"
-                        />
-                        <textarea
-                            v-else-if="computedInputElement === 'textarea'"
-                            v-model="editableValue"
-                            :ref="(el:any) => inputElement = el"
-                            :value="editableValue"
-                            :name="name"
-                            :id="Identifier"
-                            :disabled="disabled"
-                            :readonly="readonly"
-                            :placeholder="computedPlaceholder"
-                            :tabindex="tabindex"
-                            :autocomplete="autocompleteText"
-                            v-on:keyup="onKeyUp"
-                            v-on:keydown="onKeyDown"
-                            v-on:focus="onFocus"
-                            v-on:blur="onBlur"
-                            v-on:click="onClick"
-                            v-on:change="onChange"
-                        />
-                    </template>
-                    <template v-else>
-                        <input
-                            v-if="computedInputElement === 'input'"
-                            v-model="editableValue"
-                            :ref="(el:any) => inputElement = el"
-                            :value="editableValue"
-                            :type="computedInputType"
-                            :name="name"
-                            :id="Identifier"
-                            :disabled="disabled"
-                            :readonly="readonly"
-                            :tabindex="tabindex"
-                            :autocomplete="autocompleteText"
-                            :min="MinimumValue"
-                            :max="MaximumValue"
-                            :step="step"
-                            v-on:keyup="onKeyUp"
-                            v-on:keydown="onKeyDown"
-                            v-on:focus="onFocus"
-                            v-on:blur="onBlur"
-                            v-on:click="onClick"
-                            v-on:change="onChange"/>
-                        <textarea
-                            v-else-if="computedInputElement === 'textarea'"
-                            v-model="editableValue"
-                            :ref="(el:any) => inputElement = el"
-                            :value="editableValue"
-                            :name="name"
-                            :id="Identifier"
-                            :disabled="disabled"
-                            :readonly="readonly"
-                            :tabindex="tabindex"
-                            :autocomplete="autocompleteText"
-                            v-on:keyup="onKeyUp"
-                            v-on:keydown="onKeyDown"
-                            v-on:focus="onFocus"
-                            v-on:blur="onBlur"
-                            v-on:click="onClick"
-                            v-on:change="onChange"/>
-                    </template>
+                    <input
+                        v-else-if="computedInputElement === 'input'"
+                        v-model="editableValue"
+                        :ref="(el:any) => inputElement = el"
+                        :value="editableValue"
+                        :type="computedInputType"
+                        :name="name"
+                        :id="Identifier"
+                        :disabled="disabled"
+                        :readonly="readonly"
+                        :placeholder="computedPlaceholder"
+                        :tabindex="tabindex"
+                        :autocomplete="autocompleteText"
+                        :min="MinimumValue"
+                        :max="MaximumValue"
+                        :step="step"
+                        v-on:keyup="onKeyUp"
+                        v-on:keydown="onKeyDown"
+                        v-on:focus="onFocus"
+                        v-on:blur="onBlur"
+                        v-on:click="onClick"
+                        v-on:change="onChange"
+                    />
+                    <textarea
+                        v-else-if="computedInputElement === 'textarea'"
+                        v-model="editableValue"
+                        :ref="(el:any) => inputElement = el"
+                        :value="editableValue"
+                        :name="name"
+                        :id="Identifier"
+                        :disabled="disabled"
+                        :readonly="readonly"
+                        :placeholder="computedPlaceholder"
+                        :tabindex="tabindex"
+                        :autocomplete="autocompleteText"
+                        v-on:keyup="onKeyUp"
+                        v-on:keydown="onKeyDown"
+                        v-on:focus="onFocus"
+                        v-on:blur="onBlur"
+                        v-on:click="onClick"
+                        v-on:change="onChange"
+                    />
+                    <div
+                        v-else-if="computedInputElement === 'div'"
+                        v-html="editableValue"
+                        :ref="(el:any) => inputElement = el"
+                        :id="Identifier"
+                        :tabindex="tabindex"
+                        v-on:keyup="onKeyUp"
+                        v-on:keydown="onKeyDown"
+                        v-on:focus="onFocus"
+                        v-on:blur="onBlur"
+                        v-on:click="onClick"
+                        v-on:change="onChange"
+                    />
                 </template>
             </div>
 
@@ -1206,19 +1188,19 @@ onMounted(() => {
                 </template>
             </div>
 
-            <div v-if="showInfoUi" class="lkt-field--info-nav">
-                <undo-button v-if="computedShowUndoInNav" @click="doUndo"/>
-                <clear-button v-if="computedShowClearInNav" @click="doClear"/>
+            <div v-show="showInfoUi" class="lkt-field--info-nav">
+                <undo-button v-show="computedShowUndoInNav" @click="doUndo"/>
+                <clear-button v-show="computedShowClearInNav" @click="doClear"/>
 
                 <lkt-button
-                    v-if="computedShowError"
+                    v-show="computedShowError"
                     :title="errorMessage"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-warning"
                     @click="onClickError"
                 />
                 <lkt-button
-                    v-if="computedShowInfo"
+                    v-show="computedShowInfo"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-info"
                     @click="onClickInfo"
@@ -1233,22 +1215,22 @@ onMounted(() => {
                 </lkt-button>
 
                 <password-button
-                    v-if="computedShowPasswordRevealInNav"
+                    v-show="computedShowPasswordRevealInNav"
                     v-model="showPasswordIcon"
                 />
 
-                <i18n-button v-if="computedShowI18nInNav"
+                <i18n-button v-show="computedShowI18nInNav"
                              v-model="value" :type="Type"
                 />
 
                 <edition-button
-                    v-if="computedShowSwitchEditionInNav"
+                    v-show="computedShowSwitchEditionInNav"
                     v-model="editable"
                     @click="onClickSwitchEdition"
                 />
 
                 <ellipsis-actions-button
-                    v-if="infoButtonEllipsis"
+                    v-show="infoButtonEllipsis"
                     :show-undo="computedShowUndo"
                     :show-clear="computedShowClear"
                     :show-password="computedShowPasswordReveal"
