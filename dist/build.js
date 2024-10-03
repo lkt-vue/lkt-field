@@ -15017,7 +15017,8 @@ const Ti = /* @__PURE__ */ he(ln), nn = { ckb: Zt, cs: jt, da: $t, de: Kt, en: l
     /** ['imageGallery'] */
     // You must add the "imageGalleryUrl".
     ["fullScreen", "showBlocks", "codeView"],
-    ["preview", "print"]
+    ["preview", "print"],
+    ["fake-lkt-box-plugin", "lkt-grid-columns-2"]
   ]
 }, on = { class: "lkt-calendar" }, an = { class: "calendar" }, rn = { class: "lkt-calendar--header-grid" }, un = ["innerHTML"], cn = {
   key: 0,
@@ -15367,11 +15368,15 @@ const Ti = /* @__PURE__ */ he(ln), nn = { ckb: Zt, cs: jt, da: $t, de: Kt, en: l
           }, 100);
         };
         let $ = {
-          ...sn,
-          plugins: Dl,
-          lang: zt[S.value] ? zt[S.value] : lt
+          lang: zt[S.value] ? zt[S.value] : lt,
+          plugins: {
+            ...Dl
+            // LktGridColumns2:LktGridColumns2,
+            // FakeLktBoxPlugin:FakeLktBoxPlugin,
+          },
+          ...sn
         };
-        y.value = rl.create(c, $), y.value.onChange = (J) => {
+        console.log("options: ", $), y.value = rl.create(c, $), y.value.onChange = (J) => {
           U(J), r.disabled ? y.value.disabled() : y.value.enabled();
         }, y.value.onKeyUp = (J, _e) => {
           U(_e.getContents());

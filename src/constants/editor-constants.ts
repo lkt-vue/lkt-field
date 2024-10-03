@@ -12,6 +12,7 @@ export const editorOptions = {
         ['table', 'link', /**'image', 'video', 'audio',*/],
         /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
         ['fullScreen', 'showBlocks', 'codeView'],
-        ['preview', 'print']
+        ['preview', 'print'],
+        ['fake-lkt-box-plugin', 'lkt-grid-columns-2']
     ]
 };
