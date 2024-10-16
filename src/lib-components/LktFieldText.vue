@@ -97,6 +97,8 @@ const props = withDefaults(defineProps<{
     featuredButton?: string
     infoButtonEllipsis?: boolean
     fileName?: string
+    customIconText?: string
+    customIconClass?: string
 }>(), {
     modelValue: '',
     type: 'text',
@@ -256,6 +258,7 @@ const changed = computed(() => {
         if (computedShowPasswordRevealInNav.value) ++r;
         if (computedShowI18nInNav.value) ++r;
         if (computedShowSwitchEditionInNav.value) ++r;
+        if (props.customIconText || props.customIconClass) ++r;
 
         if (r > 0 && Type.value === FieldType.Textarea) return 1;
         if (r > 0 && Type.value === FieldType.Html) return 1;
@@ -850,13 +853,9 @@ onMounted(() => {
             lang: lang[computedLang.value] ? lang[computedLang.value] : lang.en,
             plugins: {
                 ...plugins,
-                // LktGridColumns2:LktGridColumns2,
-                // FakeLktBoxPlugin:FakeLktBoxPlugin,
             },
             ...editorOptions,
         };
-
-        console.log('options: ', options);
 
         editor.value = suneditor.create(Identifier, options);
 
@@ -869,19 +868,10 @@ onMounted(() => {
 
         editor.value.onKeyUp = (event, core) => {
             updateValueFromEditor(core.getContents());
-            // if (editorTimeout.value) clearTimeout(editorTimeout.value);
-            //
-            // editorTimeout.value = setTimeout(() => {
-            //     let content = core.getContents();
-            //     let strippedContent = stripTags(content);
-            //     if (strippedContent === '') editableValue.value = '';
-            //     else editableValue.value = content
-            // }, 100);
         }
 
         editor.value.onBlur = () => {
             focusing.value = false;
-            // if (editorTimeout.value) clearTimeout(editorTimeout.value);
         }
 
         editor.value.onClick = () => {
@@ -1231,6 +1221,12 @@ onMounted(() => {
                     v-show="computedShowSwitchEditionInNav"
                     v-model="editable"
                     @click="onClickSwitchEdition"
+                />
+
+                <lkt-button
+                  :text="customIconText"
+                  class="lkt-field--info-btn"
+                  :icon="customIconClass"
                 />
 
                 <ellipsis-actions-button

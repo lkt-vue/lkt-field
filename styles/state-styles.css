@@ -134,9 +134,11 @@
 .lkt-field--atn-btn,
 .lkt-field--info-btn {
     --lkt-btn-min-height: var(--lkt-field-input-height);
+    --lkt-btn-min-width: var(--lkt-field-input-height);
     --lkt-btn-width: var(--lkt-field-input-height);
     --lkt-btn-border-radius: var(--lkt-field-border-radius);
     --lkt-btn-border-radius-hover: var(--lkt-field-border-radius);
+    --lkt-btn-color: var(--lkt-field-color);
 }
 
 .lkt-field--atn-btn,
