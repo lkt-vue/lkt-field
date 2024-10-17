@@ -141,6 +141,10 @@
     --lkt-btn-color: var(--lkt-field-color);
 }
 
+.lkt-field--custom-btn {
+    --lkt-btn-width: auto;
+}
+
 .lkt-field--atn-btn,
 .lkt-field--atn-btn:hover {
     border-top-right-radius: 0;

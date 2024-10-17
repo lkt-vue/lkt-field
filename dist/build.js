@@ -15156,8 +15156,8 @@ const Ti = /* @__PURE__ */ he(ln), nn = { ckb: Zt, cs: jt, da: $t, de: Kt, en: l
     featuredButton: { default: "" },
     infoButtonEllipsis: { type: Boolean, default: !1 },
     fileName: { default: "" },
-    customIconText: {},
-    customIconClass: {}
+    customButtonText: {},
+    customButtonClass: {}
   },
   emits: ["update:modelValue", "update:valid", "keyup", "keydown", "focus", "blur", "click", "click-info", "click-error", "validation", "validating"],
   setup(e, { expose: t, emit: i }) {
@@ -15177,7 +15177,7 @@ const Ti = /* @__PURE__ */ he(ln), nn = { ckb: Zt, cs: jt, da: $t, de: Kt, en: l
       return U;
     }, _ = oe(r.modelValue), x = oe(255), E = oe(255), L = oe(255), I = oe(255), o = oe(void 0), a = oe(u(r.modelValue)), d = oe(r.valid), h = oe(!1), g = oe(!1), p = oe(!1), m = oe(!1), y = oe(null), C = oe(void 0), b = oe(v), w = oe(!r.readMode), R = oe(r.fileName), k = oe(r.fileName), S = X(() => Nt.value), N = X(() => ne.langDateReadFormat[S.value] ? ne.langDateReadFormat[S.value] : "Y-m-d"), F = oe(""), P = () => typeof a.value == "object" ? a.value[S.value] : a.value, A = oe(P()), D = oe(P()), V = X(() => f.value === K.Color), B = X(() => f.value === K.Date), H = X(() => f.value === K.File), z = X(() => f.value === K.Image), O = X(() => f.value === K.Textarea ? "textarea" : f.value === K.Html ? "div" : "input"), T = X(() => f.value === K.Date ? a.value !== _.value : A.value !== D.value), M = X(() => {
       let U = 0;
-      return Le.value && ++U, ae.value && ++U, Ke.value && ++U, Oe.value && ++U, Te.value && ++U, (r.customIconText || r.customIconClass) && ++U, U > 0 && f.value === K.Textarea || U > 0 && f.value === K.Html || U > 0 && r.infoButtonEllipsis ? 1 : U;
+      return Le.value && ++U, ae.value && ++U, Ke.value && ++U, Oe.value && ++U, Te.value && ++U, (r.customButtonText || r.customButtonClass) && ++U, U > 0 && f.value === K.Textarea || U > 0 && f.value === K.Html || U > 0 && r.infoButtonEllipsis ? 1 : U;
     }), Z = X(() => Ee.value && r.featuredButton === "i18n" || Ne.value && r.featuredButton === "password"), W = X(() => M.value > 0), G = X(() => r.autocomplete === !0 ? "on" : "off"), j = X(() => f.value === K.Date ? a.value !== "" : A.value !== ""), q = X(() => f.value === K.Password && h.value === !0 ? "text" : f.value === K.Email ? "email" : f.value === K.Password ? "password" : f.value === K.Number ? "number" : f.value === K.Tel ? "tel" : f.value === K.Search ? "search" : f.value === K.Color ? "color" : f.value === K.Range ? "range" : "text"), Y = X(() => {
       const U = ["lkt-field", "lkt-field-text"];
       return U.push(`is-${f.value}`), r.palette && U.push(`lkt-field--${r.palette}`), T.value && U.push("is-changed"), r.disabled && U.push("is-disabled"), Z.value && U.push("with-atn-btn"), W.value && U.push("with-info-btn"), r.mandatory && w.value && U.push("is-mandatory-field"), g.value && U.push("has-focus"), f.value !== K.Range && r.autoValidation && m.value && p.value && (b.value.length > 0 ? U.push("is-invalid") : U.push("is-valid")), [K.Textarea, K.Html].includes(f.value) && U.push("is-lg"), [K.Image].includes(f.value) && U.push("is-xl"), M.value > 0 && U.push("has-icons", `has-icons-${M.value}`), U.push(w.value ? "is-editable" : "is-read"), f.value !== K.Range && (U.push(d.value ? "is-valid" : "is-error"), U.push(j.value ? "is-filled" : "is-empty")), U.join(" ");
@@ -15770,9 +15770,9 @@ const Ti = /* @__PURE__ */ he(ln), nn = { ckb: Zt, cs: jt, da: $t, de: Kt, en: l
               [Pe, Te.value]
             ]),
             pe(ve, {
-              text: U.customIconText,
-              class: "lkt-field--info-btn",
-              icon: U.customIconClass
+              text: U.customButtonText,
+              class: "lkt-field--info-btn lkt-field--custom-btn",
+              icon: U.customButtonClass
             }, null, 8, ["text", "icon"]),
             Me(pe(el, {
               "show-undo": ue.value,

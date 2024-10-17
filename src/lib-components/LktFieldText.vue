@@ -97,8 +97,8 @@ const props = withDefaults(defineProps<{
     featuredButton?: string
     infoButtonEllipsis?: boolean
     fileName?: string
-    customIconText?: string
-    customIconClass?: string
+    customButtonText?: string
+    customButtonClass?: string
 }>(), {
     modelValue: '',
     type: 'text',
@@ -258,7 +258,7 @@ const changed = computed(() => {
         if (computedShowPasswordRevealInNav.value) ++r;
         if (computedShowI18nInNav.value) ++r;
         if (computedShowSwitchEditionInNav.value) ++r;
-        if (props.customIconText || props.customIconClass) ++r;
+        if (props.customButtonText || props.customButtonClass) ++r;
 
         if (r > 0 && Type.value === FieldType.Textarea) return 1;
         if (r > 0 && Type.value === FieldType.Html) return 1;
@@ -1224,9 +1224,9 @@ onMounted(() => {
                 />
 
                 <lkt-button
-                  :text="customIconText"
-                  class="lkt-field--info-btn"
-                  :icon="customIconClass"
+                  :text="customButtonText"
+                  class="lkt-field--info-btn lkt-field--custom-btn"
+                  :icon="customButtonClass"
                 />
 
                 <ellipsis-actions-button
