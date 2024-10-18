@@ -42,10 +42,8 @@ const LktFieldText: Plugin = {
 
 export default LktFieldText;
 
-export const setDefaultTextEmptyValueSlot = (str: string, component?: string|Component) => {
-  Settings.defaultEmptyValueSlot = str;
-
-  if (component) Settings.customValueSlots[str] = component;
+export const setDefaultTextEmptyValueSlot = (component?: string|Component) => {
+  Settings.defaultEmptyValueSlot = component;
 }
 
 export const setFieldUndoText = (text: string) => Settings.undoText = text;
@@ -55,3 +53,5 @@ export const setFieldSwitchEditionOnText = (text: string) => Settings.switchEdit
 export const setFieldSwitchEditionOffText = (text: string) => Settings.switchEditionOffText = text;
 export const setFieldShowPasswordOnText = (text: string) => Settings.showPasswordOnText = text;
 export const setFieldShowPasswordOffText = (text: string) => Settings.showPasswordOffText = text;
+export const setFieldDateReadFormat = (format: string) => Settings.dateReadFormat = format;
+export const setFieldDefaultDateReadFormat = (format: string) => Settings.defaultDateReadFormat = format;

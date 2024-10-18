@@ -14,7 +14,11 @@ const pickedDate = ref(props.modelValue);
 watch(() => props.modelValue, v => pickedDate.value = v, {deep: true});
 watch(pickedDate, v => emit('update:modelValue', v));
 
+const today = ref(new Date());
 const visibleDate = ref(new Date());
+if (!(Object.prototype.toString.call(pickedDate.value) === "[object Date]" && isNaN(pickedDate.value))) {
+  visibleDate.value = new Date(pickedDate.value.getFullYear(), pickedDate.value.getMonth(), pickedDate.value.getDate());
+}
 const visibleYear = ref(visibleDate.value.getFullYear());
 const visibleMonth = ref(visibleDate.value.getMonth());
 const refreshing = ref(false);
@@ -59,9 +63,16 @@ const onClickNext = () => {
         if (pickedDate.value.getMonth() !== visibleMonth.value) return false;
         return pickedDate.value.getDate() === day;
     },
+    dayIsToday = (day: number) => {
+        if (typeof pickedDate.value === 'undefined') return false;
+        if (today.value.getFullYear() !== visibleYear.value) return false;
+        if (today.value.getMonth() !== visibleMonth.value) return false;
+        return today.value.getDate() === day;
+    },
     getDayClasses = (day: number) => {
         return {
-            'is-picked': dayIsPicked(day)
+            'is-picked': dayIsPicked(day),
+            'is-today' : dayIsToday(day),
         }
     },
     onClickDay = (day: number) => {

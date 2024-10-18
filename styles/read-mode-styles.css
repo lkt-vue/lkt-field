@@ -20,6 +20,12 @@
     line-height: var(--lkt-field-input-height);
 }
 
+.lkt-field-text.is-textarea .lkt-field-text__read-value,
+.lkt-field-text.is-html .lkt-field-text__read-value {
+    text-wrap: wrap;
+    line-height: var(--lkt-field-textarea-read-mode-line-height);
+}
+
 .lkt-field-textarea .lkt-field-textarea__read-value,
 .lkt-field-editor .lkt-field-editor__read-value {
     box-sizing: border-box;

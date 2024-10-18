@@ -13,6 +13,9 @@ export class Settings {
     static showPasswordOnText: string = '';
     static showPasswordOffText: string = '';
 
+    static dateReadFormat = '';
+    static defaultDateReadFormat = 'Y-m-d';
+
     static langDateReadFormat = {
         en: 'Y-m-d',
         es: 'd/m/Y',

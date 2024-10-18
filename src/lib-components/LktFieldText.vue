@@ -218,7 +218,10 @@ const originalValue = ref(props.modelValue),
 
 const computedLang = computed(() => currentLanguage.value);
 const computedDateReadFormat = computed(() => {
+    computedLang.value; // Call in order to force prop to re-compute
+    if (Settings.dateReadFormat) return Settings.dateReadFormat;
     if (Settings.langDateReadFormat[computedLang.value]) return Settings.langDateReadFormat[computedLang.value];
+    if (Settings.defaultDateReadFormat) return Settings.defaultDateReadFormat;
     return 'Y-m-d';
 });
 
@@ -706,7 +709,6 @@ const
                 reader.readAsDataURL(input.files[0]);
             }
         }
-        // (focusing.value = true) && emits('focus', $event, createLktEvent(Identifier, {value: value.value}))
     },
     onBlur = ($event: any) => {
         hadFirstBlur.value = true;
@@ -725,8 +727,7 @@ const
 
         if (!props.enableAutoNumberFix) return false;
 
-        let N = Number(n),
-            reAssign = false;
+        let N = Number(n);
 
         let ensured = ensureNumberBetween(N, MinimumValue.value, MaximumValue.value);
 
@@ -735,24 +736,6 @@ const
             return true;
         }
         return false;
-
-        // // @ts-ignore
-        // if (MinimumValue.value !== false && N < MinimumValue.value) {
-        //     N = MinimumValue.value;
-        //     reAssign = true;
-        // }
-        //
-        // // @ts-ignore
-        // if (MaximumValue.value !== false && N > MaximumValue.value) {
-        //     N = MaximumValue.value;
-        //     reAssign = true;
-        // }
-        //
-        // if (reAssign) {
-        //     value.value = N;
-        //     return true;
-        // }
-        // return false;
     };
 
 defineExpose({
@@ -764,14 +747,14 @@ defineExpose({
 });
 
 const hasCustomValueSlot = computed(() => {
-        if (editableValue.value === '') {
-            return (props.emptyValueSlot !== '' && typeof Settings.customValueSlots[props.emptyValueSlot] !== 'undefined') || (Settings.defaultEmptyValueSlot && typeof Settings.customValueSlots[Settings.defaultEmptyValueSlot] !== 'undefined');
+        if (editableValue.value === '' || (Type.value === 'date' && visibleDateValue.value === '')) {
+            return (props.emptyValueSlot !== '' && typeof Settings.customValueSlots[props.emptyValueSlot] !== 'undefined') || (Settings.defaultEmptyValueSlot && typeof Settings.defaultEmptyValueSlot !== 'undefined');
         }
         return props.valueSlot !== '' && typeof Settings.customValueSlots[props.valueSlot] !== 'undefined';
     }),
     customValueSlot = computed(() => {
-        if (editableValue.value === '') {
-            return Settings.customValueSlots[props.emptyValueSlot] ?? Settings.customValueSlots[Settings.defaultEmptyValueSlot];
+        if (editableValue.value === '' || (Type.value === 'date' && visibleDateValue.value === '')) {
+            return Settings.customValueSlots[props.emptyValueSlot] ?? Settings.defaultEmptyValueSlot;
         }
 
         return Settings.customValueSlots[props.valueSlot];
@@ -1128,7 +1111,6 @@ onMounted(() => {
             </div>
 
             <div v-if="!editable" class="lkt-field-text__read" v-on:click="onClick">
-
                 <template v-if="slots['value']">
                     <slot
                         name="value"
@@ -1176,6 +1158,10 @@ onMounted(() => {
                         :to="'tel:' + value">{{ value }}
                     </lkt-anchor>
                     <div
+                        v-else-if="Type === 'date'"
+                        class="lkt-field-text__read-value"
+                        v-html="visibleDateValue" :title="readModeTitle"></div>
+                    <div
                         v-else
                         class="lkt-field-text__read-value"
                         v-html="value" :title="readModeTitle"></div>
@@ -1213,8 +1199,10 @@ onMounted(() => {
                     v-model="showPasswordIcon"
                 />
 
-                <i18n-button v-show="computedShowI18nInNav"
-                             v-model="value" :type="Type"
+                <i18n-button
+                    v-show="computedShowI18nInNav"
+                    v-model="value"
+                    :type="Type"
                 />
 
                 <edition-button
