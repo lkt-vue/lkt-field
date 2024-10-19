@@ -682,6 +682,17 @@
         },
         fetchOptions = async (query: string) => {
             if (!editable.value && !props.autoloadOptionsResource) return;
+            if ([
+                FieldType.Tel,
+                FieldType.Date,
+                FieldType.Color,
+                FieldType.File,
+                FieldType.Html,
+                FieldType.Image,
+                FieldType.Password,
+                FieldType.Range,
+                FieldType.Textarea,
+            ].includes(Type.value)) return;
 
             isLoading.value = false;
             if (props.optionsResource !== '') {
