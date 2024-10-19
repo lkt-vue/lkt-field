@@ -30,6 +30,7 @@ import {editorOptions} from "../constants/editor-constants";
 import {ValidFieldValue} from "../types/ValidFieldValue";
 import LktCalendar from "../components/calendar/LktCalendar.vue";
 import {date} from "lkt-date-tools";
+import { Option } from '@/instances/Option';
 
 const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -99,6 +100,7 @@ const props = withDefaults(defineProps<{
     fileName?: string
     customButtonText?: string
     customButtonClass?: string
+    options?: Option[]
 }>(), {
     modelValue: '',
     type: 'text',
@@ -155,6 +157,7 @@ const props = withDefaults(defineProps<{
     featuredButton: '',
     infoButtonEllipsis: false,
     fileName: '',
+    options: [],
 });
 
 // Constant data
