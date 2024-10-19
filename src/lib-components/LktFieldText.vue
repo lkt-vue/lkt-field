@@ -243,9 +243,11 @@
     const dropdownEl = ref(<Element | ComponentPublicInstance | null>null);
     const container = ref(<Element | ComponentPublicInstance | null>null);
     const searchField = ref(<Element | ComponentPublicInstance | null>null);
+    const optionList = ref(<Element | ComponentPublicInstance | null>null);
     const showOptions = ref(false);
     const isLoading = ref(false);
     const searchString = ref('');
+    const focusedOptionIndex = ref(-1);
 
     const computedLang = computed(() => currentLanguage.value);
     const computedDateReadFormat = computed(() => {
@@ -673,7 +675,7 @@
 
     const buildVisibleOptions = (query: string) => {
             if (Type.value === FieldType.Text && optionsHaystack.value.length > 0) {
-                visibleOptions.value = filterOptions(optionsHaystack.value, query);
+                visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
                 isLoading.value = false;
                 showOptions.value = visibleOptions.value.length > 0;
             }
@@ -696,6 +698,30 @@
 
             } else {
                 buildVisibleOptions(query);
+            }
+        },
+        navigateOptions = (key: string) => {
+            let amountOfOptions = visibleOptions.value.length - 1;
+            if (amountOfOptions === -1) return;
+            if (focusing.value) {
+                if (key === 'ArrowDown') {
+                    ++focusedOptionIndex.value;
+                    if (focusedOptionIndex.value > amountOfOptions) focusedOptionIndex.value = 0;
+                    let el = optionList.value.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
+                    if (el) el.scrollIntoView({behavior: "instant", block: "start", inline: "nearest"});
+
+                } else if (key === 'ArrowUp') {
+                    --focusedOptionIndex.value;
+                    if (focusedOptionIndex.value < 0) focusedOptionIndex.value = amountOfOptions;
+
+                    let el = optionList.value.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
+                    if (el) el.scrollIntoView({behavior: "instant", block: "start", inline: "nearest"});
+
+                } else if (key === 'Enter') {
+                    if (focusedOptionIndex.value > -1) {
+                        onClickOption(visibleOptions.value[focusedOptionIndex.value]);
+                    }
+                }
             }
         };
 
@@ -734,12 +760,13 @@
             editableValue.value = '';
         },
         getValue = () => editableValue.value,
-        onKeyUp = ($event: any) => {
+        onKeyUp = ($event: KeyboardEvent) => {
             doLocalValidation();
             fetchOptions(editableValue.value);
+            navigateOptions($event.key);
             emits('keyup', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
-        onSearchFieldKeyUp = ($event: any) => {
+        onSearchFieldKeyUp = ($event: KeyboardEvent) => {
             fetchOptions(searchString.value);
         },
         onClickOption = (option: Option) => {
@@ -754,13 +781,14 @@
                     editableValue.value.splice(k, 1);
                 }
             } else {
+                focusedOptionIndex.value = -1;
                 editableValue.value = option.value;
                 // pickedData.value = option;
                 showOptions.value = false;
             }
         },
-        onKeyDown = ($event: any) => emits('keydown', $event, createLktEvent(Identifier, { value: editableValue.value })),
-        onFocus = ($event: any) => {
+        onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event, createLktEvent(Identifier, { value: editableValue.value })),
+        onFocus = ($event: FocusEvent) => {
             hadFirstFocus.value = true;
             doLocalValidation();
             focusing.value = true;
@@ -805,12 +833,13 @@
                 }
             }
         },
-        onBlur = ($event: any) => {
+        onBlur = ($event: Event) => {
             hadFirstBlur.value = true;
             doLocalValidation();
+            focusedOptionIndex.value = -1;
             (focusing.value = false) && emits('blur', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
-        onClick = ($event: any) => {
+        onClick = ($event: Event) => {
             emits('click', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
         onClickInfo = ($event: any) => emits('click-info', $event, createLktEvent(Identifier, { value: editableValue.value })),
@@ -1344,21 +1373,26 @@
             location-x="left-corner"
             location-y="bottom"
         >
-            <div v-if="showOptions" class="">
+            <div v-if="showOptions">
                 <div v-if="searchable" class="lkt-field__select-search-container">
-                    <lkt-field-text ref="searchField"
-                                    v-model="searchString"
-                                    :placeholder="computedSearchPlaceholder"
-                                    :tabindex="-1"
-                                    class="lkt-field__select-search"
-                                    v-on:keyup="onSearchFieldKeyUp"
+                    <lkt-field-text
+                        ref="searchField"
+                        v-model="searchString"
+                        :placeholder="computedSearchPlaceholder"
+                        :tabindex="-1"
+                        class="lkt-field__select-search"
+                        v-on:keyup="onSearchFieldKeyUp"
                     />
                 </div>
                 <lkt-loader v-if="isLoading" />
-                <ul class="lkt-field__select-options" v-if="!isLoading">
+                <ul class="lkt-field__select-options" v-if="!isLoading" ref="optionList">
                     <li class="lkt-field__select-option"
-                        v-for="option in visibleOptions"
-                        :class="{'is-active': optionIsActive(option, value, multiple)}"
+                        v-for="(option, i) in visibleOptions"
+                        :class="{
+                            'is-active': optionIsActive(option, value, multiple),
+                            'is-focused': i === focusedOptionIndex,
+                        }"
+                        :data-index="i"
                         @click="() => onClickOption(option)">
                         <template v-if="slots.option">
                             <slot name="option"

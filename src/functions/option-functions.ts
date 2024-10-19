@@ -16,13 +16,15 @@ export const prepareOptions = (options: any) => {
     }).filter(opt => typeof opt !== 'undefined');
 };
 
-export const filterOptions = (options: Option[], query: string) => {
+export const filterOptions = (options: Option[], query: string, includeEquals: boolean = true) => {
     if (query === '') return options;
 
     const q = String(query).toLowerCase();
 
     return options.filter((z: Option) => {
-        return String(z.label).toLowerCase().indexOf(q) !== -1;
+        let label = String(z.label).toLowerCase();
+        return label.indexOf(q) !== -1
+            && (includeEquals || label !== q);
     });
 };
 

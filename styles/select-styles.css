@@ -74,6 +74,7 @@
     padding: var(--lkt-field-padding-option);
     transition: var(--lkt-field-transition-input);
     color: var(--lkt-field-color-opt);
+    scroll-margin-top: 10px;
 }
 .lkt-field__select-options li:nth-child(odd) {
     background: var(--lkt-field-bg-opt-odd);
@@ -95,6 +96,10 @@
 .lkt-field__select-options li.is-active {
     background: var(--lkt-field-bg-opt-active);
     color: var(--lkt-field-color-opt-active);
+}
+
+.lkt-field__select-options li.is-focused {
+    border: 2px solid red;
 }
 
 
