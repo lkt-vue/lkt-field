@@ -2,39 +2,71 @@ import { Option } from '../instances/Option';
 import { ValidOptionValue } from '../types/ValidOptionValue';
 
 export const prepareOptions = (options: any) => {
-  if (!Array.isArray(options)) options = [];
-  return [...options];
-}
+    if (!Array.isArray(options)) return [];
+    if (options.length === 0) return options;
+    return options.map(opt => {
+        if (typeof opt === 'object') return new Option(opt);
+        if (typeof opt === 'string' || typeof opt === 'number') {
+            return new Option({
+                label: String(opt),
+                value: opt,
+            })
+        }
+        return undefined;
+    }).filter(opt => typeof opt !== 'undefined');
+};
 
 export const filterOptions = (options: Option[], query: string) => {
-  if (query === '') return options;
+    if (query === '') return options;
 
-  const q = query.toLowerCase();
+    const q = String(query).toLowerCase();
 
-  return options.filter((z: Option) => {
-    return z.label.toLowerCase().indexOf(q) !== -1;
-  });
-}
+    return options.filter((z: Option) => {
+        return String(z.label).toLowerCase().indexOf(q) !== -1;
+    });
+};
 
 export const findOptionByValue = (options: Option[], query: ValidOptionValue) => {
-  if (!query) return undefined;
+    if (!query) return undefined;
 
-  return options.find((z: Option) => {
-    return z.value === query;
-  });
-}
+    return options.find((z: Option) => {
+        return z.value === query;
+    });
+};
 
 export const receiveOptions = (currentOptions: Option[], receivedOptions: Option[]) => {
-  const set = new Set();
-  const temp: Option[] = [...currentOptions, ...receivedOptions];
-  const r: Option[] = [];
-  temp.forEach(z => {
-    let k = [z.value, z.label].join('-');
-    if (!set.has(k)) {
-      r.push(z);
-      set.add(k);
-    }
-  })
+    const set = new Set();
+    const temp: Option[] = [...currentOptions, ...prepareOptions(receivedOptions)];
+    const r: Option[] = [];
+    temp.forEach(z => {
+        let k = [z.value, z.label].join('-');
+        if (!set.has(k)) {
+            r.push(z);
+            set.add(k);
+        }
+    });
 
-  this.value = r;
-}
+    return r;
+};
+
+export const optionIsActive = (option: Option, value: ValidOptionValue | ValidOptionValue[], isMultiple: boolean) => {
+    if (isMultiple) {
+        if (Array.isArray(value)) {
+            let r = value.findIndex((v) => {
+                return v == option.value;
+            });
+            if (typeof r !== 'undefined') return true;
+        }
+        return false;
+    }
+    return option.value === value;
+};
+
+export const getInValueOptionIndex = (option: Option, value: ValidOptionValue[]): number => {
+    //@ts-ignore
+    let r = value.findIndex((v) => {
+        return v == option.value;
+    });
+    if (typeof r === 'undefined') r = -1;
+    return r;
+};

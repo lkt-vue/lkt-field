@@ -10,7 +10,7 @@
     max-height: var(--lkt-field-large-field-max-height);
 }
 
-.lkt-field-select .lkt-field__select-dropdown {
+.lkt-field__select-dropdown {
     z-index: 9;
     padding: 0;
     outline: 0;
@@ -27,7 +27,7 @@
     --lkt-tooltip-border-color-hover: var(--lkt-field-border-color);
 }
 
-.lkt-field-select .lkt-field__select-dropdown .lkt-tooltip-content {
+.lkt-field__select-dropdown .lkt-tooltip-content {
     display: flex;
     flex-direction: column;
     gap: var(--lkt-field-gap);

@@ -1,16 +1,16 @@
-declare namespace Xn {
+declare namespace ws {
     function install(e: any): void;
 }
-declare function Jn(e: any): void;
-declare function es(e: any): any;
-declare function os(e: any): any;
-declare function as(e: any): any;
-declare function ts(e: any): any;
-declare function ss(e: any): any;
-declare function ns(e: any): any;
-declare function ls(e: any): any;
-declare function is(e: any): any;
-declare function Qn(e: any): any;
-declare function Kn(e: any, t: any): boolean;
-declare function Yn(e: any, t: any): boolean;
-export { Xn as default, Jn as setDefaultTextEmptyValueSlot, es as setFieldClearText, os as setFieldDateReadFormat, as as setFieldDefaultDateReadFormat, ts as setFieldI18nText, ss as setFieldShowPasswordOffText, ns as setFieldShowPasswordOnText, ls as setFieldSwitchEditionOffText, is as setFieldSwitchEditionOnText, Qn as setFieldUndoText, Kn as setTextEditSlot, Yn as setTextValueSlot };
+declare function xs(e: any): void;
+declare function Ss(e: any): any;
+declare function Bs(e: any): any;
+declare function As(e: any): any;
+declare function Es(e: any): any;
+declare function Ns(e: any): any;
+declare function zs(e: any): any;
+declare function Ts(e: any): any;
+declare function Ls(e: any): any;
+declare function ks(e: any): any;
+declare function Cs(e: any, t: any): boolean;
+declare function ys(e: any, t: any): boolean;
+export { ws as default, xs as setDefaultTextEmptyValueSlot, Ss as setFieldClearText, Bs as setFieldDateReadFormat, As as setFieldDefaultDateReadFormat, Es as setFieldI18nText, Ns as setFieldShowPasswordOffText, zs as setFieldShowPasswordOnText, Ts as setFieldSwitchEditionOffText, Ls as setFieldSwitchEditionOnText, ks as setFieldUndoText, Cs as setTextEditSlot, ys as setTextValueSlot };
