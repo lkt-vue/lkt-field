@@ -678,6 +678,13 @@
                 visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
                 isLoading.value = false;
                 showOptions.value = visibleOptions.value.length > 0;
+                return;
+            }
+            if (Type.value === FieldType.Select && optionsHaystack.value.length > 0) {
+                visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
+                isLoading.value = false;
+                showOptions.value = visibleOptions.value.length > 0;
+                return;
             }
         },
         fetchOptions = async (query: string) => {
@@ -780,20 +787,23 @@
         onSearchFieldKeyUp = ($event: KeyboardEvent) => {
             fetchOptions(searchString.value);
         },
+        onClickSelect = () => {
+            fetchOptions(searchString.value);
+        },
         onClickOption = (option: Option) => {
             if (props.multiple) {
                 //@ts-ignore
                 let k = getInValueOptionIndex(option);
                 if (k === -1) {
                     //@ts-ignore
-                    editableValue.value.push(option.value);
+                    editableValue.value.push(String(option.value));
                 } else {
                     //@ts-ignore
                     editableValue.value.splice(k, 1);
                 }
             } else {
                 focusedOptionIndex.value = -1;
-                editableValue.value = option.value;
+                editableValue.value = String(option.value);
                 // pickedData.value = option;
                 showOptions.value = false;
             }
@@ -1189,6 +1199,16 @@
                                 <lkt-calendar v-model="pickedDate" />
                             </template>
                         </lkt-button>
+                    </template>
+
+                    <template v-else-if="Type === FieldType.Select">
+                        <lkt-button
+                            class="lkt-field--toggle-button"
+                            :text="editableValue"
+                            v-model:checked="showOptions"
+                            hidden-switch
+                            @click="onClickSelect"
+                        />
                     </template>
 
                     <input

@@ -14,4 +14,5 @@ export type ValidFieldType =
     | FieldType.Date
     | FieldType.File
     | FieldType.Image
+    | FieldType.Select
 ;

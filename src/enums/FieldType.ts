@@ -12,4 +12,5 @@ export enum FieldType {
     Date = 'date',
     File = 'file',
     Image = 'image',
+    Select = 'select',
 }
