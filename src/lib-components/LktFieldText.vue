@@ -694,17 +694,18 @@
                 case FieldType.Select:
                     visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
                     isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = props.optionsResource || visibleOptions.value.length > 0;
                     return;
 
                 case FieldType.Text:
                     visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
                     isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = props.optionsResource || visibleOptions.value.length > 0;
                     return;
             }
         },
-        fetchOptions = async (query: string) => {
+        fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
+            console.log('fetchOptions', props.optionsResource, props.optionsResourceData);
             if (!editable.value && !props.autoloadOptionsResource) return;
             if ([
                 FieldType.Tel,
@@ -726,13 +727,13 @@
                 if (Array.isArray(results.data)) {
                     optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data);
                 }
-                buildVisibleOptions(query);
+                buildVisibleOptions(query, ableToShowOptions);
                 if (Array.isArray(results.data)) {
                     emits('options-got', results.data);
                 }
 
             } else {
-                buildVisibleOptions(query);
+                buildVisibleOptions(query, ableToShowOptions);
             }
         },
         navigateOptions = (event: KeyboardEvent) => {
@@ -819,7 +820,7 @@
             fetchOptions(searchString.value);
         },
         onClickSelect = () => {
-            if (visibleOptions.value.length === 0) {
+            if (!props.optionsResource && visibleOptions.value.length === 0) {
                 showOptions.value = false;
                 return;
             }
@@ -860,10 +861,10 @@
             hadFirstFocus.value = true;
             doLocalValidation();
             focusing.value = true;
-            if (visibleOptions.value.length > 0 && (Type.value === FieldType.Text || Type.value === FieldType.Select)) {
-                showOptions.value = true;
-            } else {
-                showOptions.value = false;
+
+            showOptions.value = (visibleOptions.value.length > 0 || props.optionsResource) && (Type.value === FieldType.Text || Type.value === FieldType.Select);
+            if (showOptions.value && Type.value === FieldType.Select) {
+                fetchOptions(searchString.value, false);
             }
             emits('focus', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
