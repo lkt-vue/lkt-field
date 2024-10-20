@@ -694,18 +694,17 @@
                 case FieldType.Select:
                     visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
                     isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = props.optionsResource || visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = props.optionsResource !== '' || visibleOptions.value.length > 0;
                     return;
 
                 case FieldType.Text:
                     visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
                     isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = props.optionsResource || visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = props.optionsResource !== '' || visibleOptions.value.length > 0;
                     return;
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
-            console.log('fetchOptions', props.optionsResource, props.optionsResourceData);
             if (!editable.value && !props.autoloadOptionsResource) return;
             if ([
                 FieldType.Tel,
@@ -722,7 +721,7 @@
             isLoading.value = false;
             if (props.optionsResource !== '') {
                 isLoading.value = true;
-                // if (props.searchStringResourceParam) props.resourceData[props.searchStringResourceParam] = query;
+                if (Settings.searchKeyForResource !== '') props.optionsResourceData[Settings.searchKeyForResource] = query;
                 const results: HTTPResponse = await httpCall(props.optionsResource, props.optionsResourceData);
                 if (Array.isArray(results.data)) {
                     optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data);
@@ -862,7 +861,7 @@
             doLocalValidation();
             focusing.value = true;
 
-            showOptions.value = (visibleOptions.value.length > 0 || props.optionsResource) && (Type.value === FieldType.Text || Type.value === FieldType.Select);
+            showOptions.value = (visibleOptions.value.length > 0 || props.optionsResource !== '') && (Type.value === FieldType.Text || Type.value === FieldType.Select);
             if (showOptions.value && Type.value === FieldType.Select) {
                 fetchOptions(searchString.value, false);
             }

@@ -5,6 +5,8 @@ export class Settings {
     static customValueSlots: LktObject = {};
     static customEditSlots: LktObject = {};
 
+    static searchKeyForResource: string = 'query';
+
     static optionSlots: LktObject = {};
 
     static undoText: string = '';
