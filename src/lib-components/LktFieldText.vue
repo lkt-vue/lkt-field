@@ -38,6 +38,7 @@
         prepareOptions,
         receiveOptions,
     } from '@/functions/option-functions';
+    import { isValidDateObject } from '@/functions/date-functions';
 
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating']);
 
@@ -486,7 +487,7 @@
         if (Type.value === FieldType.Date) {
             let date = new Date(v);
 
-            if (!(Object.prototype.toString.call(date) === '[object Date]' && isNaN(date))) {
+            if (isValidDateObject(date)) {
                 pickedDate.value = date;
             } else {
                 value.value = '';
@@ -512,18 +513,20 @@
         setVisibleDateValue();
     }, { deep: true });
 
-    const setVisibleDateValue = () => {
-        if (Object.prototype.toString.call(pickedDate.value) === '[object Date]') {
-            // it is a date
-            if (isNaN(pickedDate.value)) { // d.getTime() or d.valueOf() will also work
-                // date object is not valid
-                visibleDateValue.value = '';
-            } else {
-                // date object is valid
-                visibleDateValue.value = date(computedDateReadFormat.value, pickedDate.value);
-            }
+    watch(() => props.options, (v) => {
+        optionsHaystack.value = prepareOptions(v);
+        if (Type.value === FieldType.Select) {
+            buildVisibleOptions(searchString.value, false);
         } else {
-            // not a date object
+            buildVisibleOptions(editableValue.value, false);
+        }
+    })
+
+    const setVisibleDateValue = () => {
+        if (isValidDateObject(pickedDate.value)) {
+            visibleDateValue.value = date(computedDateReadFormat.value, pickedDate.value);
+
+        } else {
             visibleDateValue.value = '';
         }
     };
@@ -681,7 +684,7 @@
         });
     };
 
-    const buildVisibleOptions = (query: string) => {
+    const buildVisibleOptions = (query: string, ableToShowOptions: boolean = true) => {
             if (optionsHaystack.value.length === 0) {
                 visibleOptions.value = [];
                 return;
@@ -691,13 +694,13 @@
                 case FieldType.Select:
                     visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
                     isLoading.value = false;
-                    showOptions.value = visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = visibleOptions.value.length > 0;
                     return;
 
                 case FieldType.Text:
                     visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
                     isLoading.value = false;
-                    showOptions.value = visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = visibleOptions.value.length > 0;
                     return;
             }
         },
@@ -1468,6 +1471,7 @@
             :stack="validationStack" :min="min" :max="max" />
 
         <lkt-tooltip
+            v-if="editable"
             ref="dropdownEl"
             class="lkt-field__select-dropdown"
             v-model="showOptions"
