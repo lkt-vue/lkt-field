@@ -252,6 +252,7 @@
     const focusedOptionIndex = ref(-1);
     const justFocusedTimeout = ref(undefined);
     const pickedOption = ref(undefined);
+    const searchMode = ref(false);
 
     const computedLang = computed(() => currentLanguage.value);
     const computedDateReadFormat = computed(() => {
@@ -816,7 +817,20 @@
             emits('keyup', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
         onSearchFieldKeyUp = ($event: KeyboardEvent) => {
-            fetchOptions(searchString.value);
+            console.log('onSearchFieldKeyUp: ', $event);
+
+            if (['ArrowDown', 'ArrowUp', 'Enter'].includes($event.key)) {
+                navigateOptions($event);
+            } else {
+                fetchOptions(searchString.value);
+            }
+        },
+        onSearchFieldBlur = ($event: KeyboardEvent) => {
+            console.log('onSearchFieldBlur', $event);
+            setTimeout(() => {
+                showOptions.value = false;
+                searchMode.value = false;
+            }, 100);
         },
         onClickSelect = () => {
             if (!props.optionsResource && visibleOptions.value.length === 0) {
@@ -826,6 +840,20 @@
             if (typeof justFocusedTimeout.value === 'undefined') {
                 showOptions.value = !showOptions.value;
             }
+        },
+        turnOnSelectSearchMode = () => {
+            searchMode.value = true;
+
+            nextTick(() => {
+                if (searchField.value) {
+                    //@ts-ignore
+                    searchField.value.focus();
+                }
+            });
+        },
+        onClickSelectButton = () => {
+            if (!props.searchable) return onClickSelect();
+            turnOnSelectSearchMode();
         },
         onClickOption = (option: Option) => {
             if (props.multiple) {
@@ -843,6 +871,7 @@
                 editableValue.value = String(option.value);
                 pickedOption.value = option;
                 showOptions.value = false;
+                searchMode.value = false;
             }
         },
         onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event, createLktEvent(Identifier, { value: editableValue.value })),
@@ -855,6 +884,10 @@
                     }, 200);
                 } else {
                     clearTimeout(justFocusedTimeout.value);
+                }
+
+                if (props.searchable && !searchMode.value) {
+                    turnOnSelectSearchMode();
                 }
             }
             hadFirstFocus.value = true;
@@ -873,6 +906,9 @@
             focusedOptionIndex.value = -1;
             focusing.value = false
             setTimeout(() => {
+                if (props.searchable && searchMode.value) {
+                    return;
+                }
                 showOptions.value = false;
             }, 100)
             emits('blur', $event, createLktEvent(Identifier, { value: editableValue.value }));
@@ -1259,14 +1295,30 @@
                     </template>
 
                     <template v-else-if="Type === FieldType.Select">
+
+                        <input
+                            v-show="searchable && searchMode"
+                            v-model="searchString"
+                            ref="searchField"
+                            :value="searchString"
+                            :placeholder="computedSearchPlaceholder"
+                            type="text"
+                            tabindex="-1"
+                            autocomplete="off"
+                            @keyup="onSearchFieldKeyUp"
+                            @blur="onSearchFieldBlur"
+                            @click="onClickSelect"
+                        />
+
                         <lkt-button
+                            v-show="!searchable || !searchMode"
                             class="lkt-field--toggle-button"
                             :text="optionSlot ? '' : editableValue"
                             v-model:open-tooltip="showOptions"
                             @keyup="onKeyUp"
                             @blur="onBlur"
                             @focus="onFocus"
-                            @click="onClickSelect"
+                            @click="onClickSelectButton"
                         >
                             <template v-if="optionSlot">
                                 <component
@@ -1481,16 +1533,6 @@
             location-y="bottom"
         >
             <div v-if="showOptions">
-                <div v-if="searchable" class="lkt-field__select-search-container">
-                    <lkt-field-text
-                        ref="searchField"
-                        v-model="searchString"
-                        :placeholder="computedSearchPlaceholder"
-                        :tabindex="-1"
-                        class="lkt-field__select-search"
-                        v-on:keyup="onSearchFieldKeyUp"
-                    />
-                </div>
                 <lkt-loader v-if="isLoading" />
                 <ul class="lkt-field__select-options" v-if="!isLoading" ref="optionList">
                     <li class="lkt-field__select-option"
