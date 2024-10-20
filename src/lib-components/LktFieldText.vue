@@ -248,6 +248,7 @@
     const isLoading = ref(false);
     const searchString = ref('');
     const focusedOptionIndex = ref(-1);
+    const justFocusedTimeout = ref(undefined);
 
     const computedLang = computed(() => currentLanguage.value);
     const computedDateReadFormat = computed(() => {
@@ -273,6 +274,9 @@
 
     if (Type.value === FieldType.Text) {
         visibleOptions.value = filterOptions(optionsHaystack.value, editableValue.value);
+    }
+    else if (Type.value === FieldType.Select) {
+        visibleOptions.value = filterOptions(optionsHaystack.value, searchString.value);
     }
 
     const computedIsColor = computed(() => Type.value === FieldType.Color);
@@ -674,17 +678,23 @@
     };
 
     const buildVisibleOptions = (query: string) => {
-            if (Type.value === FieldType.Text && optionsHaystack.value.length > 0) {
-                visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
-                isLoading.value = false;
-                showOptions.value = visibleOptions.value.length > 0;
+            if (optionsHaystack.value.length === 0) {
+                visibleOptions.value = [];
                 return;
             }
-            if (Type.value === FieldType.Select && optionsHaystack.value.length > 0) {
-                visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
-                isLoading.value = false;
-                showOptions.value = visibleOptions.value.length > 0;
-                return;
+
+            switch (Type.value) {
+                case FieldType.Select:
+                    visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
+                    isLoading.value = false;
+                    showOptions.value = visibleOptions.value.length > 0;
+                    return;
+
+                case FieldType.Text:
+                    visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
+                    isLoading.value = false;
+                    showOptions.value = visibleOptions.value.length > 0;
+                    return;
             }
         },
         fetchOptions = async (query: string) => {
@@ -718,10 +728,18 @@
                 buildVisibleOptions(query);
             }
         },
-        navigateOptions = (key: string) => {
+        navigateOptions = (event: KeyboardEvent) => {
             let amountOfOptions = visibleOptions.value.length - 1;
             if (amountOfOptions === -1) return;
+
+            const key = event.key;
+
             if (focusing.value) {
+
+                if (['ArrowDown', 'ArrowUp', 'Enter'].includes(key)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
                 if (key === 'ArrowDown') {
                     ++focusedOptionIndex.value;
                     if (focusedOptionIndex.value > amountOfOptions) focusedOptionIndex.value = 0;
@@ -780,15 +798,27 @@
         getValue = () => editableValue.value,
         onKeyUp = ($event: KeyboardEvent) => {
             doLocalValidation();
-            fetchOptions(editableValue.value);
-            navigateOptions($event.key);
+            if (Type.value === FieldType.Text) {
+                fetchOptions(editableValue.value);
+                navigateOptions($event);
+
+            } else if (Type.value === FieldType.Select) {
+                // fetchOptions(searchString.value);
+                navigateOptions($event);
+            }
             emits('keyup', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
         onSearchFieldKeyUp = ($event: KeyboardEvent) => {
             fetchOptions(searchString.value);
         },
         onClickSelect = () => {
-            fetchOptions(searchString.value);
+            if (visibleOptions.value.length === 0) {
+                showOptions.value = false;
+                return;
+            }
+            if (typeof justFocusedTimeout.value === 'undefined') {
+                showOptions.value = !showOptions.value;
+            }
         },
         onClickOption = (option: Option) => {
             if (props.multiple) {
@@ -810,15 +840,35 @@
         },
         onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event, createLktEvent(Identifier, { value: editableValue.value })),
         onFocus = ($event: FocusEvent) => {
+            if (Type.value === FieldType.Select) {
+                if (!focusing.value) {
+                    justFocusedTimeout.value = setTimeout(() => {
+                        clearTimeout(justFocusedTimeout.value);
+                        justFocusedTimeout.value =  undefined;
+                    }, 200);
+                } else {
+                    clearTimeout(justFocusedTimeout.value);
+                }
+            }
             hadFirstFocus.value = true;
             doLocalValidation();
             focusing.value = true;
-            if (visibleOptions.value.length > 0 && Type.value === FieldType.Text) {
+            if (visibleOptions.value.length > 0 && (Type.value === FieldType.Text || Type.value === FieldType.Select)) {
                 showOptions.value = true;
             } else {
                 showOptions.value = false;
             }
             emits('focus', $event, createLktEvent(Identifier, { value: editableValue.value }));
+        },
+        onBlur = ($event: Event) => {
+            hadFirstBlur.value = true;
+            doLocalValidation();
+            focusedOptionIndex.value = -1;
+            focusing.value = false
+            setTimeout(() => {
+                showOptions.value = false;
+            }, 100)
+            emits('blur', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
         onChange = ($event: any) => {
             if (computedIsFile.value || computedIsImage.value) {
@@ -853,12 +903,6 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
-        },
-        onBlur = ($event: Event) => {
-            hadFirstBlur.value = true;
-            doLocalValidation();
-            focusedOptionIndex.value = -1;
-            (focusing.value = false) && emits('blur', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
         onClick = ($event: Event) => {
             emits('click', $event, createLktEvent(Identifier, { value: editableValue.value }));
@@ -1205,8 +1249,10 @@
                         <lkt-button
                             class="lkt-field--toggle-button"
                             :text="editableValue"
-                            v-model:checked="showOptions"
-                            hidden-switch
+                            v-model:open-tooltip="showOptions"
+                            @keyup="onKeyUp"
+                            @blur="onBlur"
+                            @focus="onFocus"
                             @click="onClickSelect"
                         />
                     </template>

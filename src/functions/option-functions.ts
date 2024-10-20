@@ -16,7 +16,7 @@ export const prepareOptions = (options: any) => {
     }).filter(opt => typeof opt !== 'undefined');
 };
 
-export const filterOptions = (options: Option[], query: string, includeEquals: boolean = true) => {
+export const filterOptions = (options: Option[], query: string = '', includeEquals: boolean = true) => {
     if (query === '') return options;
 
     const q = String(query).toLowerCase();
@@ -61,7 +61,7 @@ export const optionIsActive = (option: Option, value: ValidOptionValue | ValidOp
         }
         return false;
     }
-    return option.value === value;
+    return option.value == value;
 };
 
 export const getInValueOptionIndex = (option: Option, value: ValidOptionValue[]): number => {
