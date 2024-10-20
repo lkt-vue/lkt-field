@@ -46,6 +46,10 @@ export const setDefaultTextEmptyValueSlot = (component?: string|Component) => {
   Settings.defaultEmptyValueSlot = component;
 }
 
+export const setFieldOptionSlot = (name: string, component?: string|Component) => {
+  Settings.optionSlots[name] = component;
+}
+
 export const setFieldUndoText = (text: string) => Settings.undoText = text;
 export const setFieldClearText = (text: string) => Settings.clearText = text;
 export const setFieldI18nText = (text: string) => Settings.i18nText = text;

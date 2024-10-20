@@ -32,7 +32,7 @@
     import { date } from 'lkt-date-tools';
     import { Option } from '@/instances/Option';
     import {
-        filterOptions,
+        filterOptions, findOptionByValue,
         getInValueOptionIndex,
         optionIsActive,
         prepareOptions,
@@ -82,6 +82,7 @@
         isRange?: boolean
         enableAutoNumberFix?: boolean
         emptyValueSlot?: string
+        optionSlot?: string
         valueSlot?: string
         editSlot?: string
         slotData?: LktObject
@@ -249,6 +250,7 @@
     const searchString = ref('');
     const focusedOptionIndex = ref(-1);
     const justFocusedTimeout = ref(undefined);
+    const pickedOption = ref(undefined);
 
     const computedLang = computed(() => currentLanguage.value);
     const computedDateReadFormat = computed(() => {
@@ -274,9 +276,11 @@
 
     if (Type.value === FieldType.Text) {
         visibleOptions.value = filterOptions(optionsHaystack.value, editableValue.value);
+        pickedOption.value = findOptionByValue(visibleOptions.value, editableValue.value);
     }
     else if (Type.value === FieldType.Select) {
         visibleOptions.value = filterOptions(optionsHaystack.value, searchString.value);
+        pickedOption.value = findOptionByValue(visibleOptions.value, editableValue.value);
     }
 
     const computedIsColor = computed(() => Type.value === FieldType.Color);
@@ -834,7 +838,7 @@
             } else {
                 focusedOptionIndex.value = -1;
                 editableValue.value = String(option.value);
-                // pickedData.value = option;
+                pickedOption.value = option;
                 showOptions.value = false;
             }
         },
@@ -955,6 +959,12 @@
         }),
         hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
         customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
+
+    const optionSlot = computed(() => {
+        if (visibleOptions.value.length === 0 || !props.optionSlot) return undefined;
+        if (typeof Settings.optionSlots[props.optionSlot] === 'undefined') return undefined;
+        return Settings.optionSlots[props.optionSlot];
+    })
 
     const computedComplementaryColor = computed(() => {
         if (!computedIsColor.value) return '';
@@ -1248,13 +1258,20 @@
                     <template v-else-if="Type === FieldType.Select">
                         <lkt-button
                             class="lkt-field--toggle-button"
-                            :text="editableValue"
+                            :text="optionSlot ? '' : editableValue"
                             v-model:open-tooltip="showOptions"
                             @keyup="onKeyUp"
                             @blur="onBlur"
                             @focus="onFocus"
                             @click="onClickSelect"
-                        />
+                        >
+                            <template v-if="optionSlot">
+                                <component
+                                    :is="optionSlot"
+                                    :option="pickedOption"
+                                />
+                            </template>
+                        </lkt-button>
                     </template>
 
                     <input
@@ -1363,9 +1380,18 @@
                         :to="'tel:' + value">{{ value }}
                     </lkt-anchor>
                     <div
-                        v-else-if="Type === 'date'"
+                        v-else-if="Type === FieldType.Date"
                         class="lkt-field-text__read-value"
                         v-html="visibleDateValue" :title="readModeTitle"></div>
+                    <div
+                        v-else-if="Type === FieldType.Select && optionSlot"
+                        class="lkt-field-text__read-value"
+                         :title="readModeTitle">
+                        <component
+                            :is="optionSlot"
+                            :option="pickedOption"
+                        />
+                    </div>
                     <div
                         v-else
                         class="lkt-field-text__read-value"
@@ -1473,12 +1499,14 @@
                         @click="() => onClickOption(option)">
                         <template v-if="slots.option">
                             <slot name="option"
-                                  v-bind:option="option"
-                                  v-bind:data="slotData"
+                                  :option="option"
+                                  :data="slotData"
                             />
                         </template>
-                        <component v-else-if="hasCustomValueSlot" v-bind:is="customValueSlot"
-                                   v-bind:option="option" />
+                        <component
+                            v-else-if="optionSlot"
+                            :is="optionSlot"
+                            :option="option" />
                         <template v-else>
                             {{ option.label }}
                         </template>

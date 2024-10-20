@@ -5,6 +5,8 @@ export class Settings {
     static customValueSlots: LktObject = {};
     static customEditSlots: LktObject = {};
 
+    static optionSlots: LktObject = {};
+
     static undoText: string = '';
     static clearText: string = '';
     static i18nText: string = '';
