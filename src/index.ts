@@ -32,7 +32,7 @@ const LktField: Plugin = {
     if (app.component('lkt-tooltip') === undefined) app.use(LktTooltip);
 
     // Register plugin components
-    if (app.component('lkt-field-text') === undefined) app.component('lkt-field', libComponent);
+    if (app.component('lkt-field') === undefined) app.component('lkt-field', libComponent);
     if (app.component('lkt-field-validations') === undefined) app.use(LktFieldValidation);
 
     // Register modals

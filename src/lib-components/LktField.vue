@@ -290,8 +290,6 @@
         else if (Type.value === FieldType.Select) {
             visibleOptions.value = filterOptions(optionsHaystack.value, searchString.value);
             pickedOption.value = findOptionByValue(optionsHaystack.value, editableValue.value);
-
-            console.log('updatePickedOption: ', pickedOption.value, optionsHaystack.value);
         }
     }
 
@@ -1195,7 +1193,7 @@
                                     <div class="lkt-field-color--tooltip--rgba-container">
                                         <div class="lkt-field-color--tooltip--hex-input-container">
                                             <label class="like-lkt-field-label">HEX</label>
-                                            <lkt-field-text
+                                            <lkt-field
                                                 v-model="editableValue"
                                                 :style="computedColorStylesHex"
                                                 @change="onColorChange"
@@ -1205,7 +1203,7 @@
                                     <div class="lkt-field-color--tooltip--rgba-container">
                                         <div class="lkt-field-color--tooltip--numeric-input-container">
                                             <label class="like-lkt-field-label">R</label>
-                                            <lkt-field-text
+                                            <lkt-field
                                                 v-model="pickedColorRed"
                                                 is-number
                                                 min="0"
@@ -1213,7 +1211,7 @@
                                                 step="1"
                                             />
                                         </div>
-                                        <lkt-field-text
+                                        <lkt-field
                                             class="color-range color-range--red"
                                             v-model="pickedColorRed"
                                             is-range
@@ -1226,7 +1224,7 @@
                                     <div class="lkt-field-color--tooltip--rgba-container">
                                         <div class="lkt-field-color--tooltip--numeric-input-container">
                                             <label class="like-lkt-field-label">G</label>
-                                            <lkt-field-text
+                                            <lkt-field
                                                 v-model="pickedColorGreen"
                                                 is-number
                                                 min="0"
@@ -1234,7 +1232,7 @@
                                                 step="1"
                                             />
                                         </div>
-                                        <lkt-field-text
+                                        <lkt-field
                                             class="color-range color-range--green"
                                             v-model="pickedColorGreen"
                                             is-range
@@ -1247,7 +1245,7 @@
                                     <div class="lkt-field-color--tooltip--rgba-container">
                                         <div class="lkt-field-color--tooltip--numeric-input-container">
                                             <label class="like-lkt-field-label">B</label>
-                                            <lkt-field-text
+                                            <lkt-field
                                                 v-model="pickedColorBlue"
                                                 is-number
                                                 min="0"
@@ -1255,7 +1253,7 @@
                                                 step="1"
                                             />
                                         </div>
-                                        <lkt-field-text
+                                        <lkt-field
                                             class="color-range color-range--blue"
                                             v-model="pickedColorBlue"
                                             is-range
@@ -1268,7 +1266,7 @@
                                     <div class="lkt-field-color--tooltip--rgba-container">
                                         <div class="lkt-field-color--tooltip--numeric-input-container">
                                             <label class="like-lkt-field-label">A</label>
-                                            <lkt-field-text
+                                            <lkt-field
                                                 v-model="pickedColorAlpha"
                                                 is-number
                                                 min="0"
@@ -1276,7 +1274,7 @@
                                                 step="1"
                                             />
                                         </div>
-                                        <lkt-field-text
+                                        <lkt-field
                                             class="color-range color-range--alpha"
                                             v-model="pickedColorAlpha"
                                             is-range
