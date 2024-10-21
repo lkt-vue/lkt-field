@@ -15177,7 +15177,7 @@ const ts = /* @__PURE__ */ Fe({
   key: 0,
   class: "lkt-field-main"
 }, Ls = ["innerHTML", "title"], Ts = ["title"], zs = ["title"], Ns = ["innerHTML", "title"], Bs = { class: "lkt-field--info-nav" }, As = { key: 0 }, Rs = ["data-index", "onClick"], Bt = /* @__PURE__ */ Fe({
-  __name: "LktFieldText",
+  __name: "LktField",
   props: {
     modelValue: { default: "" },
     type: { default: "text" },
@@ -15563,7 +15563,7 @@ const ts = /* @__PURE__ */ Fe({
       }
     }), (D, j) => {
       var $t;
-      const J = Ne("lkt-field-text", !0), ce = Ne("lkt-button"), qe = Ne("lkt-image"), Je = Ne("lkt-tag"), Gt = Ne("lkt-anchor"), xl = Ne("lkt-field-validations"), kl = Ne("lkt-loader"), Sl = Ne("lkt-tooltip");
+      const J = Ne("lkt-field-text"), ce = Ne("lkt-button"), qe = Ne("lkt-image"), Je = Ne("lkt-tag"), Gt = Ne("lkt-anchor"), xl = Ne("lkt-field-validations"), kl = Ne("lkt-loader"), Sl = Ne("lkt-tooltip");
       return X(), de("div", {
         class: Ve(st.value),
         "data-show-ui": Be.value,
@@ -16152,7 +16152,7 @@ const ts = /* @__PURE__ */ Fe({
   }
 }), $s = {
   install: (e) => {
-    e.component("lkt-modal") === void 0 && e.use(Il), e.component("lkt-button") === void 0 && e.use(Dl), e.component("lkt-tooltip") === void 0 && e.use(Hl), e.component("lkt-field-text") === void 0 && e.component("lkt-field-text", Bt), e.component("lkt-field-validations") === void 0 && e.use(El), Ml("lkt-field-language-edit", Ms);
+    e.component("lkt-modal") === void 0 && e.use(Il), e.component("lkt-button") === void 0 && e.use(Dl), e.component("lkt-tooltip") === void 0 && e.use(Hl), e.component("lkt-field-text") === void 0 && e.component("lkt-field", Bt), e.component("lkt-field-validations") === void 0 && e.use(El), Ml("lkt-field-language-edit", Ms);
   }
 }, Ys = (e) => {
   le.defaultEmptyValueSlot = e;

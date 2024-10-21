@@ -13,7 +13,7 @@ export default {
     build: {
         lib: {
             entry: `${ src }/index.ts`,
-            name: 'LktFieldText',
+            name: 'LktField',
             fileName: 'build',
             formats: ['es']
         },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import LktFieldText from "../../lib-components/LktFieldText.vue";
+import LktFieldText from "../../lib-components/LktField.vue";
 import {LktObject} from "lkt-ts-interfaces";
 import {availableLanguages, currentLanguage} from "lkt-i18n";
 import {ValidFieldType} from "../../types/ValidFieldType";

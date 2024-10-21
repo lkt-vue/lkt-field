@@ -1,7 +1,7 @@
 import {App, Component, defineCustomElement, Plugin} from 'vue';
 import LktFieldValidation from 'lkt-field-validation';
 
-import { default as textField } from './lib-components/LktFieldText.vue';
+import { default as libComponent } from './lib-components/LktField.vue';
 
 export {setTextValueSlot, setTextEditSlot} from './functions/settings-functions';
 
@@ -24,7 +24,7 @@ import LktButton from "lkt-button";
 import LktTooltip from "lkt-tooltip";
 import LktTextLanguageEditModal from "./components/modals/LktTextLanguageEditModal.vue";
 
-const LktFieldText: Plugin = {
+const LktField: Plugin = {
   install: (app: App) => {
     // Register library components
     if (app.component('lkt-modal') === undefined) app.use(LktModal);
@@ -32,7 +32,7 @@ const LktFieldText: Plugin = {
     if (app.component('lkt-tooltip') === undefined) app.use(LktTooltip);
 
     // Register plugin components
-    if (app.component('lkt-field-text') === undefined) app.component('lkt-field-text', textField);
+    if (app.component('lkt-field-text') === undefined) app.component('lkt-field', libComponent);
     if (app.component('lkt-field-validations') === undefined) app.use(LktFieldValidation);
 
     // Register modals
@@ -40,7 +40,7 @@ const LktFieldText: Plugin = {
   },
 };
 
-export default LktFieldText;
+export default LktField;
 
 export const setDefaultTextEmptyValueSlot = (component?: string|Component) => {
   Settings.defaultEmptyValueSlot = component;
