@@ -117,6 +117,7 @@
         multiple?: boolean,
         searchable?: boolean,
         autoloadOptionsResource?: boolean,
+        optionsModal?: string,
         optionsIcon?: string,
         optionsResource?: string,
         optionsResourceData?: LktObject,
@@ -182,6 +183,7 @@
         multiple: false,
         searchable: false,
         autoloadOptionsResource: false,
+        optionsModal: '',
         optionsIcon: '',
         optionsResource: '',
         optionsResourceData: () => ({}),
@@ -1382,6 +1384,8 @@
                                 v-else-if="pickedOption"
                                 :option="pickedOption"
                                 :icon="optionsIcon"
+                                :modal="optionsModal"
+                                :editable="editable"
                             />
                         </lkt-button>
                     </template>
@@ -1511,6 +1515,8 @@
                         <dropdown-option
                             :option="pickedOption"
                             :icon="optionsIcon"
+                            :modal="optionsModal"
+                            :editable="editable"
                         />
                     </div>
                     <div
@@ -1628,6 +1634,8 @@
                             <dropdown-option
                                 :option="option"
                                 :icon="optionsIcon"
+                                :modal="optionsModal"
+                                :editable="editable"
                             />
                         </template>
                     </li>
