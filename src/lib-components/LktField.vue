@@ -77,13 +77,6 @@
         min?: number | string | undefined
         max?: number | string | undefined
         step?: number | string
-        isTel?: boolean
-        isEmail?: boolean
-        isPassword?: boolean
-        isSearch?: boolean
-        isNumber?: boolean
-        isColor?: boolean
-        isRange?: boolean
         enableAutoNumberFix?: boolean
         emptyValueSlot?: string
         optionSlot?: string
@@ -146,13 +139,6 @@
         min: undefined,
         max: undefined,
         step: 1,
-        isTel: false,
-        isEmail: false,
-        isPassword: false,
-        isSearch: false,
-        isNumber: false,
-        isRange: false,
-        isColor: false,
         enableAutoNumberFix: true,
         emptyValueSlot: '',
         valueSlot: '',
@@ -193,15 +179,6 @@
     const Identifier = generateRandomString(16);
 
     const Type = ref(props.type);
-    if (Type.value === FieldType.Text) {
-        if (props.isEmail) Type.value = FieldType.Email;
-        else if (props.isTel) Type.value = FieldType.Tel;
-        else if (props.isPassword) Type.value = FieldType.Password;
-        else if (props.isSearch) Type.value = FieldType.Search;
-        else if (props.isNumber) Type.value = FieldType.Number;
-        else if (props.isColor) Type.value = FieldType.Color;
-        else if (props.isRange) Type.value = FieldType.Range;
-    }
 
     // Components refs
     const inputElement = ref(null);
@@ -1484,13 +1461,13 @@
                         </div>
                     </template>
                     <lkt-anchor
-                        v-else-if="isEmail"
+                        v-else-if="Type === FieldType.Email"
                         class="lkt-field--read-value"
                         :title="readModeTitle"
                         :to="'mail:' + value">{{ value }}
                     </lkt-anchor>
                     <lkt-anchor
-                        v-else-if="isTel"
+                        v-else-if="Type === FieldType.Tel"
                         class="lkt-field--read-value"
                         :title="readModeTitle"
                         :to="'tel:' + value">{{ value }}
