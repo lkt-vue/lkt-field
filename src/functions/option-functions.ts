@@ -29,10 +29,10 @@ export const filterOptions = (options: Option[], query: string = '', includeEqua
 };
 
 export const findOptionByValue = (options: Option[], query: ValidOptionValue) => {
-    if (!query) return undefined;
+    if (query === '') return undefined;
 
     return options.find((z: Option) => {
-        return z.value === query;
+        return z.value == query;
     });
 };
 

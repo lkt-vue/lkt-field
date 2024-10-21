@@ -167,6 +167,11 @@
     padding: var(--lkt-field-padding-input);
 }
 
+.lkt-field input:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
 .lkt-field-date input {
     padding-left: 35px;
     padding-right: 35px;
@@ -183,4 +188,9 @@
 .lkt-field-editor .sun-editor .se-toolbar,
 .lkt-field-editor .sun-editor .se-toolbar-cover {
     z-index: initial;
+}
+
+.lkt-field .lkt-tag {
+    --lkt-tag-padding-content: var(--lkt-field-padding-input);
+    --lkt-tag-font-size-content: var(--lkt-field-font-size-input);
 }

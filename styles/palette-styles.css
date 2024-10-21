@@ -20,11 +20,6 @@
     box-shadow: var(--lkt-field-shadow-valid);
 }
 
-.lkt-field input:focus {
-    outline: 0;
-    box-shadow: var(--lkt-field-shadow-focus);
-}
-
 .lkt-field.is-invalid.has-focus input:focus {
     box-shadow: var(--lkt-field-shadow-invalid);
 }
