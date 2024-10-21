@@ -1444,7 +1444,7 @@
                 </template>
             </div>
 
-            <div v-if="!editable" class="lkt-field-text__read" v-on:click="onClick">
+            <div v-if="!editable" class="lkt-field--read" v-on:click="onClick">
                 <template v-if="slots['value']">
                     <slot
                         name="value"

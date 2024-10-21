@@ -15890,7 +15890,7 @@ const ts = /* @__PURE__ */ Fe({
           ])) : he("", !0),
           w.value ? he("", !0) : (X(), de("div", {
             key: 2,
-            class: "lkt-field-text__read",
+            class: "lkt-field--read",
             onClick: Xe
           }, [
             Re(n).value ? ft(D.$slots, "value", {

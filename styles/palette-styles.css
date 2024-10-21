@@ -1,19 +1,11 @@
-.lkt-field.is-invalid > .lkt-field-main,
-.lkt-field.is-invalid.lkt-field-date input,
-.lkt-field.is-invalid.lkt-field-editor i.lkt-field-editor__main,
-.lkt-field.is-invalid.lkt-field-file i.lkt-field-file__main,
-.lkt-field.is-invalid.lkt-field-textarea select.lkt-field__select {
+.lkt-field.is-invalid > .lkt-field-main {
     background: var(--lkt-field-bg-invalid);
     border-width: var(--lkt-field-border-width-invalid);
     border-color: var(--lkt-field-border-color-invalid);
     box-shadow: var(--lkt-field-shadow-invalid);
 }
 
-.lkt-field.is-valid > .lkt-field-main,
-.lkt-field.is-valid.lkt-field-date input,
-.lkt-field.is-valid.lkt-field-editor i.lkt-field-editor__main,
-.lkt-field.is-valid.lkt-field-file i.lkt-field-file__main,
-.lkt-field.is-valid.lkt-field-textarea select.lkt-field__select {
+.lkt-field.is-valid > .lkt-field-main {
     background: var(--lkt-field-bg-valid);
     border-width: var(--lkt-field-border-width-valid);
     border-color: var(--lkt-field-border-color-valid);

@@ -1,9 +1,3 @@
-.is-mandatory-field label:after {
-    content: '*';
-    display: inline-block;
-    margin-left: 5px;
-}
-
 .lkt-field--atn-btn-container {
     display: flex;
     flex-direction: row;

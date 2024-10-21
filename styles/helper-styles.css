@@ -6,28 +6,3 @@
     line-height: var(--lkt-field-line-height-label);
     margin: var(--lkt-field-margin-label);
 }
-
-
-
-
-
-
-
-
-
-
- /*Estilos para el botón CTA del input:*/
-
-   /*{*/
-/*   padding: 0;*/
-/*display: inline-flex;*/
-/*align-items: center;*/
-/*padding: 5px;*/
-/*!* background: red; *!*/
-/*!* border-radius: 6px; *!*/
-/*min-width: 40px;*/
-/*justify-content: center;*/
-/*!* margin-left: 5px; *!*/
-/*border-right: 1px solid var(--dark-1);*/
-/*background: #fff;*/
-/*}*/

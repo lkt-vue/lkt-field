@@ -20,9 +20,6 @@
     width: calc(5 * var(--lkt-field-input-height) + 4 * 7px);
 }
 
-.lkt-calendar--filling-day {
-}
-
 .lkt-calendar--day {
     width: var(--lkt-field-input-height);
     height: var(--lkt-field-input-height);

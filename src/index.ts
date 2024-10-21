@@ -19,6 +19,7 @@ import "../styles/read-mode-styles.css";
 import "../styles/calendar-styles.css";
 import "../styles/palette-styles.css";
 import "../styles/state-styles.css";
+import "../styles/tags-styles.css";
 import "../styles/helper-styles.css";
 import {Settings} from "./settings/Settings";
 import LktModal, {addModal} from "lkt-modal";
