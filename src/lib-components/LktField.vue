@@ -354,7 +354,7 @@
             return 'text';
         }),
         classes = computed(() => {
-            const r = ['lkt-field', 'lkt-field-text'];
+            const r = ['lkt-field'];
 
             r.push(`is-${Type.value}`);
             if (props.palette) r.push(`lkt-field--${props.palette}`);
@@ -1205,7 +1205,7 @@
                                             <label class="like-lkt-field-label">R</label>
                                             <lkt-field
                                                 v-model="pickedColorRed"
-                                                is-number
+                                                type="number"
                                                 min="0"
                                                 max="255"
                                                 step="1"
@@ -1214,7 +1214,7 @@
                                         <lkt-field
                                             class="color-range color-range--red"
                                             v-model="pickedColorRed"
-                                            is-range
+                                            type="range"
                                             min="0"
                                             max="255"
                                             step="1"
@@ -1226,7 +1226,7 @@
                                             <label class="like-lkt-field-label">G</label>
                                             <lkt-field
                                                 v-model="pickedColorGreen"
-                                                is-number
+                                                type="number"
                                                 min="0"
                                                 max="255"
                                                 step="1"
@@ -1235,7 +1235,7 @@
                                         <lkt-field
                                             class="color-range color-range--green"
                                             v-model="pickedColorGreen"
-                                            is-range
+                                            type="range"
                                             min="0"
                                             max="255"
                                             step="1"
@@ -1247,7 +1247,7 @@
                                             <label class="like-lkt-field-label">B</label>
                                             <lkt-field
                                                 v-model="pickedColorBlue"
-                                                is-number
+                                                type="number"
                                                 min="0"
                                                 max="255"
                                                 step="1"
@@ -1256,7 +1256,7 @@
                                         <lkt-field
                                             class="color-range color-range--blue"
                                             v-model="pickedColorBlue"
-                                            is-range
+                                            type="range"
                                             min="0"
                                             max="255"
                                             step="1"
@@ -1268,7 +1268,7 @@
                                             <label class="like-lkt-field-label">A</label>
                                             <lkt-field
                                                 v-model="pickedColorAlpha"
-                                                is-number
+                                                type="number"
                                                 min="0"
                                                 max="255"
                                                 step="1"
@@ -1277,7 +1277,7 @@
                                         <lkt-field
                                             class="color-range color-range--alpha"
                                             v-model="pickedColorAlpha"
-                                            is-range
+                                            type="range"
                                             min="0"
                                             max="255"
                                             step="1"
@@ -1481,23 +1481,23 @@
                     </template>
                     <lkt-anchor
                         v-else-if="isEmail"
-                        class="lkt-field-text__read-value"
+                        class="lkt-field--read-value"
                         :title="readModeTitle"
                         :to="'mail:' + value">{{ value }}
                     </lkt-anchor>
                     <lkt-anchor
                         v-else-if="isTel"
-                        class="lkt-field-text__read-value"
+                        class="lkt-field--read-value"
                         :title="readModeTitle"
                         :to="'tel:' + value">{{ value }}
                     </lkt-anchor>
                     <div
                         v-else-if="Type === FieldType.Date"
-                        class="lkt-field-text__read-value"
+                        class="lkt-field--read-value"
                         v-html="visibleDateValue" :title="readModeTitle"></div>
                     <div
                         v-else-if="Type === FieldType.Select && optionSlot"
-                        class="lkt-field-text__read-value"
+                        class="lkt-field--read-value"
                          :title="readModeTitle">
                         <component
                             :is="optionSlot"
@@ -1506,7 +1506,7 @@
                     </div>
                     <div
                         v-else-if="Type === FieldType.Select && pickedOption"
-                        class="lkt-field-text__read-value"
+                        class="lkt-field--read-value"
                          :title="readModeTitle">
                         <dropdown-option
                             :option="pickedOption"
@@ -1515,7 +1515,7 @@
                     </div>
                     <div
                         v-else
-                        class="lkt-field-text__read-value"
+                        class="lkt-field--read-value"
                         v-html="value" :title="readModeTitle"></div>
                 </template>
             </div>
@@ -1597,7 +1597,7 @@
         <lkt-tooltip
             v-if="editable"
             ref="dropdownEl"
-            class="lkt-field__select-dropdown"
+            class="lkt-field--dropdown"
             v-model="showOptions"
             :referrer="container"
             referrer-width
@@ -1606,9 +1606,8 @@
         >
             <div v-if="showOptions">
                 <lkt-loader v-if="isLoading" />
-                <ul class="lkt-field__select-options" v-if="!isLoading" ref="optionList">
-                    <li class="lkt-field__select-option"
-                        v-for="(option, i) in visibleOptions"
+                <ul class="lkt-field--dropdown-options" v-if="!isLoading" ref="optionList">
+                    <li v-for="(option, i) in visibleOptions"
                         :class="{
                             'is-active': optionIsActive(option, value, multiple),
                             'is-focused': i === focusedOptionIndex,

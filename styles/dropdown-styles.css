@@ -1,0 +1,69 @@
+.lkt-field--dropdown {
+    z-index: 9;
+    padding: 0;
+    outline: 0;
+    box-shadow: var(--lkt-field-shadow);
+    --lkt-tooltip-text-align: left;
+    --lkt-tooltip-bg: var(--lkt-field-bg);
+    --lkt-tooltip-transition: var(--lkt-field-transition-input);
+    --lkt-tooltip-border-radius: var(--lkt-field-border-radius);
+    --lkt-tooltip-border-style: var(--lkt-field-border-style);
+    --lkt-tooltip-border-style-hover: var(--lkt-field-border-style);
+    --lkt-tooltip-border-width: var(--lkt-field-border-width);
+    --lkt-tooltip-border-width-hover: var(--lkt-field-border-width);
+    --lkt-tooltip-border-color: var(--lkt-field-border-color);
+    --lkt-tooltip-border-color-hover: var(--lkt-field-border-color);
+}
+
+.lkt-field--dropdown .lkt-tooltip-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lkt-field-gap);
+}
+
+.lkt-field--dropdown-options {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: var(--lkt-field-max-height-dropdown);
+    overflow-y: auto;
+    border-radius: var(--lkt-field-border-radius-input);
+}
+
+.lkt-field--dropdown-options li {
+    padding: var(--lkt-field-padding-option);
+    transition: var(--lkt-field-transition-input);
+    color: var(--lkt-field-color-opt);
+    scroll-margin-top: 10px;
+}
+.lkt-field--dropdown-options li:nth-child(odd) {
+    background: var(--lkt-field-bg-opt-odd);
+    color: var(--lkt-field-color-opt-odd);
+}
+.lkt-field--dropdown-options li:nth-child(even) {
+    background: var(--lkt-field-bg-opt-even);
+    color: var(--lkt-field-color-opt-even);
+}
+.lkt-field--dropdown-options li:nth-child(odd):hover,
+.lkt-field--dropdown-options li:nth-child(odd).is-focused {
+    background: var(--lkt-field-bg-opt-odd-hover);
+    color: var(--lkt-field-color-opt-odd-hover);
+}
+.lkt-field--dropdown-options li:nth-child(even):hover,
+.lkt-field--dropdown-options li:nth-child(even).is-focused {
+    background: var(--lkt-field-bg-opt-even-hover);
+    color: var(--lkt-field-color-opt-even-hover);
+}
+
+.lkt-field--dropdown-options li.is-active {
+    background: var(--lkt-field-bg-opt-active);
+    color: var(--lkt-field-color-opt-active);
+}
+
+.lkt-field--dropdown-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+

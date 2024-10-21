@@ -15267,12 +15267,12 @@ const ts = /* @__PURE__ */ Fe({
       }
       return D;
     }, _ = te(r.modelValue), x = te(255), E = te(255), L = te(255), I = te(255), o = te(void 0), a = te(u(r.modelValue)), d = te(r.valid), h = te(!1), g = te(!1), p = te(!1), m = te(!1), y = te(null), C = te(void 0), v = te(b), w = te(!r.readMode), A = te(r.fileName), k = te(r.fileName), S = te(null), B = te(null), U = te(null), W = te(null), P = te(null), M = te(!1), F = te(!1), N = te(""), H = te(-1), z = te(void 0), O = te(void 0), T = te(!1), R = Q(() => ai.value), G = Q(() => (R.value, le.dateReadFormat ? le.dateReadFormat : le.langDateReadFormat[R.value] ? le.langDateReadFormat[R.value] : le.defaultDateReadFormat ? le.defaultDateReadFormat : "Y-m-d")), Z = te(""), Y = () => typeof a.value == "object" ? a.value[R.value] : a.value, V = te(Y()), q = te(Y()), K = te(Nt(r.options)), ee = te([]), se = () => {
-      f.value === $.Text ? (ee.value = ht(K.value, V.value), O.value = si(K.value, V.value)) : f.value === $.Select && (ee.value = ht(K.value, N.value), O.value = si(K.value, V.value), console.log("updatePickedOption: ", O.value, K.value));
+      f.value === $.Text ? (ee.value = ht(K.value, V.value), O.value = si(K.value, V.value)) : f.value === $.Select && (ee.value = ht(K.value, N.value), O.value = si(K.value, V.value));
     }, ne = Q(() => f.value === $.Color), re = Q(() => f.value === $.Date), ye = Q(() => f.value === $.File), xe = Q(() => f.value === $.Image), ue = Q(() => f.value === $.Textarea ? "textarea" : f.value === $.Html ? "div" : "input"), ke = Q(() => f.value === $.Date ? a.value !== _.value : V.value !== q.value), ge = Q(() => {
       let D = 0;
       return Dt.value && ++D, Ht.value && ++D, Ot.value && ++D, Vt.value && ++D, Ft.value && ++D, ee.value.length > 0 && ++D, (r.customButtonText || r.customButtonClass) && ++D, D > 0 && f.value === $.Textarea || D > 0 && f.value === $.Html || D > 0 && r.infoButtonEllipsis ? 1 : D;
     }), Pe = Q(() => vt.value && r.featuredButton === "i18n" || ot.value && r.featuredButton === "password"), Be = Q(() => ge.value > 0), He = Q(() => r.autocomplete === !0 ? "on" : "off"), ze = Q(() => f.value === $.Date ? a.value !== "" : V.value !== ""), fe = Q(() => f.value === $.Password && h.value === !0 ? "text" : f.value === $.Email ? "email" : f.value === $.Password ? "password" : f.value === $.Number ? "number" : f.value === $.Tel ? "tel" : f.value === $.Search ? "search" : f.value === $.Color ? "color" : f.value === $.Range ? "range" : "text"), st = Q(() => {
-      const D = ["lkt-field", "lkt-field-text"];
+      const D = ["lkt-field"];
       return D.push(`is-${f.value}`), r.palette && D.push(`lkt-field--${r.palette}`), ke.value && D.push("is-changed"), r.disabled && D.push("is-disabled"), Pe.value && D.push("with-atn-btn"), Be.value && D.push("with-info-btn"), r.mandatory && w.value && D.push("is-mandatory-field"), g.value && D.push("has-focus"), M.value && D.push("show-options"), f.value !== $.Range && r.autoValidation && m.value && p.value && (v.value.length > 0 ? D.push("is-invalid") : D.push("is-valid")), [$.Textarea, $.Html].includes(f.value) && D.push("is-lg"), [$.Image].includes(f.value) && D.push("is-xl"), ge.value > 0 && D.push("has-icons", `has-icons-${ge.value}`), D.push(w.value ? "is-editable" : "is-read"), f.value !== $.Range && (D.push(d.value ? "is-valid" : "is-error"), D.push(ze.value ? "is-filled" : "is-empty")), D.join(" ");
     }), Ee = Q(() => typeof V.value == "number" ? V.value.toString() : V.value), Ie = Q(() => typeof r.min == "string" ? parseFloat(r.min) : typeof r.min == "number" ? r.min : !1), Ce = Q(() => typeof r.max == "string" ? parseFloat(r.max) : typeof r.max == "number" ? r.max : !1), Ae = Q(() => {
       let D = "";
@@ -15642,7 +15642,7 @@ const ts = /* @__PURE__ */ Fe({
                         be(J, {
                           modelValue: x.value,
                           "onUpdate:modelValue": j[3] || (j[3] = (we) => x.value = we),
-                          "is-number": "",
+                          type: "number",
                           min: "0",
                           max: "255",
                           step: "1"
@@ -15652,7 +15652,7 @@ const ts = /* @__PURE__ */ Fe({
                         class: "color-range color-range--red",
                         modelValue: x.value,
                         "onUpdate:modelValue": j[4] || (j[4] = (we) => x.value = we),
-                        "is-range": "",
+                        type: "range",
                         min: "0",
                         max: "255",
                         step: "1"
@@ -15664,7 +15664,7 @@ const ts = /* @__PURE__ */ Fe({
                         be(J, {
                           modelValue: E.value,
                           "onUpdate:modelValue": j[5] || (j[5] = (we) => E.value = we),
-                          "is-number": "",
+                          type: "number",
                           min: "0",
                           max: "255",
                           step: "1"
@@ -15674,7 +15674,7 @@ const ts = /* @__PURE__ */ Fe({
                         class: "color-range color-range--green",
                         modelValue: E.value,
                         "onUpdate:modelValue": j[6] || (j[6] = (we) => E.value = we),
-                        "is-range": "",
+                        type: "range",
                         min: "0",
                         max: "255",
                         step: "1"
@@ -15686,7 +15686,7 @@ const ts = /* @__PURE__ */ Fe({
                         be(J, {
                           modelValue: L.value,
                           "onUpdate:modelValue": j[7] || (j[7] = (we) => L.value = we),
-                          "is-number": "",
+                          type: "number",
                           min: "0",
                           max: "255",
                           step: "1"
@@ -15696,7 +15696,7 @@ const ts = /* @__PURE__ */ Fe({
                         class: "color-range color-range--blue",
                         modelValue: L.value,
                         "onUpdate:modelValue": j[8] || (j[8] = (we) => L.value = we),
-                        "is-range": "",
+                        type: "range",
                         min: "0",
                         max: "255",
                         step: "1"
@@ -15708,7 +15708,7 @@ const ts = /* @__PURE__ */ Fe({
                         be(J, {
                           modelValue: I.value,
                           "onUpdate:modelValue": j[9] || (j[9] = (we) => I.value = we),
-                          "is-number": "",
+                          type: "number",
                           min: "0",
                           max: "255",
                           step: "1"
@@ -15718,7 +15718,7 @@ const ts = /* @__PURE__ */ Fe({
                         class: "color-range color-range--alpha",
                         modelValue: I.value,
                         "onUpdate:modelValue": j[10] || (j[10] = (we) => I.value = we),
-                        "is-range": "",
+                        type: "range",
                         min: "0",
                         max: "255",
                         step: "1"
@@ -15925,7 +15925,7 @@ const ts = /* @__PURE__ */ Fe({
                 }, 8, ["text"])
               ])) : D.isEmail ? (X(), ae(Gt, {
                 key: 1,
-                class: "lkt-field-text__read-value",
+                class: "lkt-field--read-value",
                 title: Ee.value,
                 to: "mail:" + a.value
               }, {
@@ -15935,7 +15935,7 @@ const ts = /* @__PURE__ */ Fe({
                 _: 1
               }, 8, ["title", "to"])) : D.isTel ? (X(), ae(Gt, {
                 key: 2,
-                class: "lkt-field-text__read-value",
+                class: "lkt-field--read-value",
                 title: Ee.value,
                 to: "tel:" + a.value
               }, {
@@ -15945,18 +15945,18 @@ const ts = /* @__PURE__ */ Fe({
                 _: 1
               }, 8, ["title", "to"])) : f.value === Re($).Date ? (X(), de("div", {
                 key: 3,
-                class: "lkt-field-text__read-value",
+                class: "lkt-field--read-value",
                 innerHTML: Z.value,
                 title: Ee.value
               }, null, 8, Ls)) : f.value === Re($).Select && We.value ? (X(), de("div", {
                 key: 4,
-                class: "lkt-field-text__read-value",
+                class: "lkt-field--read-value",
                 title: Ee.value
               }, [
                 (X(), ae(Qe(We.value), { option: O.value }, null, 8, ["option"]))
               ], 8, Ts)) : f.value === Re($).Select && O.value ? (X(), de("div", {
                 key: 5,
-                class: "lkt-field-text__read-value",
+                class: "lkt-field--read-value",
                 title: Ee.value
               }, [
                 be(Et, {
@@ -15965,7 +15965,7 @@ const ts = /* @__PURE__ */ Fe({
                 }, null, 8, ["option", "icon"])
               ], 8, zs)) : (X(), de("div", {
                 key: 6,
-                class: "lkt-field-text__read-value",
+                class: "lkt-field--read-value",
                 innerHTML: a.value,
                 title: Ee.value
               }, null, 8, Ns))
@@ -16061,7 +16061,7 @@ const ts = /* @__PURE__ */ Fe({
           key: 3,
           ref_key: "dropdownEl",
           ref: S,
-          class: "lkt-field__select-dropdown",
+          class: "lkt-field--dropdown",
           modelValue: M.value,
           "onUpdate:modelValue": j[21] || (j[21] = (oe) => M.value = oe),
           referrer: B.value,
@@ -16074,15 +16074,15 @@ const ts = /* @__PURE__ */ Fe({
               F.value ? (X(), ae(kl, { key: 0 })) : he("", !0),
               F.value ? he("", !0) : (X(), de("ul", {
                 key: 1,
-                class: "lkt-field__select-options",
+                class: "lkt-field--dropdown-options",
                 ref_key: "optionList",
                 ref: P
               }, [
                 (X(!0), de(Ze, null, pt(ee.value, (oe, we) => (X(), de("li", {
-                  class: Ve(["lkt-field__select-option", {
+                  class: Ve({
                     "is-active": Re(Jn)(oe, a.value, D.multiple),
                     "is-focused": we === H.value
-                  }]),
+                  }),
                   "data-index": we,
                   onClick: () => qt(oe)
                 }, [

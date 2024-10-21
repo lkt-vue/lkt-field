@@ -8,10 +8,12 @@ export {setTextValueSlot, setTextEditSlot} from './functions/settings-functions'
 import "../fonts/fontello/css/lkt-fields.css";
 import "../styles/common-styles.css";
 import "../styles/select-styles.css";
+import "../styles/dropdown-styles.css";
 import "../styles/editor-styles.css";
 import "../styles/switch-styles.css";
 import "../styles/file-styles.css";
 import "../styles/color-styles.css";
+import "../styles/buttons-styles.css";
 import "../styles/range-styles.css";
 import "../styles/read-mode-styles.css";
 import "../styles/calendar-styles.css";

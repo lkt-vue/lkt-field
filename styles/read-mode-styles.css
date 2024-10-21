@@ -6,7 +6,7 @@
     width: 100%;
 }
 
-.lkt-field-text .lkt-field-text__read-value {
+.lkt-field--read-value {
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
@@ -20,8 +20,8 @@
     line-height: var(--lkt-field-input-height);
 }
 
-.lkt-field-text.is-textarea .lkt-field-text__read-value,
-.lkt-field-text.is-html .lkt-field-text__read-value {
+.lkt-field.is-textarea .lkt-field--read-value,
+.lkt-field.is-html .lkt-field--read-value {
     text-wrap: wrap;
     line-height: var(--lkt-field-textarea-read-mode-line-height);
 }
