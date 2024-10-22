@@ -57,7 +57,8 @@ export const optionIsActive = (option: Option, value: ValidOptionValue | ValidOp
             let r = value.findIndex((v) => {
                 return v == option.value;
             });
-            if (typeof r !== 'undefined') return true;
+            if (typeof r == 'undefined') return false;
+            return r > -1;
         }
         return false;
     }

@@ -17,7 +17,6 @@
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { ValidFieldType } from '../types/ValidFieldType';
     import { FieldType } from '../enums/FieldType';
-    import { calculateColorValue, decodeHexColor, getContrastFontColor } from '../functions/color-functions';
     import { ensureNumberBetween } from '../functions/numeric-functions';
 
 
@@ -32,7 +31,8 @@
     import { date } from 'lkt-date-tools';
     import { Option } from '@/instances/Option';
     import {
-        filterOptions, findOptionByValue,
+        filterOptions,
+        findOptionByValue,
         getInValueOptionIndex,
         optionIsActive,
         prepareOptions,
@@ -42,8 +42,11 @@
     import { FieldTypesWithOptions } from '@/constants/field-type-constants';
     import DropdownButton from '@/components/buttons/DropdownButton.vue';
     import DropdownOption from '@/components/dropdown/DropdownOption.vue';
+    import ColorInput from '@/components/color/ColorInput.vue';
+    import { validateAmountOfNumbers } from '@/functions/validation-functions';
+    import { MultipleDisplayType } from '@/enums/MultipleDisplayType';
 
-    const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded']);
+    const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
 
     // Slots
     const slots = useSlots();
@@ -108,6 +111,8 @@
         customButtonClass?: string
         options?: Option[],
         multiple?: boolean,
+        multipleDisplay?: MultipleDisplayType,
+        multipleDisplayEdition?: MultipleDisplayType,
         searchable?: boolean,
         autoloadOptionsResource?: boolean,
         optionsModal?: string,
@@ -167,6 +172,8 @@
         fileName: '',
         options: [],
         multiple: false,
+        multipleDisplay: MultipleDisplayType.List,
+        multipleDisplayEdition: MultipleDisplayType.Inline,
         searchable: false,
         autoloadOptionsResource: false,
         optionsModal: '',
@@ -185,34 +192,15 @@
 
     let baseValidationStatus: string[] = [];
 
-    const decodeColor = (value: string) => {
-        if (Type.value === FieldType.Color) {
-            if ([0, 1].includes(value.length)) {
-                pickedColorRed.value = 0;
-                pickedColorGreen.value = 0;
-                pickedColorBlue.value = 0;
-                pickedColorAlpha.value = 255;
-
-            } else if ([7, 9].includes(value.length)) {
-                let decoded = decodeHexColor(value);
-
-                pickedColorRed.value = decoded.r;
-                pickedColorGreen.value = decoded.g;
-                pickedColorBlue.value = decoded.b;
-                pickedColorAlpha.value = decoded.a;
-            }
-        }
-        return value;
-    };
+    let _val = props.modelValue;
+    if (Type.value === 'select' && props.multiple) {
+        if (!_val || !Array.isArray(_val)) _val = [];
+    }
 
     // Reactive data
-    const originalValue = ref(props.modelValue),
-        pickedColorRed = ref(255),
-        pickedColorGreen = ref(255),
-        pickedColorBlue = ref(255),
-        pickedColorAlpha = ref(255),
+    const originalValue = ref(_val),
         pickedDate = ref(undefined),
-        value = ref(decodeColor(props.modelValue)),
+        value = ref(_val),
         isValid = ref(props.valid),
         showPasswordIcon = ref(false),
         focusing = ref(false),
@@ -226,17 +214,19 @@
         visibleFileName = ref(props.fileName);
 
 
-    const dropdownEl = ref(<Element | ComponentPublicInstance | null>null);
-    const container = ref(<Element | ComponentPublicInstance | null>null);
-    const searchField = ref(<Element | ComponentPublicInstance | null>null);
-    const selectButton = ref(<Element | ComponentPublicInstance | null>null);
-    const optionList = ref(<Element | ComponentPublicInstance | null>null);
-    const showOptions = ref(false);
-    const isLoading = ref(false);
+    const dropdownEl = ref(<Element | ComponentPublicInstance | null>null),
+        container = ref(<Element | ComponentPublicInstance | null>null),
+        searchField = ref(<Element | ComponentPublicInstance | null>null),
+        selectButton = ref(<Element | ComponentPublicInstance | null>null),
+        optionList = ref(<Element | ComponentPublicInstance | null>null);
+
+    const showOptions = ref(false),
+        isLoading = ref(false);
+
     const searchString = ref('');
     const focusedOptionIndex = ref(-1);
     const justFocusedTimeout = ref(undefined);
-    const pickedOption = ref(undefined);
+    const pickedOptions = ref([]);
     const searchMode = ref(false);
 
     const computedLang = computed(() => currentLanguage.value);
@@ -251,7 +241,9 @@
     const visibleDateValue = ref('');
 
     const assignEditableValue = () => {
-        if (typeof value.value === 'object') return value.value[computedLang.value];
+        if (typeof value.value === 'object' && !Array.isArray(value.value)) {
+            return value.value[computedLang.value];
+        }
         return value.value;
     };
 
@@ -262,17 +254,37 @@
         visibleOptions = ref([]);
 
     const updatePickedOption = () => {
-        if (Type.value === FieldType.Text) {
-            visibleOptions.value = filterOptions(optionsHaystack.value, editableValue.value);
-            pickedOption.value = findOptionByValue(optionsHaystack.value, editableValue.value);
-        }
-        else if (Type.value === FieldType.Select) {
-            visibleOptions.value = filterOptions(optionsHaystack.value, searchString.value);
-            pickedOption.value = findOptionByValue(optionsHaystack.value, editableValue.value);
-        }
-    }
 
-    const computedIsColor = computed(() => Type.value === FieldType.Color);
+        const _doUpdate = (query: string) => {
+            visibleOptions.value = filterOptions(optionsHaystack.value, query);
+            if (props.multiple) {
+                for (let k in editableValue.value) {
+                    let option = findOptionByValue(optionsHaystack.value, editableValue.value[k]);
+                    if (pickedOptions.value.length === 0) {
+                        pickedOptions.value.push(option);
+                    } else {
+                        pickedOptions.value.splice(k, 1, option);
+                    }
+                }
+
+                return;
+            }
+
+            let option = findOptionByValue(optionsHaystack.value, editableValue.value);
+            if (pickedOptions.value.length === 0) {
+                pickedOptions.value.push(option);
+            } else {
+                pickedOptions.value.splice(0, 1, option);
+            }
+        }
+
+        if (Type.value === FieldType.Text) {
+            _doUpdate(editableValue.value);
+        } else if (Type.value === FieldType.Select) {
+            _doUpdate(searchString.value);
+        }
+    };
+
     const computedIsDate = computed(() => Type.value === FieldType.Date);
     const computedIsFile = computed(() => Type.value === FieldType.File);
     const computedIsImage = computed(() => Type.value === FieldType.Image);
@@ -339,11 +351,13 @@
             if (props.palette) r.push(`lkt-field--${props.palette}`);
             if (changed.value) r.push('is-changed');
             if (props.disabled) r.push('is-disabled');
+            if (props.multiple) r.push('is-multiple');
             if (computedHasFeaturedButton.value) r.push('with-atn-btn');
             if (showInfoUi.value) r.push('with-info-btn');
             if (props.mandatory && editable.value) r.push('is-mandatory-field');
-            if (focusing.value) r.push('has-focus');
+            if (editable.value && focusing.value) r.push('has-focus');
             if (showOptions.value) r.push('show-options');
+            if (props.searchable && searchMode.value) r.push('is-searching')
 
             if (Type.value !== FieldType.Range && props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
                 if (localValidationStatus.value.length > 0) r.push('is-invalid');
@@ -352,6 +366,7 @@
 
             if ([FieldType.Textarea, FieldType.Html].includes(Type.value)) r.push('is-lg');
             if ([FieldType.Image].includes(Type.value)) r.push('is-xl');
+            if (props.multiple && Type.value === FieldType.Select) r.push('is-lg');
 
             if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
             r.push(editable.value ? 'is-editable' : 'is-read');
@@ -510,7 +525,7 @@
         } else {
             buildVisibleOptions(editableValue.value, false);
         }
-    })
+    });
 
     const setVisibleDateValue = () => {
         if (isValidDateObject(pickedDate.value)) {
@@ -575,23 +590,7 @@
             }
 
             if (Type.value !== FieldType.Number) {
-                if (typeof props.minNumbers !== 'undefined') {
-                    let constraint = parseInt(props.minNumbers),
-                        val = editableValue.value.replace(/\D+/g, '');
-
-                    if (val.length < constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMinNumbers(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.maxNumbers !== 'undefined') {
-                    let constraint = parseInt(props.maxNumbers),
-                        val = editableValue.value.replace(/\D+/g, '');
-
-                    if (val.length > constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMaxNumbers(constraint, 'ko'));
-                    }
-                }
+                validateAmountOfNumbers(localValidationStatus.value, editableValue.value, props.minNumbers, props.maxNumbers);
 
                 if (typeof props.minUpperChars !== 'undefined') {
                     let constraint = parseInt(props.minUpperChars),
@@ -689,6 +688,8 @@
                     }
                     isLoading.value = false;
                     if (ableToShowOptions) showOptions.value = props.optionsResource !== '' || visibleOptions.value.length > 0;
+
+                    updatePickedOption();
                     return;
 
                 case FieldType.Text:
@@ -747,14 +748,14 @@
                     ++focusedOptionIndex.value;
                     if (focusedOptionIndex.value > amountOfOptions) focusedOptionIndex.value = 0;
                     let el = optionList.value.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
-                    if (el) el.scrollIntoView({behavior: "instant", block: "start", inline: "nearest"});
+                    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 
                 } else if (key === 'ArrowUp') {
                     --focusedOptionIndex.value;
                     if (focusedOptionIndex.value < 0) focusedOptionIndex.value = amountOfOptions;
 
                     let el = optionList.value.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
-                    if (el) el.scrollIntoView({behavior: "instant", block: "start", inline: "nearest"});
+                    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 
                 } else if (key === 'Enter') {
                     if (focusedOptionIndex.value > -1) {
@@ -820,12 +821,23 @@
         },
         onSearchFieldBlur = ($event: KeyboardEvent) => {
             setTimeout(() => {
-                showOptions.value = false;
-                searchMode.value = false;
+                if (!props.multiple) {
+                    showOptions.value = false;
+                    searchMode.value = false;
+                }
             }, 100);
             onBlur();
         },
         onClickSelect = () => {
+            if (props.multiple) {
+                if (!hadFirstFocus.value || !showOptions.value) {
+                    onFocus();
+                    onClickSelectButton();
+                }
+                showOptions.value = true;
+                return;
+            }
+
             if (!props.optionsResource && visibleOptions.value.length === 0) {
                 showOptions.value = false;
                 return;
@@ -853,7 +865,14 @@
             if (showOptions.value) {
                 if (Type.value === FieldType.Select) {
                     onBlur();
-                    return onClickSelectButton();
+                    onClickSelectButton();
+
+                    if (props.multiple) {
+                        showOptions.value = false;
+                        focusing.value = false;
+                    }
+
+                    return;
                 }
 
                 return onBlur();
@@ -867,20 +886,26 @@
         onClickOption = (option: Option) => {
             if (props.multiple) {
                 //@ts-ignore
-                let k = getInValueOptionIndex(option);
+                let k = getInValueOptionIndex(option, editableValue.value);
                 if (k === -1) {
                     //@ts-ignore
                     editableValue.value.push(String(option.value));
+                    pickedOptions.value.push(option);
                 } else {
                     //@ts-ignore
                     editableValue.value.splice(k, 1);
+                    pickedOptions.value.splice(k, 1);
                 }
+                turnOnSelectSearchMode();
+                emits('selected-option', option);
+
             } else {
                 focusedOptionIndex.value = -1;
                 editableValue.value = String(option.value);
-                pickedOption.value = option;
+                pickedOptions.value.splice(0, 1, option);
                 showOptions.value = false;
                 searchMode.value = false;
+                emits('selected-option', option);
             }
         },
         onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event, createLktEvent(Identifier, { value: editableValue.value })),
@@ -889,7 +914,7 @@
                 if (!focusing.value) {
                     justFocusedTimeout.value = setTimeout(() => {
                         clearTimeout(justFocusedTimeout.value);
-                        justFocusedTimeout.value =  undefined;
+                        justFocusedTimeout.value = undefined;
                     }, 200);
                 } else {
                     clearTimeout(justFocusedTimeout.value);
@@ -903,9 +928,12 @@
             focusing.value = true;
             doLocalValidation();
 
+            let alreadyOpened = showOptions.value;
             showOptions.value = (visibleOptions.value.length > 0 || props.optionsResource !== '') && FieldTypesWithOptions.includes(Type.value);
             if (showOptions.value && Type.value === FieldType.Select) {
-                fetchOptions(searchString.value, false);
+                if (!props.multiple || !alreadyOpened) {
+                    fetchOptions(searchString.value, false);
+                }
             }
             emits('focus', $event, createLktEvent(Identifier, { value: editableValue.value }));
         },
@@ -916,17 +944,24 @@
             }
         },
         onBlur = ($event: Event) => {
-            hadFirstBlur.value = true;
-            doLocalValidation();
-            focusedOptionIndex.value = -1;
             setTimeout(() => {
                 if (props.searchable && searchMode.value) {
                     return;
                 }
+
+                if (props.multiple) {
+                    showOptions.value = true;
+                    focusing.value = true;
+                    return;
+                }
+
+                hadFirstBlur.value = true;
+                focusedOptionIndex.value = -1;
                 showOptions.value = false;
-                focusing.value = false
-            }, 100)
-            emits('blur', $event, createLktEvent(Identifier, { value: editableValue.value }));
+                focusing.value = false;
+                doLocalValidation();
+                emits('blur', $event, createLktEvent(Identifier, { value: editableValue.value }));
+            }, 100);
         },
         onChange = ($event: any) => {
             if (computedIsFile.value || computedIsImage.value) {
@@ -1014,68 +1049,20 @@
         hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
         customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
-    const optionSlot = computed(() => {
-        if (!props.optionSlot) return undefined;
-        if (typeof Settings.optionSlots[props.optionSlot] === 'undefined') return undefined;
-        return Settings.optionSlots[props.optionSlot];
-    })
-
-    const computedComplementaryColor = computed(() => {
-        if (!computedIsColor.value) return '';
-        return getContrastFontColor(decodeHexColor(editableValue.value));
-    });
-
-    const onRgbaChanged = ($event) => {
-        editableValue.value = calculateColorValue(
-            pickedColorRed.value,
-            pickedColorGreen.value,
-            pickedColorBlue.value,
-            pickedColorAlpha.value,
-        );
-    };
-
-    const onColorChange = ($event) => {
-        decodeColor(editableValue.value);
-    };
-
-    watch(pickedColorRed, onRgbaChanged);
-    watch(pickedColorGreen, onRgbaChanged);
-    watch(pickedColorBlue, onRgbaChanged);
-    watch(pickedColorAlpha, onRgbaChanged);
-
-    const computedColorStyles = computed(() => {
-        if (!computedIsColor.value) return {};
-
-        if (editableValue.value === '' || editableValue.value === '#') {
-            return {};
-        }
-
-        return {
-            background: editableValue.value,
-            '--lkt-btn-bg': editableValue.value,
-
-            color: computedComplementaryColor.value,
-            '--lkt-btn-color': computedComplementaryColor.value,
-        };
-    });
-
-    const computedColorStylesHex = computed(() => {
-        if (!computedIsColor.value) return {};
-
-        if (editableValue.value === '' || editableValue.value === '#') {
-            return {};
-        }
-
-        return {
-            '--lkt-field-bg-input': editableValue.value,
-            '--lkt-field-color': computedComplementaryColor.value,
-        };
-    });
-
     onMounted(() => {
         updatePickedOption();
 
-        if (Type.value === FieldType.Date) {
+        if (Type.value === FieldType.Select) {
+            if (props.multiple) {
+                searchMode.value = true;
+            }
+
+            if (props.autoloadOptionsResource) {
+                console.log('autoloadOptionsResource');
+                fetchOptions('', false);
+            }
+        }
+        else if (Type.value === FieldType.Date) {
             pickedDate.value = new Date(value.value);
             setVisibleDateValue();
 
@@ -1157,114 +1144,8 @@
                                    v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
                     </div>
 
-                    <template v-else-if="computedIsColor">
-                        <lkt-button
-                            class="lkt-field--toggle-button"
-                            :style="computedColorStyles"
-                            :text="editableValue"
-                            tooltip
-                            tooltip-class="lkt-field-color--alpha--tooltip"
-                            tooltip-location-y="bottom"
-                            tooltip-location-x="left-corner"
-                        >
-                            <template #tooltip="{doClose}">
-                                <div class="lkt-grid-1">
-                                    <div class="lkt-field-color--tooltip--rgba-container">
-                                        <div class="lkt-field-color--tooltip--hex-input-container">
-                                            <label class="like-lkt-field-label">HEX</label>
-                                            <lkt-field
-                                                v-model="editableValue"
-                                                :style="computedColorStylesHex"
-                                                @change="onColorChange"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="lkt-field-color--tooltip--rgba-container">
-                                        <div class="lkt-field-color--tooltip--numeric-input-container">
-                                            <label class="like-lkt-field-label">R</label>
-                                            <lkt-field
-                                                v-model="pickedColorRed"
-                                                type="number"
-                                                min="0"
-                                                max="255"
-                                                step="1"
-                                            />
-                                        </div>
-                                        <lkt-field
-                                            class="color-range color-range--red"
-                                            v-model="pickedColorRed"
-                                            type="range"
-                                            min="0"
-                                            max="255"
-                                            step="1"
-                                        />
-                                    </div>
-
-                                    <div class="lkt-field-color--tooltip--rgba-container">
-                                        <div class="lkt-field-color--tooltip--numeric-input-container">
-                                            <label class="like-lkt-field-label">G</label>
-                                            <lkt-field
-                                                v-model="pickedColorGreen"
-                                                type="number"
-                                                min="0"
-                                                max="255"
-                                                step="1"
-                                            />
-                                        </div>
-                                        <lkt-field
-                                            class="color-range color-range--green"
-                                            v-model="pickedColorGreen"
-                                            type="range"
-                                            min="0"
-                                            max="255"
-                                            step="1"
-                                        />
-                                    </div>
-
-                                    <div class="lkt-field-color--tooltip--rgba-container">
-                                        <div class="lkt-field-color--tooltip--numeric-input-container">
-                                            <label class="like-lkt-field-label">B</label>
-                                            <lkt-field
-                                                v-model="pickedColorBlue"
-                                                type="number"
-                                                min="0"
-                                                max="255"
-                                                step="1"
-                                            />
-                                        </div>
-                                        <lkt-field
-                                            class="color-range color-range--blue"
-                                            v-model="pickedColorBlue"
-                                            type="range"
-                                            min="0"
-                                            max="255"
-                                            step="1"
-                                        />
-                                    </div>
-
-                                    <div class="lkt-field-color--tooltip--rgba-container">
-                                        <div class="lkt-field-color--tooltip--numeric-input-container">
-                                            <label class="like-lkt-field-label">A</label>
-                                            <lkt-field
-                                                v-model="pickedColorAlpha"
-                                                type="number"
-                                                min="0"
-                                                max="255"
-                                                step="1"
-                                            />
-                                        </div>
-                                        <lkt-field
-                                            class="color-range color-range--alpha"
-                                            v-model="pickedColorAlpha"
-                                            type="range"
-                                            min="0"
-                                            max="255"
-                                            step="1"
-                                        />
-                                    </div>
-                                </div>
-                            </template>
-                        </lkt-button>
+                    <template v-else-if="Type === FieldType.Color">
+                        <color-input v-model="editableValue" />
                     </template>
 
                     <template v-else-if="computedIsFile || computedIsImage">
@@ -1314,52 +1195,67 @@
 
                     <template v-else-if="Type === FieldType.Select">
 
-                        <lkt-tag
-                            v-if="searchable && searchMode && pickedOption"
-                            :text="optionSlot ? '' : pickedOption?.label"
-                        >
-                            <template v-if="optionSlot">
-                                <component
-                                    :is="optionSlot"
-                                    :option="pickedOption"
+                        <div v-if="searchable && (multiple || searchMode)" class="lkt-field--searchable-box">
+                            <lkt-tag
+                                v-if="pickedOptions.length > 0 || multiple"
+                                :icon="multiple ? optionsIcon : ''"
+                                :text="multiple ? pickedOptions.length : ''"
+                            >
+                                <dropdown-option
+                                    v-if="!multiple && pickedOptions.length > 0"
+                                    :option="pickedOptions[0]"
+                                    :option-slot="optionSlot"
+                                    :icon="optionsIcon"
+                                    :modal="optionsModal"
+                                    :editable="editable"
                                 />
-                            </template>
-                        </lkt-tag>
+                            </lkt-tag>
 
-                        <input
-                            v-show="searchable && searchMode"
-                            v-model="searchString"
-                            ref="searchField"
-                            :value="searchString"
-                            :placeholder="computedSearchPlaceholder"
-                            type="text"
-                            tabindex="-1"
-                            autocomplete="off"
-                            @keyup="onSearchFieldKeyUp"
-                            @blur="onSearchFieldBlur"
-                            @click="onClickSelect"
-                        />
+                            <input
+                                v-model="searchString"
+                                ref="searchField"
+                                :value="searchString"
+                                :placeholder="computedSearchPlaceholder"
+                                type="text"
+                                tabindex="-1"
+                                autocomplete="off"
+                                @keyup="onSearchFieldKeyUp"
+                                @blur="onSearchFieldBlur"
+                                @click="onClickSelect"
+                            />
+                        </div>
 
                         <lkt-button
                             ref="selectButton"
-                            v-show="!searchable || !searchMode"
+                            v-show="multiple || (!searchable || !searchMode)"
                             class="lkt-field--toggle-button lkt-field--select-button"
-                            :text="pickedOption ? '' : 'Select item'"
                             v-model:open-tooltip="showOptions"
                             @keyup="onKeyUp"
                             @blur="onBlur"
                             @focus="onFocusSelectButton"
                             @click="onClickSelectButton"
                         >
-                            <template v-if="optionSlot && pickedOption">
-                                <component
-                                    :is="optionSlot"
-                                    :option="pickedOption"
-                                />
+                            <template v-if="multiple && pickedOptions.length > 0">
+                                <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
+                                    {{ pickedOptions.length }}
+                                </div>
+
+                                <ul v-else :class="`lkt-field-select-read--${props.multipleDisplayEdition}`">
+                                    <li v-for="(option, i) in pickedOptions" :title="option.label">
+                                        <dropdown-option
+                                            :option="pickedOptions[i]"
+                                            :option-slot="optionSlot"
+                                            :icon="optionsIcon"
+                                            :modal="optionsModal"
+                                            :editable="editable"
+                                        />
+                                    </li>
+                                </ul>
                             </template>
                             <dropdown-option
-                                v-else-if="pickedOption"
-                                :option="pickedOption"
+                                v-else-if="!multiple && pickedOptions.length > 0"
+                                :option="pickedOptions[0]"
+                                :option-slot="optionSlot"
                                 :icon="optionsIcon"
                                 :modal="optionsModal"
                                 :editable="editable"
@@ -1477,20 +1373,31 @@
                         class="lkt-field--read-value"
                         v-html="visibleDateValue" :title="readModeTitle"></div>
                     <div
-                        v-else-if="Type === FieldType.Select && optionSlot"
+                        v-else-if="Type === FieldType.Select && pickedOptions.length > 0"
                         class="lkt-field--read-value"
-                         :title="readModeTitle">
-                        <component
-                            :is="optionSlot"
-                            :option="pickedOption"
-                        />
-                    </div>
-                    <div
-                        v-else-if="Type === FieldType.Select && pickedOption"
-                        class="lkt-field--read-value"
-                         :title="readModeTitle">
+                        :title="readModeTitle">
+
+                        <template v-if="multiple">
+                            <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
+                                {{ pickedOptions.length }}
+                            </div>
+
+                            <ul v-else :class="`lkt-field-select-read--${props.multipleDisplayEdition}`">
+                                <li v-for="(option, i) in pickedOptions" :title="option.label">
+                                    <dropdown-option
+                                        :option="pickedOptions[i]"
+                                        :option-slot="optionSlot"
+                                        :icon="optionsIcon"
+                                        :modal="optionsModal"
+                                        :editable="editable"
+                                    />
+                                </li>
+                            </ul>
+                        </template>
                         <dropdown-option
-                            :option="pickedOption"
+                            v-else
+                            :option="pickedOptions[0]"
+                            :option-slot="optionSlot"
                             :icon="optionsIcon"
                             :modal="optionsModal"
                             :editable="editable"
@@ -1601,15 +1508,14 @@
                             <slot name="option"
                                   :option="option"
                                   :data="slotData"
+                                  :modal="optionsModal"
+                                  :editable="editable"
                             />
                         </template>
-                        <component
-                            v-else-if="optionSlot"
-                            :is="optionSlot"
-                            :option="option" />
                         <template v-else>
                             <dropdown-option
                                 :option="option"
+                                :option-slot="optionSlot"
                                 :icon="optionsIcon"
                                 :modal="optionsModal"
                                 :editable="editable"

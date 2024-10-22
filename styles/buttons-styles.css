@@ -25,6 +25,20 @@
     --lkt-btn-border-color-focus: var(--lkt-field-border-color);
 }
 
+.lkt-field.is-select.is-multiple .lkt-field--select-button {
+    --lkt-btn-transition: none;
+    --lkt-btn-padding: var(--lkt-field-padding-textarea);
+    align-items: start;
+    line-height: 1.425;
+}
+
+.lkt-field.is-select.is-multiple.is-searching .lkt-field--select-button {
+    --lkt-btn-min-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
+    --lkt-btn-max-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
+    --lkt-btn-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
+    line-height: 1.425;
+}
+
 .lkt-field.is-color .lkt-field--toggle-button {
     justify-content: center;
 }

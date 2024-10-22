@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
 import {Settings} from "../../settings/Settings";
-import HoverTooltip from "../HoverTooltip.vue";
 import {LktObject} from "lkt-ts-interfaces";
 import {ValidFieldType} from "../../types/ValidFieldType";
 

@@ -54,6 +54,10 @@
     outline: 0;
 }
 
+.lkt-field.is-select.is-multiple .lkt-field-main {
+    flex-direction: column;
+}
+
 .lkt-field-select .lkt-field-main {
     display: flex;
     flex-direction: row;

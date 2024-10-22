@@ -115,3 +115,10 @@
 .lkt-field.show-options .lkt-field--btn-dropdown i {
     transform: rotate(180deg);
 }
+
+.lkt-field--searchable-box {
+    display: flex;
+    align-items: center;
+    padding: var(--lkt-field-padding-input);
+    border-bottom: var(--lkt-field-border-width) var(--lkt-field-border-style) var(--lkt-field-border-color);
+}
