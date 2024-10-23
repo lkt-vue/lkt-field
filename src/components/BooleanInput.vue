@@ -1,11 +1,14 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue';
+    import { FieldType } from '@/enums/FieldType';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
     const props = withDefaults(defineProps<{
         modelValue: boolean,
         name: string,
+        type: string,
+        label: string,
         id: string,
         editable: boolean,
         focusing: boolean,
@@ -30,21 +33,28 @@
 
     watch(() => props.modelValue, v => value.value = v);
     watch(value, v => emit('update:modelValue', v));
-
 </script>
 
 <template>
-    <input v-model="value"
-           type="checkbox"
-           ref="input"
-           :name="name"
-           :id="id"
-           :disabled="!editable || disabled"
-           :readonly="!editable || readonly"
-           :value="inputLikeValue"
-           :checked="value"
-           @focus="onFocus"
-           @blur="onBlur">
+    <div class="boolean-input">
+        <div class="boolean-input-label">
+            <div class="boolean-input--check-on">
+                <i v-if="type === FieldType.Check && value" class="lkt-field-icon-ok"/>
+            </div>
+        </div>
+        <div class="lkt-field--label" v-html="label"/>
+        <input v-model="value"
+               type="checkbox"
+               ref="input"
+               :name="name"
+               :id="id"
+               :disabled="!editable || disabled"
+               :readonly="!editable || readonly"
+               :value="inputLikeValue"
+               :checked="value"
+               @focus="onFocus"
+               @blur="onBlur">
+    </div>
 </template>
 
 <style scoped>

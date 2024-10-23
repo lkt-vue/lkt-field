@@ -1077,7 +1077,7 @@
     const emptyValueSlot = computed(() => {
         switch (Type.value) {
             case FieldType.Select:
-                if (props.multiple && Array.isArray(editableValue.value) && editableValue.value.length > 0 ) {
+                if (props.multiple && Array.isArray(editableValue.value) && editableValue.value.length > 0) {
                     return '';
                 }
                 if (!props.multiple && editableValue.value !== '') return '';
@@ -1159,6 +1159,17 @@
             };
         }
     });
+
+    const computedMainComponent = computed(() => {
+            if (BooleanFieldTypes.includes(Type.value)) return 'label';
+            return 'div';
+        }),
+        computedMainAttrs = computed(() => {
+            if (BooleanFieldTypes.includes(Type.value)) return {
+                'for': Identifier
+            };
+            return {};
+        });
 </script>
 
 <template>
@@ -1168,7 +1179,10 @@
          ref="container"
     >
         <slot v-if="!!slots.label" name="label"></slot>
-        <label v-if="!!!slots.label && computedLabel !== ''" :for="Identifier" v-html="computedLabel"></label>
+        <label v-if="!!!slots.label && computedLabel !== '' && !BooleanFieldTypes.includes(Type)"
+               :for="Identifier"
+               class="lkt-field--label"
+               v-html="computedLabel"></label>
 
         <div class="lkt-field-content">
 
@@ -1183,7 +1197,7 @@
                              :type="Type" />
             </div>
 
-            <div class="lkt-field-main" v-if="editable">
+            <component :is="computedMainComponent" v-bind="computedMainAttrs" class="lkt-field-main" v-if="editable">
                 <template v-if="editable">
                     <template v-if="slots['edit']">
                         <div v-on:click="onClick">
@@ -1200,6 +1214,8 @@
                             v-model="editableValue"
                             :id="Identifier"
                             :name="name"
+                            :type="Type"
+                            :label="computedLabel"
                             :editable="editable"
                             :focusing="focusing"
                             :disabled="disabled"
@@ -1394,7 +1410,7 @@
                         v-on:change="onChange"
                     />
                 </template>
-            </div>
+            </component>
 
             <div v-if="!editable" class="lkt-field--read" v-on:click="onClick">
                 <template v-if="slots['value']">

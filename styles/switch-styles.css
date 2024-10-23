@@ -9,95 +9,86 @@
     bottom: -100vh;
 }
 
-/** Switch styles */
-.lkt-field.is-switch label:before,
-.lkt-field.is-switch label:after {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: all linear 200ms;
-    display: block;
-    content: '';
-    border-radius: var(--lkt-field-border-radius-input);
+.boolean-input {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
 }
-
-.lkt-field.is-switch label:before {
-    left: 0;
-    width: var(--lkt-field-switch-width);
-    height: var(--lkt-field-switch-height);
+.boolean-input-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     background-color: var(--lkt-field-bg-switch-off);
     border-width: var(--lkt-field-border-width);
     border-style: var(--lkt-field-border-style);
     border-color: var(--lkt-field-border-color);
-    z-index: 1;
+    border-radius: var(--lkt-field-border-radius-input);
+}
+.lkt-field.is-boolean .lkt-field-content {
+    border: none;
+    box-shadow: none;
 }
 
-.lkt-field.is-switch label:after {
+/** Switch styles */
+.lkt-field.is-switch .boolean-input-label {
+    justify-content: flex-start;
+    width: var(--lkt-field-switch-width);
+    height: var(--lkt-field-switch-height);
+}
+
+.lkt-field.is-switch .boolean-input--check-on {
+    transition: all linear 200ms;
+    position: absolute;
+    top: 50%;
     left: var(--lkt-field-switch-dot-left-start);
+    transform: translateY(-50%);
     width: var(--lkt-field-switch-dot-size);
     height: var(--lkt-field-switch-dot-size);
     background: var(--lkt-field-bg-switch-dot-off);
+    border-radius: var(--lkt-field-border-radius-input);
     z-index: 3;
 }
 
-.lkt-field.is-switch.is-checked label:before {
+.lkt-field.is-switch.is-checked .boolean-input-label {
     background-color: var(--lkt-field-bg-switch-on);
 }
 
-.lkt-field.is-switch.is-checked label:after {
+.lkt-field.is-switch.is-checked .boolean-input--check-on {
     background: var(--lkt-field-bg-switch-dot-on);
     left: var(--lkt-field-switch-dot-left-end);
 }
 
-.lkt-field.is-switch input:disabled label:before {
+.lkt-field.is-switch input:disabled .boolean-input-label {
     background: var(--lkt-field-bg-switch-disabled);
 }
 
-.lkt-field.is-switch input:disabled label:after {
+.lkt-field.is-switch input:disabled .boolean-input--check-on {
     background: var(--lkt-field-bg-switch-dot-disabled);
 }
 
-.lkt-field.is-switch input:checked:disabled label:before {
+.lkt-field.is-switch.is-checked.is-disabled .boolean-input-label {
     background-color: var(--lkt-field-bg-switch-on-disabled);
 }
 
-.lkt-field.is-switch.is-checked:disabled label:after {
+.lkt-field.is-switch.is-checked.is-disabled .boolean-input--check-on {
     background: var(--lkt-field-bg-switch-dot-on-disabled);
 }
 
 /* Check styles */
-.lkt-field.is-check.is-checked label:before {
+.lkt-field.is-check .boolean-input-label {
+    width: var(--lkt-field-switch-dot-size);
+    height: var(--lkt-field-switch-dot-size);
     color: #ffffff;
-    background: var(--lkt-field-bg-switch-on) url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxMiIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgMTIgOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TC4wNTcgNS42NGwuODI5LTEuMjI3TDQuNDcgNy4yNjggMTAuOTIxLjA4NmwuOTIzIDEuMTAzLTYuODYzIDcuNjRjLS4xMzQtLjAwMy0uNDA2LjE0OC0uNDA2LjE0OHoiIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPg0KPC9zdmc+) 50% 40% no-repeat;
-    border: 2px solid var(--lkt-field-bg-switch-on);
 }
 
-.lkt-field.is-check label {
-    padding-left: 20px;
-    min-height: 1rem;
-    min-width: 1rem;
+.lkt-field.is-check.is-checked .boolean-input-label {
+    background: var(--lkt-field-bg-switch-dot-on);
 }
 
-.lkt-field.is-check label:before {
-    content: '';
-    display: inline-block;
-    border-radius: var(--lkt-field-border-radius-input);
-    position: absolute;
-    left: 0;
-    width:  1rem;
-    height: 1rem;
-    background-color: var(--lkt-field-color);
-    border: 2px solid var(--lkt-field-color);
-    pointer-events: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
 
-.lkt-field.is-check label:after {
-    display: none;
-}
+
 
 
 /* Stamp */
