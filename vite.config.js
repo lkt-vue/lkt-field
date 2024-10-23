@@ -23,8 +23,6 @@ export default {
             external: [
                 'vue',
                 'lkt-i18n',
-                'lkt-tools',
-                'lkt-events',
                 'lkt-field-validation',
                 'lkt-button',
                 'lkt-modal',
@@ -39,7 +37,6 @@ export default {
                 globals: {
                     vue: 'Vue',
                     axios: 'axios',
-                    "lkt-tools": 'LktTools',
                     "lkt-events": 'LktEvents',
                     "lkt-button": 'LktButton',
                     "lkt-http-client": 'LktHttpClient',

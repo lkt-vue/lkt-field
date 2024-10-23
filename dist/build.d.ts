@@ -1,17 +1,17 @@
-declare namespace Ws {
+declare namespace Ps {
     function install(e: any): void;
 }
-declare function $s(e: any): any;
-declare function Qs(e: any): any;
-declare function eo(e: any): any;
-declare function Zs(e: any): void;
-declare function Gs(e: any): any;
-declare function js(e: any, t: any): void;
-declare function Js(e: any): any;
+declare function js(e: any): any;
 declare function Xs(e: any): any;
+declare function Js(e: any): any;
+declare function Us(e: any): void;
+declare function qs(e: any): any;
+declare function Ws(e: any, t: any): void;
 declare function Ks(e: any): any;
 declare function Ys(e: any): any;
-declare function qs(e: any): any;
-declare function Us(e: any, t: any): boolean;
-declare function Ps(e: any, t: any): boolean;
-export { Ws as default, $s as setFieldClearText, Qs as setFieldDateReadFormat, eo as setFieldDefaultDateReadFormat, Zs as setFieldEmptySlot, Gs as setFieldI18nText, js as setFieldOptionSlot, Js as setFieldShowPasswordOffText, Xs as setFieldShowPasswordOnText, Ks as setFieldSwitchEditionOffText, Ys as setFieldSwitchEditionOnText, qs as setFieldUndoText, Us as setTextEditSlot, Ps as setTextValueSlot };
+declare function Gs(e: any): any;
+declare function $s(e: any): any;
+declare function Zs(e: any): any;
+declare function Fs(e: any, t: any): boolean;
+declare function Vs(e: any, t: any): boolean;
+export { Ps as default, js as setFieldClearText, Xs as setFieldDateReadFormat, Js as setFieldDefaultDateReadFormat, Us as setFieldEmptySlot, qs as setFieldI18nText, Ws as setFieldOptionSlot, Ks as setFieldShowPasswordOffText, Ys as setFieldShowPasswordOnText, Gs as setFieldSwitchEditionOffText, $s as setFieldSwitchEditionOnText, Zs as setFieldUndoText, Fs as setTextEditSlot, Vs as setTextValueSlot };

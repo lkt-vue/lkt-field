@@ -2,7 +2,6 @@
     // Emits
     import { generateRandomString, isEmail as checkIsEmail, stripTags } from 'lkt-string-tools';
     import { computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
-    import { createLktEvent } from 'lkt-events';
     import { Settings } from '../settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
     //@ts-ignore
@@ -847,10 +846,9 @@
                 navigateOptions($event);
 
             } else if (Type.value === FieldType.Select) {
-                // fetchOptions(searchString.value);
                 navigateOptions($event);
             }
-            emits('keyup', $event, createLktEvent(Identifier, { value: editableValue.value }));
+            emits('keyup', $event);
         },
         onSearchFieldKeyUp = ($event: KeyboardEvent) => {
             if (['ArrowDown', 'ArrowUp', 'Enter'].includes($event.key)) {
@@ -948,7 +946,7 @@
                 emits('selected-option', option);
             }
         },
-        onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event, createLktEvent(Identifier, { value: editableValue.value })),
+        onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event),
         onFocus = ($event: FocusEvent) => {
             if (Type.value === FieldType.Select) {
                 if (!focusing.value) {
@@ -975,7 +973,7 @@
                     fetchOptions(searchString.value, false);
                 }
             }
-            emits('focus', $event, createLktEvent(Identifier, { value: editableValue.value }));
+            emits('focus', $event);
         },
         onFocusSelectButton = ($event: FocusEvent) => {
             if ($event) {
@@ -1000,7 +998,7 @@
                 showOptions.value = false;
                 focusing.value = false;
                 doLocalValidation();
-                emits('blur', $event, createLktEvent(Identifier, { value: editableValue.value }));
+                emits('blur', $event);
             }, 100);
         },
         onChange = ($event: any) => {
@@ -1038,10 +1036,10 @@
             }
         },
         onClick = ($event: Event) => {
-            emits('click', $event, createLktEvent(Identifier, { value: editableValue.value }));
+            emits('click', $event);
         },
-        onClickInfo = ($event: any) => emits('click-info', $event, createLktEvent(Identifier, { value: editableValue.value })),
-        onClickError = ($event: any) => emits('click-error', $event, createLktEvent(Identifier, { value: editableValue.value })),
+        onClickInfo = ($event: any) => emits('click-info', $event),
+        onClickError = ($event: any) => emits('click-error', $event),
         onClickSwitchEdition = ($event: any) => {
             if (editable.value) focus();
         },
