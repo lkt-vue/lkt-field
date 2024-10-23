@@ -1,4 +1,4 @@
-import {App, Component, defineCustomElement, Plugin} from 'vue';
+import {App, Component, Plugin} from 'vue';
 import LktFieldValidation from 'lkt-field-validation';
 
 import { default as libComponent } from './lib-components/LktField.vue';
@@ -45,7 +45,7 @@ const LktField: Plugin = {
 
 export default LktField;
 
-export const setDefaultTextEmptyValueSlot = (component?: string|Component) => {
+export const setFieldEmptySlot = (component?: string|Component) => {
   Settings.defaultEmptyValueSlot = component;
 }
 

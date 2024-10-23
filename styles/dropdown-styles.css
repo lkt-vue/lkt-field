@@ -64,6 +64,12 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    white-space: break-spaces;
+    line-height: 1.425;
+}
+
+.lkt-field--dropdown-option--icon-container {
+    align-self: flex-start;
 }
 
 

@@ -114,9 +114,12 @@
         multipleDisplay?: MultipleDisplayType,
         multipleDisplayEdition?: MultipleDisplayType,
         searchable?: boolean,
-        autoloadOptionsResource?: boolean,
-        optionsModal?: string,
-        optionsIcon?: string,
+        autoloadOptionsResource?: boolean | 'feed',
+        optionsDownload?: string | Function,
+        optionsModal?: string | Function,
+        optionsModalData?: LktObject | Function,
+        optionsIcon?: string | Function,
+        optionsLabelFormatter?: Function,
         optionsResource?: string,
         optionsResourceData?: LktObject,
 
@@ -176,7 +179,9 @@
         multipleDisplayEdition: MultipleDisplayType.Inline,
         searchable: false,
         autoloadOptionsResource: false,
+        optionsDownload: '',
         optionsModal: '',
+        optionsModalData: () => ({}),
         optionsIcon: '',
         optionsResource: '',
         optionsResourceData: () => ({}),
@@ -228,6 +233,8 @@
     const justFocusedTimeout = ref(undefined);
     const pickedOptions = ref([]);
     const searchMode = ref(false);
+    const optionsAutoLoaded = ref(false);
+    const optionsAutoLoading = ref(false);
 
     const computedLang = computed(() => currentLanguage.value);
     const computedDateReadFormat = computed(() => {
@@ -276,7 +283,7 @@
             } else {
                 pickedOptions.value.splice(0, 1, option);
             }
-        }
+        };
 
         if (Type.value === FieldType.Text) {
             _doUpdate(editableValue.value);
@@ -310,7 +317,7 @@
             if (computedShowPasswordRevealInNav.value) ++r;
             if (computedShowI18nInNav.value) ++r;
             if (computedShowSwitchEditionInNav.value) ++r;
-            if (visibleOptions.value.length > 0) ++r;
+            if (computedShowDropdownButton.value) ++r;
             if (props.customButtonText || props.customButtonClass) ++r;
 
             if (r > 0 && Type.value === FieldType.Textarea) return 1;
@@ -357,7 +364,7 @@
             if (props.mandatory && editable.value) r.push('is-mandatory-field');
             if (editable.value && focusing.value) r.push('has-focus');
             if (showOptions.value) r.push('show-options');
-            if (props.searchable && searchMode.value) r.push('is-searching')
+            if (props.searchable && searchMode.value) r.push('is-searching');
 
             if (Type.value !== FieldType.Range && props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
                 if (localValidationStatus.value.length > 0) r.push('is-invalid');
@@ -367,6 +374,14 @@
             if ([FieldType.Textarea, FieldType.Html].includes(Type.value)) r.push('is-lg');
             if ([FieldType.Image].includes(Type.value)) r.push('is-xl');
             if (props.multiple && Type.value === FieldType.Select) r.push('is-lg');
+
+            if (props.multiple) {
+                if (editable.value) {
+                    r.push(`has-multiple-display-${props.multipleDisplayEdition}`);
+                } else {
+                    r.push(`has-multiple-display-${props.multipleDisplay}`);
+                }
+            }
 
             if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
             r.push(editable.value ? 'is-editable' : 'is-read');
@@ -380,6 +395,7 @@
         }),
         readModeTitle = computed(() => {
             if (typeof editableValue.value === 'number') return editableValue.value.toString();
+            if (Type.value === FieldType.Html) return stripTags(editableValue.value);
             return editableValue.value;
         }),
         MinimumValue = computed((): number => {
@@ -445,6 +461,9 @@
         computedShowClearInNav = computed(() => computedShowClear.value && !props.infoButtonEllipsis),
         computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && props.featuredButton !== 'password'),
         computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && props.featuredButton !== 'i18n'),
+        computedShowDropdownButton = computed(() => {
+            return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || props.optionsResource !== '';
+        }),
         computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis)
     ;
 
@@ -701,7 +720,7 @@
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
-            if (!editable.value && !props.autoloadOptionsResource) return;
+            if (!editable.value && (!props.autoloadOptionsResource && !optionsAutoLoaded.value)) return;
             if ([
                 FieldType.Tel,
                 FieldType.Date,
@@ -715,6 +734,10 @@
             ].includes(Type.value)) return;
 
             isLoading.value = false;
+            if (props.autoloadOptionsResource && !optionsAutoLoaded.value) {
+                optionsAutoLoading.value = true;
+            }
+
             if (props.optionsResource !== '') {
                 isLoading.value = true;
                 if (Settings.searchKeyForResource !== '') props.optionsResourceData[Settings.searchKeyForResource] = query;
@@ -722,9 +745,22 @@
                 const isValidData = Array.isArray(results.data) && results.data.length > 0;
                 if (isValidData) {
                     optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data);
-                }
-                buildVisibleOptions(query, ableToShowOptions);
-                if (isValidData) {
+                    buildVisibleOptions(query, ableToShowOptions);
+
+                    if (props.autoloadOptionsResource && !optionsAutoLoaded.value) {
+                        if (props.autoloadOptionsResource === 'feed') {
+                            if (props.multiple) {
+                                visibleOptions.value.forEach(opt => {
+                                    onClickOption(opt);
+                                });
+                            } else if (visibleOptions.value.length > 0) {
+                                onClickOption(visibleOptions.value[0]);
+                            }
+                        }
+                        optionsAutoLoaded.value = true;
+                        optionsAutoLoading.value = false;
+                    }
+
                     emits('options-loaded', results.data);
                 }
 
@@ -795,6 +831,10 @@
             } else if (Type.value === FieldType.File) {
                 value.value = '';
                 visibleFileName.value = '';
+                return;
+            } else if (Type.value === FieldType.Select) {
+                editableValue.value = props.multiple ? [] : '';
+                pickedOptions.value = [];
                 return;
             }
             editableValue.value = '';
@@ -1028,22 +1068,29 @@
         isMandatory: () => props.mandatory,
     });
 
-    const hasCustomValueSlot = computed(() => {
-            if (!(Type.value === FieldType.Text && optionsHaystack.value.length > 0)) {
-                if (editableValue.value === '' || (Type.value === 'date' && visibleDateValue.value === '')) {
-                    return (props.emptyValueSlot !== '' && typeof Settings.customValueSlots[props.emptyValueSlot] !== 'undefined') || (Settings.defaultEmptyValueSlot && typeof Settings.defaultEmptyValueSlot !== 'undefined');
+    const emptyValueSlot = computed(() => {
+        switch (Type.value) {
+            case FieldType.Select:
+                if (props.multiple && Array.isArray(editableValue.value) && editableValue.value.length > 0 ) {
+                    return '';
                 }
+                if (!props.multiple && editableValue.value !== '') return '';
+                break;
 
-            }
+            case FieldType.Date:
+                if (visibleDateValue.value !== '') return '';
+                break;
+
+            default:
+                if (editableValue.value !== '') return '';
+        }
+        return Settings.customValueSlots[props.emptyValueSlot] ?? Settings.defaultEmptyValueSlot;
+    });
+
+    const hasCustomValueSlot = computed(() => {
             return props.valueSlot !== '' && typeof Settings.customValueSlots[props.valueSlot] !== 'undefined';
         }),
         customValueSlot = computed(() => {
-            if (!(Type.value === FieldType.Text && optionsHaystack.value.length > 0)) {
-                if (editableValue.value === '' || (Type.value === 'date' && visibleDateValue.value === '')) {
-                    return Settings.customValueSlots[props.emptyValueSlot] ?? Settings.defaultEmptyValueSlot;
-                }
-            }
-
             return Settings.customValueSlots[props.valueSlot];
         }),
         hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
@@ -1061,12 +1108,11 @@
                 console.log('autoloadOptionsResource');
                 fetchOptions('', false);
             }
-        }
-        else if (Type.value === FieldType.Date) {
+        } else if (Type.value === FieldType.Date) {
             pickedDate.value = new Date(value.value);
             setVisibleDateValue();
 
-        } else if (Type.value === FieldType.Html) {
+        } else if (Type.value === FieldType.Html && editable.value) {
 
             const updateValueFromEditor = (content) => {
                 if (editorTimeout.value) clearTimeout(editorTimeout.value);
@@ -1196,17 +1242,24 @@
                     <template v-else-if="Type === FieldType.Select">
 
                         <div v-if="searchable && (multiple || searchMode)" class="lkt-field--searchable-box">
+
                             <lkt-tag
-                                v-if="pickedOptions.length > 0 || multiple"
-                                :icon="multiple ? optionsIcon : ''"
-                                :text="multiple ? pickedOptions.length : ''"
+                                v-if="multiple"
+                                :icon="optionsIcon"
+                                :text="pickedOptions.length"
+                            />
+
+                            <lkt-tag
+                                v-else-if="pickedOptions.length > 0"
                             >
                                 <dropdown-option
-                                    v-if="!multiple && pickedOptions.length > 0"
                                     :option="pickedOptions[0]"
                                     :option-slot="optionSlot"
                                     :icon="optionsIcon"
                                     :modal="optionsModal"
+                                    :modal-data="optionsModalData"
+                                    :download="optionsDownload"
+                                    :label-formatter="optionsLabelFormatter"
                                     :editable="editable"
                                 />
                             </lkt-tag>
@@ -1240,13 +1293,16 @@
                                     {{ pickedOptions.length }}
                                 </div>
 
-                                <ul v-else :class="`lkt-field-select-read--${props.multipleDisplayEdition}`">
+                                <ul v-else class="lkt-field-select-read">
                                     <li v-for="(option, i) in pickedOptions" :title="option.label">
                                         <dropdown-option
                                             :option="pickedOptions[i]"
                                             :option-slot="optionSlot"
                                             :icon="optionsIcon"
                                             :modal="optionsModal"
+                                            :modal-data="optionsModalData"
+                                            :download="optionsDownload"
+                                            :label-formatter="optionsLabelFormatter"
                                             :editable="editable"
                                         />
                                     </li>
@@ -1258,6 +1314,9 @@
                                 :option-slot="optionSlot"
                                 :icon="optionsIcon"
                                 :modal="optionsModal"
+                                :modal-data="optionsModalData"
+                                :download="optionsDownload"
+                                :label-formatter="optionsLabelFormatter"
                                 :editable="editable"
                             />
                         </lkt-button>
@@ -1329,6 +1388,12 @@
                         :title="readModeTitle"
                         :data="slotData" />
                 </template>
+
+                <component
+                    v-else-if="emptyValueSlot"
+                    v-bind:is="emptyValueSlot"
+                    :data="slotData" />
+
                 <component
                     v-else-if="hasCustomValueSlot"
                     v-bind:is="customValueSlot"
@@ -1389,6 +1454,9 @@
                                         :option-slot="optionSlot"
                                         :icon="optionsIcon"
                                         :modal="optionsModal"
+                                        :modal-data="optionsModalData"
+                                        :download="optionsDownload"
+                                        :label-formatter="optionsLabelFormatter"
                                         :editable="editable"
                                     />
                                 </li>
@@ -1400,6 +1468,9 @@
                             :option-slot="optionSlot"
                             :icon="optionsIcon"
                             :modal="optionsModal"
+                            :modal-data="optionsModalData"
+                            :download="optionsDownload"
+                            :label-formatter="optionsLabelFormatter"
                             :editable="editable"
                         />
                     </div>
@@ -1461,7 +1532,8 @@
                 />
 
                 <dropdown-button
-                    v-if="editable && (visibleOptions.length > 0 || optionsHaystack.length > 0)"
+                    v-if="editable"
+                    v-show="computedShowDropdownButton"
                     @click="onClickDropdownButton"
                 />
 
@@ -1509,6 +1581,8 @@
                                   :option="option"
                                   :data="slotData"
                                   :modal="optionsModal"
+                                  :modal-data="optionsModalData"
+                                  :download="optionsDownload"
                                   :editable="editable"
                             />
                         </template>
@@ -1518,6 +1592,9 @@
                                 :option-slot="optionSlot"
                                 :icon="optionsIcon"
                                 :modal="optionsModal"
+                                :modal-data="optionsModalData"
+                                :download="optionsDownload"
+                                :label-formatter="optionsLabelFormatter"
                                 :editable="editable"
                             />
                         </template>

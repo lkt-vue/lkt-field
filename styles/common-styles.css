@@ -2,6 +2,7 @@
     --lkt-field-height: var(--lkt-field-input-height);
     --lkt-field-large-field-min-height: calc(var(--lkt-field-height) * 2 + var(--lkt-field-gap) + var(--lkt-field-line-height-label));
     --lkt-field-large-field-max-height: calc(var(--lkt-field-height) * 4 + var(--lkt-field-gap) * 3 + var(--lkt-field-line-height-label) * 3);
+    --lkt-field--icons-amount: 0;
 }
 
 .lkt-field {
@@ -13,6 +14,14 @@
     font-weight: var(--lkt-field-font-weight);
     width: 100%;
 }
+
+.lkt-field.has-icons-1 { --lkt-field--icons-amount: 1; }
+.lkt-field.has-icons-2 { --lkt-field--icons-amount: 2; }
+.lkt-field.has-icons-3 { --lkt-field--icons-amount: 3; }
+.lkt-field.has-icons-4 { --lkt-field--icons-amount: 4; }
+.lkt-field.has-icons-5 { --lkt-field--icons-amount: 5; }
+.lkt-field.has-icons-6 { --lkt-field--icons-amount: 6; }
+.lkt-field.has-icons-7 { --lkt-field--icons-amount: 7; }
 
 .lkt-field.is-lg {
     --lkt-field-height: var(--lkt-field-large-field-min-height);
@@ -52,6 +61,14 @@
     width: 100%;
     max-width: 100%;
     outline: 0;
+}
+
+.lkt-field.is-editable .lkt-field-main {
+    max-width: calc(100% - var(--lkt-field--icons-amount) * var(--lkt-field-input-height));
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .lkt-field.is-select.is-multiple .lkt-field-main {
