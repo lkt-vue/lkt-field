@@ -13,4 +13,6 @@ export enum FieldType {
     File = 'file',
     Image = 'image',
     Select = 'select',
+    Check = 'check',
+    Switch = 'switch',
 }

@@ -15,4 +15,6 @@ export type ValidFieldType =
     | FieldType.File
     | FieldType.Image
     | FieldType.Select
+    | FieldType.Check
+    | FieldType.Switch
 ;

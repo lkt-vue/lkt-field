@@ -7,3 +7,7 @@ export const FieldTypesWithOptions = [
 export const TextFieldTypesWithOptions = [
     FieldType.Text, FieldType.Search
 ];
+
+export const BooleanFieldTypes = [
+    FieldType.Switch, FieldType.Check
+];

@@ -38,12 +38,13 @@
         receiveOptions,
     } from '@/functions/option-functions';
     import { isValidDateObject } from '@/functions/date-functions';
-    import { FieldTypesWithOptions } from '@/constants/field-type-constants';
+    import { BooleanFieldTypes, FieldTypesWithOptions } from '@/constants/field-type-constants';
     import DropdownButton from '@/components/buttons/DropdownButton.vue';
     import DropdownOption from '@/components/dropdown/DropdownOption.vue';
     import ColorInput from '@/components/color/ColorInput.vue';
     import { validateAmountOfNumbers } from '@/functions/validation-functions';
     import { MultipleDisplayType } from '@/enums/MultipleDisplayType';
+    import BooleanInput from '@/components/BooleanInput.vue';
 
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
 
@@ -199,6 +200,9 @@
     let _val = props.modelValue;
     if (Type.value === 'select' && props.multiple) {
         if (!_val || !Array.isArray(_val)) _val = [];
+
+    } else if (BooleanFieldTypes.includes(Type.value)) {
+        if (typeof _val !== 'boolean') _val = false;
     }
 
     // Reactive data
@@ -354,6 +358,10 @@
             const r = ['lkt-field'];
 
             r.push(`is-${Type.value}`);
+            if (BooleanFieldTypes.includes(Type.value)) {
+                r.push('is-boolean');
+                if (editableValue.value) r.push('is-checked');
+            }
             if (props.palette) r.push(`lkt-field--${props.palette}`);
             if (changed.value) r.push('is-changed');
             if (props.disabled) r.push('is-disabled');
@@ -1103,7 +1111,6 @@
             }
 
             if (props.autoloadOptionsResource) {
-                console.log('autoloadOptionsResource');
                 fetchOptions('', false);
             }
         } else if (Type.value === FieldType.Date) {
@@ -1187,6 +1194,17 @@
                         <component v-bind:is="customEditSlot"
                                    v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
                     </div>
+
+                    <template v-else-if="BooleanFieldTypes.includes(Type)">
+                        <boolean-input
+                            v-model="editableValue"
+                            :id="Identifier"
+                            :name="name"
+                            :editable="editable"
+                            :focusing="focusing"
+                            :disabled="disabled"
+                            :readonly="readonly" />
+                    </template>
 
                     <template v-else-if="Type === FieldType.Color">
                         <color-input v-model="editableValue" />
