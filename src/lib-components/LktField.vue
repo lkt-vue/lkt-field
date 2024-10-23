@@ -1466,6 +1466,14 @@
                         :to="'tel:' + value">{{ value }}
                     </lkt-anchor>
                     <div
+                        v-else-if="BooleanFieldTypes.includes(Type)"
+                        class="lkt-field--read-value">
+                        <lkt-tag
+                            :icon="editableValue ? 'lkt-field-icon-ok' : 'lkt-field-icon-cancel'"
+                            :featured-text="computedLabel"
+                            :title="readModeTitle"/>
+                    </div>
+                    <div
                         v-else-if="Type === FieldType.Date"
                         class="lkt-field--read-value"
                         v-html="visibleDateValue" :title="readModeTitle"></div>

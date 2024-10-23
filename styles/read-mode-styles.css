@@ -27,3 +27,27 @@
     overflow-y: auto;
     white-space: break-spaces;
 }
+
+.lkt-field.is-boolean .lkt-field--read-value .lkt-tag {
+    --lkt-tag-bg: var(--lkt-field-bg-switch-off);
+    --lkt-tag-bg-hover: var(--lkt-field-bg-switch-off);
+    --lkt-tag-color: var(--lkt-field-color);
+    --lkt-tag-color-content: var(--lkt-field-color);
+    --lkt-tag-color-featured: var(--lkt-field-color);
+    --lkt-tag-border-width: var(--lkt-field-border-width);
+    --lkt-tag-border-style: var(--lkt-field-border-style);
+    --lkt-tag-border-color: var(--lkt-field-border-color);
+    --lkt-tag-border-radius: var(--lkt-field-border-radius-input);
+
+    --lkt-tag-bg-content: var(--lkt-field-bg-switch-dot-off);
+    --lkt-tag-border-radius-content: var(--lkt-field-border-radius-input) 0 0 var(--lkt-field-border-radius-input);
+
+    align-items: stretch;
+    line-height: 1.425;
+}
+
+.lkt-field.is-boolean.is-checked .lkt-field--read-value .lkt-tag {
+    --lkt-tag-bg: var(--lkt-field-bg-switch-on);
+    --lkt-tag-bg-hover: var(--lkt-field-bg-switch-on);
+    --lkt-tag-bg-content: var(--lkt-field-bg-switch-dot-on);
+}
