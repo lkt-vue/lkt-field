@@ -222,8 +222,6 @@
 
     const dropdownEl = ref(<Element | ComponentPublicInstance | null>null),
         container = ref(<Element | ComponentPublicInstance | null>null),
-        searchField = ref(<Element | ComponentPublicInstance | null>null),
-        selectButton = ref(<Element | ComponentPublicInstance | null>null),
         optionList = ref(<Element | ComponentPublicInstance | null>null);
 
     const showOptions = ref(false),
@@ -231,7 +229,6 @@
 
     const searchString = ref('');
     const focusedOptionIndex = ref(-1);
-    const justFocusedTimeout = ref(undefined);
     const pickedOptions = ref([]);
     const searchMode = ref(false);
     const optionsAutoLoaded = ref(false);
