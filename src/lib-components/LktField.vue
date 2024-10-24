@@ -38,6 +38,7 @@
     import { MultipleDisplayType } from '@/enums/MultipleDisplayType';
     import BooleanInput from '@/components/BooleanInput.vue';
     import HtmlInput from '@/components/HtmlInput.vue';
+    import SelectInput from '@/components/SelectInput.vue';
 
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
 
@@ -788,14 +789,14 @@
                 if (key === 'ArrowDown') {
                     ++focusedOptionIndex.value;
                     if (focusedOptionIndex.value > amountOfOptions) focusedOptionIndex.value = 0;
-                    let el = optionList.value.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
+                    let el = optionList.value?.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
                     if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 
                 } else if (key === 'ArrowUp') {
                     --focusedOptionIndex.value;
                     if (focusedOptionIndex.value < 0) focusedOptionIndex.value = amountOfOptions;
 
-                    let el = optionList.value.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
+                    let el = optionList.value?.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
                     if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 
                 } else if (key === 'Enter') {
@@ -891,15 +892,22 @@
             }
         },
         turnOnSelectSearchMode = () => {
-            focusing.value = true;
-            searchMode.value = true;
+            // focusing.value = true;
+            // showOptions.value = true;
+            // searchMode.value = true;
 
-            nextTick(() => {
-                if (searchField.value) {
+            // setTimeout(() => {
+            //     focusing.value = true;
+            //     showOptions.value = true;
+            //     searchMode.value = true;
+            // }, 100);
+
+            // nextTick(() => {
+                if (inputElement.value) {
                     //@ts-ignore
-                    searchField.value.focus();
+                    inputElement.value.keepFocused();
                 }
-            });
+            // });
         },
         onClickSelectButton = () => {
             if (!props.searchable) return onClickSelect();
@@ -1012,10 +1020,48 @@
         onFocusBooleanInput = (event: FocusEvent) => {
             hadFirstFocus.value = true;
             focusing.value = true;
+
+            emits('focus', event);
         },
         onBlurBooleanInput = (event: Event) => {
             hadFirstBlur.value = true;
             focusing.value = false;
+
+            emits('blur', event);
+        },
+        onNavigateSelectInput = (event) => {
+            navigateOptions(event);
+        },
+        onSearchSelectInput = (query: string) => {
+            fetchOptions(query);
+        },
+        onFocusSelectInput = () => {
+            console.log('onFocusSelectInput')
+            hadFirstFocus.value = true;
+            focusing.value = true;
+
+            if (!props.optionsResource && visibleOptions.value.length === 0) {
+                showOptions.value = false;
+                return;
+            }
+
+            showOptions.value = true;
+
+            doLocalValidation();
+            fetchOptions(searchString.value, false);
+
+            if (props.searchable) {
+                turnOnSelectSearchMode();
+            }
+
+            emits('focus');
+        },
+        onBlurSelectInput = () => {
+            console.log('onBlurSelectInput')
+            hadFirstBlur.value = true;
+            focusing.value = false;
+            // if (!props.searchable) return onClickSelect();
+            // turnOnSelectSearchMode();
         },
         onChange = ($event: any) => {
             if (computedIsFile.value || computedIsImage.value) {
@@ -1246,6 +1292,32 @@
                     </lkt-button>
                 </template>
 
+                <template v-else-if="Type === FieldType.Select">
+                    <select-input
+                        ref="inputElement"
+                        v-model="editableValue"
+                        v-model:show-options="showOptions"
+                        :search-string="searchString"
+                        :searchable="searchable"
+                        :search-mode="searchMode"
+                        :multiple="multiple"
+                        :options-icon="optionsIcon"
+                        :option-slot="optionSlot"
+                        :options-modal="optionsModal"
+                        :options-download="optionsDownload"
+                        :options-label-formatter="optionsLabelFormatter"
+                        :options-modal-data="optionsModalData"
+                        :picked-options="pickedOptions"
+                        :editable="editable"
+                        :focusing="focusing"
+                        :search-placeholder="computedSearchPlaceholder"
+                        :multiple-display-edition="multipleDisplayEdition"
+                        @focus="onFocusSelectInput"
+                        @blur="onBlurSelectInput"
+                        @navigate="onNavigateSelectInput"
+                        @search="onSearchSelectInput"
+                    />
+                </template>
                 <template v-else-if="Type === FieldType.Select">
 
                     <div v-if="searchable && (multiple || searchMode)" class="lkt-field--searchable-box">
