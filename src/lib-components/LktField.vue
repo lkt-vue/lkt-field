@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-    // Emits
     import { generateRandomString, isEmail as checkIsEmail, stripTags } from 'lkt-string-tools';
     import { computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
-    //@ts-ignore
     import { httpCall, HTTPResponse } from 'lkt-http-client';
     import { __, currentLanguage } from 'lkt-i18n';
     import { FieldValidation } from 'lkt-field-validation';
@@ -30,7 +28,7 @@
         receiveOptions,
     } from '@/functions/option-functions';
     import { isValidDateObject } from '@/functions/date-functions';
-    import { BooleanFieldTypes, FieldTypesWithOptions } from '@/constants/field-type-constants';
+    import { BooleanFieldTypes } from '@/constants/field-type-constants';
     import DropdownButton from '@/components/buttons/DropdownButton.vue';
     import DropdownOption from '@/components/dropdown/DropdownOption.vue';
     import ColorInput from '@/components/color/ColorInput.vue';
@@ -40,6 +38,7 @@
     import HtmlInput from '@/components/HtmlInput.vue';
     import SelectInput from '@/components/SelectInput.vue';
 
+    // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
 
     // Slots
@@ -858,53 +857,24 @@
             }
             emits('keyup', $event);
         },
-        onClickSelect = () => {
-            if (props.multiple) {
-                if (!hadFirstFocus.value || !showOptions.value) {
-                    onFocus();
-                    onClickSelectButton();
-                }
-                showOptions.value = true;
-                return;
-            }
-
-            if (!props.optionsResource && visibleOptions.value.length === 0) {
-                showOptions.value = false;
-                return;
-            }
-            if (typeof justFocusedTimeout.value === 'undefined') {
-                showOptions.value = !showOptions.value;
-            }
-        },
         turnOnSelectSearchMode = () => {
             if (inputElement.value) {
                 //@ts-ignore
                 inputElement.value.keepFocused();
             }
         },
-        onClickSelectButton = () => {
-            if (!props.searchable) return onClickSelect();
-            turnOnSelectSearchMode();
-        },
         onClickDropdownButton = () => {
             if (showOptions.value) {
                 if (Type.value === FieldType.Select) {
-                    onBlur();
-                    onClickSelectButton();
-
-                    if (props.multiple) {
-                        showOptions.value = false;
-                        focusing.value = false;
-                    }
-
+                    onBlurSelectInput();
                     return;
                 }
 
                 return onBlur();
             }
             if (Type.value === FieldType.Select) {
-                onFocus();
-                return onClickSelectButton();
+                onFocusSelectInput();
+                return;
             }
             return onFocus();
         },
@@ -937,31 +907,9 @@
         },
         onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event),
         onFocus = ($event: FocusEvent) => {
-            if (Type.value === FieldType.Select) {
-                if (!focusing.value) {
-                    justFocusedTimeout.value = setTimeout(() => {
-                        clearTimeout(justFocusedTimeout.value);
-                        justFocusedTimeout.value = undefined;
-                    }, 200);
-                } else {
-                    clearTimeout(justFocusedTimeout.value);
-                }
-
-                if (props.searchable && !searchMode.value) {
-                    turnOnSelectSearchMode();
-                }
-            }
             hadFirstFocus.value = true;
             focusing.value = true;
             doLocalValidation();
-
-            let alreadyOpened = showOptions.value;
-            showOptions.value = (visibleOptions.value.length > 0 || props.optionsResource !== '') && FieldTypesWithOptions.includes(Type.value);
-            if (showOptions.value && Type.value === FieldType.Select) {
-                if (!props.multiple || !alreadyOpened) {
-                    fetchOptions(searchString.value, false);
-                }
-            }
             emits('focus', $event);
         },
         onBlur = ($event: Event) => {
@@ -987,13 +935,11 @@
         onFocusBooleanInput = (event: FocusEvent) => {
             hadFirstFocus.value = true;
             focusing.value = true;
-
             emits('focus', event);
         },
         onBlurBooleanInput = (event: Event) => {
             hadFirstBlur.value = true;
             focusing.value = false;
-
             emits('blur', event);
         },
         onNavigateSelectInput = (event) => {
@@ -1017,9 +963,7 @@
             doLocalValidation();
             fetchOptions(searchString.value, false);
 
-            if (props.searchable) {
-                turnOnSelectSearchMode();
-            }
+            if (props.searchable) turnOnSelectSearchMode();
 
             emits('focus');
         },
@@ -1184,12 +1128,12 @@
             <component :is="computedMainComponent" v-bind="computedMainAttrs" class="lkt-field-main" v-if="editable">
                 <template v-if="slots['edit']">
                     <div v-on:click="onClick">
-                        <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
+                        <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"/>
                     </div>
                 </template>
                 <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
                     <component v-bind:is="customEditSlot"
-                               v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
+                               v-bind:value="value" :title="readModeTitle" :data="slotData"/>
                 </div>
 
                 <template v-else-if="BooleanFieldTypes.includes(Type)">
