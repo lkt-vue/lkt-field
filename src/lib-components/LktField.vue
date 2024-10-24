@@ -858,22 +858,6 @@
             }
             emits('keyup', $event);
         },
-        onSearchFieldKeyUp = ($event: KeyboardEvent) => {
-            if (['ArrowDown', 'ArrowUp', 'Enter'].includes($event.key)) {
-                navigateOptions($event);
-            } else {
-                fetchOptions(searchString.value);
-            }
-        },
-        onSearchFieldBlur = ($event: KeyboardEvent) => {
-            setTimeout(() => {
-                if (!props.multiple) {
-                    showOptions.value = false;
-                    searchMode.value = false;
-                }
-            }, 100);
-            onBlur();
-        },
         onClickSelect = () => {
             if (props.multiple) {
                 if (!hadFirstFocus.value || !showOptions.value) {
@@ -979,12 +963,6 @@
                 }
             }
             emits('focus', $event);
-        },
-        onFocusSelectButton = ($event: FocusEvent) => {
-            if ($event) {
-                onFocus($event);
-                onClickSelectButton();
-            }
         },
         onBlur = ($event: Event) => {
             setTimeout(() => {
