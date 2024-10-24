@@ -9,6 +9,8 @@ export class Settings {
 
     static optionSlots: LktObject = {};
 
+    static defaultDateIcon: string = 'lkt-field-icon-calendar-empty';
+
     static undoText: string = '';
     static clearText: string = '';
     static i18nText: string = '';

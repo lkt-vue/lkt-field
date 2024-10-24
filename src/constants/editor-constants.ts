@@ -13,6 +13,6 @@ export const editorOptions = {
         /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
         ['fullScreen', 'showBlocks', 'codeView'],
         ['preview', 'print'],
-        ['fake-lkt-box-plugin', 'lkt-grid-columns-2']
+        // ['fake-lkt-box-plugin', 'lkt-grid-columns-2']
     ]
 };

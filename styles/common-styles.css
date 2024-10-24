@@ -70,9 +70,16 @@
     text-wrap: nowrap;
     white-space: nowrap;
 }
+.lkt-field.is-editable.is-html .lkt-field-main {
+    overflow: initial;
+}
 
 .lkt-field.is-select.is-multiple .lkt-field-main {
     flex-direction: column;
+}
+
+.lkt-field.is-boolean .lkt-field-main {
+    justify-content: flex-start;
 }
 
 .lkt-field-select .lkt-field-main {
@@ -120,7 +127,7 @@
     -webkit-text-fill-color: var(--lkt-field-color);
 }
 
-.lkt-field label {
+.lkt-field--label {
     display: block;
     font-weight: var(--lkt-field-font-weight-label);
     font-size: var(--lkt-field-font-size-label);
@@ -128,14 +135,10 @@
     margin: var(--lkt-field-margin-label);
 }
 
-.is-mandatory-field label:after {
+.is-mandatory-field .lkt-field--label:after {
     content: '*';
     display: inline-block;
     margin-left: 5px;
-}
-
-.lkt-field-switch label {
-    padding-left: 50px;
 }
 
 .lkt-field input[type="file"] {
@@ -199,4 +202,13 @@
     max-height: var(--lkt-field-large-field-max-height);
     padding: var(--lkt-field-padding-textarea);
     resize: vertical;
+}
+
+.lkt-field--icon {
+    align-self: center;
+    margin-right: 5px;
+}
+
+.lkt-field.is-editable .lkt-field--icon {
+    margin-left: 5px;
 }

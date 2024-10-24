@@ -1,5 +1,6 @@
 .lkt-field .sun-editor {
     border: none;
+    width: 100% !important;
 }
 
 .lkt-field .sun-editor-editable {
@@ -25,6 +26,7 @@
     bottom: calc(100% + var(--lkt-field-border-width) + var(--lkt-field--html-floating-gap));
     outline: var(--lkt-field-border-width) var(--lkt-field-border-style) var(--lkt-field-border-color);
     display: none;
+    z-index: 2;
 }
 
 .lkt-field .sun-editor .se-resizing-bar {

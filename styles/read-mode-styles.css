@@ -19,6 +19,10 @@
     line-height: var(--lkt-field-input-height);
 }
 
+.lkt-field.is-text .lkt-field--read-value {
+    text-wrap: initial;
+}
+
 .lkt-field.is-textarea .lkt-field--read-value,
 .lkt-field.is-html .lkt-field--read-value {
     text-wrap: wrap;

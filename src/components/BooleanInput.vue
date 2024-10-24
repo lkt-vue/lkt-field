@@ -26,9 +26,11 @@
 
     const onFocus = (event: FocusEvent) => {
             hasFocus.value = true;
+            emit('focus', event);
         },
         onBlur = (event: Event) => {
             hasFocus.value = false;
+            emit('blur', event);
         };
 
     watch(() => props.modelValue, v => value.value = v);
@@ -42,7 +44,7 @@
                 <i v-if="type === FieldType.Check && value" class="lkt-field-icon-ok"/>
             </div>
         </div>
-        <div class="lkt-field--label" v-html="label"/>
+        <div v-if="label" class="lkt-field--label" v-html="label"/>
         <input v-model="value"
                type="checkbox"
                ref="input"
@@ -56,7 +58,3 @@
                @blur="onBlur">
     </div>
 </template>
-
-<style scoped>
-
-</style>

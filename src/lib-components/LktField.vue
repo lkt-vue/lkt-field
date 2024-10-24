@@ -17,14 +17,6 @@
     import { ValidFieldType } from '../types/ValidFieldType';
     import { FieldType } from '../enums/FieldType';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-
-
-    import suneditor from 'suneditor';
-    import plugins from 'suneditor/src/plugins';
-
-    // How to import language files (default: en)
-    import * as lang from 'suneditor/src/lang';
-    import { editorOptions } from '../constants/editor-constants';
     import { ValidFieldValue } from '../types/ValidFieldValue';
     import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
@@ -45,6 +37,7 @@
     import { validateAmountOfNumbers } from '@/functions/validation-functions';
     import { MultipleDisplayType } from '@/enums/MultipleDisplayType';
     import BooleanInput from '@/components/BooleanInput.vue';
+    import HtmlInput from '@/components/HtmlInput.vue';
 
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
 
@@ -122,6 +115,7 @@
         optionsLabelFormatter?: Function,
         optionsResource?: string,
         optionsResourceData?: LktObject,
+        icon?: string | Function,
 
     }>(), {
         modelValue: '',
@@ -185,6 +179,7 @@
         optionsIcon: '',
         optionsResource: '',
         optionsResourceData: () => ({}),
+        icon: '',
     });
 
     // Constant data
@@ -197,12 +192,17 @@
 
     let baseValidationStatus: string[] = [];
 
+    let fieldIcon = props.icon;
+
     let _val = props.modelValue;
     if (Type.value === 'select' && props.multiple) {
         if (!_val || !Array.isArray(_val)) _val = [];
 
     } else if (BooleanFieldTypes.includes(Type.value)) {
         if (typeof _val !== 'boolean') _val = false;
+
+    } else if (Type.value === FieldType.Date && !props.icon) {
+        fieldIcon = Settings.defaultDateIcon;
     }
 
     // Reactive data
@@ -214,8 +214,6 @@
         focusing = ref(false),
         hadFirstBlur = ref(false),
         hadFirstFocus = ref(false),
-        editor = ref(null),
-        editorTimeout = ref(undefined),
         localValidationStatus = ref(baseValidationStatus),
         editable = ref(!props.readMode),
         originalFileName = ref(props.fileName),
@@ -811,8 +809,8 @@
     const
         doUndo = () => {
             if (Type.value === FieldType.Html) {
-                if (editor.value) {
-                    editor.value.setContents(originalEditableValue.value);
+                if (inputElement.value) {
+                    inputElement.value.setValue(originalEditableValue.value);
                 }
                 return;
             } else if (Type.value === FieldType.Date) {
@@ -827,8 +825,8 @@
         },
         doClear = () => {
             if (Type.value === FieldType.Html) {
-                if (editor.value) {
-                    editor.value.setContents('');
+                if (inputElement.value) {
+                    inputElement.value.setValue('');
                 }
                 return;
             } else if (Type.value === FieldType.Date) {
@@ -930,6 +928,8 @@
             return onFocus();
         },
         onClickOption = (option: Option) => {
+            if (option.disabled) return;
+
             if (props.multiple) {
                 //@ts-ignore
                 let k = getInValueOptionIndex(option, editableValue.value);
@@ -1008,6 +1008,14 @@
                 doLocalValidation();
                 emits('blur', $event);
             }, 100);
+        },
+        onFocusBooleanInput = (event: FocusEvent) => {
+            hadFirstFocus.value = true;
+            focusing.value = true;
+        },
+        onBlurBooleanInput = (event: Event) => {
+            hadFirstBlur.value = true;
+            focusing.value = false;
         },
         onChange = ($event: any) => {
             if (computedIsFile.value || computedIsImage.value) {
@@ -1113,50 +1121,11 @@
             if (props.autoloadOptionsResource) {
                 fetchOptions('', false);
             }
+
         } else if (Type.value === FieldType.Date) {
             pickedDate.value = new Date(value.value);
             setVisibleDateValue();
 
-        } else if (Type.value === FieldType.Html && editable.value) {
-
-            const updateValueFromEditor = (content) => {
-                if (editorTimeout.value) clearTimeout(editorTimeout.value);
-
-                editorTimeout.value = setTimeout(() => {
-                    let strippedContent = stripTags(content);
-                    if (strippedContent === '') editableValue.value = '';
-                    else editableValue.value = content;
-                }, 100);
-            };
-
-            let options = {
-                lang: lang[computedLang.value] ? lang[computedLang.value] : lang.en,
-                plugins: {
-                    ...plugins,
-                },
-                ...editorOptions,
-            };
-
-            editor.value = suneditor.create(Identifier, options);
-
-            editor.value.onChange = (content) => {
-                updateValueFromEditor(content);
-
-                if (props.disabled) editor.value.disabled();
-                else editor.value.enabled();
-            };
-
-            editor.value.onKeyUp = (event, core) => {
-                updateValueFromEditor(core.getContents());
-            };
-
-            editor.value.onBlur = () => {
-                focusing.value = false;
-            };
-
-            editor.value.onClick = () => {
-                focusing.value = true;
-            };
         }
     });
 
@@ -1166,7 +1135,7 @@
         }),
         computedMainAttrs = computed(() => {
             if (BooleanFieldTypes.includes(Type.value)) return {
-                'for': Identifier
+                'for': Identifier,
             };
             return {};
         });
@@ -1197,151 +1166,100 @@
                              :type="Type" />
             </div>
 
+            <div v-if="fieldIcon" class="lkt-field--icon">
+                <i :class="fieldIcon"/>
+            </div>
+
             <component :is="computedMainComponent" v-bind="computedMainAttrs" class="lkt-field-main" v-if="editable">
-                <template v-if="editable">
-                    <template v-if="slots['edit']">
-                        <div v-on:click="onClick">
-                            <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
-                        </div>
-                    </template>
-                    <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
-                        <component v-bind:is="customEditSlot"
-                                   v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
+                <template v-if="slots['edit']">
+                    <div v-on:click="onClick">
+                        <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"></slot>
                     </div>
+                </template>
+                <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
+                    <component v-bind:is="customEditSlot"
+                               v-bind:value="value" :title="readModeTitle" :data="slotData"></component>
+                </div>
 
-                    <template v-else-if="BooleanFieldTypes.includes(Type)">
-                        <boolean-input
-                            v-model="editableValue"
-                            :id="Identifier"
-                            :name="name"
-                            :type="Type"
-                            :label="computedLabel"
-                            :editable="editable"
-                            :focusing="focusing"
-                            :disabled="disabled"
-                            :readonly="readonly" />
-                    </template>
+                <template v-else-if="BooleanFieldTypes.includes(Type)">
+                    <boolean-input
+                        v-model="editableValue"
+                        :id="Identifier"
+                        :name="name"
+                        :type="Type"
+                        :label="computedLabel"
+                        :editable="editable"
+                        :focusing="focusing"
+                        :disabled="disabled"
+                        :readonly="readonly"
+                        @focus="onFocusBooleanInput"
+                        @blur="onBlurBooleanInput"
+                    />
+                </template>
 
-                    <template v-else-if="Type === FieldType.Color">
-                        <color-input v-model="editableValue" />
-                    </template>
+                <template v-else-if="Type === FieldType.Color">
+                    <color-input v-model="editableValue" />
+                </template>
 
-                    <template v-else-if="computedIsFile || computedIsImage">
-                        <input type="file"
-                               v-bind:ref="(el:any) => inputElement = el"
-                               v-bind:name="name"
-                               v-bind:id="Identifier"
-                               v-bind:disabled="disabled || !editable"
-                               v-bind:readonly="readonly || !editable"
-                               v-bind:placeholder="placeholder"
-                               v-bind:accept="computedAccept"
-                               v-on:change="onChange"
+                <template v-else-if="computedIsFile || computedIsImage">
+                    <input type="file"
+                           v-bind:ref="(el:any) => inputElement = el"
+                           v-bind:name="name"
+                           v-bind:id="Identifier"
+                           v-bind:disabled="disabled || !editable"
+                           v-bind:readonly="readonly || !editable"
+                           v-bind:placeholder="placeholder"
+                           v-bind:accept="computedAccept"
+                           v-on:change="onChange"
+                    >
+
+                    <lkt-button
+                        class="lkt-field--toggle-button"
+                        :click-ref="inputElement"
+                        :text="computedIsFile ? visibleFileName : ''"
+                    >
+                        <lkt-image
+                            v-if="computedIsImage"
+                            :src="value"
+                            class="lkt-field--image-cover"
+                        />
+                        <lkt-image
+                            v-if="computedIsImage"
+                            :src="value"
+                            class="lkt-field--image-main"
+                        />
+                    </lkt-button>
+                </template>
+
+                <template v-else-if="computedIsDate">
+                    <lkt-button
+                        class="lkt-field--toggle-button"
+                        :text="visibleDateValue"
+                        tooltip
+                        tooltip-class="lkt-field--date--tooltip"
+                        tooltip-location-y="bottom"
+                        tooltip-location-x="left-corner"
+                    >
+                        <template #tooltip="{doClose}">
+                            <lkt-calendar v-model="pickedDate" />
+                        </template>
+                    </lkt-button>
+                </template>
+
+                <template v-else-if="Type === FieldType.Select">
+
+                    <div v-if="searchable && (multiple || searchMode)" class="lkt-field--searchable-box">
+
+                        <lkt-tag
+                            v-if="multiple"
+                            :icon="optionsIcon"
+                            :text="pickedOptions.length"
+                        />
+
+                        <lkt-tag
+                            v-else-if="pickedOptions.length > 0"
                         >
-
-                        <lkt-button
-                            class="lkt-field--toggle-button"
-                            :click-ref="inputElement"
-                            :text="computedIsFile ? visibleFileName : ''"
-                        >
-                            <lkt-image
-                                v-if="computedIsImage"
-                                :src="value"
-                                class="lkt-field--image-cover"
-                            />
-                            <lkt-image
-                                v-if="computedIsImage"
-                                :src="value"
-                                class="lkt-field--image-main"
-                            />
-                        </lkt-button>
-                    </template>
-
-                    <template v-else-if="computedIsDate">
-                        <lkt-button
-                            class="lkt-field--toggle-button"
-                            :text="visibleDateValue"
-                            tooltip
-                            tooltip-class="lkt-field--date--tooltip"
-                            tooltip-location-y="bottom"
-                            tooltip-location-x="left-corner"
-                        >
-                            <template #tooltip="{doClose}">
-                                <lkt-calendar v-model="pickedDate" />
-                            </template>
-                        </lkt-button>
-                    </template>
-
-                    <template v-else-if="Type === FieldType.Select">
-
-                        <div v-if="searchable && (multiple || searchMode)" class="lkt-field--searchable-box">
-
-                            <lkt-tag
-                                v-if="multiple"
-                                :icon="optionsIcon"
-                                :text="pickedOptions.length"
-                            />
-
-                            <lkt-tag
-                                v-else-if="pickedOptions.length > 0"
-                            >
-                                <dropdown-option
-                                    :option="pickedOptions[0]"
-                                    :option-slot="optionSlot"
-                                    :icon="optionsIcon"
-                                    :modal="optionsModal"
-                                    :modal-data="optionsModalData"
-                                    :download="optionsDownload"
-                                    :label-formatter="optionsLabelFormatter"
-                                    :editable="editable"
-                                />
-                            </lkt-tag>
-
-                            <input
-                                v-model="searchString"
-                                ref="searchField"
-                                :value="searchString"
-                                :placeholder="computedSearchPlaceholder"
-                                type="text"
-                                tabindex="-1"
-                                autocomplete="off"
-                                @keyup="onSearchFieldKeyUp"
-                                @blur="onSearchFieldBlur"
-                                @click="onClickSelect"
-                            />
-                        </div>
-
-                        <lkt-button
-                            ref="selectButton"
-                            v-show="multiple || (!searchable || !searchMode)"
-                            class="lkt-field--toggle-button lkt-field--select-button"
-                            v-model:open-tooltip="showOptions"
-                            @keyup="onKeyUp"
-                            @blur="onBlur"
-                            @focus="onFocusSelectButton"
-                            @click="onClickSelectButton"
-                        >
-                            <template v-if="multiple && pickedOptions.length > 0">
-                                <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
-                                    {{ pickedOptions.length }}
-                                </div>
-
-                                <ul v-else class="lkt-field-select-read">
-                                    <li v-for="(option, i) in pickedOptions" :title="option.label">
-                                        <dropdown-option
-                                            :option="pickedOptions[i]"
-                                            :option-slot="optionSlot"
-                                            :icon="optionsIcon"
-                                            :modal="optionsModal"
-                                            :modal-data="optionsModalData"
-                                            :download="optionsDownload"
-                                            :label-formatter="optionsLabelFormatter"
-                                            :editable="editable"
-                                        />
-                                    </li>
-                                </ul>
-                            </template>
                             <dropdown-option
-                                v-else-if="!multiple && pickedOptions.length > 0"
                                 :option="pickedOptions[0]"
                                 :option-slot="optionSlot"
                                 :icon="optionsIcon"
@@ -1351,65 +1269,123 @@
                                 :label-formatter="optionsLabelFormatter"
                                 :editable="editable"
                             />
-                        </lkt-button>
-                    </template>
+                        </lkt-tag>
 
-                    <input
-                        v-else-if="computedInputElement === 'input'"
-                        v-model="editableValue"
-                        :ref="(el:any) => inputElement = el"
-                        :value="editableValue"
-                        :type="computedInputType"
-                        :name="name"
-                        :id="Identifier"
-                        :disabled="disabled"
-                        :readonly="readonly"
-                        :placeholder="computedPlaceholder"
-                        :tabindex="tabindex"
-                        :autocomplete="autocompleteText"
-                        :min="MinimumValue"
-                        :max="MaximumValue"
-                        :step="step"
-                        v-on:keyup="onKeyUp"
-                        v-on:keydown="onKeyDown"
-                        v-on:focus="onFocus"
-                        v-on:blur="onBlur"
-                        v-on:click="onClick"
-                        v-on:change="onChange"
-                    />
-                    <textarea
-                        v-else-if="computedInputElement === 'textarea'"
-                        v-model="editableValue"
-                        :ref="(el:any) => inputElement = el"
-                        :value="editableValue"
-                        :name="name"
-                        :id="Identifier"
-                        :disabled="disabled"
-                        :readonly="readonly"
-                        :placeholder="computedPlaceholder"
-                        :tabindex="tabindex"
-                        :autocomplete="autocompleteText"
-                        v-on:keyup="onKeyUp"
-                        v-on:keydown="onKeyDown"
-                        v-on:focus="onFocus"
-                        v-on:blur="onBlur"
-                        v-on:click="onClick"
-                        v-on:change="onChange"
-                    />
-                    <div
-                        v-else-if="computedInputElement === 'div'"
-                        v-html="editableValue"
-                        :ref="(el:any) => inputElement = el"
-                        :id="Identifier"
-                        :tabindex="tabindex"
-                        v-on:keyup="onKeyUp"
-                        v-on:keydown="onKeyDown"
-                        v-on:focus="onFocus"
-                        v-on:blur="onBlur"
-                        v-on:click="onClick"
-                        v-on:change="onChange"
-                    />
+                        <input
+                            v-model="searchString"
+                            ref="searchField"
+                            :value="searchString"
+                            :placeholder="computedSearchPlaceholder"
+                            type="text"
+                            tabindex="-1"
+                            autocomplete="off"
+                            @keyup="onSearchFieldKeyUp"
+                            @blur="onSearchFieldBlur"
+                            @click="onClickSelect"
+                        />
+                    </div>
+
+                    <lkt-button
+                        ref="selectButton"
+                        v-show="multiple || (!searchable || !searchMode)"
+                        class="lkt-field--toggle-button lkt-field--select-button"
+                        v-model:open-tooltip="showOptions"
+                        @keyup="onKeyUp"
+                        @blur="onBlur"
+                        @focus="onFocusSelectButton"
+                        @click="onClickSelectButton"
+                    >
+                        <template v-if="multiple && pickedOptions.length > 0">
+                            <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
+                                {{ pickedOptions.length }}
+                            </div>
+
+                            <ul v-else class="lkt-field-select-read">
+                                <li v-for="(option, i) in pickedOptions" :title="option.label">
+                                    <dropdown-option
+                                        :option="pickedOptions[i]"
+                                        :option-slot="optionSlot"
+                                        :icon="optionsIcon"
+                                        :modal="optionsModal"
+                                        :modal-data="optionsModalData"
+                                        :download="optionsDownload"
+                                        :label-formatter="optionsLabelFormatter"
+                                        :editable="editable"
+                                    />
+                                </li>
+                            </ul>
+                        </template>
+                        <dropdown-option
+                            v-else-if="!multiple && pickedOptions.length > 0"
+                            :option="pickedOptions[0]"
+                            :option-slot="optionSlot"
+                            :icon="optionsIcon"
+                            :modal="optionsModal"
+                            :modal-data="optionsModalData"
+                            :download="optionsDownload"
+                            :label-formatter="optionsLabelFormatter"
+                            :editable="editable"
+                        />
+                    </lkt-button>
                 </template>
+
+                <input
+                    v-else-if="computedInputElement === 'input'"
+                    v-model="editableValue"
+                    :ref="(el:any) => inputElement = el"
+                    :value="editableValue"
+                    :type="computedInputType"
+                    :name="name"
+                    :id="Identifier"
+                    :disabled="disabled"
+                    :readonly="readonly"
+                    :placeholder="computedPlaceholder"
+                    :tabindex="tabindex"
+                    :autocomplete="autocompleteText"
+                    :min="MinimumValue"
+                    :max="MaximumValue"
+                    :step="step"
+                    v-on:keyup="onKeyUp"
+                    v-on:keydown="onKeyDown"
+                    v-on:focus="onFocus"
+                    v-on:blur="onBlur"
+                    v-on:click="onClick"
+                    v-on:change="onChange"
+                />
+                <textarea
+                    v-else-if="computedInputElement === 'textarea'"
+                    v-model="editableValue"
+                    :ref="(el:any) => inputElement = el"
+                    :value="editableValue"
+                    :name="name"
+                    :id="Identifier"
+                    :disabled="disabled"
+                    :readonly="readonly"
+                    :placeholder="computedPlaceholder"
+                    :tabindex="tabindex"
+                    :autocomplete="autocompleteText"
+                    v-on:keyup="onKeyUp"
+                    v-on:keydown="onKeyDown"
+                    v-on:focus="onFocus"
+                    v-on:blur="onBlur"
+                    v-on:click="onClick"
+                    v-on:change="onChange"
+                />
+                <html-input
+                    ref="inputElement"
+                    v-else-if="Type === FieldType.Html"
+                    v-model="editableValue"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :name="name"
+                    :lang="computedLang"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :disabled="disabled"
+                    :readonly="readonly"
+                    @focus="onFocus"
+                    @blur="onBlur"
+                />
             </component>
 
             <div v-if="!editable" class="lkt-field--read" v-on:click="onClick">
@@ -1471,7 +1447,7 @@
                         <lkt-tag
                             :icon="editableValue ? 'lkt-field-icon-ok' : 'lkt-field-icon-cancel'"
                             :featured-text="computedLabel"
-                            :title="readModeTitle"/>
+                            :title="readModeTitle" />
                     </div>
                     <div
                         v-else-if="Type === FieldType.Date"
@@ -1548,6 +1524,7 @@
                 </lkt-button>
 
                 <password-button
+                    v-if="Type === FieldType.Password"
                     v-show="computedShowPasswordRevealInNav"
                     v-model="showPasswordIcon"
                 />
@@ -1559,7 +1536,7 @@
                 />
 
                 <edition-button
-                    v-show="computedShowSwitchEditionInNav"
+                    v-if="computedShowSwitchEditionInNav"
                     v-model="editable"
                     @click="onClickSwitchEdition"
                 />
@@ -1613,6 +1590,7 @@
                         :class="{
                             'is-active': optionIsActive(option, value, multiple),
                             'is-focused': i === focusedOptionIndex,
+                            'is-disabled': option.disabled,
                         }"
                         :data-index="i"
                         @click="() => onClickOption(option)">

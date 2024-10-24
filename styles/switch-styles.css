@@ -1,12 +1,14 @@
 /** Common boolean props */
+.lkt-field.is-boolean {
+    align-self: flex-end;
+}
+
 .lkt-field.is-boolean input {
     opacity: 0;
-    visibility: hidden;
     width: 0;
     height: 0;
     overflow: hidden;
     position: absolute;
-    bottom: -100vh;
 }
 
 .boolean-input {
@@ -20,6 +22,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: 0;
     background-color: var(--lkt-field-bg-switch-off);
     border-width: var(--lkt-field-border-width);
     border-style: var(--lkt-field-border-style);
@@ -29,6 +32,12 @@
 .lkt-field.is-boolean .lkt-field-content {
     border: none;
     box-shadow: none;
+}
+.lkt-button > .lkt-field.is-switch {
+    width: auto;
+}
+.boolean-input .lkt-field--label {
+    margin: 0;
 }
 
 /** Switch styles */
@@ -85,50 +94,4 @@
 
 .lkt-field.is-check.is-checked .boolean-input-label {
     background: var(--lkt-field-bg-switch-dot-on);
-}
-
-
-
-
-
-/* Stamp */
-.lkt-field.is-switch.with-stamp,
-.lkt-field.is-switch.with-value-slot {
-    height: auto;
-}
-
-.lkt-field.is-switch-stamp {
-    color: #555;
-    font-weight: 700;
-    border: 0.25rem solid #555;
-    display: inline-block;
-    padding: 0.25rem 1rem;
-    text-transform: uppercase;
-    border-radius: 1rem;
-    mix-blend-mode: multiply;
-    line-height: 1.5;
-}
-
-.lkt-field.is-switch-stamp.is-danger {
-    color: var(--danger-color);
-    border: 5px double var(--danger-color);
-    -webkit-mask-position: 2rem 3rem;
-}
-
-.lkt-field.is-switch-stamp.is-success {
-    color: var(--success-color);
-    border: 5px solid var(--success-color);
-    border-radius: 0;
-}
-
-.lkt-field.is-switch-stamp.is-warning {
-    color: var(--warning-color);
-    border: 5px solid var(--warning-color);
-    border-radius: 0;
-}
-
-.lkt-field.is-switch-stamp.is-disabled {
-    color: #C4C4C4;
-    border: 10px double #C4C4C4;
-    border-radius: 0;
 }
