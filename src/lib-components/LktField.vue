@@ -725,7 +725,6 @@
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
-            console.log('fetchOptions: ', query);
             if (!editable.value && (!props.autoloadOptionsResource && !optionsAutoLoaded.value)) return;
             if ([
                 FieldType.Tel,
