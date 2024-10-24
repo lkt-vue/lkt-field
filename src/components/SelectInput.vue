@@ -59,25 +59,25 @@
             hasFocus.value = queryHasFocus.value || buttonHasFocus.value;
             visibleOptions.value = hasFocus.value;
         });
-    }
+    };
 
     watch(queryHasFocus, v => {
         if (v) buttonHasFocus.value = false;
         checkGlobalFocus();
-    })
+    });
 
     watch(buttonHasFocus, v => {
         if (v) queryHasFocus.value = false;
         checkGlobalFocus();
-    })
+    });
 
     watch(hasFocus, v => {
-        if (v) emit('focus')
-        else emit('blur')
-    })
+        if (v) emit('focus');
+        else emit('blur');
+    });
 
     let queryBlurTimeout = undefined,
-            buttonBlurTimeout = undefined;
+        buttonBlurTimeout = undefined;
 
     const onBlurQueryInput = (event: Event) => {
             queryBlurTimeout = setTimeout(() => {
@@ -117,8 +117,8 @@
             clearTimeout(queryBlurTimeout);
             clearTimeout(buttonBlurTimeout);
             if (queryField.value) queryField.value.focus();
-        }
-    })
+        },
+    });
 
 </script>
 

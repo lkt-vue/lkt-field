@@ -8,10 +8,10 @@
         option: Option,
         optionSlot?: string,
         editable?: boolean
-        icon?: string|Function
-        modal?: string|Function
-        modalData?: LktObject|Function
-        download?: string|Function
+        icon?: string | Function
+        modal?: string | Function
+        modalData?: LktObject | Function
+        download?: string | Function
         labelFormatter?: Function
     }>(), {
         option: () => ({}),
@@ -47,7 +47,7 @@
             if (optionSlot.value) return optionSlot.value;
             if (!props.editable && props.modal !== '') return 'lkt-button';
             if (!props.editable && props.download !== '') return 'lkt-anchor';
-            return 'div'
+            return 'div';
         }),
         computedContainerAttrs = computed(() => {
             if (computedContainerComponent.value === 'lkt-button') {
@@ -55,7 +55,7 @@
                 if (typeof props.modal === 'function') {
                     modal = () => {
                         return props.modal(props.option);
-                    }
+                    };
                 }
 
                 return {
@@ -71,7 +71,7 @@
                 if (typeof props.download === 'function') {
                     href = () => {
                         return props.download(props.option);
-                    }
+                    };
 
                 } else if (props.download.startsWith('prop:')) {
                     href = props.download.substring(5);
@@ -83,7 +83,7 @@
                 return {
                     href,
                     target: isDownload ? '_blank' : '',
-                    download: isDownload
+                    download: isDownload,
                 };
             }
 
@@ -98,7 +98,8 @@
         class="lkt-field--dropdown-option"
         :class="computedClass"
         :title="option.label">
-        <div v-if="computedIcon && computedContainerComponent !== 'lkt-button'" class="lkt-field--dropdown-option--icon-container">
+        <div v-if="computedIcon && computedContainerComponent !== 'lkt-button'"
+             class="lkt-field--dropdown-option--icon-container">
             <i :class="computedIcon"></i>
         </div>
         <div class="lkt-field--dropdown-option--label-container">

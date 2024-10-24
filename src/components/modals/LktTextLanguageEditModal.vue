@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import {computed} from "vue";
-import LktFieldText from "../../lib-components/LktField.vue";
-import {LktObject} from "lkt-ts-interfaces";
-import {availableLanguages, currentLanguage} from "lkt-i18n";
-import {ValidFieldType} from "../../types/ValidFieldType";
+    import { computed } from 'vue';
+    import LktFieldText from '../../lib-components/LktField.vue';
+    import { LktObject } from 'lkt-ts-interfaces';
+    import { availableLanguages, currentLanguage } from 'lkt-i18n';
+    import { ValidFieldType } from '../../types/ValidFieldType';
 
-const props = withDefaults(defineProps<{
-    modalName: string
-    modalKey: string
-    zIndex: number
-    type: ValidFieldType
-    translations: LktObject
-}>(), {
-    modalName: '',
-    modalKey: '_',
-    zIndex: 500,
-    translations: () => ({}),
-});
+    const props = withDefaults(defineProps<{
+        modalName: string
+        modalKey: string
+        zIndex: number
+        type: ValidFieldType
+        translations: LktObject
+    }>(), {
+        modalName: '',
+        modalKey: '_',
+        zIndex: 500,
+        translations: () => ({}),
+    });
 
-const computedAvailableLanguages = computed(() => {
-    return availableLanguages.value.filter(z => z !== currentLanguage.value);
-})
+    const computedAvailableLanguages = computed(() => {
+        return availableLanguages.value.filter(z => z !== currentLanguage.value);
+    });
 
 </script>
 

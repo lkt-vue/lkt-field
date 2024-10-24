@@ -1124,12 +1124,12 @@
             <component :is="computedMainComponent" v-bind="computedMainAttrs" class="lkt-field-main" v-if="editable">
                 <template v-if="slots['edit']">
                     <div v-on:click="onClick">
-                        <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData"/>
+                        <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData" />
                     </div>
                 </template>
                 <div v-else-if="hasCustomEditSlot" v-on:click="onClick">
                     <component v-bind:is="customEditSlot"
-                               v-bind:value="value" :title="readModeTitle" :data="slotData"/>
+                               v-bind:value="value" :title="readModeTitle" :data="slotData" />
                 </div>
 
                 <template v-else-if="BooleanFieldTypes.includes(Type)">

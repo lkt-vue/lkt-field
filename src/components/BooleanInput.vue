@@ -41,10 +41,10 @@
     <div class="boolean-input">
         <div class="boolean-input-label">
             <div class="boolean-input--check-on">
-                <i v-if="type === FieldType.Check && value" class="lkt-field-icon-ok"/>
+                <i v-if="type === FieldType.Check && value" class="lkt-field-icon-ok" />
             </div>
         </div>
-        <div v-if="label" class="lkt-field--label" v-html="label"/>
+        <div v-if="label" class="lkt-field--label" v-html="label" />
         <input v-model="value"
                type="checkbox"
                ref="input"

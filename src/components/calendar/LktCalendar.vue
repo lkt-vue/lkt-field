@@ -1,89 +1,88 @@
 <script setup lang="ts">
 
-import {computed, nextTick, ref, watch} from "vue";
-import {date} from "lkt-date-tools";
+    import { computed, ref, watch } from 'vue';
+    import { date } from 'lkt-date-tools';
 
-const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits(['update:modelValue']);
 
-const props = withDefaults(defineProps<{
-    modelValue: Date|undefined
-}>(), {
-});
+    const props = withDefaults(defineProps<{
+        modelValue: Date | undefined
+    }>(), {});
 
-const pickedDate = ref(props.modelValue);
-watch(() => props.modelValue, v => pickedDate.value = v, {deep: true});
-watch(pickedDate, v => emit('update:modelValue', v));
+    const pickedDate = ref(props.modelValue);
+    watch(() => props.modelValue, v => pickedDate.value = v, { deep: true });
+    watch(pickedDate, v => emit('update:modelValue', v));
 
-const today = ref(new Date());
-const visibleDate = ref(new Date());
-if (!(Object.prototype.toString.call(pickedDate.value) === "[object Date]" && isNaN(pickedDate.value))) {
-  visibleDate.value = new Date(pickedDate.value.getFullYear(), pickedDate.value.getMonth(), pickedDate.value.getDate());
-}
-const visibleYear = ref(visibleDate.value.getFullYear());
-const visibleMonth = ref(visibleDate.value.getMonth());
-const refreshing = ref(false);
-const visibleText = ref(date('Y-m', visibleDate.value));
-
-const computedNumberOfDays = computed(() => {
-        const lastDay = new Date(visibleYear.value, visibleMonth.value + 1, 0);
-        return lastDay.getDate();
-    }),
-    computedEmptySpacesAtBeginning = computed(() => {
-        const firstDay = new Date(visibleYear.value, visibleMonth.value, 1);
-        return firstDay.getDay();
-    })
-
-const onClickNext = () => {
-        if (visibleMonth.value > 11) {
-            visibleMonth.value = 0;
-            visibleYear.value += 1;
-        }
-
-        visibleMonth.value += 1;
-        visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
-        visibleDate.value = new Date(visibleDate.value);
-        visibleText.value = date('Y-m', visibleDate.value);
-        doRefresh();
-    },
-    onClickPrev = () => {
-        if (visibleMonth.value < 0) {
-            visibleMonth.value = 11;
-            visibleYear.value -= 1;
-        }
-
-        visibleMonth.value -= 1;
-        visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
-        visibleDate.value = new Date(visibleDate.value);
-        visibleText.value = date('Y-m', visibleDate.value);
-        doRefresh();
-    },
-    dayIsPicked = (day: number) => {
-        if (typeof pickedDate.value === 'undefined') return false;
-        if (pickedDate.value.getFullYear() !== visibleYear.value) return false;
-        if (pickedDate.value.getMonth() !== visibleMonth.value) return false;
-        return pickedDate.value.getDate() === day;
-    },
-    dayIsToday = (day: number) => {
-        if (typeof pickedDate.value === 'undefined') return false;
-        if (today.value.getFullYear() !== visibleYear.value) return false;
-        if (today.value.getMonth() !== visibleMonth.value) return false;
-        return today.value.getDate() === day;
-    },
-    getDayClasses = (day: number) => {
-        return {
-            'is-picked': dayIsPicked(day),
-            'is-today' : dayIsToday(day),
-        }
-    },
-    onClickDay = (day: number) => {
-        pickedDate.value.setFullYear(visibleYear.value, visibleMonth.value, day);
-        pickedDate.value = new Date(pickedDate.value);
-        doRefresh();
-    },
-    doRefresh = () => {
-        // refreshing.value = true;
-        // nextTick(() => refreshing.value = false);
+    const today = ref(new Date());
+    const visibleDate = ref(new Date());
+    if (!(Object.prototype.toString.call(pickedDate.value) === '[object Date]' && isNaN(pickedDate.value))) {
+        visibleDate.value = new Date(pickedDate.value.getFullYear(), pickedDate.value.getMonth(), pickedDate.value.getDate());
     }
+    const visibleYear = ref(visibleDate.value.getFullYear());
+    const visibleMonth = ref(visibleDate.value.getMonth());
+    const refreshing = ref(false);
+    const visibleText = ref(date('Y-m', visibleDate.value));
+
+    const computedNumberOfDays = computed(() => {
+            const lastDay = new Date(visibleYear.value, visibleMonth.value + 1, 0);
+            return lastDay.getDate();
+        }),
+        computedEmptySpacesAtBeginning = computed(() => {
+            const firstDay = new Date(visibleYear.value, visibleMonth.value, 1);
+            return firstDay.getDay();
+        });
+
+    const onClickNext = () => {
+            if (visibleMonth.value > 11) {
+                visibleMonth.value = 0;
+                visibleYear.value += 1;
+            }
+
+            visibleMonth.value += 1;
+            visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
+            visibleDate.value = new Date(visibleDate.value);
+            visibleText.value = date('Y-m', visibleDate.value);
+            doRefresh();
+        },
+        onClickPrev = () => {
+            if (visibleMonth.value < 0) {
+                visibleMonth.value = 11;
+                visibleYear.value -= 1;
+            }
+
+            visibleMonth.value -= 1;
+            visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
+            visibleDate.value = new Date(visibleDate.value);
+            visibleText.value = date('Y-m', visibleDate.value);
+            doRefresh();
+        },
+        dayIsPicked = (day: number) => {
+            if (typeof pickedDate.value === 'undefined') return false;
+            if (pickedDate.value.getFullYear() !== visibleYear.value) return false;
+            if (pickedDate.value.getMonth() !== visibleMonth.value) return false;
+            return pickedDate.value.getDate() === day;
+        },
+        dayIsToday = (day: number) => {
+            if (typeof pickedDate.value === 'undefined') return false;
+            if (today.value.getFullYear() !== visibleYear.value) return false;
+            if (today.value.getMonth() !== visibleMonth.value) return false;
+            return today.value.getDate() === day;
+        },
+        getDayClasses = (day: number) => {
+            return {
+                'is-picked': dayIsPicked(day),
+                'is-today': dayIsToday(day),
+            };
+        },
+        onClickDay = (day: number) => {
+            pickedDate.value.setFullYear(visibleYear.value, visibleMonth.value, day);
+            pickedDate.value = new Date(pickedDate.value);
+            doRefresh();
+        },
+        doRefresh = () => {
+            // refreshing.value = true;
+            // nextTick(() => refreshing.value = false);
+        };
 
 </script>
 
