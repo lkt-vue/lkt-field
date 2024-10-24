@@ -726,6 +726,7 @@
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
+            console.log('fetchOptions: ', query);
             if (!editable.value && (!props.autoloadOptionsResource && !optionsAutoLoaded.value)) return;
             if ([
                 FieldType.Tel,
@@ -892,22 +893,10 @@
             }
         },
         turnOnSelectSearchMode = () => {
-            // focusing.value = true;
-            // showOptions.value = true;
-            // searchMode.value = true;
-
-            // setTimeout(() => {
-            //     focusing.value = true;
-            //     showOptions.value = true;
-            //     searchMode.value = true;
-            // }, 100);
-
-            // nextTick(() => {
-                if (inputElement.value) {
-                    //@ts-ignore
-                    inputElement.value.keepFocused();
-                }
-            // });
+            if (inputElement.value) {
+                //@ts-ignore
+                inputElement.value.keepFocused();
+            }
         },
         onClickSelectButton = () => {
             if (!props.searchable) return onClickSelect();
@@ -1033,10 +1022,10 @@
             navigateOptions(event);
         },
         onSearchSelectInput = (query: string) => {
+            searchString.value = query;
             fetchOptions(query);
         },
         onFocusSelectInput = () => {
-            console.log('onFocusSelectInput')
             hadFirstFocus.value = true;
             focusing.value = true;
 
@@ -1057,11 +1046,9 @@
             emits('focus');
         },
         onBlurSelectInput = () => {
-            console.log('onBlurSelectInput')
             hadFirstBlur.value = true;
             focusing.value = false;
-            // if (!props.searchable) return onClickSelect();
-            // turnOnSelectSearchMode();
+            emits('blur');
         },
         onChange = ($event: any) => {
             if (computedIsFile.value || computedIsImage.value) {
@@ -1213,7 +1200,7 @@
             </div>
 
             <div v-if="fieldIcon" class="lkt-field--icon">
-                <i :class="fieldIcon"/>
+                <i :class="fieldIcon" />
             </div>
 
             <component :is="computedMainComponent" v-bind="computedMainAttrs" class="lkt-field-main" v-if="editable">
@@ -1292,114 +1279,30 @@
                     </lkt-button>
                 </template>
 
-                <template v-else-if="Type === FieldType.Select">
-                    <select-input
-                        ref="inputElement"
-                        v-model="editableValue"
-                        v-model:show-options="showOptions"
-                        :search-string="searchString"
-                        :searchable="searchable"
-                        :search-mode="searchMode"
-                        :multiple="multiple"
-                        :options-icon="optionsIcon"
-                        :option-slot="optionSlot"
-                        :options-modal="optionsModal"
-                        :options-download="optionsDownload"
-                        :options-label-formatter="optionsLabelFormatter"
-                        :options-modal-data="optionsModalData"
-                        :picked-options="pickedOptions"
-                        :editable="editable"
-                        :focusing="focusing"
-                        :search-placeholder="computedSearchPlaceholder"
-                        :multiple-display-edition="multipleDisplayEdition"
-                        @focus="onFocusSelectInput"
-                        @blur="onBlurSelectInput"
-                        @navigate="onNavigateSelectInput"
-                        @search="onSearchSelectInput"
-                    />
-                </template>
-                <template v-else-if="Type === FieldType.Select">
-
-                    <div v-if="searchable && (multiple || searchMode)" class="lkt-field--searchable-box">
-
-                        <lkt-tag
-                            v-if="multiple"
-                            :icon="optionsIcon"
-                            :text="pickedOptions.length"
-                        />
-
-                        <lkt-tag
-                            v-else-if="pickedOptions.length > 0"
-                        >
-                            <dropdown-option
-                                :option="pickedOptions[0]"
-                                :option-slot="optionSlot"
-                                :icon="optionsIcon"
-                                :modal="optionsModal"
-                                :modal-data="optionsModalData"
-                                :download="optionsDownload"
-                                :label-formatter="optionsLabelFormatter"
-                                :editable="editable"
-                            />
-                        </lkt-tag>
-
-                        <input
-                            v-model="searchString"
-                            ref="searchField"
-                            :value="searchString"
-                            :placeholder="computedSearchPlaceholder"
-                            type="text"
-                            tabindex="-1"
-                            autocomplete="off"
-                            @keyup="onSearchFieldKeyUp"
-                            @blur="onSearchFieldBlur"
-                            @click="onClickSelect"
-                        />
-                    </div>
-
-                    <lkt-button
-                        ref="selectButton"
-                        v-show="multiple || (!searchable || !searchMode)"
-                        class="lkt-field--toggle-button lkt-field--select-button"
-                        v-model:open-tooltip="showOptions"
-                        @keyup="onKeyUp"
-                        @blur="onBlur"
-                        @focus="onFocusSelectButton"
-                        @click="onClickSelectButton"
-                    >
-                        <template v-if="multiple && pickedOptions.length > 0">
-                            <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
-                                {{ pickedOptions.length }}
-                            </div>
-
-                            <ul v-else class="lkt-field-select-read">
-                                <li v-for="(option, i) in pickedOptions" :title="option.label">
-                                    <dropdown-option
-                                        :option="pickedOptions[i]"
-                                        :option-slot="optionSlot"
-                                        :icon="optionsIcon"
-                                        :modal="optionsModal"
-                                        :modal-data="optionsModalData"
-                                        :download="optionsDownload"
-                                        :label-formatter="optionsLabelFormatter"
-                                        :editable="editable"
-                                    />
-                                </li>
-                            </ul>
-                        </template>
-                        <dropdown-option
-                            v-else-if="!multiple && pickedOptions.length > 0"
-                            :option="pickedOptions[0]"
-                            :option-slot="optionSlot"
-                            :icon="optionsIcon"
-                            :modal="optionsModal"
-                            :modal-data="optionsModalData"
-                            :download="optionsDownload"
-                            :label-formatter="optionsLabelFormatter"
-                            :editable="editable"
-                        />
-                    </lkt-button>
-                </template>
+                <select-input
+                    v-else-if="Type === FieldType.Select"
+                    ref="inputElement"
+                    v-model="editableValue"
+                    v-model:show-options="showOptions"
+                    :searchable="searchable"
+                    :search-mode="searchMode"
+                    :multiple="multiple"
+                    :options-icon="optionsIcon"
+                    :option-slot="optionSlot"
+                    :options-modal="optionsModal"
+                    :options-download="optionsDownload"
+                    :options-label-formatter="optionsLabelFormatter"
+                    :options-modal-data="optionsModalData"
+                    :picked-options="pickedOptions"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :search-placeholder="computedSearchPlaceholder"
+                    :multiple-display-edition="multipleDisplayEdition"
+                    @focus="onFocusSelectInput"
+                    @blur="onBlurSelectInput"
+                    @navigate="onNavigateSelectInput"
+                    @search="onSearchSelectInput"
+                />
 
                 <input
                     v-else-if="computedInputElement === 'input'"

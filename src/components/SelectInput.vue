@@ -11,7 +11,6 @@
 
     const props = withDefaults(defineProps<{
         modelValue: ValidFieldValue,
-        searchString: string,
         searchable: boolean,
         searchMode: boolean,
         multiple: boolean,
@@ -39,7 +38,7 @@
     /**
      * Search query
      */
-    const query = ref(props.searchString),
+    const query = ref(''),
         queryField = ref(null);
 
     /**
