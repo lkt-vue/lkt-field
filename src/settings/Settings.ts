@@ -1,7 +1,8 @@
 import {LktObject} from "lkt-ts-interfaces";
+import { Component } from 'vue';
 
 export class Settings {
-    static defaultEmptyValueSlot: string = '';
+    static defaultEmptyValueSlot: string|Component|undefined = '';
     static customValueSlots: LktObject = {};
     static customEditSlots: LktObject = {};
 
@@ -10,6 +11,7 @@ export class Settings {
     static optionSlots: LktObject = {};
 
     static defaultDateIcon: string = 'lkt-field-icon-calendar-empty';
+    static defaultNumberFeaturedButton: string = 'subtract';
 
     static undoText: string = '';
     static clearText: string = '';

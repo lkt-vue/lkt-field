@@ -23,6 +23,7 @@
     --lkt-btn-border-radius: var(--lkt-field-border-radius);
     --lkt-btn-border-radius-hover: var(--lkt-field-border-radius);
     --lkt-btn-color: var(--lkt-field-color);
+    --lkt-btn-bg: transparent;
 }
 
 .lkt-field--custom-btn {
@@ -33,10 +34,6 @@
 .lkt-field--atn-btn:hover {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-}
-
-.lkt-field--info-btn {
-    --lkt-btn-bg: transparent;
 }
 
 .lkt-field--info-btn,

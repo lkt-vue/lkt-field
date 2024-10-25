@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "keywords": [
     "lkt",
@@ -59,6 +59,7 @@
     "lkt-http-client": "^1.0.29",
     "lkt-i18n": "^1.0.4",
     "lkt-modal": "^1.1.7",
+    "lkt-object-tools": "^1.0.3",
     "lkt-string-tools": "^1.0.3",
     "lkt-tooltip": "^1.0.3",
     "lkt-ts-interfaces": "^1.0.5",

@@ -191,6 +191,10 @@
     padding: var(--lkt-field-padding-input);
 }
 
+.lkt-field input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .lkt-field input:focus {
     outline: 0;
     box-shadow: none;

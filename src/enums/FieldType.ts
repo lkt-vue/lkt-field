@@ -15,4 +15,5 @@ export enum FieldType {
     Select = 'select',
     Check = 'check',
     Switch = 'switch',
+    Calc = 'calc',
 }

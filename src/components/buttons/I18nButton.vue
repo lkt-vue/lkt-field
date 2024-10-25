@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import {computed, ref, watch} from "vue";
-import {Settings} from "../../settings/Settings";
-import {LktObject} from "lkt-ts-interfaces";
-import {ValidFieldType} from "../../types/ValidFieldType";
+    import { computed, ref, watch } from 'vue';
+    import { Settings } from '../../settings/Settings';
+    import { LktObject } from 'lkt-ts-interfaces';
+    import { FieldType } from '@/enums/FieldType';
 
-const emit = defineEmits(['click', 'update:modelValue']);
+    const emit = defineEmits(['click', 'update:modelValue']);
 
 const props = withDefaults(defineProps<{
     modelValue: LktObject
-    type: ValidFieldType
+    type: FieldType
     insideEllipsis?: boolean
     isFeatured?: boolean
 }>(), {

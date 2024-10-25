@@ -3,13 +3,13 @@
     import LktFieldText from '../../lib-components/LktField.vue';
     import { LktObject } from 'lkt-ts-interfaces';
     import { availableLanguages, currentLanguage } from 'lkt-i18n';
-    import { ValidFieldType } from '../../types/ValidFieldType';
+    import { FieldType } from '@/enums/FieldType';
 
     const props = withDefaults(defineProps<{
         modalName: string
         modalKey: string
         zIndex: number
-        type: ValidFieldType
+        type: FieldType
         translations: LktObject
     }>(), {
         modalName: '',

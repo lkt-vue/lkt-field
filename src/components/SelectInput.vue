@@ -76,8 +76,8 @@
         else emit('blur');
     });
 
-    let queryBlurTimeout = undefined,
-        buttonBlurTimeout = undefined;
+    let queryBlurTimeout:Timeout|undefined = undefined,
+        buttonBlurTimeout:Timeout|undefined = undefined;
 
     const onBlurQueryInput = (event: Event) => {
             queryBlurTimeout = setTimeout(() => {

@@ -1,17 +1,17 @@
-declare namespace Xs {
+declare namespace ho {
     function install(e: any): void;
 }
-declare function to(e: any): any;
-declare function ao(e: any): any;
-declare function ro(e: any): any;
-declare function Js(e: any): void;
-declare function io(e: any): any;
-declare function Qs(e: any, t: any): void;
-declare function oo(e: any): any;
-declare function so(e: any): any;
-declare function no(e: any): any;
-declare function lo(e: any): any;
-declare function eo(e: any): any;
-declare function Ks(e: any, t: any): boolean;
-declare function Ys(e: any, t: any): boolean;
-export { Xs as default, to as setFieldClearText, ao as setFieldDateReadFormat, ro as setFieldDefaultDateReadFormat, Js as setFieldEmptySlot, io as setFieldI18nText, Qs as setFieldOptionSlot, oo as setFieldShowPasswordOffText, so as setFieldShowPasswordOnText, no as setFieldSwitchEditionOffText, lo as setFieldSwitchEditionOnText, eo as setFieldUndoText, Ks as setTextEditSlot, Ys as setTextValueSlot };
+declare function vo(e: any): any;
+declare function ko(e: any): any;
+declare function xo(e: any): any;
+declare function po(e: any): void;
+declare function bo(e: any): any;
+declare function go(e: any, t: any): void;
+declare function wo(e: any): any;
+declare function Co(e: any): any;
+declare function yo(e: any): any;
+declare function _o(e: any): any;
+declare function mo(e: any): any;
+declare function fo(e: any, t: any): boolean;
+declare function co(e: any, t: any): boolean;
+export { ho as default, vo as setFieldClearText, ko as setFieldDateReadFormat, xo as setFieldDefaultDateReadFormat, po as setFieldEmptySlot, bo as setFieldI18nText, go as setFieldOptionSlot, wo as setFieldShowPasswordOffText, Co as setFieldShowPasswordOnText, yo as setFieldSwitchEditionOffText, _o as setFieldSwitchEditionOnText, mo as setFieldUndoText, fo as setTextEditSlot, co as setTextValueSlot };

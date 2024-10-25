@@ -17,6 +17,7 @@ import "../styles/buttons-styles.css";
 import "../styles/range-styles.css";
 import "../styles/read-mode-styles.css";
 import "../styles/calendar-styles.css";
+import "../styles/calc-styles.css";
 import "../styles/palette-styles.css";
 import "../styles/state-styles.css";
 import "../styles/tags-styles.css";

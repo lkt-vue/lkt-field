@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { generateRandomString, isEmail as checkIsEmail, stripTags } from 'lkt-string-tools';
-    import { computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
+    import { ComponentPublicInstance, computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
@@ -12,7 +12,6 @@
     import EditionButton from '../components/buttons/EditionButton.vue';
     import EllipsisActionsButton from '../components/buttons/EllipsisActionsButton.vue';
     import I18nButton from '../components/buttons/I18nButton.vue';
-    import { ValidFieldType } from '../types/ValidFieldType';
     import { FieldType } from '../enums/FieldType';
     import { ensureNumberBetween } from '../functions/numeric-functions';
     import { ValidFieldValue } from '../types/ValidFieldValue';
@@ -37,6 +36,7 @@
     import BooleanInput from '@/components/BooleanInput.vue';
     import HtmlInput from '@/components/HtmlInput.vue';
     import SelectInput from '@/components/SelectInput.vue';
+    import CalcInput from '@/components/CalcInput.vue';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -47,7 +47,7 @@
     // Props
     const props = withDefaults(defineProps<{
         modelValue: ValidFieldValue
-        type: ValidFieldType
+        type: FieldType
         valid?: boolean
         placeholder?: string
         searchPlaceholder?: string
@@ -67,6 +67,7 @@
         canClear?: boolean
         canUndo?: boolean
         canI18n?: boolean
+        canStep?: boolean
         mandatoryMessage?: string
         infoMessage?: string
         errorMessage?: string
@@ -102,7 +103,7 @@
         fileName?: string
         customButtonText?: string
         customButtonClass?: string
-        options?: Option[],
+        options?: string|Option[],
         multiple?: boolean,
         multipleDisplay?: MultipleDisplayType,
         multipleDisplayEdition?: MultipleDisplayType,
@@ -116,7 +117,9 @@
         optionsResource?: string,
         optionsResourceData?: LktObject,
         icon?: string | Function,
-
+        modal?: string | Function,
+        modalKey?: string | number | Function,
+        modalData?: LktObject,
     }>(), {
         modelValue: '',
         type: 'text',
@@ -135,6 +138,7 @@
         mandatory: false,
         showPassword: false,
         canClear: false,
+        canStep: true,
         mandatoryMessage: '',
         infoMessage: '',
         errorMessage: '',
@@ -180,6 +184,9 @@
         optionsResource: '',
         optionsResourceData: () => ({}),
         icon: '',
+        modal: '',
+        modalKey: '',
+        modalData: () => ({}),
     });
 
     // Constant data
@@ -189,6 +196,7 @@
 
     // Components refs
     const inputElement = ref(null);
+    const fieldFeaturedButton = ref(props.featuredButton);
 
     let baseValidationStatus: string[] = [];
 
@@ -203,6 +211,9 @@
 
     } else if (Type.value === FieldType.Date && !props.icon) {
         fieldIcon = Settings.defaultDateIcon;
+
+    } else if (Type.value === FieldType.Number && props.canStep && fieldFeaturedButton.value === '') {
+        fieldFeaturedButton.value = Settings.defaultNumberFeaturedButton;
     }
 
     // Reactive data
@@ -255,7 +266,7 @@
     const editableValue = ref(assignEditableValue());
     const originalEditableValue = ref(assignEditableValue());
 
-    const optionsHaystack = ref(prepareOptions(props.options)),
+    const optionsHaystack = ref([]),
         visibleOptions = ref([]);
 
     const updatePickedOption = () => {
@@ -316,6 +327,8 @@
             if (computedShowI18nInNav.value) ++r;
             if (computedShowSwitchEditionInNav.value) ++r;
             if (computedShowDropdownButton.value) ++r;
+            if (computedShowSubtractStepInNav.value) ++r;
+            if (computedShowIncreaseStep.value) ++r;
             if (props.customButtonText || props.customButtonClass) ++r;
 
             if (r > 0 && Type.value === FieldType.Textarea) return 1;
@@ -325,8 +338,9 @@
             return r;
         }),
         computedHasFeaturedButton = computed(() => {
-            return computedShowI18n.value && props.featuredButton === 'i18n'
-                || computedShowPasswordReveal.value && props.featuredButton === 'password';
+            return computedShowI18n.value && fieldFeaturedButton.value === 'i18n'
+                || computedShowPasswordReveal.value && fieldFeaturedButton.value === 'password'
+                || computedShowSubtractStep.value && fieldFeaturedButton.value === 'subtract';
         }),
         showInfoUi = computed(() => {
             return amountOfIcons.value > 0;
@@ -454,6 +468,9 @@
         computedShowError = computed(() => props.errorMessage),
         computedShowInfo = computed(() => props.infoMessage),
 
+        computedShowSubtractStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
+        computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && Type.value === FieldType.Number && fieldFeaturedButton.value !== 'subtract'),
+        computedShowIncreaseStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
         computedShowUndo = computed(() => props.canUndo && changed.value && editable.value),
         computedShowClear = computed(() => props.canClear && isFilled.value && editable.value),
         computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object' && editable.value),
@@ -461,9 +478,10 @@
 
         computedShowUndoInNav = computed(() => computedShowUndo.value && !props.infoButtonEllipsis),
         computedShowClearInNav = computed(() => computedShowClear.value && !props.infoButtonEllipsis),
-        computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && props.featuredButton !== 'password'),
-        computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && props.featuredButton !== 'i18n'),
+        computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && fieldFeaturedButton.value !== 'password'),
+        computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && fieldFeaturedButton.value !== 'i18n'),
         computedShowDropdownButton = computed(() => {
+            if (Type.value === FieldType.Calc) return false;
             return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || props.optionsResource !== '';
         }),
         computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis)
@@ -1007,6 +1025,18 @@
         },
         onClickInfo = ($event: any) => emits('click-info', $event),
         onClickError = ($event: any) => emits('click-error', $event),
+        onClickSubtract = () => {
+            let step = props.step ?? 1;
+            if (!props.min || editableValue.value > props.min ) {
+                editableValue.value -= step;
+            }
+        },
+        onClickIncrease = () => {
+            let step = props.step ?? 1;
+            if (!props.max || editableValue.value < props.max ) {
+                editableValue.value += step;
+            }
+        },
         onClickSwitchEdition = ($event: any) => {
             if (editable.value) focus();
         },
@@ -1039,7 +1069,7 @@
                 if (props.multiple && Array.isArray(editableValue.value) && editableValue.value.length > 0) {
                     return '';
                 }
-                if (!props.multiple && editableValue.value !== '') return '';
+                if (!props.multiple && !!editableValue.value) return '';
                 break;
 
             case FieldType.Date:
@@ -1061,8 +1091,33 @@
         hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
         customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
+    // const computedI18nOptions = computed(() => {
+    //     if (typeof props.options === 'string') {
+    //         if (props.options.startsWith('__:')) {
+    //             let key = props.options.substring(3);
+    //
+    //             let haystack = fetchInObject(i18n, key, '.'),
+    //                 r = [];
+    //             for (let k in haystack) r.push({value: k, label: haystack[k]});
+    //             optionsHaystack.value = prepareOptions(r);
+    //             buildVisibleOptions('', false);
+    //             console.log('computedI18nOptions2: ', r)
+    //             updatePickedOption();
+    //             return r;
+    //         }
+    //     }
+    //     return [];
+    // })
+    //
+    // watch(i18n, v => {
+    //     computedI18nOptions.value;
+    // }, {deep: true})
+
     onMounted(() => {
+        optionsHaystack.value = prepareOptions(props.options);
+        buildVisibleOptions('', false);
         updatePickedOption();
+        // computedI18nOptions.value;
 
         if (Type.value === FieldType.Select) {
             if (props.multiple) {
@@ -1113,8 +1168,15 @@
                     is-featured
                 />
 
-                <i18n-button v-if="computedShowI18n && featuredButton === 'i18n' && canI18n" v-model="value" is-featured
+                <i18n-button v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n" v-model="value" is-featured
                              :type="Type" />
+
+                <lkt-button
+                    v-if="computedShowSubtractStep && fieldFeaturedButton === 'subtract'"
+                    class="lkt-field--atn-btn"
+                    icon="lkt-field-icon-minus"
+                    @click="onClickSubtract"
+                />
             </div>
 
             <div v-if="fieldIcon" class="lkt-field--icon">
@@ -1220,6 +1282,21 @@
                     @blur="onBlurSelectInput"
                     @navigate="onNavigateSelectInput"
                     @search="onSearchSelectInput"
+                />
+                <calc-input
+                    ref="inputElement"
+                    v-else-if="Type === FieldType.Calc"
+                    v-model="editableValue"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :name="name"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :disabled="disabled"
+                    :readonly="readonly"
+                    :options="optionsHaystack"
+                    @focus="onFocusBooleanInput"
+                    @blur="onBlurBooleanInput"
                 />
 
                 <input
@@ -1352,11 +1429,11 @@
                         :title="readModeTitle">
 
                         <template v-if="multiple">
-                            <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
+                            <div v-if="multipleDisplay === MultipleDisplayType.Count">
                                 {{ pickedOptions.length }}
                             </div>
 
-                            <ul v-else :class="`lkt-field-select-read--${props.multipleDisplayEdition}`">
+                            <ul v-else class="lkt-field-select-read">
                                 <li v-for="(option, i) in pickedOptions" :title="option.label">
                                     <dropdown-option
                                         :option="pickedOptions[i]"
@@ -1383,6 +1460,16 @@
                             :editable="editable"
                         />
                     </div>
+                    <lkt-button
+                        v-else-if="modal"
+                        class="lkt-field--read-value"
+                        :title="readModeTitle"
+                        :modal="modal"
+                        :modal-key="modalKey"
+                        :modal-data="modalData"
+                    >
+                        <div v-html="value"/>
+                    </lkt-button>
                     <div
                         v-else
                         class="lkt-field--read-value"
@@ -1393,6 +1480,19 @@
             <div v-show="showInfoUi" class="lkt-field--info-nav">
                 <undo-button v-show="computedShowUndoInNav" @click="doUndo" />
                 <clear-button v-show="computedShowClearInNav" @click="doClear" />
+
+                <lkt-button
+                    v-show="computedShowSubtractStepInNav"
+                    class="lkt-field--info-btn"
+                    icon="lkt-field-icon-minus"
+                    @click="onClickSubtract"
+                />
+                <lkt-button
+                    v-show="computedShowIncreaseStep"
+                    class="lkt-field--info-btn"
+                    icon="lkt-field-icon-plus"
+                    @click="onClickIncrease"
+                />
 
                 <lkt-button
                     v-show="computedShowError"

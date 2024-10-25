@@ -1,7 +1,19 @@
 import { Option } from '../instances/Option';
 import { ValidOptionValue } from '../types/ValidOptionValue';
+import { __ } from 'lkt-i18n';
 
 export const prepareOptions = (options: any) => {
+    if (typeof options === 'string') {
+        if (options.startsWith('__:')) {
+            let key = options.substring(3);
+
+            let haystack = __(key),
+                r = [];
+            for (let k in haystack) r.push({value: k, label: haystack[k]});
+            return prepareOptions(r);
+        }
+    }
+
     if (!Array.isArray(options)) return [];
     if (options.length === 0) return options;
     return options.map(opt => {

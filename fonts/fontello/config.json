@@ -15,13 +15,13 @@
     {
       "uid": "ccd52a22af21fbaa98a9c85fb50fca6b",
       "css": "info-1",
-      "code": 59393,
+      "code": 59216,
       "src": "iconic"
     },
     {
       "uid": "dd4b00255957a608953c409346e7d7fb",
       "css": "warning",
-      "code": 59394,
+      "code": 59217,
       "src": "typicons"
     },
     {
@@ -149,6 +149,18 @@
       "css": "ok",
       "code": 59289,
       "src": "websymbols"
+    },
+    {
+      "uid": "44e04715aecbca7f266a17d5a7863c68",
+      "css": "plus",
+      "code": 59403,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "861ab06e455e2de3232ebef67d60d708",
+      "css": "minus",
+      "code": 59404,
+      "src": "fontawesome"
     }
   ]
 }

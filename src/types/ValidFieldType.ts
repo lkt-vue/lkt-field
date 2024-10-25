@@ -17,4 +17,5 @@ export type ValidFieldType =
     | FieldType.Select
     | FieldType.Check
     | FieldType.Switch
+    | FieldType.Calc
 ;

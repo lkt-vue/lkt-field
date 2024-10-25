@@ -5,6 +5,30 @@
     width: 100%;
 }
 
+.lkt-field--read > .lkt-button-container {
+    width: 100%;
+}
+
+.lkt-button.lkt-field--read-value {
+    --lkt-btn-box-sizing: border-box;
+    --lkt-btn-auto: 100%;
+    --lkt-btn-max-width: 100%;
+    --lkt-btn-min-width: 0;
+    --lkt-btn-outline: 0;
+    --lkt-btn-border: none;
+    --lkt-btn-font-size: var(--lkt-field-font-size);
+    --lkt-btn-padding: 0;
+    --lkt-btn-text-wrap: nowrap;
+    --lkt-btn-text-overflow: ellipsis;
+    --lkt-btn-overflow: hidden;
+    --lkt-btn-line-height: var(--lkt-field-input-height);
+    --lkt-btn-bg: transparent;
+    --lkt-btn-color: var(--lkt-field-color);
+    --lkt-btn-height: auto;
+    --lkt-btn-min-height: 0;
+    justify-content: flex-start;
+}
+
 .lkt-field--read-value {
     box-sizing: border-box;
     width: 100%;

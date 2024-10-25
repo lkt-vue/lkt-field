@@ -28,6 +28,7 @@ export default {
                 'lkt-modal',
                 'lkt-tooltip',
                 'lkt-http-client',
+                'lkt-object-tools',
                 'lkt-string-tools',
                 'lkt-date-tools',
                 'axios',

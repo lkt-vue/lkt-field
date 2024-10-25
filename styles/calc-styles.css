@@ -1,0 +1,43 @@
+.lkt-field--calc {
+    --lkt-tooltip-width: 340px;
+}
+
+.lkt-calc--numeric-pad,
+.lkt-calc--math-pad,
+.lkt-calc--custom-pad,
+.lkt-calc--advance-math-pad
+{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.lkt-calc--pad {
+    display: flex;
+    align-items: end;
+}
+
+.lkt-calc--numeric-pad {
+    flex: 3;
+}
+.lkt-calc--math-pad {
+    flex: 2;
+}
+.lkt-calc--advance-math-pad {
+    flex: 2;
+}
+.lkt-calc--custom-pad {
+    margin-bottom: 5px;
+}
+
+.lkt-field--calc .lkt-button {
+    --lkt-btn-bg: #e6e6e6;
+    --lkt-btn-color: #2e2e2e;
+    --lkt-btn-width: auto;
+    --lkt-btn-min-width: 40px;
+}
+
+.lkt-field--calc .lkt-button.lkt-calc--btn-number {
+    --lkt-btn-bg: #d2d2d2;
+    --lkt-btn-font-weight: 600;
+}
