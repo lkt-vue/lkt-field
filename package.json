@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "",
   "keywords": [
     "lkt",
@@ -25,7 +25,7 @@
     "./theme": "./theme/default.css",
     "./theme/default": "./theme/default.css"
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/build.d.ts",
   "files": [
     "dist/*",
     "src/**/*.vue",
