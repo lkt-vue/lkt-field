@@ -15,7 +15,7 @@
     import { ensureNumberBetween } from '../functions/numeric-functions';
     import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
-    import { Option } from '@/instances/Option';
+    import { Option } from '../instances/Option.ts';
     import {
         filterOptions,
         findOptionByValue,
@@ -23,19 +23,19 @@
         optionIsActive,
         prepareOptions,
         receiveOptions,
-    } from '@/functions/option-functions';
-    import { isValidDateObject } from '@/functions/date-functions';
-    import { BooleanFieldTypes } from '@/constants/field-type-constants';
-    import DropdownButton from '@/components/buttons/DropdownButton.vue';
-    import DropdownOption from '@/components/dropdown/DropdownOption.vue';
-    import ColorInput from '@/components/color/ColorInput.vue';
-    import { validateAmountOfNumbers } from '@/functions/validation-functions';
-    import { MultipleDisplayType } from '@/enums/MultipleDisplayType';
-    import BooleanInput from '@/components/BooleanInput.vue';
-    import HtmlInput from '@/components/HtmlInput.vue';
-    import SelectInput from '@/components/SelectInput.vue';
-    import CalcInput from '@/components/CalcInput.vue';
-    import { LktFieldConfigType } from '../types/LktFieldConfigType.ts';
+    } from '../functions/option-functions';
+    import { isValidDateObject } from '../functions/date-functions';
+    import { BooleanFieldTypes } from '../constants/field-type-constants';
+    import DropdownButton from '../components/buttons/DropdownButton.vue';
+    import DropdownOption from '../components/dropdown/DropdownOption.vue';
+    import ColorInput from '../components/color/ColorInput.vue';
+    import { validateAmountOfNumbers } from '../functions/validation-functions';
+    import { MultipleDisplayType } from '../enums/MultipleDisplayType';
+    import BooleanInput from '../components/BooleanInput.vue';
+    import HtmlInput from '../components/HtmlInput.vue';
+    import SelectInput from '../components/SelectInput.vue';
+    import CalcInput from '../components/CalcInput.vue';
+    import { LktFieldConfigType } from '../types/LktFieldConfigType';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
