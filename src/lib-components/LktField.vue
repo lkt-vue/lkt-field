@@ -2,7 +2,6 @@
     import { generateRandomString, isEmail as checkIsEmail, stripTags } from 'lkt-string-tools';
     import { ComponentPublicInstance, computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
-    import { LktObject } from 'lkt-ts-interfaces';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
     import { __, currentLanguage } from 'lkt-i18n';
     import { FieldValidation } from 'lkt-field-validation';
@@ -14,7 +13,6 @@
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { FieldType } from '../enums/FieldType';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import { ValidFieldValue } from '../types/ValidFieldValue';
     import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
     import { Option } from '@/instances/Option';
@@ -37,6 +35,7 @@
     import HtmlInput from '@/components/HtmlInput.vue';
     import SelectInput from '@/components/SelectInput.vue';
     import CalcInput from '@/components/CalcInput.vue';
+    import { LktFieldConfig } from '../types/LktFieldConfig.ts';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -45,84 +44,9 @@
     const slots = useSlots();
 
     // Props
-    const props = withDefaults(defineProps<{
-        modelValue: ValidFieldValue
-        type: FieldType
-        valid?: boolean
-        placeholder?: string
-        searchPlaceholder?: string
-        label?: string
-        labelIcon?: string
-        labelIconAtEnd?: boolean
-        palette?: string
-        name?: string
-        autocomplete?: boolean
-        disabled?: boolean
-        readonly?: boolean
-        readMode?: boolean
-        allowReadModeSwitch?: boolean
-        tabindex?: number
-        mandatory?: boolean
-        showPassword?: boolean
-        canClear?: boolean
-        canUndo?: boolean
-        canI18n?: boolean
-        canStep?: boolean
-        mandatoryMessage?: string
-        infoMessage?: string
-        errorMessage?: string
-        min?: number | string | undefined
-        max?: number | string | undefined
-        step?: number | string
-        enableAutoNumberFix?: boolean
-        emptyValueSlot?: string
-        optionSlot?: string
-        valueSlot?: string
-        editSlot?: string
-        slotData?: LktObject
-        resource?: string
-        resourceData?: LktObject
-        validationResource?: string
-        validationResourceData?: LktObject
-        autoValidation?: boolean
-        autoValidationType?: 'focus' | 'blur' | 'always'
-        validationStack?: string
-        minNumbers: number | string | undefined,
-        maxNumbers: number | string | undefined,
-        minChars: number | string | undefined,
-        maxChars: number | string | undefined,
-        minUpperChars: number | string | undefined,
-        maxUpperChars: number | string | undefined,
-        minLowerChars: number | string | undefined,
-        maxLowerChars: number | string | undefined,
-        minSpecialChars: number | string | undefined,
-        maxSpecialChars: number | string | undefined,
-        checkEqualTo: number | string | undefined,
-        featuredButton?: string
-        infoButtonEllipsis?: boolean
-        fileName?: string
-        customButtonText?: string
-        customButtonClass?: string
-        options?: string|Option[],
-        multiple?: boolean,
-        multipleDisplay?: MultipleDisplayType,
-        multipleDisplayEdition?: MultipleDisplayType,
-        searchable?: boolean,
-        autoloadOptionsResource?: boolean | 'feed',
-        optionsDownload?: string | Function,
-        optionsModal?: string | Function,
-        optionsModalData?: LktObject | Function,
-        optionsIcon?: string | Function,
-        optionsLabelFormatter?: Function,
-        optionsResource?: string,
-        optionsResourceData?: LktObject,
-        icon?: string | Function,
-        modal?: string | Function,
-        modalKey?: string | number | Function,
-        modalData?: LktObject,
-    }>(), {
+    const props = withDefaults(defineProps<LktFieldConfig>(), {
         modelValue: '',
-        type: 'text',
+        type: FieldType.Text,
         placeholder: '',
         searchPlaceholder: '',
         label: '',
@@ -171,7 +95,7 @@
         featuredButton: '',
         infoButtonEllipsis: false,
         fileName: '',
-        options: [],
+        options: () => [],
         multiple: false,
         multipleDisplay: MultipleDisplayType.List,
         multipleDisplayEdition: MultipleDisplayType.Inline,
@@ -1069,6 +993,7 @@
                 if (props.multiple && Array.isArray(editableValue.value) && editableValue.value.length > 0) {
                     return '';
                 }
+                if (props.multiple && !editable.value && props.multipleDisplay === MultipleDisplayType.Count) return '';
                 if (!props.multiple && !!editableValue.value) return '';
                 break;
 
@@ -1424,7 +1349,7 @@
                         class="lkt-field--read-value"
                         v-html="visibleDateValue" :title="readModeTitle"></div>
                     <div
-                        v-else-if="Type === FieldType.Select && pickedOptions.length > 0"
+                        v-else-if="Type === FieldType.Select"
                         class="lkt-field--read-value"
                         :title="readModeTitle">
 
@@ -1433,7 +1358,7 @@
                                 {{ pickedOptions.length }}
                             </div>
 
-                            <ul v-else class="lkt-field-select-read">
+                            <ul v-else-if="pickedOptions.length > 0" class="lkt-field-select-read">
                                 <li v-for="(option, i) in pickedOptions" :title="option.label">
                                     <dropdown-option
                                         :option="pickedOptions[i]"
@@ -1449,7 +1374,7 @@
                             </ul>
                         </template>
                         <dropdown-option
-                            v-else
+                            v-else-if="pickedOptions.length > 0"
                             :option="pickedOptions[0]"
                             :option-slot="optionSlot"
                             :icon="optionsIcon"
@@ -1470,6 +1395,13 @@
                     >
                         <div v-html="value"/>
                     </lkt-button>
+                    <dropdown-option
+                        class="lkt-field--read-value"
+                        v-else-if="download"
+                        :option="{label: value}"
+                        :editable="!editable"
+                        :download="download"
+                    />
                     <div
                         v-else
                         class="lkt-field--read-value"
