@@ -35,7 +35,7 @@
     import HtmlInput from '@/components/HtmlInput.vue';
     import SelectInput from '@/components/SelectInput.vue';
     import CalcInput from '@/components/CalcInput.vue';
-    import { LktFieldConfig } from '../types/LktFieldConfig.ts';
+    import { LktFieldConfigType } from '../types/LktFieldConfigType.ts';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -44,7 +44,7 @@
     const slots = useSlots();
 
     // Props
-    const props = withDefaults(defineProps<LktFieldConfig>(), {
+    const props = withDefaults(defineProps<LktFieldConfigType>(), {
         modelValue: '',
         type: FieldType.Text,
         placeholder: '',
@@ -951,13 +951,13 @@
         onClickError = ($event: any) => emits('click-error', $event),
         onClickSubtract = () => {
             let step = props.step ?? 1;
-            if (!props.min || editableValue.value > props.min ) {
+            if (!props.min || editableValue.value > props.min) {
                 editableValue.value -= step;
             }
         },
         onClickIncrease = () => {
             let step = props.step ?? 1;
-            if (!props.max || editableValue.value < props.max ) {
+            if (!props.max || editableValue.value < props.max) {
                 editableValue.value += step;
             }
         },
@@ -1093,7 +1093,8 @@
                     is-featured
                 />
 
-                <i18n-button v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n" v-model="value" is-featured
+                <i18n-button v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n" v-model="value"
+                             is-featured
                              :type="Type" />
 
                 <lkt-button
@@ -1359,18 +1360,20 @@
                             </div>
 
                             <ul v-else-if="pickedOptions.length > 0" class="lkt-field-select-read">
-                                <li v-for="(option, i) in pickedOptions" :title="option.label">
-                                    <dropdown-option
-                                        :option="pickedOptions[i]"
-                                        :option-slot="optionSlot"
-                                        :icon="optionsIcon"
-                                        :modal="optionsModal"
-                                        :modal-data="optionsModalData"
-                                        :download="optionsDownload"
-                                        :label-formatter="optionsLabelFormatter"
-                                        :editable="editable"
-                                    />
-                                </li>
+                                <template v-for="(option, i) in pickedOptions">
+                                    <li :title="pickedOptions[i]?.label">
+                                        <dropdown-option
+                                            :option="pickedOptions[i]"
+                                            :option-slot="optionSlot"
+                                            :icon="optionsIcon"
+                                            :modal="optionsModal"
+                                            :modal-data="optionsModalData"
+                                            :download="optionsDownload"
+                                            :label-formatter="optionsLabelFormatter"
+                                            :editable="editable"
+                                        />
+                                    </li>
+                                </template>
                             </ul>
                         </template>
                         <dropdown-option
@@ -1393,12 +1396,12 @@
                         :modal-key="modalKey"
                         :modal-data="modalData"
                     >
-                        <div v-html="value"/>
+                        <div v-html="value" />
                     </lkt-button>
                     <dropdown-option
                         class="lkt-field--read-value"
                         v-else-if="download"
-                        :option="{label: value}"
+                        :option="{value: '', label: value}"
                         :editable="!editable"
                         :download="download"
                     />

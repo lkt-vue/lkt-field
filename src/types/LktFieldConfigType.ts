@@ -4,7 +4,7 @@ import { LktObject } from 'lkt-ts-interfaces';
 import { Option } from '../instances/Option';
 import { MultipleDisplayType } from '../enums/MultipleDisplayType';
 
-export type LktFieldConfig = {
+export type LktFieldConfigType = {
     modelValue: ValidFieldValue
     type: FieldType
     valid?: boolean
@@ -13,7 +13,6 @@ export type LktFieldConfig = {
     label?: string
     labelIcon?: string
     labelIconAtEnd?: boolean
-    palette?: string
     name?: string
     autocomplete?: boolean
     disabled?: boolean
@@ -46,38 +45,38 @@ export type LktFieldConfig = {
     autoValidation?: boolean
     autoValidationType?: 'focus' | 'blur' | 'always'
     validationStack?: string
-    minNumbers: number | string | undefined,
-    maxNumbers: number | string | undefined,
-    minChars: number | string | undefined,
-    maxChars: number | string | undefined,
-    minUpperChars: number | string | undefined,
-    maxUpperChars: number | string | undefined,
-    minLowerChars: number | string | undefined,
-    maxLowerChars: number | string | undefined,
-    minSpecialChars: number | string | undefined,
-    maxSpecialChars: number | string | undefined,
-    checkEqualTo: number | string | undefined,
+    minNumbers: number | string | undefined
+    maxNumbers: number | string | undefined
+    minChars: number | string | undefined
+    maxChars: number | string | undefined
+    minUpperChars: number | string | undefined
+    maxUpperChars: number | string | undefined
+    minLowerChars: number | string | undefined
+    maxLowerChars: number | string | undefined
+    minSpecialChars: number | string | undefined
+    maxSpecialChars: number | string | undefined
+    checkEqualTo: number | string | undefined
     featuredButton?: string
     infoButtonEllipsis?: boolean
     fileName?: string
     customButtonText?: string
     customButtonClass?: string
-    options?: string | Option[],
-    multiple?: boolean,
-    multipleDisplay?: MultipleDisplayType,
-    multipleDisplayEdition?: MultipleDisplayType,
-    searchable?: boolean,
-    autoloadOptionsResource?: boolean | 'feed',
-    optionsDownload?: string | Function,
-    optionsModal?: string | Function,
-    optionsModalData?: LktObject | Function,
-    optionsIcon?: string | Function,
-    optionsLabelFormatter?: Function,
-    optionsResource?: string,
-    optionsResourceData?: LktObject,
-    icon?: string | Function,
-    download?: string | Function,
-    modal?: string | Function,
-    modalKey?: string | number | Function,
-    modalData?: LktObject,
+    options?: string | Option[]
+    multiple?: boolean
+    multipleDisplay?: MultipleDisplayType
+    multipleDisplayEdition?: MultipleDisplayType
+    searchable?: boolean
+    autoloadOptionsResource?: boolean | 'feed'
+    optionsDownload?: string | Function
+    optionsModal?: string | Function
+    optionsModalData?: LktObject | Function
+    optionsIcon?: string | Function
+    optionsLabelFormatter?: Function
+    optionsResource?: string
+    optionsResourceData?: LktObject
+    icon?: string | Function
+    download?: string | Function
+    modal?: string | Function
+    modalKey?: string | number | Function
+    modalData?: LktObject
 }

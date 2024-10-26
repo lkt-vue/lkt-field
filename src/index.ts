@@ -46,7 +46,8 @@ const LktField: Plugin = {
 
 export default LktField;
 
-export type {LktFieldConfig} from "./types/LktFieldConfig";
+export {Option} from "./instances/Option";
+export {Field} from "./instances/Field";
 
 export const setFieldEmptySlot = (component?: string|Component) => {
   Settings.defaultEmptyValueSlot = component;

@@ -10,6 +10,9 @@ export class Option {
     icon?: string = '';
 
     constructor(data: LktObject = {}) {
-        for (let k in data) this[k] = data[k];
+        for (let k in data) {
+            //@ts-ignore
+            this[k] = data[k];
+        }
     }
 }
