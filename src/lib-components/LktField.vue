@@ -42,6 +42,7 @@
     import CalcInput from '../components/CalcInput.vue';
     import { LktFieldConfigType } from '../types/LktFieldConfigType';
     import LktFieldValidations from '@/components/validations/LktFieldValidations.vue';
+    import SearchInput from '@/components/SearchInput.vue';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -1133,6 +1134,23 @@
                     :disabled="disabled"
                     :readonly="readonly"
                     :options="optionsHaystack"
+                    @focus="onFocusBooleanInput"
+                    @blur="onBlurBooleanInput"
+                />
+
+                <search-input
+                    ref="inputElement"
+                    v-else-if="Type === FieldType.Search"
+                    v-model="editableValue"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :name="name"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :disabled="disabled"
+                    :readonly="readonly"
+                    :options-resource="optionsResource"
+                    :container="container"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
                 />

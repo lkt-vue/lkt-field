@@ -1,4 +1,4 @@
-declare class yo {
+declare class Co {
     constructor(t?: {});
     modelValue: string;
     type: any;
@@ -63,22 +63,22 @@ declare class ti {
     group: string;
     icon: string;
 }
-declare namespace wo {
+declare namespace ko {
     function install(e: any): void;
 }
-declare function So(e: any): any;
-declare function Bo(e: any): any;
-declare function Ao(e: any): any;
-declare function Co(e: any): void;
-declare function Eo(e: any): any;
-declare function ko(e: any, t: any): void;
-declare function No(e: any): any;
-declare function zo(e: any): any;
-declare function To(e: any): any;
 declare function Lo(e: any): any;
-declare function xo(e: any): any;
-declare function Mo(e: any): boolean;
-declare function Ro(e: any, t: any, i?: string): void;
-declare function _o(e: any, t: any): boolean;
-declare function bo(e: any, t: any): boolean;
-export { yo as Field, ti as Option, wo as default, So as setFieldClearText, Bo as setFieldDateReadFormat, Ao as setFieldDefaultDateReadFormat, Co as setFieldEmptySlot, Eo as setFieldI18nText, ko as setFieldOptionSlot, No as setFieldShowPasswordOffText, zo as setFieldShowPasswordOnText, To as setFieldSwitchEditionOffText, Lo as setFieldSwitchEditionOnText, xo as setFieldUndoText, Mo as setFieldValidationIconSlot, Ro as setFieldValidationMessage, _o as setTextEditSlot, bo as setTextValueSlot };
+declare function Ro(e: any): any;
+declare function Mo(e: any): any;
+declare function xo(e: any): void;
+declare function To(e: any): any;
+declare function So(e: any, t: any): void;
+declare function Ao(e: any): any;
+declare function No(e: any): any;
+declare function Bo(e: any): any;
+declare function zo(e: any): any;
+declare function Eo(e: any): any;
+declare function Do(e: any): boolean;
+declare function Io(e: any, t: any, i?: string): void;
+declare function wo(e: any, t: any): boolean;
+declare function yo(e: any, t: any): boolean;
+export { Co as Field, ti as Option, ko as default, Lo as setFieldClearText, Ro as setFieldDateReadFormat, Mo as setFieldDefaultDateReadFormat, xo as setFieldEmptySlot, To as setFieldI18nText, So as setFieldOptionSlot, Ao as setFieldShowPasswordOffText, No as setFieldShowPasswordOnText, Bo as setFieldSwitchEditionOffText, zo as setFieldSwitchEditionOnText, Eo as setFieldUndoText, Do as setFieldValidationIconSlot, Io as setFieldValidationMessage, wo as setTextEditSlot, yo as setTextValueSlot };
