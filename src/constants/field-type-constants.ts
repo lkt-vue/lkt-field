@@ -11,3 +11,9 @@ export const TextFieldTypesWithOptions = [
 export const BooleanFieldTypes = [
     FieldType.Switch, FieldType.Check
 ];
+
+export const TextFieldTypes = [
+    FieldType.Text,
+    FieldType.Email,
+    FieldType.Password,
+];

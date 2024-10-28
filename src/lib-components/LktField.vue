@@ -25,17 +25,23 @@
         receiveOptions,
     } from '../functions/option-functions';
     import { isValidDateObject } from '../functions/date-functions';
-    import { BooleanFieldTypes } from '../constants/field-type-constants';
+    import { BooleanFieldTypes, TextFieldTypes } from '../constants/field-type-constants';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import ColorInput from '../components/color/ColorInput.vue';
-    import { validateAmountOfNumbers } from '../functions/validation-functions';
+    import {
+        validateAmountOfChars,
+        validateAmountOfLowerChars,
+        validateAmountOfNumbers, validateAmountOfSpecialChars,
+        validateAmountOfUpperChars,
+    } from '../functions/validation-functions';
     import { MultipleDisplayType } from '../enums/MultipleDisplayType';
     import BooleanInput from '../components/BooleanInput.vue';
     import HtmlInput from '../components/HtmlInput.vue';
     import SelectInput from '../components/SelectInput.vue';
     import CalcInput from '../components/CalcInput.vue';
     import { LktFieldConfigType } from '../types/LktFieldConfigType';
+    import LktFieldValidations from '@/components/validations/LktFieldValidations.vue';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -50,7 +56,6 @@
         placeholder: '',
         searchPlaceholder: '',
         label: '',
-        palette: '',
         name: generateRandomString(16),
         valid: false,
         autocomplete: true,
@@ -122,8 +127,6 @@
     const inputElement = ref(null);
     const fieldFeaturedButton = ref(props.featuredButton);
 
-    let baseValidationStatus: string[] = [];
-
     let fieldIcon = props.icon;
 
     let _val = props.modelValue;
@@ -149,11 +152,10 @@
         focusing = ref(false),
         hadFirstBlur = ref(false),
         hadFirstFocus = ref(false),
-        localValidationStatus = ref(baseValidationStatus),
+        localValidationStatus = ref(<FieldValidation[]>[]),
         editable = ref(!props.readMode),
         originalFileName = ref(props.fileName),
         visibleFileName = ref(props.fileName);
-
 
     const dropdownEl = ref(<Element | ComponentPublicInstance | null>null),
         container = ref(<Element | ComponentPublicInstance | null>null),
@@ -191,7 +193,7 @@
     const originalEditableValue = ref(assignEditableValue());
 
     const optionsHaystack = ref([]),
-        visibleOptions = ref([]);
+        visibleOptions = ref(<Option[]>[]);
 
     const updatePickedOption = () => {
 
@@ -295,7 +297,6 @@
                 r.push('is-boolean');
                 if (editableValue.value) r.push('is-checked');
             }
-            if (props.palette) r.push(`lkt-field--${props.palette}`);
             if (changed.value) r.push('is-changed');
             if (props.disabled) r.push('is-disabled');
             if (props.multiple) r.push('is-multiple');
@@ -509,7 +510,6 @@
         localValidationStatus.value = [];
 
         nextTick(() => {
-
             let min = typeof props.min === 'undefined' ? 0 : parseFloat(props.min),
                 max = typeof props.max === 'undefined' ? 0 : parseFloat(props.max);
 
@@ -545,87 +545,21 @@
                 }
             }
 
-            if (Type.value === FieldType.Email && props.mandatory && editableValue.value === '') {
-                localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
+            if (Type.value === FieldType.Email) {
+                if (props.mandatory && editableValue.value === '') {
+                    localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
 
-            } else if (Type.value === FieldType.Email && !checkIsEmail(editableValue.value)) {
-                localValidationStatus.value.push(FieldValidation.createEmail('ko'));
+                } else if (!checkIsEmail(editableValue.value)) {
+                    localValidationStatus.value.push(FieldValidation.createEmail('ko'));
+                }
             }
 
-            if (Type.value !== FieldType.Number) {
+            if (TextFieldTypes.includes(Type.value)) {
                 validateAmountOfNumbers(localValidationStatus.value, editableValue.value, props.minNumbers, props.maxNumbers);
-
-                if (typeof props.minUpperChars !== 'undefined') {
-                    let constraint = parseInt(props.minUpperChars),
-                        val = editableValue.value.replace(/[^A-Z]+/g, '');
-
-                    if (val.length < constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMinUpperChars(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.maxUpperChars !== 'undefined') {
-                    let constraint = parseInt(props.maxUpperChars),
-                        val = editableValue.value.replace(/[^A-Z]+/g, '');
-
-                    if (val.length > constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMaxUpperChars(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.minLowerChars !== 'undefined') {
-                    let constraint = parseInt(props.minLowerChars),
-                        val = editableValue.value.replace(/[A-Z]+/g, '');
-
-                    if (val.length < constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMinLowerChars(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.maxLowerChars !== 'undefined') {
-                    let constraint = parseInt(props.maxLowerChars),
-                        val = editableValue.value.replace(/[A-Z]+/g, '');
-
-                    if (val.length > constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMaxLowerChars(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.minChars !== 'undefined') {
-                    let constraint = parseInt(props.minChars),
-                        val = editableValue.value.replace(/\d+/g, '');
-
-                    if (val.length < constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMinChars(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.maxChars !== 'undefined') {
-                    let constraint = parseInt(props.maxChars),
-                        val = editableValue.value.replace(/\d+/g, '');
-
-                    if (val.length > constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMaxChars(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.minSpecialChars !== 'undefined') {
-                    let constraint = parseInt(props.minSpecialChars),
-                        val = editableValue.value.replace(/\d+/g, '').replace(/[a-zA-Z]+/g, '');
-
-                    if (val.length < constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMinSpecialChars(constraint, 'ko'));
-                    }
-                }
-
-                if (typeof props.maxSpecialChars !== 'undefined') {
-                    let constraint = parseInt(props.maxSpecialChars),
-                        val = editableValue.value.replace(/\d+/g, '').replace(/[a-zA-Z]+/g, '');
-
-                    if (val.length > constraint) {
-                        localValidationStatus.value.push(FieldValidation.createMaxSpecialChars(constraint, 'ko'));
-                    }
-                }
+                validateAmountOfUpperChars(localValidationStatus.value, editableValue.value, props.minUpperChars, props.maxUpperChars);
+                validateAmountOfLowerChars(localValidationStatus.value, editableValue.value, props.minLowerChars, props.maxLowerChars);
+                validateAmountOfChars(localValidationStatus.value, editableValue.value, props.minChars, props.maxChars);
+                validateAmountOfSpecialChars(localValidationStatus.value, editableValue.value, props.minSpecialChars, props.maxSpecialChars);
             }
 
             if (props.checkEqualTo && editableValue.value !== props.checkEqualTo) {
@@ -1016,28 +950,6 @@
         hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
         customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
-    // const computedI18nOptions = computed(() => {
-    //     if (typeof props.options === 'string') {
-    //         if (props.options.startsWith('__:')) {
-    //             let key = props.options.substring(3);
-    //
-    //             let haystack = fetchInObject(i18n, key, '.'),
-    //                 r = [];
-    //             for (let k in haystack) r.push({value: k, label: haystack[k]});
-    //             optionsHaystack.value = prepareOptions(r);
-    //             buildVisibleOptions('', false);
-    //             console.log('computedI18nOptions2: ', r)
-    //             updatePickedOption();
-    //             return r;
-    //         }
-    //     }
-    //     return [];
-    // })
-    //
-    // watch(i18n, v => {
-    //     computedI18nOptions.value;
-    // }, {deep: true})
-
     onMounted(() => {
         optionsHaystack.value = prepareOptions(props.options);
         buildVisibleOptions('', false);
@@ -1073,9 +985,9 @@
 </script>
 
 <template>
-    <div v-bind:class="classes"
-         v-bind:data-show-ui="showInfoUi"
-         v-bind:data-labeled="!!!slots.label"
+    <div :class="classes"
+         :data-show-ui="showInfoUi"
+         :data-labeled="!!!slots.label"
          ref="container"
     >
         <slot v-if="!!slots.label" name="label"></slot>
@@ -1402,7 +1314,7 @@
                         class="lkt-field--read-value"
                         v-else-if="download"
                         :option="{value: '', label: value}"
-                        :editable="!editable"
+                        :editable="false"
                         :download="download"
                     />
                     <div

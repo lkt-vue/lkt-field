@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "",
   "keywords": [
     "lkt",
@@ -55,7 +55,6 @@
   "dependencies": {
     "lkt-button": "^1.2.3",
     "lkt-date-tools": "^1.0.4",
-    "lkt-field-validation": "^1.0.0",
     "lkt-http-client": "^1.0.29",
     "lkt-i18n": "^1.0.4",
     "lkt-modal": "^1.1.7",

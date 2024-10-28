@@ -1,5 +1,4 @@
 import {App, Component, Plugin} from 'vue';
-import LktFieldValidation from 'lkt-field-validation';
 
 import { default as libComponent } from './lib-components/LktField.vue';
 
@@ -23,21 +22,13 @@ import "../styles/state-styles.css";
 import "../styles/tags-styles.css";
 import "../styles/helper-styles.css";
 import {Settings} from "./settings/Settings";
-import LktModal, {addModal} from "lkt-modal";
-import LktButton from "lkt-button";
-import LktTooltip from "lkt-tooltip";
+import {addModal} from "lkt-modal";
 import LktTextLanguageEditModal from "./components/modals/LktTextLanguageEditModal.vue";
 
 const LktField: Plugin = {
   install: (app: App) => {
-    // Register library components
-    if (app.component('lkt-modal') === undefined) app.use(LktModal);
-    if (app.component('lkt-button') === undefined) app.use(LktButton);
-    if (app.component('lkt-tooltip') === undefined) app.use(LktTooltip);
-
     // Register plugin components
     if (app.component('lkt-field') === undefined) app.component('lkt-field', libComponent);
-    if (app.component('lkt-field-validations') === undefined) app.use(LktFieldValidation);
 
     // Register modals
     addModal('lkt-field-language-edit', LktTextLanguageEditModal);
@@ -66,3 +57,15 @@ export const setFieldShowPasswordOnText = (text: string) => Settings.showPasswor
 export const setFieldShowPasswordOffText = (text: string) => Settings.showPasswordOffText = text;
 export const setFieldDateReadFormat = (format: string) => Settings.dateReadFormat = format;
 export const setFieldDefaultDateReadFormat = (format: string) => Settings.defaultDateReadFormat = format;
+
+
+export const setFieldValidationMessage = (code: string, message: string, stack: string = 'default') => {
+  if (!stack) stack = 'default';
+  if (!Settings.validationMessages[stack]) Settings.validationMessages[stack] = {};
+  Settings.validationMessages[stack][code] = message;
+}
+
+export const setFieldValidationIconSlot = (component: string|Component) => {
+  Settings.validationIconSlot = component;
+  return true;
+}
