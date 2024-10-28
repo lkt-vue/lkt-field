@@ -25,7 +25,7 @@
         receiveOptions,
     } from '../functions/option-functions';
     import { isValidDateObject } from '../functions/date-functions';
-    import { BooleanFieldTypes, TextFieldTypes } from '../constants/field-type-constants';
+    import { BooleanFieldTypes, FieldTypesWithOptions, TextFieldTypes } from '../constants/field-type-constants';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import ColorInput from '../components/color/ColorInput.vue';
@@ -720,7 +720,7 @@
         getValue = () => editableValue.value,
         onKeyUp = ($event: KeyboardEvent) => {
             doLocalValidation();
-            if ([FieldType.Text, FieldType.Select].includes(Type.value)) {
+            if (FieldTypesWithOptions.includes(Type.value)) {
                 fetchOptions(editableValue.value);
                 navigateOptions($event);
 
@@ -1414,7 +1414,7 @@
             :stack="validationStack" :min="min" :max="max" />
 
         <lkt-tooltip
-            v-if="editable"
+            v-if="editable && FieldTypesWithOptions.includes(Type)"
             ref="dropdownEl"
             class="lkt-field--dropdown"
             v-model="showOptions"
@@ -1428,10 +1428,10 @@
                 <ul class="lkt-field--dropdown-options" v-if="!isLoading" ref="optionList">
                     <li v-for="(option, i) in visibleOptions"
                         :class="{
-                            'is-active': optionIsActive(option, value, multiple),
-                            'is-focused': i === focusedOptionIndex,
-                            'is-disabled': option.disabled,
-                        }"
+                                'is-active': optionIsActive(option, value, multiple),
+                                'is-focused': i === focusedOptionIndex,
+                                'is-disabled': option.disabled,
+                            }"
                         :data-index="i"
                         @click="() => onClickOption(option)">
                         <template v-if="slots.option">
