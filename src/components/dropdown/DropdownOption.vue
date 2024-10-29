@@ -4,6 +4,8 @@
     import { Settings } from '@/settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
 
+    const emit = defineEmits(['click']);
+
     const props = withDefaults(defineProps<{
         option: Option,
         optionSlot?: string,
@@ -45,21 +47,23 @@
         }),
         computedContainerComponent = computed(() => {
             if (optionSlot.value) return optionSlot.value;
-            if (!props.editable && props.modal !== '') return 'lkt-button';
+            if (!props.editable && (props.modal !== '' || props.option.modal !== '')) return 'lkt-button';
             if (!props.editable && props.download !== '') return 'lkt-anchor';
             return 'div';
         }),
         computedContainerAttrs = computed(() => {
             if (computedContainerComponent.value === 'lkt-button') {
-                let modal = props.modal;
-                if (typeof props.modal === 'function') {
-                    modal = () => {
-                        return props.modal(props.option);
+                let modal = props.option.modal;
+                if (props.modal) modal = props.modal;
+                let modalVal = modal;
+                if (typeof modal === 'function') {
+                    modalVal = () => {
+                        return modal(props.option);
                     };
                 }
 
                 return {
-                    modal,
+                    modal: modalVal,
                     modalData: props.modalData,
                     modalKey: props.option.value,
                     icon: computedIcon.value,
@@ -89,6 +93,10 @@
 
             return {};
         });
+
+    const onClick = () => {
+        emit('click');
+    }
 </script>
 
 <template>
@@ -97,7 +105,9 @@
         v-bind="computedContainerAttrs"
         class="lkt-field--dropdown-option"
         :class="computedClass"
-        :title="option.label">
+        :title="option.label"
+        @click="onClick"
+    >
         <div v-if="computedIcon && computedContainerComponent !== 'lkt-button'"
              class="lkt-field--dropdown-option--icon-container">
             <i :class="computedIcon"></i>

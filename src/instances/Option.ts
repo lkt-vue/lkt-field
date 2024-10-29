@@ -8,6 +8,7 @@ export class Option {
     disabled?: boolean = false;
     group?: string = '';
     icon?: string = '';
+    modal?: string = '';
 
     constructor(data: LktObject = {}) {
         for (let k in data) {

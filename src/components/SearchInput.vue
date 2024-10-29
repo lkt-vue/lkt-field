@@ -1,14 +1,17 @@
 <script setup lang="ts">
-    import { computed, ref, watch } from 'vue';
-    import DropdownOption from '@/components/dropdown/DropdownOption.vue';
+    import { ref, watch } from 'vue';
+    import DropdownOption from '../components/dropdown/DropdownOption.vue';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
     const props = withDefaults(defineProps<{
         modelValue: string
+        name: string
+        id: string
         optionsResource: string
         editable: boolean,
         focusing: boolean,
+        hadFirstFocus: boolean,
         disabled: boolean,
         readonly: boolean,
         tabindex: number,
@@ -20,15 +23,28 @@
     const value = ref(props.modelValue);
 
     const hasFocus = ref(props.focusing);
+    let focusTimeout:Timeout|undefined = undefined;
     let blurTimeout:Timeout|undefined = undefined;
+    let searchTimeout:Timeout|undefined = undefined;
+
+    const filters = ref({});
+    const updateFilters = () => {
+        clearTimeout(searchTimeout);
+
+        searchTimeout = setTimeout(() => {
+            filters.value = {
+                query: value.value
+            }
+        }, 300);
+    }
 
     const onFocus = () => {
             hasFocus.value = true;
         },
         onBlur = () => {
-            // blurTimeout = setTimeout(() => {
-            //     hasFocus.value = false;
-            // }, 100);
+            blurTimeout = setTimeout(() => {
+                hasFocus.value = false;
+            }, 100);
         };
 
     watch(hasFocus, v => {
@@ -36,47 +52,50 @@
         else emit('blur');
     });
 
-    const computedFilters = computed(() => {
-        return {
-            query: value.value
-        }
-    })
+    const cancelBlur = () => {
+        clearTimeout(blurTimeout);
+        focusTimeout = setTimeout(() => {
+            onFocus();
+        }, 100);
+    }
 
 </script>
 
 <template>
     <input
+        :id="id"
         type="text"
         ref="input"
         v-model="value"
         @focus="onFocus"
         @blur="onBlur"
+        @keyup="updateFilters"
     />
 
     <lkt-tooltip
-        v-if="editable"
+        v-if="editable && hadFirstFocus"
         ref="dropdownEl"
-        class="lkt-field--dropdown"
+        class="lkt-field--dropdown lkt-field--search-results"
         v-model="hasFocus"
         :referrer="container"
         referrer-width
         location-x="left-corner"
         location-y="bottom"
     >
-        <div v-if="hasFocus">
-            <lkt-table
-                :resource="optionsResource"
-                :filters="computedFilters"
-                items-container-class="lkt-field--dropdown-options"
-                type="ul"
-            >
-                <template #item="{item, index, isLoading, canCreate, canUpdate, canDrop, canRead, doDrop}">
-                    <dropdown-option
-                        :option="item"
-                        :editable="editable"
-                    />
-                </template>
-            </lkt-table>
-        </div>
+        <lkt-table
+            :resource="optionsResource"
+            :filters="filters"
+            items-container-class="lkt-field--dropdown-options"
+            type="ul"
+            @page="cancelBlur"
+            @click="cancelBlur"
+        >
+            <template #item="{item, index, isLoading, canCreate, canUpdate, canDrop, canRead, doDrop}">
+                <dropdown-option
+                    :option="item"
+                    @click="cancelBlur"
+                />
+            </template>
+        </lkt-table>
     </lkt-tooltip>
 </template>

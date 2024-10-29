@@ -62,6 +62,7 @@ declare class ti {
     disabled: boolean;
     group: string;
     icon: string;
+    modal: string;
 }
 declare namespace ko {
     function install(e: any): void;

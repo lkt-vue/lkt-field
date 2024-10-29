@@ -408,6 +408,7 @@
         computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && fieldFeaturedButton.value !== 'i18n'),
         computedShowDropdownButton = computed(() => {
             if (Type.value === FieldType.Calc) return false;
+            if (Type.value === FieldType.Search) return false;
             return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || props.optionsResource !== '';
         }),
         computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis)
@@ -1147,6 +1148,7 @@
                     :name="name"
                     :editable="editable"
                     :focusing="focusing"
+                    :had-first-focus="hadFirstFocus"
                     :disabled="disabled"
                     :readonly="readonly"
                     :options-resource="optionsResource"
