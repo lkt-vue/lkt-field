@@ -216,3 +216,10 @@
 .lkt-field.is-editable .lkt-field--icon {
     margin-left: 5px;
 }
+
+.lkt-field-validation-message {
+    font-family: var(--lkt-field-validation-font-family), serif;
+    font-size: var(--lkt-field-validation-font-size);
+    font-weight: var(--lkt-field-validation-font-weight);
+    color: var(--lkt-field-validation-color);
+}
