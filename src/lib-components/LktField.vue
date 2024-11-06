@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { generateRandomString, isEmail as checkIsEmail, stripTags } from 'lkt-string-tools';
+    import { formatNumber, generateRandomString, isEmail as checkIsEmail, stripTags } from 'lkt-string-tools';
     import { ComponentPublicInstance, computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
@@ -336,7 +336,28 @@
             return r.join(' ');
         }),
         readModeTitle = computed(() => {
-            if (typeof editableValue.value === 'number') return editableValue.value.toString();
+            if (typeof editableValue.value === 'number') {
+                computedLang.value; // Call in order to force prop to re-compute
+                if (Settings.langNumberFormat[computedLang.value]?.amountOfDecimals) {
+                    return formatNumber(
+                        editableValue.value,
+                        Settings.langNumberFormat[computedLang.value].amountOfDecimals,
+                        Settings.langNumberFormat[computedLang.value].decimalSeparator,
+                        Settings.langNumberFormat[computedLang.value].thousandsSeparator,
+                        Settings.langNumberFormat[computedLang.value].removeDecimalsIfZero,
+                    );
+                }
+                if (Settings.amountOfDecimals) {
+                    return formatNumber(
+                        editableValue.value,
+                        Settings.amountOfDecimals,
+                        Settings.decimalSeparator,
+                        Settings.thousandsSeparator,
+                        Settings.removeDecimalsIfZero,
+                    );
+                }
+                return editableValue.value.toString();
+            }
             if (Type.value === FieldType.Html) return stripTags(editableValue.value);
             return editableValue.value;
         }),
@@ -1337,6 +1358,10 @@
                         :editable="false"
                         :download="download"
                     />
+                    <div
+                        v-else-if="Type === FieldType.Number"
+                        class="lkt-field--read-value"
+                        v-html="readModeTitle" :title="readModeTitle"></div>
                     <div
                         v-else
                         class="lkt-field--read-value"

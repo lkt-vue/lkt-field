@@ -1,4 +1,4 @@
-declare class Co {
+declare class xo {
     constructor(t?: {});
     modelValue: string;
     type: any;
@@ -55,7 +55,7 @@ declare class Co {
     modalKey: string;
     modalData: {};
 }
-declare class ti {
+declare class ii {
     constructor(t?: {});
     label: string;
     data: {};
@@ -64,22 +64,23 @@ declare class ti {
     icon: string;
     modal: string;
 }
-declare namespace ko {
+declare namespace So {
     function install(e: any): void;
 }
-declare function Lo(e: any): any;
-declare function Ro(e: any): any;
-declare function Mo(e: any): any;
-declare function xo(e: any): void;
-declare function To(e: any): any;
-declare function So(e: any, t: any): void;
-declare function Ao(e: any): any;
-declare function No(e: any): any;
-declare function Bo(e: any): any;
 declare function zo(e: any): any;
-declare function Eo(e: any): any;
-declare function Do(e: any): boolean;
-declare function Io(e: any, t: any, i?: string): void;
-declare function wo(e: any, t: any): boolean;
-declare function yo(e: any, t: any): boolean;
-export { Co as Field, ti as Option, ko as default, Lo as setFieldClearText, Ro as setFieldDateReadFormat, Mo as setFieldDefaultDateReadFormat, xo as setFieldEmptySlot, To as setFieldI18nText, So as setFieldOptionSlot, Ao as setFieldShowPasswordOffText, No as setFieldShowPasswordOnText, Bo as setFieldSwitchEditionOffText, zo as setFieldSwitchEditionOnText, Eo as setFieldUndoText, Do as setFieldValidationIconSlot, Io as setFieldValidationMessage, wo as setTextEditSlot, yo as setTextValueSlot };
+declare function Io(e: any): any;
+declare function Do(e: any): any;
+declare function Eo(e: any): void;
+declare function No(e: any): any;
+declare function Vo(e?: number, t?: string, i?: string, s?: boolean, l?: string): boolean;
+declare function Lo(e: any, t: any): void;
+declare function Mo(e: any): any;
+declare function Ro(e: any): any;
+declare function Ao(e: any): any;
+declare function Bo(e: any): any;
+declare function To(e: any): any;
+declare function Oo(e: any): boolean;
+declare function Ho(e: any, t: any, i?: string): void;
+declare function ko(e: any, t: any): boolean;
+declare function Co(e: any, t: any): boolean;
+export { xo as Field, ii as Option, So as default, zo as setFieldClearText, Io as setFieldDateReadFormat, Do as setFieldDefaultDateReadFormat, Eo as setFieldEmptySlot, No as setFieldI18nText, Vo as setFieldNumberFormat, Lo as setFieldOptionSlot, Mo as setFieldShowPasswordOffText, Ro as setFieldShowPasswordOnText, Ao as setFieldSwitchEditionOffText, Bo as setFieldSwitchEditionOnText, To as setFieldUndoText, Oo as setFieldValidationIconSlot, Ho as setFieldValidationMessage, ko as setTextEditSlot, Co as setTextValueSlot };

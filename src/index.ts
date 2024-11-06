@@ -1,52 +1,54 @@
-import {App, Component, Plugin} from 'vue';
+import { App, Component, Plugin } from 'vue';
 
 import { default as libComponent } from './lib-components/LktField.vue';
 
-export {setTextValueSlot, setTextEditSlot} from './functions/settings-functions';
+export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 
-import "../fonts/fontello/css/lkt-fields.css";
-import "../styles/common-styles.css";
-import "../styles/select-styles.css";
-import "../styles/dropdown-styles.css";
-import "../styles/editor-styles.css";
-import "../styles/switch-styles.css";
-import "../styles/file-styles.css";
-import "../styles/color-styles.css";
-import "../styles/buttons-styles.css";
-import "../styles/range-styles.css";
-import "../styles/read-mode-styles.css";
-import "../styles/calendar-styles.css";
-import "../styles/calc-styles.css";
-import "../styles/palette-styles.css";
-import "../styles/state-styles.css";
-import "../styles/tags-styles.css";
-import "../styles/helper-styles.css";
-import {Settings} from "./settings/Settings";
-import {addModal} from "lkt-modal";
-import LktTextLanguageEditModal from "./components/modals/LktTextLanguageEditModal.vue";
+import '../fonts/fontello/css/lkt-fields.css';
+import '../styles/common-styles.css';
+import '../styles/select-styles.css';
+import '../styles/dropdown-styles.css';
+import '../styles/editor-styles.css';
+import '../styles/switch-styles.css';
+import '../styles/file-styles.css';
+import '../styles/color-styles.css';
+import '../styles/buttons-styles.css';
+import '../styles/range-styles.css';
+import '../styles/read-mode-styles.css';
+import '../styles/calendar-styles.css';
+import '../styles/calc-styles.css';
+import '../styles/palette-styles.css';
+import '../styles/state-styles.css';
+import '../styles/tags-styles.css';
+import '../styles/helper-styles.css';
+import { Settings } from './settings/Settings';
+import { addModal } from 'lkt-modal';
+import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditModal.vue';
 
 const LktField: Plugin = {
-  install: (app: App) => {
-    // Register plugin components
-    if (app.component('lkt-field') === undefined) app.component('lkt-field', libComponent);
+    install: (app: App) => {
+        // Register plugin components
+        if (app.component('lkt-field') === undefined) {
+            app.component('lkt-field', libComponent);
 
-    // Register modals
-    addModal('lkt-field-language-edit', LktTextLanguageEditModal);
-  },
+            // Register modals
+            addModal('lkt-field-language-edit', LktTextLanguageEditModal);
+        }
+    },
 };
 
 export default LktField;
 
-export {Option} from "./instances/Option";
-export {Field} from "./instances/Field";
+export { Option } from './instances/Option';
+export { Field } from './instances/Field';
 
-export const setFieldEmptySlot = (component?: string|Component) => {
-  Settings.defaultEmptyValueSlot = component;
-}
+export const setFieldEmptySlot = (component?: string | Component) => {
+    Settings.defaultEmptyValueSlot = component;
+};
 
-export const setFieldOptionSlot = (name: string, component?: string|Component) => {
-  Settings.optionSlots[name] = component;
-}
+export const setFieldOptionSlot = (name: string, component?: string | Component) => {
+    Settings.optionSlots[name] = component;
+};
 
 export const setFieldUndoText = (text: string) => Settings.undoText = text;
 export const setFieldClearText = (text: string) => Settings.clearText = text;
@@ -60,12 +62,33 @@ export const setFieldDefaultDateReadFormat = (format: string) => Settings.defaul
 
 
 export const setFieldValidationMessage = (code: string, message: string, stack: string = 'default') => {
-  if (!stack) stack = 'default';
-  if (!Settings.validationMessages[stack]) Settings.validationMessages[stack] = {};
-  Settings.validationMessages[stack][code] = message;
-}
+    if (!stack) stack = 'default';
+    if (!Settings.validationMessages[stack]) Settings.validationMessages[stack] = {};
+    Settings.validationMessages[stack][code] = message;
+};
 
-export const setFieldValidationIconSlot = (component: string|Component) => {
-  Settings.validationIconSlot = component;
-  return true;
-}
+export const setFieldValidationIconSlot = (component: string | Component) => {
+    Settings.validationIconSlot = component;
+    return true;
+};
+
+export const setFieldNumberFormat = (
+    decimals: number = 2,
+    decimalSeparator: string = '.',
+    thousandsSeparator: string = '.',
+    removeDecimalsIfZero: boolean = true,
+    lang: string = '',
+) => {
+    if (lang !== '') {
+        Settings.langNumberFormat[lang].amountOfDecimals = decimals;
+        Settings.langNumberFormat[lang].decimalSeparator = decimalSeparator;
+        Settings.langNumberFormat[lang].thousandsSeparator = thousandsSeparator;
+        Settings.langNumberFormat[lang].removeDecimalsIfZero = removeDecimalsIfZero;
+        return true;
+    }
+    Settings.amountOfDecimals = decimals;
+    Settings.decimalSeparator = decimalSeparator;
+    Settings.thousandsSeparator = thousandsSeparator;
+    Settings.removeDecimalsIfZero = removeDecimalsIfZero;
+    return true;
+};
