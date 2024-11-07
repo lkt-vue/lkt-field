@@ -29,6 +29,10 @@
     justify-content: flex-start;
 }
 
+.lkt-anchor.lkt-field--read-value {
+    --lkt-anchor-justify-content: flex-start;
+}
+
 .lkt-field--read-value {
     box-sizing: border-box;
     width: 100%;
