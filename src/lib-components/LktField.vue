@@ -32,7 +32,8 @@
     import {
         validateAmountOfChars,
         validateAmountOfLowerChars,
-        validateAmountOfNumbers, validateAmountOfSpecialChars,
+        validateAmountOfNumbers,
+        validateAmountOfSpecialChars,
         validateAmountOfUpperChars,
     } from '../functions/validation-functions';
     import { MultipleDisplayType } from '../enums/MultipleDisplayType';
@@ -45,7 +46,7 @@
     import SearchInput from '@/components/SearchInput.vue';
 
     // Emits
-    const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
+    const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
 
     // Slots
     const slots = useSlots();
@@ -163,7 +164,8 @@
         optionList = ref(<Element | ComponentPublicInstance | null>null);
 
     const showOptions = ref(false),
-        isLoading = ref(false);
+        isLoading = ref(false),
+        ready = ref(false);
 
     const searchString = ref('');
     const focusedOptionIndex = ref(-1);
@@ -487,9 +489,11 @@
             }
 
         }
-        emits('update:modelValue', v);
-        doRemoteValidation();
-        doLocalValidation();
+        if (ready.value && editable.value) {
+            emits('update:modelValue', v);
+            doRemoteValidation();
+            doLocalValidation();
+        }
     }, { deep: true });
 
     watch(isValid, (v) => {
@@ -900,6 +904,7 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+            emits('change', $event);
         },
         onClick = ($event: Event) => {
             emits('click', $event);
@@ -977,7 +982,6 @@
         optionsHaystack.value = prepareOptions(props.options);
         buildVisibleOptions('', false);
         updatePickedOption();
-        // computedI18nOptions.value;
 
         if (Type.value === FieldType.Select) {
             if (props.multiple) {
@@ -993,6 +997,8 @@
             setVisibleDateValue();
 
         }
+
+        ready.value = true;
     });
 
     const computedMainComponent = computed(() => {

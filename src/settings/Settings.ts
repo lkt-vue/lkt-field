@@ -24,12 +24,12 @@ export class Settings {
     static dateReadFormat = '';
     static defaultDateReadFormat = 'Y-m-d';
 
-    static langDateReadFormat = {
+    static langDateReadFormat: LktObject = {
         en: 'Y-m-d',
         es: 'd/m/Y',
     };
 
-    static acceptTypes = {
+    static acceptTypes: LktObject = {
         file: '*/*',
         image: 'image/*',
     };
