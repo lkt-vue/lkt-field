@@ -4,6 +4,14 @@ export const FieldTypesWithOptions = [
     FieldType.Text, FieldType.Search, FieldType.Select
 ];
 
+export const FieldTypesWithoutClear = [
+    FieldType.Switch, FieldType.Check
+];
+
+export const FieldTypesWithoutUndo = [
+    FieldType.Switch, FieldType.Check
+];
+
 export const TextFieldTypesWithOptions = [
     FieldType.Text, FieldType.Search
 ];

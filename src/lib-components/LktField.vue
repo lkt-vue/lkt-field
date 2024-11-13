@@ -25,7 +25,12 @@
         receiveOptions,
     } from '../functions/option-functions';
     import { isValidDateObject } from '../functions/date-functions';
-    import { BooleanFieldTypes, FieldTypesWithOptions, TextFieldTypes } from '../constants/field-type-constants';
+    import {
+        BooleanFieldTypes,
+        FieldTypesWithOptions,
+        FieldTypesWithoutClear, FieldTypesWithoutUndo,
+        TextFieldTypes,
+    } from '../constants/field-type-constants';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import ColorInput from '../components/color/ColorInput.vue';
@@ -420,8 +425,8 @@
         computedShowSubtractStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
         computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && Type.value === FieldType.Number && fieldFeaturedButton.value !== 'subtract'),
         computedShowIncreaseStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
-        computedShowUndo = computed(() => props.canUndo && changed.value && editable.value),
-        computedShowClear = computed(() => props.canClear && isFilled.value && editable.value),
+        computedShowUndo = computed(() => props.canUndo && changed.value && editable.value && !FieldTypesWithoutUndo.includes(Type.value)),
+        computedShowClear = computed(() => props.canClear && isFilled.value && editable.value && !FieldTypesWithoutClear.includes(Type.value)),
         computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object' && editable.value),
         computedShowPasswordReveal = computed(() => Type.value === FieldType.Password && props.showPassword && isFilled.value && editable.value),
 
