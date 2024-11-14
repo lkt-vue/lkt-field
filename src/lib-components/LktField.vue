@@ -13,7 +13,6 @@
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { FieldType } from '../enums/FieldType';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import { date } from 'lkt-date-tools';
     import { Option } from '../instances/Option';
     import {
         filterOptions,
@@ -23,7 +22,7 @@
         prepareOptions,
         receiveOptions,
     } from '../functions/option-functions';
-    import { getVisibleDateValue, isValidDateObject } from '../functions/date-functions';
+    import { getVisibleDateValue } from '../functions/date-functions';
     import {
         BooleanFieldTypes,
         FieldTypesWithOptions,
@@ -176,7 +175,7 @@
 
     const searchString = ref('');
     const focusedOptionIndex = ref(-1);
-    const pickedOptions = ref([]);
+    const pickedOptions = ref(<Option[]>[]);
     const searchMode = ref(false);
     const optionsAutoLoaded = ref(false);
     const optionsAutoLoading = ref(false);
@@ -210,10 +209,12 @@
             if (props.multiple) {
                 for (let k in editableValue.value) {
                     let option = findOptionByValue(optionsHaystack.value, editableValue.value[k]);
-                    if (pickedOptions.value.length === 0) {
-                        pickedOptions.value.push(option);
-                    } else {
-                        pickedOptions.value.splice(k, 1, option);
+                    if (typeof option !== 'undefined') {
+                        if (pickedOptions.value.length === 0) {
+                            pickedOptions.value.push(option);
+                        } else {
+                            pickedOptions.value.splice(k, 1, option);
+                        }
                     }
                 }
 
@@ -221,10 +222,12 @@
             }
 
             let option = findOptionByValue(optionsHaystack.value, editableValue.value);
-            if (pickedOptions.value.length === 0) {
-                pickedOptions.value.push(option);
-            } else {
-                pickedOptions.value.splice(0, 1, option);
+            if (typeof option !== 'undefined') {
+                if (pickedOptions.value.length === 0) {
+                    pickedOptions.value.push(option);
+                } else {
+                    pickedOptions.value.splice(0, 1, option);
+                }
             }
         };
 
