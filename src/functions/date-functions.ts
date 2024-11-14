@@ -4,7 +4,11 @@ export const isValidDateObject = (date: any) => {
     return !(Object.prototype.toString.call(date) === '[object Date]' && isNaN(date));
 }
 
-export const getVisibleDateValue = (value: string|Date, format: string) => {
+export const getVisibleDateValue = (value: string|Date|undefined, format: string) => {
+    if (typeof value === 'undefined') {
+        return '';
+    }
+
     if (typeof value === 'string') {
         value = new Date(value);
     }

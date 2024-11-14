@@ -1,18 +1,16 @@
 <script setup lang="ts">
     import { computed, onMounted, ref, watch } from 'vue';
-    import { getVisibleDateValue, isValidDateObject } from '@/functions/date-functions';
-    import LktCalendar from '@/components/calendar/LktCalendar.vue';
+    import { getVisibleDateValue, isValidDateObject } from '../functions/date-functions';
+    import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
-    import { Settings } from '@/settings/Settings';
+    import { Settings } from '../settings/Settings';
 
     const emit = defineEmits([
         'update:modelValue',
-        'update:text',
     ]);
 
     const props = withDefaults(defineProps<{
         modelValue: string
-        text: string
         name: string
         id: string
         tabindex: number
@@ -32,16 +30,21 @@
         return 'Y-m-d';
     });
 
-    const checkDate = (d: string) => {
+    const setPickedDate = (d: string) => {
             let date = new Date(d);
 
             if (isValidDateObject(date)) {
                 pickedDate.value = date;
             }
+        },
+        setVisibleDateValue = () => {
+            visibleDateValue.value = getVisibleDateValue(pickedDate.value, computedDateReadFormat.value);
         };
 
-    checkDate(props.modelValue);
-
+    watch(() => props.modelValue, v => {
+        value.value = v;
+        setPickedDate(v);
+    });
     watch(value, (v) => emit('update:modelValue', v));
 
     watch(pickedDate, (v) => {
@@ -51,14 +54,13 @@
         } else {
             value.value = date('Y-m-d', v);
         }
-        visibleDateValue.value = getVisibleDateValue(pickedDate.value, computedDateReadFormat.value);
+        setVisibleDateValue();
     }, { deep: true });
 
-    watch(visibleDateValue, v => emit('update:text', v));
-
     onMounted(() => {
-        visibleDateValue.value = getVisibleDateValue(pickedDate.value, computedDateReadFormat.value);
-    })
+        setPickedDate(props.modelValue);
+        setVisibleDateValue();
+    });
 </script>
 
 <template>
@@ -70,7 +72,7 @@
         tooltip-location-y="bottom"
         tooltip-location-x="left-corner"
     >
-        <template #tooltip="{doClose}">
+        <template #tooltip>
             <lkt-calendar v-model="pickedDate" />
         </template>
     </lkt-button>

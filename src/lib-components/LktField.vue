@@ -13,7 +13,6 @@
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { FieldType } from '../enums/FieldType';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
     import { Option } from '../instances/Option';
     import {
@@ -28,7 +27,8 @@
     import {
         BooleanFieldTypes,
         FieldTypesWithOptions,
-        FieldTypesWithoutClear, FieldTypesWithoutUndo,
+        FieldTypesWithoutClear,
+        FieldTypesWithoutUndo,
         TextFieldTypes,
     } from '../constants/field-type-constants';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
@@ -155,7 +155,6 @@
 
     // Reactive data
     const originalValue = ref(_val),
-        pickedDate = ref(undefined),
         value = ref(_val),
         isValid = ref(props.valid),
         showPasswordIcon = ref(false),
@@ -190,8 +189,6 @@
         if (Settings.defaultDateReadFormat) return Settings.defaultDateReadFormat;
         return 'Y-m-d';
     });
-
-    const visibleDateValue = ref('');
 
     const assignEditableValue = () => {
         if (typeof value.value === 'object' && !Array.isArray(value.value)) {
@@ -247,7 +244,6 @@
         if (Type.value === FieldType.Html) return 'div';
         return 'input';
     });
-
 
     const changed = computed(() => {
             if (Type.value === FieldType.Date) {
@@ -486,17 +482,6 @@
         if (Type.value === FieldType.Number) reAssignNumericValue(v);
     });
     watch(value, (v) => {
-        if (Type.value === FieldType.Date) {
-            let date = new Date(v);
-
-            if (isValidDateObject(date)) {
-                pickedDate.value = date;
-            } else {
-                value.value = '';
-                return;
-            }
-
-        }
         if (ready.value && editable.value) {
             emits('update:modelValue', v);
             doRemoteValidation();
@@ -507,15 +492,6 @@
     watch(isValid, (v) => {
         emits('update:valid', v);
     });
-    watch(pickedDate, (v) => {
-        if (typeof v === 'undefined') {
-            value.value = '';
-
-        } else {
-            value.value = date('Y-m-d', v);
-        }
-        setVisibleDateValue();
-    }, { deep: true });
 
     watch(() => props.options, (v) => {
         optionsHaystack.value = prepareOptions(v);
@@ -525,15 +501,6 @@
             buildVisibleOptions(editableValue.value, false);
         }
     });
-
-    const setVisibleDateValue = () => {
-        if (isValidDateObject(pickedDate.value)) {
-            visibleDateValue.value = date(computedDateReadFormat.value, pickedDate.value);
-
-        } else {
-            visibleDateValue.value = '';
-        }
-    };
 
     const doLocalValidation = () => {
         if (props.autoValidationType === 'blur' && (!hadFirstBlur.value || !hadFirstFocus.value)) {
@@ -722,7 +689,7 @@
                 }
                 return;
             } else if (Type.value === FieldType.Date) {
-                pickedDate.value = new Date(originalValue.value);
+                value.value = originalValue.value;
                 return;
             } else if (Type.value === FieldType.File) {
                 value.value = originalValue.value;
@@ -738,7 +705,6 @@
                 }
                 return;
             } else if (Type.value === FieldType.Date) {
-                pickedDate.value = undefined;
                 value.value = '';
                 return;
             } else if (Type.value === FieldType.File) {
@@ -941,11 +907,6 @@
             if (props.autoloadOptionsResource) {
                 fetchOptions('', false);
             }
-
-        } else if (Type.value === FieldType.Date) {
-            pickedDate.value = new Date(value.value);
-            setVisibleDateValue();
-
         }
 
         ready.value = true;
@@ -1068,27 +1029,11 @@
                 <date-input
                     v-else-if="computedIsDate"
                     v-model="value"
-                    v-model:text="visibleDateValue"
                     :id="Identifier"
                     :tabindex="tabindex"
                     :lang="computedLang"
                     :name="name"
                 />
-
-                <template v-else-if="computedIsDate">
-                    <lkt-button
-                        class="lkt-field--toggle-button"
-                        :text="visibleDateValue"
-                        tooltip
-                        tooltip-class="lkt-field--date--tooltip"
-                        tooltip-location-y="bottom"
-                        tooltip-location-x="left-corner"
-                    >
-                        <template #tooltip="{doClose}">
-                            <lkt-calendar v-model="pickedDate" />
-                        </template>
-                    </lkt-button>
-                </template>
 
                 <select-input
                     v-else-if="Type === FieldType.Select"

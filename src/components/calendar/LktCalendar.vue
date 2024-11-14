@@ -2,6 +2,7 @@
 
     import { computed, ref, watch } from 'vue';
     import { date } from 'lkt-date-tools';
+    import { isValidDateObject } from '@/functions/date-functions';
 
     const emit = defineEmits(['update:modelValue']);
 
@@ -15,7 +16,7 @@
 
     const today = ref(new Date());
     const visibleDate = ref(new Date());
-    if (!(Object.prototype.toString.call(pickedDate.value) === '[object Date]' && isNaN(pickedDate.value))) {
+    if (isValidDateObject(pickedDate.value) && typeof pickedDate.value !== 'undefined') {
         visibleDate.value = new Date(pickedDate.value.getFullYear(), pickedDate.value.getMonth(), pickedDate.value.getDate());
     }
     const visibleYear = ref(visibleDate.value.getFullYear());
@@ -75,7 +76,7 @@
             };
         },
         onClickDay = (day: number) => {
-            pickedDate.value.setFullYear(visibleYear.value, visibleMonth.value, day);
+            pickedDate.value?.setFullYear(visibleYear.value, visibleMonth.value, day);
             pickedDate.value = new Date(pickedDate.value);
             doRefresh();
         },
