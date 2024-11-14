@@ -1,4 +1,4 @@
-declare class Lo {
+declare class Eo {
     constructor(t?: {});
     modelValue: string;
     type: any;
@@ -54,6 +54,7 @@ declare class Lo {
     modal: string;
     modalKey: string;
     modalData: {};
+    data: {};
 }
 declare class li {
     constructor(t?: {});
@@ -64,23 +65,23 @@ declare class li {
     icon: string;
     modal: string;
 }
-declare namespace To {
+declare namespace Lo {
     function install(e: any): void;
 }
-declare function Ao(e: any): any;
-declare function Oo(e: any): any;
-declare function Fo(e: any): any;
-declare function zo(e: any): void;
-declare function Ro(e: any): any;
-declare function Uo(e?: number, t?: string, i?: string, s?: boolean, l?: string): boolean;
-declare function No(e: any, t: any): void;
+declare function Bo(e: any): any;
 declare function Ho(e: any): any;
+declare function Oo(e: any): any;
+declare function To(e: any): void;
+declare function Ro(e: any): any;
+declare function Po(e?: number, t?: string, i?: string, s?: boolean, n?: string): boolean;
+declare function No(e: any, t: any): void;
 declare function Do(e: any): any;
 declare function Io(e: any): any;
 declare function Mo(e: any): any;
-declare function Bo(e: any): any;
-declare function Po(e: any): boolean;
+declare function Ao(e: any): any;
+declare function zo(e: any): any;
+declare function Fo(e: any): boolean;
 declare function Vo(e: any, t: any, i?: string): void;
-declare function Eo(e: any, t: any): boolean;
 declare function So(e: any, t: any): boolean;
-export { Lo as Field, li as Option, To as default, Ao as setFieldClearText, Oo as setFieldDateReadFormat, Fo as setFieldDefaultDateReadFormat, zo as setFieldEmptySlot, Ro as setFieldI18nText, Uo as setFieldNumberFormat, No as setFieldOptionSlot, Ho as setFieldShowPasswordOffText, Do as setFieldShowPasswordOnText, Io as setFieldSwitchEditionOffText, Mo as setFieldSwitchEditionOnText, Bo as setFieldUndoText, Po as setFieldValidationIconSlot, Vo as setFieldValidationMessage, Eo as setTextEditSlot, So as setTextValueSlot };
+declare function xo(e: any, t: any): boolean;
+export { Eo as Field, li as Option, Lo as default, Bo as setFieldClearText, Ho as setFieldDateReadFormat, Oo as setFieldDefaultDateReadFormat, To as setFieldEmptySlot, Ro as setFieldI18nText, Po as setFieldNumberFormat, No as setFieldOptionSlot, Do as setFieldShowPasswordOffText, Io as setFieldShowPasswordOnText, Mo as setFieldSwitchEditionOffText, Ao as setFieldSwitchEditionOnText, zo as setFieldUndoText, Fo as setFieldValidationIconSlot, Vo as setFieldValidationMessage, So as setTextEditSlot, xo as setTextValueSlot };

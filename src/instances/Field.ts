@@ -81,6 +81,7 @@ export class Field implements LktFieldConfigType {
     modal?: string | Function = ''
     modalKey?: string | number | Function = '';
     modalData?: LktObject = {};
+    data?: LktObject = {};
 
     constructor(data: LktObject = {}) {
         for (let k in data) {

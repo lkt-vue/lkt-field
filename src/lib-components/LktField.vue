@@ -15,7 +15,7 @@
     import { ensureNumberBetween } from '../functions/numeric-functions';
     import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
-    import { Option } from '../instances/Option.ts';
+    import { Option } from '../instances/Option';
     import {
         filterOptions,
         findOptionByValue,
@@ -24,7 +24,7 @@
         prepareOptions,
         receiveOptions,
     } from '../functions/option-functions';
-    import { isValidDateObject } from '../functions/date-functions';
+    import { getVisibleDateValue, isValidDateObject } from '../functions/date-functions';
     import {
         BooleanFieldTypes,
         FieldTypesWithOptions,
@@ -47,8 +47,11 @@
     import SelectInput from '../components/SelectInput.vue';
     import CalcInput from '../components/CalcInput.vue';
     import { LktFieldConfigType } from '../types/LktFieldConfigType';
-    import LktFieldValidations from '@/components/validations/LktFieldValidations.vue';
-    import SearchInput from '@/components/SearchInput.vue';
+    import LktFieldValidations from '../components/validations/LktFieldValidations.vue';
+    import SearchInput from '../components/SearchInput.vue';
+    import LktFieldValue from '../lib-components/LktFieldValue.vue';
+    import FileInput from '../components/FileInput.vue';
+    import DateInput from '../components/DateInput.vue';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -877,38 +880,6 @@
             emits('blur');
         },
         onChange = ($event: any) => {
-            if (computedIsFile.value || computedIsImage.value) {
-                let input = $event.target;
-                // @ts-ignore
-                if (input.files && input.files[0]) {
-                    visibleFileName.value = input.files[0].name;
-                    const reader = new FileReader();
-                    reader.onload = (event: ProgressEvent) => {
-                        // @ts-ignore
-                        value.value = event.target.result;
-                        if (props.resource) {
-                            uploading.value = true;
-                            emits('uploading');
-                            let params = JSON.parse(JSON.stringify(props.resourceData));
-                            // @ts-ignore
-                            params.files = input.files[0];
-
-                            httpCall(props.resource, params).then((r: HTTPResponse) => {
-                                // @todo check with uploaded file
-                                // @ts-ignore
-                                value.value = r.data;
-                                uploading.value = false;
-                                emits('upload-success', r);
-                            }).catch(r => {
-                                uploading.value = false;
-                                emits('upload-error', r);
-                            });
-                        }
-                    };
-                    // @ts-ignore
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
             emits('change', $event);
         },
         onClick = ($event: Event) => {
@@ -954,33 +925,7 @@
         isMandatory: () => props.mandatory,
     });
 
-    const emptyValueSlot = computed(() => {
-        switch (Type.value) {
-            case FieldType.Select:
-                if (props.multiple && Array.isArray(editableValue.value) && editableValue.value.length > 0) {
-                    return '';
-                }
-                if (props.multiple && !editable.value && props.multipleDisplay === MultipleDisplayType.Count) return '';
-                if (!props.multiple && !!editableValue.value) return '';
-                break;
-
-            case FieldType.Date:
-                if (visibleDateValue.value !== '') return '';
-                break;
-
-            default:
-                if (editableValue.value !== '') return '';
-        }
-        return Settings.customValueSlots[props.emptyValueSlot] ?? Settings.defaultEmptyValueSlot;
-    });
-
-    const hasCustomValueSlot = computed(() => {
-            return props.valueSlot !== '' && typeof Settings.customValueSlots[props.valueSlot] !== 'undefined';
-        }),
-        customValueSlot = computed(() => {
-            return Settings.customValueSlots[props.valueSlot];
-        }),
-        hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
+    const hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
         customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
     onMounted(() => {
@@ -1016,6 +961,23 @@
             };
             return {};
         });
+
+    const computedReadValue = computed(() => {
+        switch (Type.value) {
+            case FieldType.Select:
+                return pickedOptions.value;
+
+            case FieldType.Date:
+                return getVisibleDateValue(value.value, computedDateReadFormat.value);
+
+            case FieldType.File:
+            case FieldType.Image:
+                return value.value;
+
+            default:
+                return editableValue.value;
+        }
+    });
 </script>
 
 <template>
@@ -1066,55 +1028,52 @@
                                v-bind:value="value" :title="readModeTitle" :data="slotData" />
                 </div>
 
-                <template v-else-if="BooleanFieldTypes.includes(Type)">
-                    <boolean-input
-                        v-model="editableValue"
-                        :id="Identifier"
-                        :name="name"
-                        :type="Type"
-                        :label="computedLabel"
-                        :editable="editable"
-                        :focusing="focusing"
-                        :disabled="disabled"
-                        :readonly="readonly"
-                        @focus="onFocusBooleanInput"
-                        @blur="onBlurBooleanInput"
-                    />
-                </template>
+                <boolean-input
+                    v-else-if="BooleanFieldTypes.includes(Type)"
+                    v-model="editableValue"
+                    :id="Identifier"
+                    :name="name"
+                    :type="Type"
+                    :label="computedLabel"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :disabled="disabled"
+                    :readonly="readonly"
+                    @focus="onFocusBooleanInput"
+                    @blur="onBlurBooleanInput"
+                />
 
-                <template v-else-if="Type === FieldType.Color">
-                    <color-input v-model="editableValue" />
-                </template>
+                <color-input
+                    v-else-if="Type === FieldType.Color"
+                    v-model="editableValue" />
 
-                <template v-else-if="computedIsFile || computedIsImage">
-                    <input type="file"
-                           v-bind:ref="(el:any) => inputElement = el"
-                           v-bind:name="name"
-                           v-bind:id="Identifier"
-                           v-bind:disabled="disabled || !editable"
-                           v-bind:readonly="readonly || !editable"
-                           v-bind:placeholder="placeholder"
-                           v-bind:accept="computedAccept"
-                           v-on:change="onChange"
-                    >
+                <file-input
+                    v-else-if="computedIsFile || computedIsImage"
+                    v-model="value"
+                    v-model:file-name="visibleFileName"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :resource="resource"
+                    :resource-data="resourceData"
+                    :name="name"
+                    :placeholder="computedPlaceholder"
+                    :accept="computedAccept"
+                    :focusing="focusing"
+                    :disabled="disabled"
+                    :readonly="readonly"
+                    :is-image="Type === FieldType.Image"
+                    @change="onChange"
+                />
 
-                    <lkt-button
-                        class="lkt-field--toggle-button"
-                        :click-ref="inputElement"
-                        :text="computedIsFile ? visibleFileName : ''"
-                    >
-                        <lkt-image
-                            v-if="computedIsImage"
-                            :src="value"
-                            class="lkt-field--image-cover"
-                        />
-                        <lkt-image
-                            v-if="computedIsImage"
-                            :src="value"
-                            class="lkt-field--image-main"
-                        />
-                    </lkt-button>
-                </template>
+                <date-input
+                    v-else-if="computedIsDate"
+                    v-model="value"
+                    v-model:text="visibleDateValue"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :lang="computedLang"
+                    :name="name"
+                />
 
                 <template v-else-if="computedIsDate">
                     <lkt-button
@@ -1248,137 +1207,40 @@
                 />
             </component>
 
-            <div v-if="!editable" class="lkt-field--read" v-on:click="onClick">
-                <template v-if="slots['value']">
+            <lkt-field-value
+                v-if="!editable"
+                :value="computedReadValue"
+                :type="Type"
+                :label="computedLabel"
+                :title="readModeTitle"
+                :file-name="visibleFileName"
+                :value-slot="valueSlot"
+                :empty-value-slot="emptyValueSlot"
+                :slot-data="slotData"
+                :download="download"
+                :multiple="multiple"
+                :multipleDisplay="multipleDisplay"
+                :modal="modal"
+                :modal-key="modalKey"
+                :modal-data="modalData"
+                :option-slot="optionSlot"
+                :options-download="optionsDownload"
+                :options-modal="optionsModal"
+                :options-modal-data="optionsModalData"
+                :options-icon="optionsIcon"
+                :options-label-formatter="optionsLabelFormatter"
+                :options-resource="optionsResource"
+                :options-resource-data="optionsResourceData"
+                @click="onClick"
+            >
+                <template v-if="slots['value']" #value>
                     <slot
-                        name="value"
-                        v-bind:value="value"
+                        :name="value"
+                        :value="value"
                         :title="readModeTitle"
                         :data="slotData" />
                 </template>
-
-                <component
-                    v-else-if="emptyValueSlot"
-                    v-bind:is="emptyValueSlot"
-                    :data="slotData" />
-
-                <component
-                    v-else-if="hasCustomValueSlot"
-                    v-bind:is="customValueSlot"
-                    v-bind:value="value"
-                    :title="readModeTitle"
-                    :data="slotData" />
-
-                <template v-else>
-                    <template v-if="computedIsFile || computedIsImage">
-                        <div class="lkt-field-main">
-                            <lkt-button
-                                class="lkt-field--toggle-button"
-                                :text="computedIsFile ? visibleFileName : ''"
-                            >
-                                <lkt-image
-                                    v-if="computedIsImage"
-                                    :src="value"
-                                    class="lkt-field--image-cover"
-                                />
-                                <lkt-image
-                                    v-if="computedIsImage"
-                                    :src="value"
-                                    class="lkt-field--image-main"
-                                />
-                            </lkt-button>
-                        </div>
-                    </template>
-                    <lkt-anchor
-                        v-else-if="Type === FieldType.Email"
-                        class="lkt-field--read-value"
-                        :title="readModeTitle"
-                        :to="'mail:' + value">{{ value }}
-                    </lkt-anchor>
-                    <lkt-anchor
-                        v-else-if="Type === FieldType.Tel"
-                        class="lkt-field--read-value"
-                        :title="readModeTitle"
-                        :to="'tel:' + value">{{ value }}
-                    </lkt-anchor>
-                    <div
-                        v-else-if="BooleanFieldTypes.includes(Type)"
-                        class="lkt-field--read-value">
-                        <lkt-tag
-                            :icon="editableValue ? 'lkt-field-icon-ok' : 'lkt-field-icon-cancel'"
-                            :featured-text="computedLabel"
-                            :title="readModeTitle" />
-                    </div>
-                    <div
-                        v-else-if="Type === FieldType.Date"
-                        class="lkt-field--read-value"
-                        v-html="visibleDateValue" :title="readModeTitle"></div>
-                    <div
-                        v-else-if="Type === FieldType.Select"
-                        class="lkt-field--read-value"
-                        :title="readModeTitle">
-
-                        <template v-if="multiple">
-                            <div v-if="multipleDisplay === MultipleDisplayType.Count">
-                                {{ pickedOptions.length }}
-                            </div>
-
-                            <ul v-else-if="pickedOptions.length > 0" class="lkt-field-select-read">
-                                <template v-for="(option, i) in pickedOptions">
-                                    <li :title="pickedOptions[i]?.label">
-                                        <dropdown-option
-                                            :option="pickedOptions[i]"
-                                            :option-slot="optionSlot"
-                                            :icon="optionsIcon"
-                                            :modal="optionsModal"
-                                            :modal-data="optionsModalData"
-                                            :download="optionsDownload"
-                                            :label-formatter="optionsLabelFormatter"
-                                            :editable="editable"
-                                        />
-                                    </li>
-                                </template>
-                            </ul>
-                        </template>
-                        <dropdown-option
-                            v-else-if="pickedOptions.length > 0"
-                            :option="pickedOptions[0]"
-                            :option-slot="optionSlot"
-                            :icon="optionsIcon"
-                            :modal="optionsModal"
-                            :modal-data="optionsModalData"
-                            :download="optionsDownload"
-                            :label-formatter="optionsLabelFormatter"
-                            :editable="editable"
-                        />
-                    </div>
-                    <lkt-button
-                        v-else-if="modal"
-                        class="lkt-field--read-value"
-                        :title="readModeTitle"
-                        :modal="modal"
-                        :modal-key="modalKey"
-                        :modal-data="modalData"
-                    >
-                        <div v-html="value" />
-                    </lkt-button>
-                    <dropdown-option
-                        class="lkt-field--read-value"
-                        v-else-if="download"
-                        :option="{value: '', label: value}"
-                        :editable="false"
-                        :download="download"
-                    />
-                    <div
-                        v-else-if="Type === FieldType.Number"
-                        class="lkt-field--read-value"
-                        v-html="readModeTitle" :title="readModeTitle"></div>
-                    <div
-                        v-else
-                        class="lkt-field--read-value"
-                        v-html="value" :title="readModeTitle"></div>
-                </template>
-            </div>
+            </lkt-field-value>
 
             <div v-show="showInfoUi" class="lkt-field--info-nav">
                 <undo-button v-show="computedShowUndoInNav" @click="doUndo" />
