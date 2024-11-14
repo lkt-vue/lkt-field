@@ -15,7 +15,7 @@ export type LktFieldConfigType = {
     labelIconAtEnd?: boolean
     name?: string
     autocomplete?: boolean
-    disabled?: boolean
+    disabled?: boolean|Function
     readonly?: boolean
     readMode?: boolean
     allowReadModeSwitch?: boolean
@@ -79,4 +79,5 @@ export type LktFieldConfigType = {
     modal?: string | Function
     modalKey?: string | number | Function
     modalData?: LktObject
+    data?: LktObject
 }

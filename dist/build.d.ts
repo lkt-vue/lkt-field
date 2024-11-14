@@ -1,4 +1,4 @@
-declare class ko {
+declare class xo {
     constructor(t?: {});
     modelValue: string;
     type: any;
@@ -56,7 +56,7 @@ declare class ko {
     modalData: {};
     data: {};
 }
-declare class Qt {
+declare class ei {
     constructor(t?: {});
     label: string;
     data: {};
@@ -65,23 +65,23 @@ declare class Qt {
     icon: string;
     modal: string;
 }
-declare namespace xo {
+declare namespace So {
     function install(e: any): void;
 }
-declare function To(e: any): any;
-declare function Mo(e: any): any;
-declare function Io(e: any): any;
-declare function So(e: any): void;
 declare function No(e: any): any;
-declare function Oo(e?: number, t?: string, i?: string, s?: boolean, n?: string): boolean;
-declare function Eo(e: any, t: any): void;
+declare function Io(e: any): any;
+declare function Do(e: any): any;
+declare function Eo(e: any): void;
+declare function zo(e: any): any;
+declare function Fo(e?: number, t?: string, i?: string, s?: boolean, n?: string): boolean;
+declare function Lo(e: any, t: any): void;
+declare function Mo(e: any): any;
 declare function Ao(e: any): any;
 declare function Ro(e: any): any;
 declare function Bo(e: any): any;
-declare function zo(e: any): any;
-declare function Lo(e: any): any;
-declare function Ho(e: any): boolean;
-declare function Do(e: any, t: any, i?: string): void;
+declare function To(e: any): any;
+declare function Oo(e: any): boolean;
+declare function Ho(e: any, t: any, i?: string): void;
+declare function ko(e: any, t: any): boolean;
 declare function Co(e: any, t: any): boolean;
-declare function wo(e: any, t: any): boolean;
-export { ko as Field, Qt as Option, xo as default, To as setFieldClearText, Mo as setFieldDateReadFormat, Io as setFieldDefaultDateReadFormat, So as setFieldEmptySlot, No as setFieldI18nText, Oo as setFieldNumberFormat, Eo as setFieldOptionSlot, Ao as setFieldShowPasswordOffText, Ro as setFieldShowPasswordOnText, Bo as setFieldSwitchEditionOffText, zo as setFieldSwitchEditionOnText, Lo as setFieldUndoText, Ho as setFieldValidationIconSlot, Do as setFieldValidationMessage, Co as setTextEditSlot, wo as setTextValueSlot };
+export { xo as Field, ei as Option, So as default, No as setFieldClearText, Io as setFieldDateReadFormat, Do as setFieldDefaultDateReadFormat, Eo as setFieldEmptySlot, zo as setFieldI18nText, Fo as setFieldNumberFormat, Lo as setFieldOptionSlot, Mo as setFieldShowPasswordOffText, Ao as setFieldShowPasswordOnText, Ro as setFieldSwitchEditionOffText, Bo as setFieldSwitchEditionOnText, To as setFieldUndoText, Oo as setFieldValidationIconSlot, Ho as setFieldValidationMessage, ko as setTextEditSlot, Co as setTextValueSlot };

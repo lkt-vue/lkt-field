@@ -125,6 +125,7 @@
         modal: '',
         modalKey: '',
         modalData: () => ({}),
+        data: () => ({}),
     });
 
     // Constant data
@@ -253,6 +254,10 @@
                 return value.value !== originalValue.value;
             }
             return editableValue.value !== originalEditableValue.value;
+        }),
+        computedIsDisabled = computed(() => {
+            if (typeof props.disabled === 'function') return props.disabled(props.data);
+            return props.disabled;
         }),
         amountOfIcons = computed(() => {
             let r = 0;
@@ -1001,7 +1006,7 @@
                     :label="computedLabel"
                     :editable="editable"
                     :focusing="focusing"
-                    :disabled="disabled"
+                    :disabled="computedIsDisabled"
                     :readonly="readonly"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
@@ -1023,7 +1028,7 @@
                     :placeholder="computedPlaceholder"
                     :accept="computedAccept"
                     :focusing="focusing"
-                    :disabled="disabled"
+                    :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :is-image="Type === FieldType.Image"
                     @change="onChange"
@@ -1071,7 +1076,7 @@
                     :name="name"
                     :editable="editable"
                     :focusing="focusing"
-                    :disabled="disabled"
+                    :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :options="optionsHaystack"
                     @focus="onFocusBooleanInput"
@@ -1088,7 +1093,7 @@
                     :editable="editable"
                     :focusing="focusing"
                     :had-first-focus="hadFirstFocus"
-                    :disabled="disabled"
+                    :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :options-resource="optionsResource"
                     :container="container"
@@ -1104,7 +1109,7 @@
                     :type="computedInputType"
                     :name="name"
                     :id="Identifier"
-                    :disabled="disabled"
+                    :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :placeholder="computedPlaceholder"
                     :tabindex="tabindex"
@@ -1126,7 +1131,7 @@
                     :value="editableValue"
                     :name="name"
                     :id="Identifier"
-                    :disabled="disabled"
+                    :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :placeholder="computedPlaceholder"
                     :tabindex="tabindex"
@@ -1148,7 +1153,7 @@
                     :lang="computedLang"
                     :editable="editable"
                     :focusing="focusing"
-                    :disabled="disabled"
+                    :disabled="computedIsDisabled"
                     :readonly="readonly"
                     @focus="onFocus"
                     @blur="onBlur"
