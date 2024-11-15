@@ -51,6 +51,7 @@
     import LktFieldValue from '../lib-components/LktFieldValue.vue';
     import FileInput from '../components/FileInput.vue';
     import DateInput from '../components/DateInput.vue';
+    import { extractEditableValue, extractPropValue } from '@/functions/calcultad-data-functions';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -125,19 +126,22 @@
         modal: '',
         modalKey: '',
         modalData: () => ({}),
-        data: () => ({}),
+        prop: () => ({}),
     });
 
     // Constant data
     const Identifier = generateRandomString(16);
 
+    // Calculated data
+    const calculatedModalKey = extractPropValue(props.modalKey, props.prop);
+    let calculatedIcon = extractPropValue(props.icon, props.prop);
+    const calculatedDownload = extractPropValue(props.download, props.prop);
+
     const Type = ref(props.type);
 
     // Components refs
     const inputElement = ref(null);
-    const fieldFeaturedButton = ref(props.featuredButton);
-
-    let fieldIcon = props.icon;
+    let fieldFeaturedButton = props.featuredButton;
 
     let _val = props.modelValue;
     if (Type.value === 'select' && props.multiple) {
@@ -146,11 +150,11 @@
     } else if (BooleanFieldTypes.includes(Type.value)) {
         if (typeof _val !== 'boolean') _val = false;
 
-    } else if (Type.value === FieldType.Date && !props.icon) {
-        fieldIcon = Settings.defaultDateIcon;
+    } else if (Type.value === FieldType.Date && !calculatedIcon) {
+        calculatedIcon = Settings.defaultDateIcon;
 
-    } else if (Type.value === FieldType.Number && props.canStep && fieldFeaturedButton.value === '') {
-        fieldFeaturedButton.value = Settings.defaultNumberFeaturedButton;
+    } else if (Type.value === FieldType.Number && props.canStep && fieldFeaturedButton === '') {
+        fieldFeaturedButton = Settings.defaultNumberFeaturedButton;
     }
 
     // Reactive data
@@ -190,17 +194,10 @@
         return 'Y-m-d';
     });
 
-    const assignEditableValue = () => {
-        if (typeof value.value === 'object' && !Array.isArray(value.value)) {
-            return value.value[computedLang.value];
-        }
-        return value.value;
-    };
+    const editableValue = ref(extractEditableValue(value.value, computedLang.value));
+    const originalEditableValue = ref(editableValue);
 
-    const editableValue = ref(assignEditableValue());
-    const originalEditableValue = ref(assignEditableValue());
-
-    const optionsHaystack = ref([]),
+    const optionsHaystack = ref(<Option[]>[]),
         visibleOptions = ref(<Option[]>[]);
 
     const updatePickedOption = () => {
@@ -256,7 +253,7 @@
             return editableValue.value !== originalEditableValue.value;
         }),
         computedIsDisabled = computed(() => {
-            if (typeof props.disabled === 'function') return props.disabled(props.data);
+            if (typeof props.disabled === 'function') return props.disabled(props.prop);
             return props.disabled;
         }),
         amountOfIcons = computed(() => {
@@ -279,9 +276,9 @@
             return r;
         }),
         computedHasFeaturedButton = computed(() => {
-            return computedShowI18n.value && fieldFeaturedButton.value === 'i18n'
-                || computedShowPasswordReveal.value && fieldFeaturedButton.value === 'password'
-                || computedShowSubtractStep.value && fieldFeaturedButton.value === 'subtract';
+            return computedShowI18n.value && fieldFeaturedButton === 'i18n'
+                || computedShowPasswordReveal.value && fieldFeaturedButton === 'password'
+                || computedShowSubtractStep.value && fieldFeaturedButton === 'subtract';
         }),
         showInfoUi = computed(() => {
             return amountOfIcons.value > 0;
@@ -430,7 +427,7 @@
         computedShowInfo = computed(() => props.infoMessage),
 
         computedShowSubtractStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
-        computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && Type.value === FieldType.Number && fieldFeaturedButton.value !== 'subtract'),
+        computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && Type.value === FieldType.Number && fieldFeaturedButton !== 'subtract'),
         computedShowIncreaseStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
         computedShowUndo = computed(() => props.canUndo && changed.value && editable.value && !FieldTypesWithoutUndo.includes(Type.value)),
         computedShowClear = computed(() => props.canClear && isFilled.value && editable.value && !FieldTypesWithoutClear.includes(Type.value)),
@@ -439,8 +436,8 @@
 
         computedShowUndoInNav = computed(() => computedShowUndo.value && !props.infoButtonEllipsis),
         computedShowClearInNav = computed(() => computedShowClear.value && !props.infoButtonEllipsis),
-        computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && fieldFeaturedButton.value !== 'password'),
-        computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && fieldFeaturedButton.value !== 'i18n'),
+        computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && fieldFeaturedButton !== 'password'),
+        computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && fieldFeaturedButton !== 'i18n'),
         computedShowDropdownButton = computed(() => {
             if (Type.value === FieldType.Calc) return false;
             if (Type.value === FieldType.Search) return false;
@@ -475,9 +472,8 @@
     watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
-        value.value = v;
         if (Type.value !== FieldType.Date) {
-            editableValue.value = assignEditableValue();
+            editableValue.value = extractEditableValue(value.value, computedLang.value);
         }
     });
     watch(editableValue, (v) => {
@@ -863,12 +859,14 @@
         onClickError = ($event: any) => emits('click-error', $event),
         onClickSubtract = () => {
             let step = props.step ?? 1;
+            if (typeof step === 'string') step = parseFloat(step);
             if (!props.min || editableValue.value > props.min) {
                 editableValue.value -= step;
             }
         },
         onClickIncrease = () => {
             let step = props.step ?? 1;
+            if (typeof step === 'string') step = parseFloat(step);
             if (!props.max || editableValue.value < props.max) {
                 editableValue.value += step;
             }
@@ -982,8 +980,8 @@
                 />
             </div>
 
-            <div v-if="fieldIcon" class="lkt-field--icon">
-                <i :class="fieldIcon" />
+            <div v-if="calculatedIcon" class="lkt-field--icon">
+                <i :class="calculatedIcon" />
             </div>
 
             <component :is="computedMainComponent" v-bind="computedMainAttrs" class="lkt-field-main" v-if="editable">
@@ -1170,11 +1168,11 @@
                 :value-slot="valueSlot"
                 :empty-value-slot="emptyValueSlot"
                 :slot-data="slotData"
-                :download="download"
+                :download="calculatedDownload"
                 :multiple="multiple"
                 :multipleDisplay="multipleDisplay"
                 :modal="modal"
-                :modal-key="modalKey"
+                :modal-key="calculatedModalKey"
                 :modal-data="modalData"
                 :option-slot="optionSlot"
                 :options-download="optionsDownload"

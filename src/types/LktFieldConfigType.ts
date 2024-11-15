@@ -79,5 +79,5 @@ export type LktFieldConfigType = {
     modal?: string | Function
     modalKey?: string | number | Function
     modalData?: LktObject
-    data?: LktObject
+    prop?: LktObject
 }
