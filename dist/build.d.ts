@@ -73,7 +73,7 @@ declare function Oo(e: any): any;
 declare function Fo(e: any): any;
 declare function No(e: any): void;
 declare function Ao(e: any): any;
-declare function Uo(e?: number, t?: string, i?: string, s?: boolean, n?: string): boolean;
+declare function Uo(e?: number, t?: string, i?: string, s?: boolean, l?: string): boolean;
 declare function zo(e: any, t: any): void;
 declare function Ho(e: any): any;
 declare function Do(e: any): any;

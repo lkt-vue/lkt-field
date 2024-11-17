@@ -5,7 +5,7 @@
     import { MultipleDisplayType } from '../enums/MultipleDisplayType';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
-    import { Settings } from '@/settings/Settings';
+    import { Settings } from '../settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
 
     const emit = defineEmits(['click']);
@@ -56,9 +56,7 @@
 
     });
 
-    const onClick = () => {
-        emit('click');
-    };
+    const onClick = () => emit('click');
 
     const computedEmptyValueSlot = computed(() => {
             switch (props.type) {
@@ -82,6 +80,11 @@
         customValueSlot = computed(() => {
             return Settings.customValueSlots[props.valueSlot] ?? '';
         });
+
+    let calculatedValue = props.value;
+    if (props.type === FieldType.Select && props.multiple && !Array.isArray(calculatedValue)) {
+        calculatedValue = [];
+    }
 </script>
 
 <template>
@@ -89,7 +92,7 @@
         <template v-if="slots['value']">
             <slot
                 name="value"
-                :value="value"
+                :value="calculatedValue"
                 :title="title"
                 :data="slotData" />
         </template>
@@ -102,7 +105,7 @@
         <component
             v-else-if="customValueSlot"
             :is="customValueSlot"
-            :value="value"
+            :value="calculatedValue"
             :title="title"
             :data="slotData" />
 
@@ -115,12 +118,12 @@
                     >
                         <lkt-image
                             v-if="type === FieldType.Image"
-                            :src="value"
+                            :src="calculatedValue"
                             class="lkt-field--image-cover"
                         />
                         <lkt-image
                             v-if="type === FieldType.Image"
-                            :src="value"
+                            :src="calculatedValue"
                             class="lkt-field--image-main"
                         />
                     </lkt-button>
@@ -128,28 +131,30 @@
             </template>
             <lkt-anchor
                 v-else-if="type === FieldType.Email"
+                type="mail"
                 class="lkt-field--read-value"
                 :title="title"
-                :to="'mail:' + value">{{ value }}
+                :to="calculatedValue">{{ calculatedValue }}
             </lkt-anchor>
             <lkt-anchor
                 v-else-if="type === FieldType.Tel"
+                type="tel"
                 class="lkt-field--read-value"
                 :title="title"
-                :to="'tel:' + value">{{ value }}
+                :to="calculatedValue">{{ calculatedValue }}
             </lkt-anchor>
             <div
                 v-else-if="BooleanFieldTypes.includes(type)"
                 class="lkt-field--read-value">
                 <lkt-tag
-                    :icon="value ? 'lkt-field-icon-ok' : 'lkt-field-icon-cancel'"
+                    :icon="calculatedValue ? 'lkt-field-icon-ok' : 'lkt-field-icon-cancel'"
                     :featured-text="label"
                     :title="title" />
             </div>
             <div
                 v-else-if="type === FieldType.Date"
                 class="lkt-field--read-value"
-                v-html="value" :title="title"></div>
+                v-html="calculatedValue" :title="title"></div>
             <div
                 v-else-if="type === FieldType.Select"
                 class="lkt-field--read-value"
@@ -157,14 +162,14 @@
 
                 <template v-if="multiple">
                     <div v-if="multipleDisplay === MultipleDisplayType.Count">
-                        {{ value.length }}
+                        {{ calculatedValue.length }}
                     </div>
 
-                    <ul v-else-if="value.length > 0" class="lkt-field-select-read">
-                        <template v-for="(option, i) in value">
-                            <li :title="value[i]?.label">
+                    <ul v-else-if="calculatedValue.length > 0" class="lkt-field-select-read">
+                        <template v-for="(option, i) in calculatedValue">
+                            <li :title="calculatedValue[i]?.label">
                                 <dropdown-option
-                                    :option="value[i]"
+                                    :option="calculatedValue[i]"
                                     :option-slot="optionSlot"
                                     :icon="optionsIcon"
                                     :modal="optionsModal"
@@ -178,8 +183,8 @@
                 </template>
 
                 <dropdown-option
-                    v-else-if="value.length > 0"
-                    :option="value[0]"
+                    v-else-if="calculatedValue.length > 0"
+                    :option="calculatedValue[0]"
                     :option-slot="optionSlot"
                     :icon="optionsIcon"
                     :modal="optionsModal"
@@ -196,12 +201,12 @@
                 :modal-key="modalKey"
                 :modal-data="modalData"
             >
-                <div v-html="value" />
+                <div v-html="calculatedValue" />
             </lkt-button>
             <dropdown-option
                 class="lkt-field--read-value"
                 v-else-if="download"
-                :option="{value: '', label: value}"
+                :option="{value: '', label: calculatedValue}"
                 :download="download"
             />
             <div
@@ -211,7 +216,7 @@
             <div
                 v-else
                 class="lkt-field--read-value"
-                v-html="value" :title="title"></div>
+                v-html="calculatedValue" :title="title"></div>
         </template>
     </div>
 </template>

@@ -1,16 +1,19 @@
 import { Option } from '../instances/Option';
 import { ValidOptionValue } from '../types/ValidOptionValue';
 import { __ } from 'lkt-i18n';
+import { LktObject } from 'lkt-ts-interfaces';
+import { extractPropValue } from './calcultad-data-functions';
 
-export const prepareOptions = (options: any) => {
+export const prepareOptions = (options: any, prop: LktObject): Option[] => {
     if (typeof options === 'string') {
-        if (options.startsWith('__:')) {
+        options = extractPropValue(options, prop);
+        if (typeof options === 'string' && options.startsWith('__:')) {
             let key = options.substring(3);
 
             let haystack = __(key),
                 r = [];
             for (let k in haystack) r.push({value: k, label: haystack[k]});
-            return prepareOptions(r);
+            return prepareOptions(r, prop);
         }
     }
 
@@ -48,9 +51,9 @@ export const findOptionByValue = (options: Option[], query: ValidOptionValue) =>
     });
 };
 
-export const receiveOptions = (currentOptions: Option[], receivedOptions: Option[]) => {
+export const receiveOptions = (currentOptions: Option[], receivedOptions: Option[], prop: LktObject) => {
     const set = new Set();
-    const temp: Option[] = [...currentOptions, ...prepareOptions(receivedOptions)];
+    const temp: Option[] = [...currentOptions, ...prepareOptions(receivedOptions, prop)];
     const r: Option[] = [];
     temp.forEach(z => {
         let k = [z.value, z.label].join('-');

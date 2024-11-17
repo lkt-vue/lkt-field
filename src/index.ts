@@ -1,9 +1,6 @@
 import { App, Component, Plugin } from 'vue';
 
 import { default as libComponent } from './lib-components/LktField.vue';
-
-export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
-
 import '../fonts/fontello/css/lkt-fields.css';
 import '../styles/common-styles.css';
 import '../styles/select-styles.css';
@@ -24,6 +21,8 @@ import '../styles/helper-styles.css';
 import { Settings } from './settings/Settings';
 import { addModal } from 'lkt-modal';
 import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditModal.vue';
+
+export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 
 const LktField: Plugin = {
     install: (app: App) => {

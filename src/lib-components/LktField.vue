@@ -498,7 +498,7 @@
     });
 
     watch(() => props.options, (v) => {
-        optionsHaystack.value = prepareOptions(v);
+        optionsHaystack.value = prepareOptions(v, props.prop);
         if (Type.value === FieldType.Select) {
             buildVisibleOptions(searchString.value, false);
         } else {
@@ -628,7 +628,7 @@
                 const results: HTTPResponse = await httpCall(props.optionsResource, props.optionsResourceData);
                 const isValidData = Array.isArray(results.data) && results.data.length > 0;
                 if (isValidData) {
-                    optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data);
+                    optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data, props.prop);
                     buildVisibleOptions(query, ableToShowOptions);
 
                     if (props.autoloadOptionsResource && !optionsAutoLoaded.value) {
@@ -901,7 +901,7 @@
         customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
     onMounted(() => {
-        optionsHaystack.value = prepareOptions(props.options);
+        optionsHaystack.value = prepareOptions(props.options, props.prop);
         buildVisibleOptions('', false);
         updatePickedOption();
 
