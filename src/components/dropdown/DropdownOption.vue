@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { Option } from '@/instances/Option';
+    import { Option } from '../../instances/Option';
     import { computed } from 'vue';
-    import { Settings } from '@/settings/Settings';
+    import { Settings } from '../../settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
 
     const emit = defineEmits(['click']);
@@ -96,7 +96,7 @@
 
     const onClick = () => {
         emit('click');
-    }
+    };
 </script>
 
 <template>
@@ -108,8 +108,9 @@
         :title="option.label"
         @click="onClick"
     >
-        <div v-if="computedIcon && computedContainerComponent !== 'lkt-button'"
-             class="lkt-field--dropdown-option--icon-container">
+        <div
+            v-if="computedIcon && computedContainerComponent !== 'lkt-button'"
+            class="lkt-field--dropdown-option--icon-container">
             <i :class="computedIcon"></i>
         </div>
         <div class="lkt-field--dropdown-option--label-container">

@@ -51,7 +51,7 @@
     import LktFieldValue from '../lib-components/LktFieldValue.vue';
     import FileInput from '../components/FileInput.vue';
     import DateInput from '../components/DateInput.vue';
-    import { extractEditableValue, extractPropValue } from '@/functions/calcultad-data-functions';
+    import { extractEditableValue, extractPropValue } from '../functions/calcultad-data-functions';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -968,9 +968,11 @@
                     is-featured
                 />
 
-                <i18n-button v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n" v-model="value"
-                             is-featured
-                             :type="Type" />
+                <i18n-button
+                    v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n"
+                    v-model="value"
+                    is-featured
+                    :type="Type" />
 
                 <lkt-button
                     v-if="computedShowSubtractStep && fieldFeaturedButton === 'subtract'"
@@ -984,7 +986,11 @@
                 <i :class="calculatedIcon" />
             </div>
 
-            <component :is="computedMainComponent" v-bind="computedMainAttrs" class="lkt-field-main" v-if="editable">
+            <component
+                v-if="editable"
+                :is="computedMainComponent"
+                v-bind="computedMainAttrs"
+                class="lkt-field-main">
                 <template v-if="slots['edit']">
                     <div v-on:click="onClick">
                         <slot name="edit" v-bind:value="value" :title="readModeTitle" :data="slotData" />
@@ -1193,17 +1199,19 @@
                 </template>
             </lkt-field-value>
 
-            <div v-show="showInfoUi" class="lkt-field--info-nav">
+            <div v-if="showInfoUi" class="lkt-field--info-nav">
                 <undo-button v-show="computedShowUndoInNav" @click="doUndo" />
                 <clear-button v-show="computedShowClearInNav" @click="doClear" />
 
                 <lkt-button
+                    v-if="Type === FieldType.Number"
                     v-show="computedShowSubtractStepInNav"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-minus"
                     @click="onClickSubtract"
                 />
                 <lkt-button
+                    v-if="Type === FieldType.Number"
                     v-show="computedShowIncreaseStep"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-plus"
@@ -1211,14 +1219,14 @@
                 />
 
                 <lkt-button
-                    v-show="computedShowError"
+                    v-if="computedShowError"
                     :title="errorMessage"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-warning"
                     @click="onClickError"
                 />
                 <lkt-button
-                    v-show="computedShowInfo"
+                    v-if="computedShowInfo"
                     class="lkt-field--info-btn"
                     icon="lkt-field-icon-info"
                     @click="onClickInfo"
@@ -1245,7 +1253,7 @@
                 />
 
                 <edition-button
-                    v-if="computedShowSwitchEditionInNav"
+                    v-if="editable && computedShowSwitchEditionInNav"
                     v-model="editable"
                     @click="onClickSwitchEdition"
                 />
@@ -1264,7 +1272,7 @@
                 />
 
                 <ellipsis-actions-button
-                    v-show="infoButtonEllipsis"
+                    v-if="infoButtonEllipsis"
                     :show-undo="computedShowUndo"
                     :show-clear="computedShowClear"
                     :show-password="computedShowPasswordReveal"
@@ -1278,9 +1286,9 @@
         </div>
 
         <lkt-field-validations
-            v-if="autoValidation && localValidationStatus.length > 0"
+            v-if="editable && autoValidation && localValidationStatus.length > 0"
             :items="localValidationStatus"
-            :stack="validationStack" :min="min" :max="max" />
+            :stack="validationStack" />
 
         <lkt-tooltip
             v-if="editable && FieldTypesWithOptions.includes(Type)"

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-    import { MultipleDisplayType } from '@/enums/MultipleDisplayType';
-    import DropdownOption from '@/components/dropdown/DropdownOption.vue';
-    import { ValidFieldValue } from '@/types/ValidFieldValue';
-    import { Option } from '@/instances/Option';
+    import { MultipleDisplayType } from '../enums/MultipleDisplayType';
+    import DropdownOption from '../components/dropdown/DropdownOption.vue';
+    import { ValidFieldValue } from '../types/ValidFieldValue';
+    import { Option } from '../instances/Option';
     import { LktObject } from 'lkt-ts-interfaces';
     import { nextTick, ref, watch } from 'vue';
 
@@ -21,14 +21,9 @@
         optionsLabelFormatter?: string | Function,
         optionsModalData: LktObject,
         pickedOptions: Option[],
-        // name: string,
-        // label: string,
-        // id: string,
         showOptions: boolean,
         editable: boolean,
         focusing: boolean,
-        // disabled: boolean,
-        // readonly: boolean,
         searchPlaceholder: string,
         multipleDisplayEdition: string,
     }>(), {
