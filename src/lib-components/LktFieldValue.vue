@@ -85,6 +85,12 @@
     if (props.type === FieldType.Select && props.multiple && !Array.isArray(calculatedValue)) {
         calculatedValue = [];
     }
+
+    if (props.type === FieldType.Textarea || props.type === FieldType.Text) {
+        if (typeof Settings.readTextMaxLength !== 'undefined' && calculatedValue.length > Settings.readTextMaxLength) {
+            calculatedValue = calculatedValue.substring(0, Settings.readTextMaxLength) + '...';
+        }
+    }
 </script>
 
 <template>

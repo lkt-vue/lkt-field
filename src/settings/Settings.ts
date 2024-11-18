@@ -77,4 +77,6 @@ export class Settings {
             removeDecimalsIfZero: true,
         },
     };
+
+    static readTextMaxLength?: number = undefined;
 }

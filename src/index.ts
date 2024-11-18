@@ -91,3 +91,7 @@ export const setFieldNumberFormat = (
     Settings.removeDecimalsIfZero = removeDecimalsIfZero;
     return true;
 };
+
+export const setReadTextMaxLength = (length: number) => {
+    Settings.readTextMaxLength = length;
+}

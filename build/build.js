@@ -1,4 +1,4 @@
-import { defineComponent as xe, computed as X, resolveComponent as ye, openBlock as Z, createBlock as ie, normalizeClass as Oe, ref as Y, watch as de, withCtx as Le, createCommentVNode as re, resolveDynamicComponent as it, mergeProps as fi, createElementBlock as ne, createElementVNode as me, toDisplayString as Ge, createVNode as se, normalizeStyle as Qt, unref as ee, withDirectives as De, vModelCheckbox as zl, onMounted as Mt, nextTick as _t, Fragment as He, vModelText as wt, renderList as Ye, vShow as je, createTextVNode as lt, useSlots as hi, renderSlot as at, createStaticVNode as Bl, vModelDynamic as Rl, createSlots as Al } from "vue";
+import { defineComponent as xe, computed as J, resolveComponent as ye, openBlock as Z, createBlock as ie, normalizeClass as Oe, ref as X, watch as de, withCtx as Le, createCommentVNode as re, resolveDynamicComponent as it, mergeProps as fi, createElementBlock as ne, createElementVNode as me, toDisplayString as Ge, createVNode as se, normalizeStyle as Qt, unref as ee, withDirectives as De, vModelCheckbox as zl, onMounted as Mt, nextTick as _t, Fragment as He, vModelText as wt, renderList as Ye, vShow as je, createTextVNode as lt, useSlots as hi, renderSlot as at, createStaticVNode as Bl, vModelDynamic as Rl, createSlots as Al } from "vue";
 import { stripTags as pi, fill as Ml, generateRandomString as Nt, formatNumber as ei, isEmail as Il } from "lkt-string-tools";
 import { httpCall as zt } from "lkt-http-client";
 import { __ as rt, currentLanguage as gi, availableLanguages as Dl } from "lkt-i18n";
@@ -46,8 +46,8 @@ be.defaultEmptyValueSlot = "", be.customValueSlots = {}, be.customEditSlots = {}
     thousandsSeparator: ".",
     removeDecimalsIfZero: !0
   }
-};
-let J = be;
+}, be.readTextMaxLength = void 0;
+let Y = be;
 const mi = /* @__PURE__ */ xe({
   __name: "UndoButton",
   props: {
@@ -55,7 +55,7 @@ const mi = /* @__PURE__ */ xe({
   },
   emits: ["click"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = X(() => J.undoText), r = X(() => s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), c = () => i("click");
+    const i = t, s = e, l = J(() => Y.undoText), r = J(() => s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), c = () => i("click");
     return (f, n) => {
       const v = ye("lkt-button");
       return Z(), ie(v, {
@@ -74,7 +74,7 @@ const mi = /* @__PURE__ */ xe({
   },
   emits: ["click"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = X(() => J.clearText), r = X(() => s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), c = () => i("click");
+    const i = t, s = e, l = J(() => Y.clearText), r = J(() => s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), c = () => i("click");
     return (f, n) => {
       const v = ye("lkt-button");
       return Z(), ie(v, {
@@ -95,9 +95,9 @@ const mi = /* @__PURE__ */ xe({
   },
   emits: ["click", "update:modelValue"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.modelValue);
+    const i = t, s = e, l = X(s.modelValue);
     de(() => s.modelValue, (v) => l.value = v), de(l, (v) => i("update:modelValue", v));
-    const r = X(() => l.value ? J.showPasswordOnText : J.showPasswordOffText), c = X(() => l.value === !0 ? "lkt-field-icon-lock-open" : "lkt-field-icon-lock"), f = X(() => s.isFeatured ? "lkt-field--atn-btn" : s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), n = () => i("click");
+    const r = J(() => l.value ? Y.showPasswordOnText : Y.showPasswordOffText), c = J(() => l.value === !0 ? "lkt-field-icon-lock-open" : "lkt-field-icon-lock"), f = J(() => s.isFeatured ? "lkt-field--atn-btn" : s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), n = () => i("click");
     return (v, u) => {
       const b = ye("lkt-button");
       return Z(), ie(b, {
@@ -120,9 +120,9 @@ const mi = /* @__PURE__ */ xe({
   },
   emits: ["click", "update:modelValue"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.modelValue);
+    const i = t, s = e, l = X(s.modelValue);
     de(() => s.modelValue, (v) => l.value = v), de(l, (v) => i("update:modelValue", v));
-    const r = X(() => l.value ? J.switchEditionOnText : J.switchEditionOffText), c = X(() => l.value === !0 ? "lkt-field-icon-eye" : "lkt-field-icon-pencil"), f = X(() => s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), n = () => i("click");
+    const r = J(() => l.value ? Y.switchEditionOnText : Y.switchEditionOffText), c = J(() => l.value === !0 ? "lkt-field-icon-eye" : "lkt-field-icon-pencil"), f = J(() => s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), n = () => i("click");
     return (v, u) => {
       const b = ye("lkt-button");
       return Z(), ie(b, {
@@ -149,9 +149,9 @@ const mi = /* @__PURE__ */ xe({
   },
   emits: ["undo", "clear", "update:showPasswordCheck", "update:showEditionCheck"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.showPasswordCheck);
+    const i = t, s = e, l = X(s.showPasswordCheck);
     de(() => s.showPasswordCheck, (c) => l.value = c), de(l, (c) => i("update:showPasswordCheck", c));
-    const r = Y(s.showEditionCheck);
+    const r = X(s.showEditionCheck);
     return de(() => s.showEditionCheck, (c) => r.value = c), de(r, (c) => i("update:showEditionCheck", c)), (c, f) => {
       const n = ye("lkt-button");
       return Z(), ie(n, {
@@ -197,9 +197,9 @@ const mi = /* @__PURE__ */ xe({
   },
   emits: ["click", "update:modelValue"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.modelValue);
+    const i = t, s = e, l = X(s.modelValue);
     de(() => s.modelValue, (f) => l.value = f, { deep: !0 }), de(l, (f) => i("update:modelValue", f), { deep: !0 });
-    const r = X(() => J.i18nText), c = X(() => s.isFeatured ? "lkt-field--atn-btn" : s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn");
+    const r = J(() => Y.i18nText), c = J(() => s.isFeatured ? "lkt-field--atn-btn" : s.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn");
     return (f, n) => {
       const v = ye("lkt-button");
       return Z(), ie(v, {
@@ -287,7 +287,7 @@ const et = [
   __name: "DropdownButton",
   emits: ["click"],
   setup(e, { emit: t }) {
-    const i = t, s = X(() => J.undoText), l = X(() => "lkt-field--info-btn"), r = () => i("click");
+    const i = t, s = J(() => Y.undoText), l = J(() => "lkt-field--info-btn"), r = () => i("click");
     return (c, f) => {
       const n = ye("lkt-button");
       return Z(), ie(n, {
@@ -317,10 +317,10 @@ const et = [
   },
   emits: ["click"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = X(() => s.option.icon !== "" ? s.option.icon : typeof s.icon == "function" ? s.icon(s.option) : s.icon), r = X(() => typeof s.labelFormatter == "function" ? s.labelFormatter(s.option) : s.option.label), c = X(() => `lkt-opt-${s.option.value}`), f = X(() => {
-      if (s.optionSlot && !(typeof J.optionSlots[s.optionSlot] > "u"))
-        return J.optionSlots[s.optionSlot];
-    }), n = X(() => f.value ? f.value : !s.editable && (s.modal !== "" || s.option.modal !== "") ? "lkt-button" : !s.editable && s.download !== "" ? "lkt-anchor" : "div"), v = X(() => {
+    const i = t, s = e, l = J(() => s.option.icon !== "" ? s.option.icon : typeof s.icon == "function" ? s.icon(s.option) : s.icon), r = J(() => typeof s.labelFormatter == "function" ? s.labelFormatter(s.option) : s.option.label), c = J(() => `lkt-opt-${s.option.value}`), f = J(() => {
+      if (s.optionSlot && !(typeof Y.optionSlots[s.optionSlot] > "u"))
+        return Y.optionSlots[s.optionSlot];
+    }), n = J(() => f.value ? f.value : !s.editable && (s.modal !== "" || s.option.modal !== "") ? "lkt-button" : !s.editable && s.download !== "" ? "lkt-anchor" : "div"), v = J(() => {
       if (n.value === "lkt-button") {
         let b = s.option.modal;
         s.modal && (b = s.modal);
@@ -371,7 +371,7 @@ const et = [
   },
   emits: ["update:modelValue"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.modelValue);
+    const i = t, s = e, l = X(s.modelValue);
     return de(() => s.modelValue, (r) => l.value = r), de(l, (r) => i("update:modelValue", r)), (r, c) => (Z(), ne("div", Kl, [
       me("div", Yl, [
         me("label", Xl, Ge(r.label), 1),
@@ -434,14 +434,14 @@ const Ql = (e, t, i, s) => {
       );
     }, c = (N) => {
       l(b.value);
-    }, f = Y(255), n = Y(255), v = Y(255), u = Y(255), b = Y(s.modelValue);
+    }, f = X(255), n = X(255), v = X(255), u = X(255), b = X(s.modelValue);
     l(b.value), de([f, n, v, u], r), de(() => s.modelValue, (N) => b.value = N), de(b, (N) => i("update:modelValue", N));
-    const C = X(() => en(oi(b.value))), E = X(() => b.value === "" || b.value === "#" ? {} : {
+    const C = J(() => en(oi(b.value))), E = J(() => b.value === "" || b.value === "#" ? {} : {
       background: b.value,
       "--lkt-btn-bg": b.value,
       color: C.value,
       "--lkt-btn-color": C.value
-    }), S = X(() => b.value === "" || b.value === "#" ? {} : {
+    }), S = J(() => b.value === "" || b.value === "#" ? {} : {
       "--lkt-field-bg-input": b.value,
       "--lkt-field-color": C.value
     });
@@ -615,7 +615,7 @@ const on = (e, t, i, s) => {
     t.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length > l && e.push(ve.createMaxSpecialChars(l, ge.Ko));
   }
 }, ai = (e, t = "default") => {
-  let i = J.validationMessages[t] && J.validationMessages[t][e] ? J.validationMessages[t][e] : "";
+  let i = Y.validationMessages[t] && Y.validationMessages[t][e] ? Y.validationMessages[t][e] : "";
   return i || (i = ""), i;
 };
 var $e = /* @__PURE__ */ ((e) => (e.List = "list", e.Inline = "inline", e.Count = "count", e))($e || {});
@@ -637,7 +637,7 @@ const dn = { class: "boolean-input" }, fn = { class: "boolean-input-label" }, hn
   },
   emits: ["update:modelValue", "focus", "blur"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(null), r = Y(s.modelValue), c = Y(r.value ? "true" : "false"), f = Y(s.focusing), n = (u) => {
+    const i = t, s = e, l = X(null), r = X(s.modelValue), c = X(r.value ? "true" : "false"), f = X(s.focusing), n = (u) => {
       f.value = !0, i("focus", u);
     }, v = (u) => {
       f.value = !1, i("blur", u);
@@ -15507,7 +15507,7 @@ const vs = {
   },
   emits: ["update:modelValue", "focus", "blur"],
   setup(e, { expose: t, emit: i }) {
-    const s = i, l = e, r = Y(null), c = Y(l.modelValue), f = Y(null), n = Y(void 0), v = Y(l.focusing), u = (S) => {
+    const s = i, l = e, r = X(null), c = X(l.modelValue), f = X(null), n = X(void 0), v = X(l.focusing), u = (S) => {
       v.value = !0, s("focus", S);
     }, b = (S) => {
       v.value = !1, s("blur", S);
@@ -15575,9 +15575,9 @@ const vs = {
   },
   emits: ["update:modelValue", "update:showOptions", "focus", "blur", "navigate", "search"],
   setup(e, { expose: t, emit: i }) {
-    const s = i, l = e, r = Y(""), c = Y(null), f = Y(l.showOptions);
+    const s = i, l = e, r = X(""), c = X(null), f = X(l.showOptions);
     de(f, (h) => s("update:showOptions", h));
-    const n = Y(l.focusing), v = Y(!1), u = Y(!1), b = () => {
+    const n = X(l.focusing), v = X(!1), u = X(!1), b = () => {
       _t(() => {
         n.value = v.value || u.value, f.value = n.value;
       });
@@ -15709,9 +15709,9 @@ const vs = {
   },
   emits: ["update:modelValue", "focus", "blur"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.modelValue), r = Y(null);
+    const i = t, s = e, l = X(s.modelValue), r = X(null);
     de(l, (h) => i("update:modelValue", h));
-    const c = Y(s.focusing), f = Y(null);
+    const c = X(s.focusing), f = X(null);
     let n;
     const v = () => {
       clearTimeout(n), r.value && typeof r.value.focus == "function" && r.value.focus();
@@ -15911,14 +15911,14 @@ const vs = {
     stack: { default: "default" }
   },
   setup(e) {
-    const t = e, i = X(() => {
+    const t = e, i = J(() => {
       let c = ai(t.validation.code, t.stack), f = {
         min: t.validation.min,
         max: t.validation.max,
         value: t.validation.equalToValue
       }, n = ai(t.validation.status + "-" + t.validation.code, t.stack);
       return n && (c = n), c ? c.startsWith("__:") ? rt(c.substring(3), f) : Ml(c, f, ":", "") : t.validation.code;
-    }), s = X(() => J.validationIconSlot !== ""), l = X(() => J.validationIconSlot), r = X(() => {
+    }), s = J(() => Y.validationIconSlot !== ""), l = J(() => Y.validationIconSlot), r = J(() => {
       let c = [];
       return c.push("code-" + t.validation.code), c.push("is-" + t.validation.status), c.join(" ");
     });
@@ -15939,7 +15939,7 @@ const vs = {
     stack: { default: "default" }
   },
   setup(e) {
-    const t = e, i = Y(t.items), s = Y(!1);
+    const t = e, i = X(t.items), s = X(!1);
     return de(() => t.items, (l) => {
       s.value = !0, _t(() => s.value = !1);
     }, { deep: !0 }), (l, r) => s.value ? re("", !0) : (Z(), ne("div", Ms, [
@@ -15967,9 +15967,9 @@ const vs = {
   },
   emits: ["update:modelValue", "focus", "blur"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.modelValue), r = Y(s.focusing);
+    const i = t, s = e, l = X(s.modelValue), r = X(s.focusing);
     let c, f;
-    const n = Y({}), v = () => {
+    const n = X({}), v = () => {
       clearTimeout(f), f = setTimeout(() => {
         n.value = {
           query: l.value
@@ -16075,7 +16075,7 @@ const vs = {
   },
   emits: ["click"],
   setup(e, { emit: t }) {
-    const i = t, s = hi(), l = e, r = () => i("click"), c = X(() => {
+    const i = t, s = hi(), l = e, r = () => i("click"), c = J(() => {
       switch (l.type) {
         case W.Select:
           if (l.multiple && Array.isArray(l.value) && l.value.length > 0 || l.multiple && l.multipleDisplay === $e.Count || !l.multiple && l.value) return "";
@@ -16086,10 +16086,10 @@ const vs = {
         default:
           if (l.value !== "") return "";
       }
-      return J.customValueSlots[l.emptyValueSlot] ?? J.defaultEmptyValueSlot;
-    }), f = X(() => J.customValueSlots[l.valueSlot] ?? "");
+      return Y.customValueSlots[l.emptyValueSlot] ?? Y.defaultEmptyValueSlot;
+    }), f = J(() => Y.customValueSlots[l.valueSlot] ?? "");
     let n = l.value;
-    return l.type === W.Select && l.multiple && !Array.isArray(n) && (n = []), (v, u) => {
+    return l.type === W.Select && l.multiple && !Array.isArray(n) && (n = []), (l.type === W.Textarea || l.type === W.Text) && typeof Y.readTextMaxLength < "u" && n.length > Y.readTextMaxLength && (n = n.substring(0, Y.readTextMaxLength) + "..."), (v, u) => {
       const b = ye("lkt-image"), C = ye("lkt-button"), E = ye("lkt-anchor"), S = ye("lkt-tag");
       return Z(), ne("div", {
         class: "lkt-field--read",
@@ -16254,7 +16254,7 @@ const vs = {
     "upload-error"
   ],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(null), r = Y(s.modelValue), c = Y(s.fileName), f = Y(s.uploading), n = (v) => {
+    const i = t, s = e, l = X(null), r = X(s.modelValue), c = X(s.fileName), f = X(s.uploading), n = (v) => {
       let u = v.target;
       if (u.files && u.files[0]) {
         c.value = u.files[0].name;
@@ -16321,11 +16321,11 @@ const vs = {
   },
   emits: ["update:modelValue"],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(s.modelValue);
+    const i = t, s = e, l = X(s.modelValue);
     de(() => s.modelValue, (p) => l.value = p, { deep: !0 }), de(l, (p) => i("update:modelValue", p));
-    const r = Y(/* @__PURE__ */ new Date()), c = Y(/* @__PURE__ */ new Date());
+    const r = X(/* @__PURE__ */ new Date()), c = X(/* @__PURE__ */ new Date());
     It(l.value) && typeof l.value < "u" && (c.value = new Date(l.value.getFullYear(), l.value.getMonth(), l.value.getDate()));
-    const f = Y(c.value.getFullYear()), n = Y(c.value.getMonth()), v = Y(!1), u = Y(ut("Y-m", c.value)), b = X(() => new Date(f.value, n.value + 1, 0).getDate()), C = X(() => new Date(f.value, n.value, 1).getDay()), E = () => {
+    const f = X(c.value.getFullYear()), n = X(c.value.getMonth()), v = X(!1), u = X(ut("Y-m", c.value)), b = J(() => new Date(f.value, n.value + 1, 0).getDate()), C = J(() => new Date(f.value, n.value, 1).getDay()), E = () => {
       n.value > 11 && (n.value = 0, f.value += 1), n.value += 1, c.value.setFullYear(f.value, n.value), c.value = new Date(c.value), u.value = ut("Y-m", c.value);
     }, S = () => {
       n.value < 0 && (n.value = 11, f.value -= 1), n.value -= 1, c.value.setFullYear(f.value, n.value), c.value = new Date(c.value), u.value = ut("Y-m", c.value);
@@ -16393,7 +16393,7 @@ const vs = {
     "update:modelValue"
   ],
   setup(e, { emit: t }) {
-    const i = t, s = e, l = Y(void 0), r = Y(""), c = Y(s.modelValue), f = X(() => J.dateReadFormat ? J.dateReadFormat : J.langDateReadFormat[s.lang] ? J.langDateReadFormat[s.lang] : J.defaultDateReadFormat ? J.defaultDateReadFormat : "Y-m-d"), n = (u) => {
+    const i = t, s = e, l = X(void 0), r = X(""), c = X(s.modelValue), f = J(() => Y.dateReadFormat ? Y.dateReadFormat : Y.langDateReadFormat[s.lang] ? Y.langDateReadFormat[s.lang] : Y.defaultDateReadFormat ? Y.defaultDateReadFormat : "Y-m-d"), n = (u) => {
       let b = new Date(u);
       It(b) && (l.value = b);
     }, v = () => {
@@ -16517,10 +16517,10 @@ const vs = {
   setup(e, { expose: t, emit: i }) {
     const s = i, l = hi(), r = e, c = Nt(16), f = bt(r.modalKey, r.prop);
     let n = bt(r.icon, r.prop);
-    const v = bt(r.download, r.prop), u = Y(r.type), b = Y(null);
+    const v = bt(r.download, r.prop), u = X(r.type), b = X(null);
     let C = r.featuredButton, E = r.modelValue;
-    u.value === "select" && r.multiple ? (!E || !Array.isArray(E)) && (E = []) : et.includes(u.value) ? typeof E != "boolean" && (E = !1) : u.value === W.Date && !n ? n = J.defaultDateIcon : u.value === W.Number && r.canStep && C === "" && (C = J.defaultNumberFeaturedButton);
-    const S = Y(E), N = Y(E), o = Y(r.valid), a = Y(!1), d = Y(!1), p = Y(!1), h = Y(!1), g = Y([]), m = Y(!r.readMode), y = Y(r.fileName), w = Y(r.fileName), _ = Y(null), k = Y(null), I = Y(null), x = Y(!1), L = Y(!1), A = Y(!1), U = Y(""), V = Y(-1), F = Y([]), O = Y(!1), P = Y(!1), M = Y(!1), H = X(() => gi.value), B = X(() => (H.value, J.dateReadFormat ? J.dateReadFormat : J.langDateReadFormat[H.value] ? J.langDateReadFormat[H.value] : J.defaultDateReadFormat ? J.defaultDateReadFormat : "Y-m-d")), R = Y(li(N.value, H.value)), T = Y(R), D = Y([]), q = Y([]), $ = () => {
+    u.value === "select" && r.multiple ? (!E || !Array.isArray(E)) && (E = []) : et.includes(u.value) ? typeof E != "boolean" && (E = !1) : u.value === W.Date && !n ? n = Y.defaultDateIcon : u.value === W.Number && r.canStep && C === "" && (C = Y.defaultNumberFeaturedButton);
+    const S = X(E), N = X(E), o = X(r.valid), a = X(!1), d = X(!1), p = X(!1), h = X(!1), g = X([]), m = X(!r.readMode), y = X(r.fileName), w = X(r.fileName), _ = X(null), k = X(null), I = X(null), x = X(!1), L = X(!1), A = X(!1), U = X(""), V = X(-1), F = X([]), O = X(!1), P = X(!1), M = X(!1), H = J(() => gi.value), B = J(() => (H.value, Y.dateReadFormat ? Y.dateReadFormat : Y.langDateReadFormat[H.value] ? Y.langDateReadFormat[H.value] : Y.defaultDateReadFormat ? Y.defaultDateReadFormat : "Y-m-d")), R = X(li(N.value, H.value)), T = X(R), D = X([]), q = X([]), $ = () => {
       const z = (Q) => {
         if (q.value = Tt(D.value, Q), r.multiple) {
           for (let qe in R.value) {
@@ -16533,35 +16533,35 @@ const vs = {
         typeof ke < "u" && (F.value.length === 0 ? F.value.push(ke) : F.value.splice(0, 1, ke));
       };
       u.value === W.Text ? z(R.value) : u.value === W.Select && z(U.value);
-    }, K = X(() => u.value === W.Date), G = X(() => u.value === W.File), j = X(() => u.value === W.Image), te = X(() => u.value === W.Textarea ? "textarea" : u.value === W.Html ? "div" : "input"), ue = X(() => u.value === W.Date ? N.value !== S.value : R.value !== T.value), ae = X(() => typeof r.disabled == "function" ? r.disabled(r.prop) : r.disabled), ce = X(() => {
+    }, K = J(() => u.value === W.Date), G = J(() => u.value === W.File), j = J(() => u.value === W.Image), te = J(() => u.value === W.Textarea ? "textarea" : u.value === W.Html ? "div" : "input"), ue = J(() => u.value === W.Date ? N.value !== S.value : R.value !== T.value), ae = J(() => typeof r.disabled == "function" ? r.disabled(r.prop) : r.disabled), ce = J(() => {
       let z = 0;
       return Ot.value && ++z, Ft.value && ++z, Vt.value && ++z, Pt.value && ++z, Wt.value && ++z, Ut.value && ++z, Be.value && ++z, Xe.value && ++z, (r.customButtonText || r.customButtonClass) && ++z, z > 0 && u.value === W.Textarea || z > 0 && u.value === W.Html || z > 0 && r.infoButtonEllipsis ? 1 : z;
-    }), fe = X(() => Qe.value && C === "i18n" || ft.value && C === "password" || Re.value && C === "subtract"), Se = X(() => ce.value > 0), Me = X(() => r.autocomplete === !0 ? "on" : "off"), he = X(() => u.value === W.Date ? N.value !== "" : R.value !== ""), Ne = X(() => u.value === W.Password && a.value === !0 ? "text" : u.value === W.Email ? "email" : u.value === W.Password ? "password" : u.value === W.Number ? "number" : u.value === W.Tel ? "tel" : u.value === W.Search ? "search" : u.value === W.Color ? "color" : u.value === W.Range ? "range" : "text"), _e = X(() => {
+    }), fe = J(() => Qe.value && C === "i18n" || ft.value && C === "password" || Re.value && C === "subtract"), Se = J(() => ce.value > 0), Me = J(() => r.autocomplete === !0 ? "on" : "off"), he = J(() => u.value === W.Date ? N.value !== "" : R.value !== ""), Ne = J(() => u.value === W.Password && a.value === !0 ? "text" : u.value === W.Email ? "email" : u.value === W.Password ? "password" : u.value === W.Number ? "number" : u.value === W.Tel ? "tel" : u.value === W.Search ? "search" : u.value === W.Color ? "color" : u.value === W.Range ? "range" : "text"), _e = J(() => {
       const z = ["lkt-field"];
       return z.push(`is-${u.value}`), et.includes(u.value) && (z.push("is-boolean"), R.value && z.push("is-checked")), ue.value && z.push("is-changed"), r.disabled && z.push("is-disabled"), r.multiple && z.push("is-multiple"), fe.value && z.push("with-atn-btn"), Se.value && z.push("with-info-btn"), r.mandatory && m.value && z.push("is-mandatory-field"), m.value && d.value && z.push("has-focus"), x.value && z.push("show-options"), r.searchable && O.value && z.push("is-searching"), u.value !== W.Range && r.autoValidation && h.value && p.value && (g.value.length > 0 ? z.push("is-invalid") : z.push("is-valid")), [W.Textarea, W.Html].includes(u.value) && z.push("is-lg"), [W.Image].includes(u.value) && z.push("is-xl"), r.multiple && u.value === W.Select && z.push("is-lg"), r.multiple && (m.value ? z.push(`has-multiple-display-${r.multipleDisplayEdition}`) : z.push(`has-multiple-display-${r.multipleDisplay}`)), ce.value > 0 && z.push("has-icons", `has-icons-${ce.value}`), z.push(m.value ? "is-editable" : "is-read"), u.value !== W.Range && (z.push(o.value ? "is-valid" : "is-error"), z.push(he.value ? "is-filled" : "is-empty")), z.join(" ");
-    }), Fe = X(() => {
+    }), Fe = J(() => {
       var z;
-      return typeof R.value == "number" ? (H.value, (z = J.langNumberFormat[H.value]) != null && z.amountOfDecimals ? ei(
+      return typeof R.value == "number" ? (H.value, (z = Y.langNumberFormat[H.value]) != null && z.amountOfDecimals ? ei(
         R.value,
-        J.langNumberFormat[H.value].amountOfDecimals,
-        J.langNumberFormat[H.value].decimalSeparator,
-        J.langNumberFormat[H.value].thousandsSeparator,
-        J.langNumberFormat[H.value].removeDecimalsIfZero
-      ) : J.amountOfDecimals ? ei(
+        Y.langNumberFormat[H.value].amountOfDecimals,
+        Y.langNumberFormat[H.value].decimalSeparator,
+        Y.langNumberFormat[H.value].thousandsSeparator,
+        Y.langNumberFormat[H.value].removeDecimalsIfZero
+      ) : Y.amountOfDecimals ? ei(
         R.value,
-        J.amountOfDecimals,
-        J.decimalSeparator,
-        J.thousandsSeparator,
-        J.removeDecimalsIfZero
+        Y.amountOfDecimals,
+        Y.decimalSeparator,
+        Y.thousandsSeparator,
+        Y.removeDecimalsIfZero
       ) : R.value.toString()) : u.value === W.Html ? pi(R.value) : R.value;
-    }), Ae = X(() => typeof r.min == "string" ? parseFloat(r.min) : typeof r.min == "number" ? r.min : !1), Ve = X(() => typeof r.max == "string" ? parseFloat(r.max) : typeof r.max == "number" ? r.max : !1), ze = X(() => {
+    }), Ae = J(() => typeof r.min == "string" ? parseFloat(r.min) : typeof r.min == "number" ? r.min : !1), Ve = J(() => typeof r.max == "string" ? parseFloat(r.max) : typeof r.max == "number" ? r.max : !1), ze = J(() => {
       let z = "";
       if (r.label.startsWith("__:") ? z = rt(r.label.substring(3)) : z = r.label, r.labelIcon) {
         let Q = '<i class="' + r.labelIcon + '"></i>';
         r.labelIconAtEnd ? z += Q : z = Q + z;
       }
       return z;
-    }), pe = X(() => r.placeholder.startsWith("__:") ? rt(r.placeholder.substring(3)) : r.placeholder), dt = X(() => r.searchPlaceholder.startsWith("__:") ? rt(r.searchPlaceholder.substring(3)) : r.searchPlaceholder), We = X(() => u.value === W.File ? J.acceptTypes.file : u.value === W.Image ? J.acceptTypes.image : ""), Ie = X(() => r.errorMessage), Ee = X(() => r.infoMessage), Re = X(() => r.canStep && m.value && u.value === W.Number), Be = X(() => r.canStep && m.value && u.value === W.Number && C !== "subtract"), Xe = X(() => r.canStep && m.value && u.value === W.Number), Je = X(() => r.canUndo && ue.value && m.value && !Zl.includes(u.value)), Pe = X(() => r.canClear && he.value && m.value && !Wl.includes(u.value)), Qe = X(() => r.canI18n && typeof N.value == "object" && m.value), ft = X(() => u.value === W.Password && r.showPassword && he.value && m.value), Ot = X(() => Je.value && !r.infoButtonEllipsis), Ft = X(() => Pe.value && !r.infoButtonEllipsis), Vt = X(() => ft.value && !r.infoButtonEllipsis && C !== "password"), Pt = X(() => Qe.value && !r.infoButtonEllipsis && C !== "i18n"), Ut = X(() => u.value === W.Calc || u.value === W.Search ? !1 : q.value.length > 0 || D.value.length > 0 || r.optionsResource !== ""), Wt = X(() => r.allowReadModeSwitch && !r.infoButtonEllipsis), Zt = () => {
+    }), pe = J(() => r.placeholder.startsWith("__:") ? rt(r.placeholder.substring(3)) : r.placeholder), dt = J(() => r.searchPlaceholder.startsWith("__:") ? rt(r.searchPlaceholder.substring(3)) : r.searchPlaceholder), We = J(() => u.value === W.File ? Y.acceptTypes.file : u.value === W.Image ? Y.acceptTypes.image : ""), Ie = J(() => r.errorMessage), Ee = J(() => r.infoMessage), Re = J(() => r.canStep && m.value && u.value === W.Number), Be = J(() => r.canStep && m.value && u.value === W.Number && C !== "subtract"), Xe = J(() => r.canStep && m.value && u.value === W.Number), Je = J(() => r.canUndo && ue.value && m.value && !Zl.includes(u.value)), Pe = J(() => r.canClear && he.value && m.value && !Wl.includes(u.value)), Qe = J(() => r.canI18n && typeof N.value == "object" && m.value), ft = J(() => u.value === W.Password && r.showPassword && he.value && m.value), Ot = J(() => Je.value && !r.infoButtonEllipsis), Ft = J(() => Pe.value && !r.infoButtonEllipsis), Vt = J(() => ft.value && !r.infoButtonEllipsis && C !== "password"), Pt = J(() => Qe.value && !r.infoButtonEllipsis && C !== "i18n"), Ut = J(() => u.value === W.Calc || u.value === W.Search ? !1 : q.value.length > 0 || D.value.length > 0 || r.optionsResource !== ""), Wt = J(() => r.allowReadModeSwitch && !r.infoButtonEllipsis), Zt = () => {
       _t(() => {
         b.value && b.value.focus();
       });
@@ -16622,7 +16622,7 @@ const vs = {
         W.Textarea
       ].includes(u.value))
         if (L.value = !1, r.autoloadOptionsResource && !P.value && (M.value = !0), r.optionsResource !== "") {
-          L.value = !0, J.searchKeyForResource !== "" && (r.optionsResourceData[J.searchKeyForResource] = z);
+          L.value = !0, Y.searchKeyForResource !== "" && (r.optionsResourceData[Y.searchKeyForResource] = z);
           const ke = await zt(r.optionsResource, r.optionsResourceData);
           Array.isArray(ke.data) && ke.data.length > 0 && (D.value = Vl(D.value, ke.data, r.prop), st(z, Q), r.autoloadOptionsResource && !P.value && (r.autoloadOptionsResource === "feed" && (r.multiple ? q.value.forEach((Ue) => {
             pt(Ue);
@@ -16747,13 +16747,13 @@ const vs = {
       value: ml,
       isMandatory: () => r.mandatory
     });
-    const Sl = X(() => r.editSlot !== "" && typeof J.customEditSlots[r.editSlot] < "u"), El = X(() => J.customEditSlots[r.editSlot]);
+    const Sl = J(() => r.editSlot !== "" && typeof Y.customEditSlots[r.editSlot] < "u"), El = J(() => Y.customEditSlots[r.editSlot]);
     Mt(() => {
       D.value = yt(r.options, r.prop), st("", !1), $(), u.value === W.Select && (r.multiple && (O.value = !0), r.autoloadOptionsResource && ht("", !1)), A.value = !0;
     });
-    const Ll = X(() => et.includes(u.value) ? "label" : "div"), Tl = X(() => et.includes(u.value) ? {
+    const Ll = J(() => et.includes(u.value) ? "label" : "div"), Tl = J(() => et.includes(u.value) ? {
       for: c
-    } : {}), Nl = X(() => {
+    } : {}), Nl = J(() => {
       switch (u.value) {
         case W.Select:
           return F.value;
@@ -17200,7 +17200,7 @@ const vs = {
     translations: { default: () => ({}) }
   },
   setup(e) {
-    const t = X(() => Dl.value.filter((i) => i !== gi.value));
+    const t = J(() => Dl.value.filter((i) => i !== gi.value));
     return (i, s) => {
       const l = ye("lkt-modal");
       return Z(), ie(l, {
@@ -17233,7 +17233,7 @@ const vs = {
       }, 8, ["modal-name", "modal-key", "z-index"]);
     };
   }
-}), So = (e, t) => (J.customValueSlots[e] = t, !0), Eo = (e, t) => (J.customEditSlots[e] = t, !0);
+}), So = (e, t) => (Y.customValueSlots[e] = t, !0), Eo = (e, t) => (Y.customEditSlots[e] = t, !0);
 class Lo {
   constructor(t = {}) {
     this.modelValue = "", this.type = W.Text, this.valid = void 0, this.placeholder = "", this.searchPlaceholder = "", this.label = "", this.labelIcon = "", this.labelIconAtEnd = !1, this.name = Nt(16), this.autocomplete = !1, this.disabled = !1, this.readonly = !1, this.readMode = !1, this.allowReadModeSwitch = !1, this.tabindex = void 0, this.mandatory = !1, this.showPassword = !1, this.canClear = !1, this.canUndo = !1, this.canI18n = !1, this.canStep = !0, this.mandatoryMessage = "", this.infoMessage = "", this.errorMessage = "", this.min = void 0, this.max = void 0, this.step = 1, this.enableAutoNumberFix = !0, this.emptyValueSlot = "", this.optionSlot = void 0, this.valueSlot = void 0, this.editSlot = void 0, this.slotData = {}, this.resource = "", this.resourceData = {}, this.validationResourceData = {}, this.autoValidation = !1, this.autoValidationType = "blur", this.validationStack = "default", this.minNumbers = void 0, this.maxNumbers = void 0, this.minChars = void 0, this.maxChars = void 0, this.minUpperChars = void 0, this.maxUpperChars = void 0, this.minLowerChars = void 0, this.maxLowerChars = void 0, this.minSpecialChars = void 0, this.maxSpecialChars = void 0, this.checkEqualTo = void 0, this.featuredButton = "", this.infoButtonEllipsis = !1, this.fileName = "", this.customButtonText = "", this.customButtonClass = "", this.options = [], this.multiple = !1, this.multipleDisplay = $e.List, this.multipleDisplayEdition = $e.Inline, this.searchable = !1, this.autoloadOptionsResource = !1, this.optionsDownload = "", this.optionsModal = "", this.optionsModalData = {}, this.optionsIcon = "", this.optionsLabelFormatter = void 0, this.optionsResource = "", this.optionsResourceData = {}, this.icon = "", this.download = "", this.modal = "", this.modalKey = "", this.modalData = {}, this.data = {};
@@ -17246,12 +17246,14 @@ const To = {
     e.component("lkt-field") === void 0 && (e.component("lkt-field", nt), Hl("lkt-field-language-edit", vo));
   }
 }, No = (e) => {
-  J.defaultEmptyValueSlot = e;
+  Y.defaultEmptyValueSlot = e;
 }, zo = (e, t) => {
-  J.optionSlots[e] = t;
-}, Bo = (e) => J.undoText = e, Ro = (e) => J.clearText = e, Ao = (e) => J.i18nText = e, Mo = (e) => J.switchEditionOnText = e, Io = (e) => J.switchEditionOffText = e, Do = (e) => J.showPasswordOnText = e, Ho = (e) => J.showPasswordOffText = e, Oo = (e) => J.dateReadFormat = e, Fo = (e) => J.defaultDateReadFormat = e, Vo = (e, t, i = "default") => {
-  i || (i = "default"), J.validationMessages[i] || (J.validationMessages[i] = {}), J.validationMessages[i][e] = t;
-}, Po = (e) => (J.validationIconSlot = e, !0), Uo = (e = 2, t = ".", i = ".", s = !0, l = "") => l !== "" ? (J.langNumberFormat[l].amountOfDecimals = e, J.langNumberFormat[l].decimalSeparator = t, J.langNumberFormat[l].thousandsSeparator = i, J.langNumberFormat[l].removeDecimalsIfZero = s, !0) : (J.amountOfDecimals = e, J.decimalSeparator = t, J.thousandsSeparator = i, J.removeDecimalsIfZero = s, !0);
+  Y.optionSlots[e] = t;
+}, Bo = (e) => Y.undoText = e, Ro = (e) => Y.clearText = e, Ao = (e) => Y.i18nText = e, Mo = (e) => Y.switchEditionOnText = e, Io = (e) => Y.switchEditionOffText = e, Do = (e) => Y.showPasswordOnText = e, Ho = (e) => Y.showPasswordOffText = e, Oo = (e) => Y.dateReadFormat = e, Fo = (e) => Y.defaultDateReadFormat = e, Vo = (e, t, i = "default") => {
+  i || (i = "default"), Y.validationMessages[i] || (Y.validationMessages[i] = {}), Y.validationMessages[i][e] = t;
+}, Po = (e) => (Y.validationIconSlot = e, !0), Uo = (e = 2, t = ".", i = ".", s = !0, l = "") => l !== "" ? (Y.langNumberFormat[l].amountOfDecimals = e, Y.langNumberFormat[l].decimalSeparator = t, Y.langNumberFormat[l].thousandsSeparator = i, Y.langNumberFormat[l].removeDecimalsIfZero = s, !0) : (Y.amountOfDecimals = e, Y.decimalSeparator = t, Y.thousandsSeparator = i, Y.removeDecimalsIfZero = s, !0), Wo = (e) => {
+  Y.readTextMaxLength = e;
+};
 export {
   Lo as Field,
   ii as Option,
@@ -17270,6 +17272,7 @@ export {
   Bo as setFieldUndoText,
   Po as setFieldValidationIconSlot,
   Vo as setFieldValidationMessage,
+  Wo as setReadTextMaxLength,
   Eo as setTextEditSlot,
   So as setTextValueSlot
 };

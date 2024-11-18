@@ -82,6 +82,7 @@ declare function Mo(e: any): any;
 declare function Bo(e: any): any;
 declare function Po(e: any): boolean;
 declare function Vo(e: any, t: any, i?: string): void;
+declare function Wo(e: any): void;
 declare function Eo(e: any, t: any): boolean;
 declare function So(e: any, t: any): boolean;
-export { Lo as Field, ii as Option, To as default, Ro as setFieldClearText, Oo as setFieldDateReadFormat, Fo as setFieldDefaultDateReadFormat, No as setFieldEmptySlot, Ao as setFieldI18nText, Uo as setFieldNumberFormat, zo as setFieldOptionSlot, Ho as setFieldShowPasswordOffText, Do as setFieldShowPasswordOnText, Io as setFieldSwitchEditionOffText, Mo as setFieldSwitchEditionOnText, Bo as setFieldUndoText, Po as setFieldValidationIconSlot, Vo as setFieldValidationMessage, Eo as setTextEditSlot, So as setTextValueSlot };
+export { Lo as Field, ii as Option, To as default, Ro as setFieldClearText, Oo as setFieldDateReadFormat, Fo as setFieldDefaultDateReadFormat, No as setFieldEmptySlot, Ao as setFieldI18nText, Uo as setFieldNumberFormat, zo as setFieldOptionSlot, Ho as setFieldShowPasswordOffText, Do as setFieldShowPasswordOnText, Io as setFieldSwitchEditionOffText, Mo as setFieldSwitchEditionOnText, Bo as setFieldUndoText, Po as setFieldValidationIconSlot, Vo as setFieldValidationMessage, Wo as setReadTextMaxLength, Eo as setTextEditSlot, So as setTextValueSlot };
