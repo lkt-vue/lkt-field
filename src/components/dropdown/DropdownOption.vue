@@ -4,7 +4,7 @@
     import { Settings } from '../../settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
 
-    const emit = defineEmits(['click']);
+    const emit = defineEmits(['click', 'click-icon']);
 
     const props = withDefaults(defineProps<{
         option: Option,
@@ -15,14 +15,16 @@
         modalData?: LktObject | Function
         download?: string | Function
         labelFormatter?: Function
+        isTag: boolean
     }>(), {
-        option: () => ({}),
+        option: () => (new Option()),
         optionSlot: '',
         editable: false,
         icon: '',
         modal: '',
         modalData: () => ({}),
         download: '',
+        isTag: false,
     });
 
     const computedIcon = computed(() => {
@@ -47,6 +49,7 @@
         }),
         computedContainerComponent = computed(() => {
             if (optionSlot.value) return optionSlot.value;
+            if (props.isTag) return 'lkt-tag';
             if (!props.editable && (props.modal !== '' || props.option.modal !== '')) return 'lkt-button';
             if (!props.editable && props.download !== '') return 'lkt-anchor';
             return 'div';
@@ -91,12 +94,22 @@
                 };
             }
 
+            if (computedContainerComponent.value === 'lkt-tag') {
+                return {
+                    type: 'action-icon',
+                    icon: 'lkt-field-icon-cancel',
+                };
+            }
+
             return {};
         });
 
     const onClick = () => {
-        emit('click');
-    };
+            emit('click');
+        },
+        onClickIcon = () => {
+            emit('click-icon', props.option);
+        };
 </script>
 
 <template>
@@ -107,6 +120,7 @@
         :class="computedClass"
         :title="option.label"
         @click="onClick"
+        @click-icon="onClickIcon"
     >
         <div
             v-if="computedIcon && computedContainerComponent !== 'lkt-button'"

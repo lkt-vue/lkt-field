@@ -7,13 +7,23 @@
     import { LktObject } from 'lkt-ts-interfaces';
     import { nextTick, ref, watch } from 'vue';
 
-    const emit = defineEmits(['update:modelValue', 'update:showOptions', 'focus', 'blur', 'navigate', 'search']);
+    const emit = defineEmits([
+        'update:modelValue',
+        'update:showOptions',
+        'focus',
+        'blur',
+        'navigate',
+        'search',
+        'tag',
+        'untag',
+    ]);
 
     const props = withDefaults(defineProps<{
         modelValue: ValidFieldValue,
         searchable: boolean,
         searchMode: boolean,
         multiple: boolean,
+        canTag: boolean,
         optionsIcon: string|Function,
         optionSlot?: string,
         optionsModal: string | Function,
@@ -30,6 +40,8 @@
         modelValue: false,
     });
 
+    const tagsEnabled = props.multiple && props.canTag;
+
     /**
      * Search query
      */
@@ -40,7 +52,9 @@
      * Options visibility
      */
     const visibleOptions = ref(props.showOptions);
-    watch(visibleOptions, v => emit('update:showOptions', v));
+    watch(visibleOptions, v => {
+        if (!tagsEnabled) emit('update:showOptions', v);
+    });
 
     /**
      * Focus state
@@ -81,7 +95,11 @@
         },
         onKeyUpQueryInput = (event: KeyboardEvent) => {
             queryHasFocus.value = true;
-            if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
+            if (tagsEnabled && event.key === 'Enter') {
+                emit('tag', query.value);
+                query.value = '';
+            }
+            else if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
                 emit('navigate', event);
             } else {
                 emit('search', query.value);
@@ -105,6 +123,9 @@
         },
         onFocusSelectButton = (event: FocusEvent) => {
             buttonHasFocus.value = true;
+        },
+        onClickOptionIcon = (option: Option) => {
+            emit('untag', option);
         };
 
     defineExpose({
@@ -118,7 +139,7 @@
 </script>
 
 <template>
-    <div v-if="searchable && (multiple || searchMode)" class="lkt-field--searchable-box">
+    <div v-if="(searchable && (multiple || searchMode)) || tagsEnabled" class="lkt-field--searchable-box">
 
         <lkt-tag
             v-if="multiple"
@@ -156,6 +177,7 @@
     </div>
 
     <lkt-button
+        :type="tagsEnabled ? 'content' : ''"
         ref="selectButton"
         v-show="multiple || (!searchable || !searchMode)"
         class="lkt-field--toggle-button lkt-field--select-button"
@@ -164,7 +186,7 @@
         @blur="onBlurSelectButton"
         @focus="onFocusSelectButton"
     >
-        <template v-if="multiple && pickedOptions.length > 0">
+        <template v-if="tagsEnabled || (multiple && pickedOptions.length > 0)">
             <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
                 {{ pickedOptions.length }}
             </div>
@@ -180,6 +202,8 @@
                         :download="optionsDownload"
                         :label-formatter="optionsLabelFormatter"
                         :editable="editable"
+                        :is-tag="tagsEnabled"
+                        @click-icon="onClickOptionIcon"
                     />
                 </li>
             </ul>

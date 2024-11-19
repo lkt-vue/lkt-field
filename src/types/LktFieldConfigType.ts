@@ -26,6 +26,7 @@ export type LktFieldConfigType = {
     canUndo?: boolean
     canI18n?: boolean
     canStep?: boolean
+    canTag?: boolean
     mandatoryMessage?: string
     infoMessage?: string
     errorMessage?: string

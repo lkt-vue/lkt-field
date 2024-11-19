@@ -78,6 +78,7 @@
         showPassword: false,
         canClear: false,
         canStep: true,
+        canTag: false,
         mandatoryMessage: '',
         infoMessage: '',
         errorMessage: '',
@@ -310,7 +311,7 @@
                 if (editableValue.value) r.push('is-checked');
             }
             if (changed.value) r.push('is-changed');
-            if (props.disabled) r.push('is-disabled');
+            if (computedIsDisabled.value) r.push('is-disabled');
             if (props.multiple) r.push('is-multiple');
             if (computedHasFeaturedButton.value) r.push('with-atn-btn');
             if (showInfoUi.value) r.push('with-info-btn');
@@ -826,6 +827,37 @@
             searchString.value = query;
             fetchOptions(query);
         },
+        onTagSelectInput = (query: string) => {
+            let option = new Option({
+                value: query,
+                label: query,
+            });
+
+            let pickedIndex = pickedOptions.value.findIndex(opt => opt.value === option.value);
+            if (pickedIndex === -1) {
+                optionsHaystack.value.push(option);
+                visibleOptions.value.push(option);
+                pickedOptions.value.push(option);
+            }
+            searchString.value = '';
+        },
+        onUntagSelectInput = (option: Option) => {
+            let pickedIndex = pickedOptions.value.findIndex(opt => opt.value === option.value);
+
+            if (pickedIndex >= 0) {
+                pickedOptions.value.splice(pickedIndex, 1);
+
+                optionsHaystack.value.splice(
+                    optionsHaystack.value.findIndex(opt => opt.value === option.value),
+                    1
+                );
+                visibleOptions.value.splice(
+                    visibleOptions.value.findIndex(opt => opt.value === option.value),
+                    1
+                );
+            }
+            searchString.value = '';
+        },
         onFocusSelectInput = () => {
             hadFirstFocus.value = true;
             focusing.value = true;
@@ -919,7 +951,7 @@
     });
 
     const computedMainComponent = computed(() => {
-            if (BooleanFieldTypes.includes(Type.value)) return 'label';
+            if (BooleanFieldTypes.includes(Type.value) && !computedIsDisabled.value) return 'label';
             return 'div';
         }),
         computedMainAttrs = computed(() => {
@@ -1055,6 +1087,7 @@
                     :searchable="searchable"
                     :search-mode="searchMode"
                     :multiple="multiple"
+                    :can-tag="multiple"
                     :options-icon="optionsIcon"
                     :option-slot="optionSlot"
                     :options-modal="optionsModal"
@@ -1070,6 +1103,8 @@
                     @blur="onBlurSelectInput"
                     @navigate="onNavigateSelectInput"
                     @search="onSearchSelectInput"
+                    @tag="onTagSelectInput"
+                    @untag="onUntagSelectInput"
                 />
                 <calc-input
                     ref="inputElement"

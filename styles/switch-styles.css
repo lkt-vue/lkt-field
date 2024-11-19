@@ -70,11 +70,11 @@
     left: var(--lkt-field-switch-dot-left-end);
 }
 
-.lkt-field.is-switch input:disabled .boolean-input-label {
+.lkt-field.is-switch.is-disabled .boolean-input-label {
     background: var(--lkt-field-bg-switch-disabled);
 }
 
-.lkt-field.is-switch input:disabled .boolean-input--check-on {
+.lkt-field.is-switch.is-disabled .boolean-input--check-on {
     background: var(--lkt-field-bg-switch-dot-disabled);
 }
 
