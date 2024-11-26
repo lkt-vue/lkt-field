@@ -6,7 +6,7 @@ import { MultipleDisplayType } from '../enums/MultipleDisplayType';
 
 export type LktFieldConfigType = {
     modelValue: ValidFieldValue
-    type: FieldType
+    type?: FieldType
     valid?: boolean
     placeholder?: string
     searchPlaceholder?: string
@@ -46,17 +46,17 @@ export type LktFieldConfigType = {
     autoValidation?: boolean
     autoValidationType?: 'focus' | 'blur' | 'always'
     validationStack?: string
-    minNumbers: number | string | undefined
-    maxNumbers: number | string | undefined
-    minChars: number | string | undefined
-    maxChars: number | string | undefined
-    minUpperChars: number | string | undefined
-    maxUpperChars: number | string | undefined
-    minLowerChars: number | string | undefined
-    maxLowerChars: number | string | undefined
-    minSpecialChars: number | string | undefined
-    maxSpecialChars: number | string | undefined
-    checkEqualTo: number | string | undefined
+    minNumbers?: number | string | undefined
+    maxNumbers?: number | string | undefined
+    minChars?: number | string | undefined
+    maxChars?: number | string | undefined
+    minUpperChars?: number | string | undefined
+    maxUpperChars?: number | string | undefined
+    minLowerChars?: number | string | undefined
+    maxLowerChars?: number | string | undefined
+    minSpecialChars?: number | string | undefined
+    maxSpecialChars?: number | string | undefined
+    checkEqualTo?: number | string | undefined
     featuredButton?: string
     infoButtonEllipsis?: boolean
     fileName?: string

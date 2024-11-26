@@ -24,7 +24,7 @@
     } from '../functions/option-functions';
     import { getVisibleDateValue } from '../functions/date-functions';
     import {
-        BooleanFieldTypes,
+        BooleanFieldTypes, FieldsWithMultipleMode,
         FieldTypesWithOptions,
         FieldTypesWithoutClear,
         FieldTypesWithoutUndo,
@@ -32,7 +32,8 @@
     } from '../constants/field-type-constants';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import ColorInput from '../components/color/ColorInput.vue';
+    import ColorInput from '../components/ColorInput.vue';
+    import MultipleColorInput from '../components/MultipleColorInput.vue';
     import {
         validateAmountOfChars,
         validateAmountOfLowerChars,
@@ -145,7 +146,7 @@
     let fieldFeaturedButton = props.featuredButton;
 
     let _val = props.modelValue;
-    if (Type.value === 'select' && props.multiple) {
+    if (props.multiple && FieldsWithMultipleMode.includes(Type.value)) {
         if (!_val || !Array.isArray(_val)) _val = [];
 
     } else if (BooleanFieldTypes.includes(Type.value)) {
@@ -1046,6 +1047,14 @@
                     :readonly="readonly"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
+                />
+
+                <multiple-color-input
+                    v-else-if="Type === FieldType.Color && multiple"
+                    v-model="editableValue"
+                    :edit-mode="editable"
+                    :min="MinimumValue"
+                    :max="MaximumValue"
                 />
 
                 <color-input

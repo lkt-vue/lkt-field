@@ -20,6 +20,11 @@ export const BooleanFieldTypes = [
     FieldType.Switch, FieldType.Check
 ];
 
+export const FieldsWithMultipleMode = [
+    FieldType.Select,
+    FieldType.Color
+];
+
 export const TextFieldTypes = [
     FieldType.Text,
     FieldType.Email,

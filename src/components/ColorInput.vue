@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-    import LktField from '@/lib-components/LktField.vue';
-    import RgbaRange from '@/components/color/RgbaRange.vue';
+    import LktField from '../lib-components/LktField.vue';
+    import RgbaRange from '../components/color/RgbaRange.vue';
     import { computed, ref, watch } from 'vue';
-    import { calculateColorValue, decodeHexColor, getContrastFontColor } from '@/functions/color-functions';
+    import { calculateColorValue, decodeHexColor, getContrastFontColor } from '../functions/color-functions';
 
     const emit = defineEmits(['update:modelValue']);
 
