@@ -16539,7 +16539,7 @@ const ks = {
     modalData: {}
   },
   setup(e) {
-    const t = Ot(), i = e, s = J(i.modelValue), l = ee(() => typeof i.max == "boolean" || s.value.length < i.max ? ["inline-create"] : []);
+    const t = Ot(), i = e, s = J(i.modelValue), l = ee(() => typeof i.max == "boolean" || s.value.length < i.max ? ["modal-create"] : []);
     return (r, c) => {
       const f = _e("lkt-table");
       return Z(), te(f, {
@@ -16549,7 +16549,8 @@ const ks = {
         perms: l.value,
         "edit-mode": r.editable,
         "new-value-generator": () => {
-        }
+        },
+        modal: r.modal
       }, {
         item: we(({ item: n, index: v, isLoading: u, canCreate: b, canRead: C, canUpdate: S, canDrop: E, doDrop: N }) => [
           se(bl, {
@@ -16575,7 +16576,7 @@ const ks = {
           ]), 1032, ["modelValue", "onUpdate:modelValue"])
         ]),
         _: 3
-      }, 8, ["modelValue", "perms", "edit-mode"]);
+      }, 8, ["modelValue", "perms", "edit-mode", "modal"]);
     };
   }
 }), po = ["data-show-ui", "data-labeled"], mo = ["for", "innerHTML"], go = { class: "lkt-field-content" }, vo = {

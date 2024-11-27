@@ -26,7 +26,7 @@
     const items = ref(props.modelValue);
 
     const computedPerms = computed(() => {
-        if (typeof props.max === 'boolean' || items.value.length < props.max) return ['inline-create'];
+        if (typeof props.max === 'boolean' || items.value.length < props.max) return ['modal-create'];
         return [];
     })
 </script>
@@ -38,6 +38,7 @@
         :perms="computedPerms"
         :edit-mode="editable"
         :new-value-generator="() => {}"
+        :modal="modal"
     >
         <template #item="{item, index, isLoading, canCreate, canRead, canUpdate, canDrop, doDrop}">
             <card-input
