@@ -53,6 +53,8 @@
     import FileInput from '../components/FileInput.vue';
     import DateInput from '../components/DateInput.vue';
     import { extractEditableValue, extractPropValue } from '../functions/calcultad-data-functions';
+    import CardInput from '../components/CardInput.vue';
+    import MultipleCardInput from '@/components/MultipleCardInput.vue';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -135,9 +137,9 @@
     const Identifier = generateRandomString(16);
 
     // Calculated data
-    const calculatedModalKey = extractPropValue(props.modalKey, props.prop);
+    let calculatedModalKey = extractPropValue(props.modalKey, props.prop);
     let calculatedIcon = extractPropValue(props.icon, props.prop);
-    const calculatedDownload = extractPropValue(props.download, props.prop);
+    let calculatedDownload = extractPropValue(props.download, props.prop);
 
     const Type = ref(props.type);
 
@@ -196,7 +198,7 @@
         return 'Y-m-d';
     });
 
-    const editableValue = ref(extractEditableValue(value.value, computedLang.value));
+    const editableValue = Type.value === FieldType.Card ? value.value : ref(extractEditableValue(value.value, computedLang.value));
     const originalEditableValue = ref(editableValue);
 
     const optionsHaystack = ref(<Option[]>[]),
@@ -474,12 +476,15 @@
     watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
-        if (Type.value !== FieldType.Date) {
-            editableValue.value = extractEditableValue(value.value, computedLang.value);
+        if (Type.value === FieldType.Card) {
+            editableValue.value = v;
+        }
+        else if (Type.value !== FieldType.Date) {
+            editableValue.value = extractEditableValue(v, computedLang.value);
         }
     });
     watch(editableValue, (v) => {
-        if (typeof value.value === 'object') {
+        if (typeof value.value === 'object' && Type.value === FieldType.Card) {
             value.value[computedLang.value] = v;
         } else {
             value.value = v;
@@ -1148,6 +1153,54 @@
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
                 />
+
+                <multiple-card-input
+                    v-else-if="Type === FieldType.Card && props.multiple"
+                    v-model="editableValue"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :name="name"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :had-first-focus="hadFirstFocus"
+                    :disabled="computedIsDisabled"
+                    :readonly="readonly"
+                    :options-resource="optionsResource"
+                    :modal="modal"
+                    :modal-key="calculatedModalKey"
+                    :modal-data="modalData"
+                >
+                    <template v-if="slots.item" v-slot:item="{item}">
+                        <slot
+                            name="item"
+                            :item="item"
+                        />
+                    </template>
+                </multiple-card-input>
+
+                <card-input
+                    v-else-if="Type === FieldType.Card"
+                    v-model="editableValue"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :name="name"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :had-first-focus="hadFirstFocus"
+                    :disabled="computedIsDisabled"
+                    :readonly="readonly"
+                    :options-resource="optionsResource"
+                    :modal="modal"
+                    :modal-key="calculatedModalKey"
+                    :modal-data="modalData"
+                >
+                    <template v-if="slots.item" v-slot:item="{item}">
+                        <slot
+                            name="item"
+                            :item="item"
+                        />
+                    </template>
+                </card-input>
 
                 <input
                     v-else-if="computedInputElement === 'input'"

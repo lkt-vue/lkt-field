@@ -16,4 +16,5 @@ export enum FieldType {
     Check = 'check',
     Switch = 'switch',
     Calc = 'calc',
+    Card = 'card',
 }

@@ -8,6 +8,13 @@ export const extractPropValue = (needle: string|Function, haystack: LktObject): 
     return needle;
 }
 
+// export const extractItemValue = (needle: string|Function, haystack: LktObject): string|Function => {
+//     if (typeof needle === 'string' && needle.startsWith('item:')) {
+//         return haystack[needle.substring(5)];
+//     }
+//     return needle;
+// }
+
 export const extractEditableValue = (value: ValidFieldValue, lang: string) => {
     if (typeof value === 'object' && !Array.isArray(value)) {
         return value[lang];

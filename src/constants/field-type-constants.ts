@@ -22,7 +22,8 @@ export const BooleanFieldTypes = [
 
 export const FieldsWithMultipleMode = [
     FieldType.Select,
-    FieldType.Color
+    FieldType.Color,
+    FieldType.Card,
 ];
 
 export const TextFieldTypes = [
