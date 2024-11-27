@@ -7,12 +7,20 @@
 
     const props = withDefaults(defineProps<{
         modelValue: LktObject[],
-        editMode?: boolean,
+        editable?: boolean,
         min: number|false,
         max: number|false,
+        focusing: boolean,
+        hadFirstFocus: boolean,
+        disabled: boolean,
+        readonly: boolean,
+        tabindex: number,
+        modal?: string | Function
+        modalKey?: string | number | Function
+        modalData?: LktObject
     }>(), {
         modelValue: () => [],
-        editMode: false,
+        editable: false,
     });
 
     const items = ref(props.modelValue);
@@ -28,7 +36,7 @@
         type="item"
         v-model="items"
         :perms="computedPerms"
-        :edit-mode="editMode"
+        :edit-mode="editable"
         :new-value-generator="() => {}"
     >
         <template #item="{item, index, isLoading, canCreate, canRead, canUpdate, canDrop, doDrop}">
@@ -38,6 +46,13 @@
                     <slot
                         name="item"
                         :item="item"
+                        :focusing="focusing"
+                        :had-first-focus="hadFirstFocus"
+                        :disabled="disabled"
+                        :readonly="readonly"
+                        :modal="modal"
+                        :modal-key="modalKey"
+                        :modal-data="modalData"
                     />
                 </template>
             </card-input>
