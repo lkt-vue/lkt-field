@@ -137,10 +137,16 @@
     const Identifier = generateRandomString(16);
 
     // Calculated data
+    let calculatedModal = extractPropValue(props.modal, props.prop);
     let calculatedModalKey = extractPropValue(props.modalKey, props.prop);
     let calculatedIcon = extractPropValue(props.icon, props.prop);
     let calculatedDownload = extractPropValue(props.download, props.prop);
     let calculatedItemType = extractPropValue(props.itemType, props.prop);
+
+
+    if (!calculatedModal && calculatedItemType && typeof Settings.modalPerItemType[calculatedItemType] !== 'undefined') {
+        calculatedModal = Settings.modalPerItemType[calculatedItemType];
+    }
 
     const Type = ref(props.type);
 
@@ -1167,7 +1173,7 @@
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :options-resource="optionsResource"
-                    :modal="modal"
+                    :modal="calculatedModal"
                     :modal-key="calculatedModalKey"
                     :modal-data="modalData"
                     :item-type="calculatedItemType"
@@ -1198,7 +1204,7 @@
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :options-resource="optionsResource"
-                    :modal="modal"
+                    :modal="calculatedModal"
                     :modal-key="calculatedModalKey"
                     :modal-data="modalData"
                     :item-type="calculatedItemType"
@@ -1289,7 +1295,7 @@
                 :download="calculatedDownload"
                 :multiple="multiple"
                 :multipleDisplay="multipleDisplay"
-                :modal="modal"
+                :modal="calculatedModal"
                 :modal-key="calculatedModalKey"
                 :modal-data="modalData"
                 :option-slot="optionSlot"

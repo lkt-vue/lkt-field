@@ -95,3 +95,8 @@ export const setFieldNumberFormat = (
 export const setReadTextMaxLength = (length: number) => {
     Settings.readTextMaxLength = length;
 }
+
+
+export const setModalPerItemType = (itemType: string, modal: string) => {
+    Settings.modalPerItemType[itemType] = modal;
+}

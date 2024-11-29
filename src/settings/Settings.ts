@@ -79,4 +79,7 @@ export class Settings {
     };
 
     static readTextMaxLength?: number = undefined;
+    
+    static modalPerItemType: LktObject = {};
 }
+

@@ -38,6 +38,7 @@
     <lkt-button
         :modal="modal"
         :modal-key="modalKey"
+        :modal-data="modalData"
         @click="onClick">
         <template v-if="value">
             <slot

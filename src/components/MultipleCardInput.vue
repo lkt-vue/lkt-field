@@ -41,6 +41,8 @@
         :edit-mode="editable"
         :new-value-generator="() => {}"
         :modal="modal"
+        :modal-key="modalKey"
+        :modal-data="modalData"
         :required-items-for-top-create="999999"
     >
         <template #item="{item, index, isLoading, canCreate, canRead, canUpdate, canDrop, doDrop}">
