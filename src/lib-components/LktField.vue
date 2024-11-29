@@ -54,7 +54,7 @@
     import DateInput from '../components/DateInput.vue';
     import { extractEditableValue, extractPropValue } from '../functions/calcultad-data-functions';
     import CardInput from '../components/CardInput.vue';
-    import MultipleCardInput from '@/components/MultipleCardInput.vue';
+    import MultipleCardInput from '../components/MultipleCardInput.vue';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -140,6 +140,7 @@
     let calculatedModalKey = extractPropValue(props.modalKey, props.prop);
     let calculatedIcon = extractPropValue(props.icon, props.prop);
     let calculatedDownload = extractPropValue(props.download, props.prop);
+    let calculatedItemType = extractPropValue(props.itemType, props.prop);
 
     const Type = ref(props.type);
 
@@ -1169,8 +1170,15 @@
                     :modal="modal"
                     :modal-key="calculatedModalKey"
                     :modal-data="modalData"
+                    :item-type="calculatedItemType"
                 >
-                    <template v-if="slots.item" v-slot:item="{item}">
+                    <template v-if="slots['item-' + calculatedItemType]" v-slot:item="{item}">
+                        <slot
+                            :name="'item-' + calculatedItemType"
+                            :item="item"
+                        />
+                    </template>
+                    <template v-else-if="slots.item" v-slot:item="{item}">
                         <slot
                             name="item"
                             :item="item"
@@ -1193,8 +1201,15 @@
                     :modal="modal"
                     :modal-key="calculatedModalKey"
                     :modal-data="modalData"
+                    :item-type="calculatedItemType"
                 >
-                    <template v-if="slots.item" v-slot:item="{item}">
+                    <template v-if="slots['item-' + calculatedItemType]" v-slot:item="{item}">
+                        <slot
+                            :name="'item-' + calculatedItemType"
+                            :item="item"
+                        />
+                    </template>
+                    <template v-else-if="slots.item" v-slot:item="{item}">
                         <slot
                             name="item"
                             :item="item"

@@ -18,9 +18,11 @@
         modal?: string | Function
         modalKey?: string | number | Function
         modalData?: LktObject
+        itemType?: string
     }>(), {
         modelValue: () => [],
         editable: false,
+        itemType: '',
     });
 
     const items = ref(props.modelValue);
@@ -39,10 +41,13 @@
         :edit-mode="editable"
         :new-value-generator="() => {}"
         :modal="modal"
+        :required-items-for-top-create="999999"
     >
         <template #item="{item, index, isLoading, canCreate, canRead, canUpdate, canDrop, doDrop}">
             <card-input
-                v-model="items[index]">
+                v-model="items[index]"
+                :item-type="itemType"
+            >
                 <template v-if="slots.item" v-slot:item="{item}">
                     <slot
                         name="item"

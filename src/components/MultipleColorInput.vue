@@ -27,6 +27,7 @@
         :perms="computedPerms"
         :edit-mode="editMode"
         :new-value-generator="() => ''"
+        :required-items-for-top-create="999999"
     >
         <template #item="{item, index, isLoading, canCreate, canRead, canUpdate, canDrop, doDrop}">
             <color-input v-model="items[index]"/>

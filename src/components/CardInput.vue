@@ -6,23 +6,25 @@
 
     const props = withDefaults(defineProps<{
         modelValue: LktObject
-        name: string
-        id: string
-        optionsResource: string
-        editable: boolean,
-        focusing: boolean,
-        hadFirstFocus: boolean,
-        disabled: boolean,
-        readonly: boolean,
-        tabindex: number,
+        name?: string
+        id?: string
+        optionsResource?: string
+        editable?: boolean,
+        focusing?: boolean,
+        hadFirstFocus?: boolean,
+        disabled?: boolean,
+        readonly?: boolean,
+        tabindex?: number,
         modal?: string | Function
         modalKey?: string | number | Function
         modalData?: LktObject
+        itemType?: string
     }>(), {
         modelValue: () => ({}),
         modal: '',
         modalKey: '_',
         modalData: () => ({}),
+        itemType: '',
     });
 
     const value = ref(props.modelValue);
