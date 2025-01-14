@@ -55,6 +55,7 @@
     import { extractEditableValue, extractPropValue } from '../functions/calcultad-data-functions';
     import CardInput from '../components/CardInput.vue';
     import MultipleCardInput from '../components/MultipleCardInput.vue';
+    import ElementsInput from '@/components/ElementsInput.vue';
 
     // Emits
     const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
@@ -1146,6 +1147,24 @@
                 <search-input
                     ref="inputElement"
                     v-else-if="Type === FieldType.Search"
+                    v-model="editableValue"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :name="name"
+                    :editable="editable"
+                    :focusing="focusing"
+                    :had-first-focus="hadFirstFocus"
+                    :disabled="computedIsDisabled"
+                    :readonly="readonly"
+                    :options-resource="optionsResource"
+                    :container="container"
+                    @focus="onFocusBooleanInput"
+                    @blur="onBlurBooleanInput"
+                />
+
+                <elements-input
+                    ref="inputElement"
+                    v-else-if="Type === FieldType.Elements"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"

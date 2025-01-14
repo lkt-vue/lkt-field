@@ -1,4 +1,4 @@
-declare class Ho {
+declare class pu {
     constructor(t?: {});
     modelValue: string;
     type: any;
@@ -56,7 +56,7 @@ declare class Ho {
     modalData: {};
     data: {};
 }
-declare class Ct {
+declare class Ti {
     constructor(t?: {});
     label: string;
     data: {};
@@ -65,25 +65,25 @@ declare class Ct {
     icon: string;
     modal: string;
 }
-declare namespace Oo {
+declare namespace mu {
     function install(e: any): void;
 }
-declare function Uo(e: any): any;
-declare function Go(e: any): any;
-declare function Ko(e: any): any;
-declare function Vo(e: any): void;
-declare function Wo(e: any): any;
-declare function Jo(e?: number, t?: string, i?: string, s?: boolean, l?: string): boolean;
-declare function Fo(e: any, t: any): void;
-declare function jo(e: any): any;
-declare function qo(e: any): any;
-declare function $o(e: any): any;
-declare function Zo(e: any): any;
-declare function Po(e: any): any;
-declare function Xo(e: any): boolean;
-declare function Yo(e: any, t: any, i?: string): void;
-declare function ea(e: any, t: any): void;
-declare function Qo(e: any): void;
-declare function Do(e: any, t: any): boolean;
-declare function Io(e: any, t: any): boolean;
-export { Ho as Field, Ct as Option, Oo as default, Uo as setFieldClearText, Go as setFieldDateReadFormat, Ko as setFieldDefaultDateReadFormat, Vo as setFieldEmptySlot, Wo as setFieldI18nText, Jo as setFieldNumberFormat, Fo as setFieldOptionSlot, jo as setFieldShowPasswordOffText, qo as setFieldShowPasswordOnText, $o as setFieldSwitchEditionOffText, Zo as setFieldSwitchEditionOnText, Po as setFieldUndoText, Xo as setFieldValidationIconSlot, Yo as setFieldValidationMessage, ea as setModalPerItemType, Qo as setReadTextMaxLength, Do as setTextEditSlot, Io as setTextValueSlot };
+declare function yu(e: any): any;
+declare function Su(e: any): any;
+declare function Eu(e: any): any;
+declare function gu(e: any): void;
+declare function _u(e: any): any;
+declare function Nu(e?: number, t?: string, i?: string, l?: boolean, n?: string): boolean;
+declare function vu(e: any, t: any): void;
+declare function xu(e: any): any;
+declare function ku(e: any): any;
+declare function Cu(e: any): any;
+declare function wu(e: any): any;
+declare function bu(e: any): any;
+declare function Lu(e: any): boolean;
+declare function Tu(e: any, t: any, i?: string): void;
+declare function zu(e: any, t: any): void;
+declare function Bu(e: any): void;
+declare function hu(e: any, t: any): boolean;
+declare function fu(e: any, t: any): boolean;
+export { pu as Field, Ti as Option, mu as default, yu as setFieldClearText, Su as setFieldDateReadFormat, Eu as setFieldDefaultDateReadFormat, gu as setFieldEmptySlot, _u as setFieldI18nText, Nu as setFieldNumberFormat, vu as setFieldOptionSlot, xu as setFieldShowPasswordOffText, ku as setFieldShowPasswordOnText, Cu as setFieldSwitchEditionOffText, wu as setFieldSwitchEditionOnText, bu as setFieldUndoText, Lu as setFieldValidationIconSlot, Tu as setFieldValidationMessage, zu as setModalPerItemType, Bu as setReadTextMaxLength, hu as setTextEditSlot, fu as setTextValueSlot };

@@ -64,6 +64,7 @@
     "lkt-ts-interfaces": "^1.0.5",
     "process": "^0.11.10",
     "sass": "^1.57.1",
+    "sortablejs": "^1.15.6",
     "suneditor": "^2.47.0",
     "vue": "^3.3.0"
   }
