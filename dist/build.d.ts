@@ -56,7 +56,7 @@ declare class pu {
     modalData: {};
     data: {};
 }
-declare class Ti {
+declare class Li {
     constructor(t?: {});
     label: string;
     data: {};
@@ -86,4 +86,4 @@ declare function zu(e: any, t: any): void;
 declare function Bu(e: any): void;
 declare function hu(e: any, t: any): boolean;
 declare function fu(e: any, t: any): boolean;
-export { pu as Field, Ti as Option, mu as default, yu as setFieldClearText, Su as setFieldDateReadFormat, Eu as setFieldDefaultDateReadFormat, gu as setFieldEmptySlot, _u as setFieldI18nText, Nu as setFieldNumberFormat, vu as setFieldOptionSlot, xu as setFieldShowPasswordOffText, ku as setFieldShowPasswordOnText, Cu as setFieldSwitchEditionOffText, wu as setFieldSwitchEditionOnText, bu as setFieldUndoText, Lu as setFieldValidationIconSlot, Tu as setFieldValidationMessage, zu as setModalPerItemType, Bu as setReadTextMaxLength, hu as setTextEditSlot, fu as setTextValueSlot };
+export { pu as Field, Li as Option, mu as default, yu as setFieldClearText, Su as setFieldDateReadFormat, Eu as setFieldDefaultDateReadFormat, gu as setFieldEmptySlot, _u as setFieldI18nText, Nu as setFieldNumberFormat, vu as setFieldOptionSlot, xu as setFieldShowPasswordOffText, ku as setFieldShowPasswordOnText, Cu as setFieldSwitchEditionOffText, wu as setFieldSwitchEditionOnText, bu as setFieldUndoText, Lu as setFieldValidationIconSlot, Tu as setFieldValidationMessage, zu as setModalPerItemType, Bu as setReadTextMaxLength, hu as setTextEditSlot, fu as setTextValueSlot };

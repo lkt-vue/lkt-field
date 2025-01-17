@@ -58,7 +58,23 @@
     import ElementsInput from '@/components/ElementsInput.vue';
 
     // Emits
-    const emits = defineEmits(['update:modelValue', 'update:valid', 'keyup', 'keydown', 'focus', 'blur', 'click', 'change', 'click-info', 'click-error', 'validation', 'validating', 'options-loaded', 'selected-option']);
+    const emits = defineEmits([
+        'update:modelValue',
+        'update:valid',
+        'update:options',
+        'keyup',
+        'keydown',
+        'focus',
+        'blur',
+        'click',
+        'change',
+        'click-info',
+        'click-error',
+        'validation',
+        'validating',
+        'options-loaded',
+        'selected-option'
+    ]);
 
     // Slots
     const slots = useSlots();
@@ -132,6 +148,7 @@
         modalKey: '',
         modalData: () => ({}),
         prop: () => ({}),
+        optionValueType: 'value',
     });
 
     // Constant data
@@ -218,7 +235,13 @@
             visibleOptions.value = filterOptions(optionsHaystack.value, query);
             if (props.multiple) {
                 for (let k in editableValue.value) {
-                    let option = findOptionByValue(optionsHaystack.value, editableValue.value[k]);
+                    let option = undefined;
+                    if (props.optionValueType === 'option') {
+                        option = findOptionByValue(optionsHaystack.value, editableValue.value[k].value);
+
+                    } else {
+                        option = findOptionByValue(optionsHaystack.value, editableValue.value[k]);
+                    }
                     if (typeof option !== 'undefined') {
                         if (pickedOptions.value.length === 0) {
                             pickedOptions.value.push(option);
@@ -231,7 +254,13 @@
                 return;
             }
 
-            let option = findOptionByValue(optionsHaystack.value, editableValue.value);
+            let option = undefined;
+
+            if (props.optionValueType === 'option') {
+                option = findOptionByValue(optionsHaystack.value, editableValue.value.map(opt => opt.value));
+            } else {
+                option = findOptionByValue(optionsHaystack.value, editableValue.value);
+            }
             if (typeof option !== 'undefined') {
                 if (pickedOptions.value.length === 0) {
                     pickedOptions.value.push(option);
@@ -512,6 +541,10 @@
         emits('update:valid', v);
     });
 
+    watch(optionsHaystack, (v) => {
+        emits('update:options', v);
+    });
+
     watch(() => props.options, (v) => {
         optionsHaystack.value = prepareOptions(v, props.prop);
         if (Type.value === FieldType.Select) {
@@ -774,11 +807,24 @@
             if (option.disabled) return;
 
             if (props.multiple) {
-                //@ts-ignore
-                let k = getInValueOptionIndex(option, editableValue.value);
-                if (k === -1) {
+                let k = undefined;
+
+                if (props.optionValueType === 'option') {
                     //@ts-ignore
-                    editableValue.value.push(String(option.value));
+                    k = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
+                } else {
+                    //@ts-ignore
+                    k = getInValueOptionIndex(option, editableValue.value);
+                }
+
+                if (k === -1) {
+                    if (props.optionValueType === 'option') {
+                        //@ts-ignore
+                        editableValue.value.push(option.value);
+                    } else {
+                        //@ts-ignore
+                        editableValue.value.push(String(option.value));
+                    }
                     pickedOptions.value.push(option);
                 } else {
                     //@ts-ignore
@@ -790,7 +836,13 @@
 
             } else {
                 focusedOptionIndex.value = -1;
-                editableValue.value = String(option.value);
+                if (props.optionValueType === 'option') {
+                    //@ts-ignore
+                    editableValue.value = option;
+                } else {
+                    //@ts-ignore
+                    editableValue.value = String(option.value);
+                }
                 pickedOptions.value.splice(0, 1, option);
                 showOptions.value = false;
                 searchMode.value = false;
@@ -851,7 +903,8 @@
             if (pickedIndex === -1) {
                 optionsHaystack.value.push(option);
                 visibleOptions.value.push(option);
-                pickedOptions.value.push(option);
+                // pickedOptions.value.push(option);
+                onClickOption(option);
             }
             searchString.value = '';
         },

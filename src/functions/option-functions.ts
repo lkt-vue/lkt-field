@@ -47,6 +47,7 @@ export const findOptionByValue = (options: Option[], query: ValidOptionValue) =>
     if (query === '') return undefined;
 
     return options.find((z: Option) => {
+        if (Array.isArray(query)) return query.includes(z.value);
         return z.value == query;
     });
 };
