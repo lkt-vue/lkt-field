@@ -1,9 +1,11 @@
 import { Settings } from '../settings/Settings';
 import { FieldValidation } from '../instances/FieldValidation';
 import { ValidationStatus } from '../enums/ValidationStatus';
+import { ValidationCode } from '../enums/ValidationCode';
 
 export const validateAmountOfNumbers = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(min),
             val = value.replace(/\D+/g, '');
 
@@ -13,6 +15,7 @@ export const validateAmountOfNumbers = (status: FieldValidation[], value: string
     }
 
     if (typeof max !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(max),
             val = value.replace(/\D+/g, '');
 
@@ -24,6 +27,7 @@ export const validateAmountOfNumbers = (status: FieldValidation[], value: string
 
 export const validateAmountOfUpperChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(min),
             val = value.replace(/[^A-Z]+/g, '');
 
@@ -33,6 +37,7 @@ export const validateAmountOfUpperChars = (status: FieldValidation[], value: str
     }
 
     if (typeof max !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(max),
             val = value.replace(/[^A-Z]+/g, '');
 
@@ -44,6 +49,7 @@ export const validateAmountOfUpperChars = (status: FieldValidation[], value: str
 
 export const validateAmountOfLowerChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(min),
             val = value.replace(/[A-Z]+/g, '');
 
@@ -53,6 +59,7 @@ export const validateAmountOfLowerChars = (status: FieldValidation[], value: str
     }
 
     if (typeof max !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(max),
             val = value.replace(/[A-Z]+/g, '');
 
@@ -64,6 +71,7 @@ export const validateAmountOfLowerChars = (status: FieldValidation[], value: str
 
 export const validateAmountOfChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(min),
             val = value.replace(/\d+/g, '');
 
@@ -73,6 +81,7 @@ export const validateAmountOfChars = (status: FieldValidation[], value: string, 
     }
 
     if (typeof max !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(max),
             val = value.replace(/\d+/g, '');
 
@@ -84,6 +93,7 @@ export const validateAmountOfChars = (status: FieldValidation[], value: string, 
 
 export const validateAmountOfSpecialChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(min),
             val = value.replace(/\d+/g, '').replace(/[a-zA-Z]+/g, '');
 
@@ -93,6 +103,7 @@ export const validateAmountOfSpecialChars = (status: FieldValidation[], value: s
     }
 
     if (typeof max !== 'undefined') {
+        //@ts-ignore
         let constraint = parseInt(max),
             val = value.replace(/\d+/g, '').replace(/[a-zA-Z]+/g, '');
 
@@ -103,7 +114,8 @@ export const validateAmountOfSpecialChars = (status: FieldValidation[], value: s
 };
 
 
-export const getCodeMessage = (code: string, stack: string = 'default'): string => {
+export const getCodeMessage = (code?: ValidationCode|string, stack: string = 'default'): string => {
+    if (!code) return '';
     let r = Settings.validationMessages[stack] && Settings.validationMessages[stack][code]
         ? Settings.validationMessages[stack][code]
         : '';

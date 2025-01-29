@@ -1,0 +1,31 @@
+import { ValidationCode } from '../enums/ValidationCode';
+import { ValidationStatus } from '../enums/ValidationStatus';
+export declare class FieldValidation {
+    code?: ValidationCode | string;
+    status: ValidationStatus;
+    min: number;
+    max: number;
+    equalToValue: number | string | undefined;
+    constructor(code: ValidationCode, status: ValidationStatus);
+    setMin(n: number): this;
+    setMax(n: number): this;
+    setEqualToValue(val: number | string): this;
+    static createEmpty(status?: ValidationStatus): FieldValidation;
+    static createEmail(status?: ValidationStatus): FieldValidation;
+    static createMinStr(min: number, status?: ValidationStatus): FieldValidation;
+    static createMaxStr(max: number, status?: ValidationStatus): FieldValidation;
+    static createMinNum(min: number, status?: ValidationStatus): FieldValidation;
+    static createMaxNum(max: number, status?: ValidationStatus): FieldValidation;
+    static createNumBetween(min: number, max: number, status?: ValidationStatus): FieldValidation;
+    static createMinNumbers(min: number, status?: ValidationStatus): FieldValidation;
+    static createMaxNumbers(max: number, status?: ValidationStatus): FieldValidation;
+    static createMinUpperChars(min: number, status?: ValidationStatus): FieldValidation;
+    static createMaxUpperChars(max: number, status?: ValidationStatus): FieldValidation;
+    static createMinLowerChars(min: number, status?: ValidationStatus): FieldValidation;
+    static createMaxLowerChars(max: number, status?: ValidationStatus): FieldValidation;
+    static createMinSpecialChars(min: number, status?: ValidationStatus): FieldValidation;
+    static createMaxSpecialChars(max: number, status?: ValidationStatus): FieldValidation;
+    static createMinChars(min: number, status?: ValidationStatus): FieldValidation;
+    static createMaxChars(max: number, status?: ValidationStatus): FieldValidation;
+    static createEqualTo(value: number | string, status?: ValidationStatus): FieldValidation;
+}

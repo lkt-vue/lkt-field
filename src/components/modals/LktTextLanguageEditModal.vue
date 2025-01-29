@@ -3,7 +3,7 @@
     import LktFieldText from '../../lib-components/LktField.vue';
     import { LktObject } from 'lkt-ts-interfaces';
     import { availableLanguages, currentLanguage } from 'lkt-i18n';
-    import { FieldType } from '@/enums/FieldType';
+    import { FieldType } from '../../enums/FieldType';
 
     const props = withDefaults(defineProps<{
         modalName: string

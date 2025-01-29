@@ -2,7 +2,7 @@ import { ValidationCode } from '../enums/ValidationCode';
 import { ValidationStatus } from '../enums/ValidationStatus';
 
 export class FieldValidation {
-    code?: ValidationCode = undefined;
+    code?: ValidationCode|string = undefined;
     status: ValidationStatus = ValidationStatus.Info;
 
     min: number = 0;

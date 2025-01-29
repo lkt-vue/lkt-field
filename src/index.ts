@@ -1,6 +1,6 @@
 import { App, Component, Plugin } from 'vue';
 
-import { default as libComponent } from './lib-components/LktField.vue';
+import LktField, { default as libComponent } from './lib-components/LktField.vue';
 import '../fonts/fontello/css/lkt-fields.css';
 import '../styles/common-styles.css';
 import '../styles/select-styles.css';
@@ -21,10 +21,11 @@ import '../styles/helper-styles.css';
 import { Settings } from './settings/Settings';
 import { addModal } from 'lkt-modal';
 import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditModal.vue';
+import { LktFieldConfigType } from './types/LktFieldConfigType.ts';
 
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 
-const LktField: Plugin = {
+const LktFieldPlugin: Plugin = {
     install: (app: App) => {
         // Register plugin components
         if (app.component('lkt-field') === undefined) {
@@ -36,7 +37,9 @@ const LktField: Plugin = {
     },
 };
 
-export default LktField;
+export default LktFieldPlugin;
+
+export { LktField };
 
 export { Option } from './instances/Option';
 export { Field } from './instances/Field';
@@ -94,9 +97,17 @@ export const setFieldNumberFormat = (
 
 export const setReadTextMaxLength = (length: number) => {
     Settings.readTextMaxLength = length;
-}
+};
 
 
 export const setModalPerItemType = (itemType: string, modal: string) => {
     Settings.modalPerItemType[itemType] = modal;
+};
+
+declare module 'vue' {
+    export interface GlobalComponents {
+        LktField: typeof LktField & {
+            props: LktFieldConfigType;
+        };
+    }
 }

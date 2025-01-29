@@ -4,7 +4,7 @@ import { LktObject } from 'lkt-ts-interfaces';
 import { Option } from '../instances/Option';
 import { MultipleDisplayType } from '../enums/MultipleDisplayType';
 
-export type LktFieldConfigType = {
+export interface LktFieldConfigType {
     modelValue: ValidFieldValue
     type?: FieldType
     valid?: boolean

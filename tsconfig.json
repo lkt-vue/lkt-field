@@ -4,17 +4,25 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "strictFunctionTypes": false,
+    "strictFunctionTypes": true,
     "allowSyntheticDefaultImports": true,
-    "allowImportingTsExtensions": false,
-    "noUnusedLocals": false,
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "module": "ES2020",
     "target": "ES2020",
     "jsx": "preserve",
     "allowJs": true,
     "declaration": true,
     "moduleResolution": "Bundler",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "emitDeclarationOnly": true,
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test"]
 }

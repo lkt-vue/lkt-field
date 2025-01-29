@@ -55,7 +55,7 @@
     import { extractEditableValue, extractPropValue } from '../functions/calcultad-data-functions';
     import CardInput from '../components/CardInput.vue';
     import MultipleCardInput from '../components/MultipleCardInput.vue';
-    import ElementsInput from '@/components/ElementsInput.vue';
+    import ElementsInput from '../components/ElementsInput.vue';
 
     // Emits
     const emits = defineEmits([
@@ -162,7 +162,7 @@
     let calculatedItemType = extractPropValue(props.itemType, props.prop);
 
 
-    if (!calculatedModal && calculatedItemType && typeof Settings.modalPerItemType[calculatedItemType] !== 'undefined') {
+    if (!calculatedModal && typeof calculatedItemType !== 'function' && calculatedItemType && typeof Settings.modalPerItemType[calculatedItemType] !== 'undefined') {
         calculatedModal = Settings.modalPerItemType[calculatedItemType];
     }
 
@@ -850,13 +850,13 @@
             }
         },
         onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event),
-        onFocus = ($event: FocusEvent) => {
+        onFocus = ($event?: FocusEvent) => {
             hadFirstFocus.value = true;
             focusing.value = true;
             doLocalValidation();
             emits('focus', $event);
         },
-        onBlur = ($event: Event) => {
+        onBlur = ($event?: Event) => {
             setTimeout(() => {
                 if (props.searchable && searchMode.value) {
                     return;
@@ -970,7 +970,7 @@
                 editableValue.value += step;
             }
         },
-        onClickSwitchEdition = ($event: any) => {
+        onClickSwitchEdition = () => {
             if (editable.value) focus();
         },
         reAssignNumericValue = (n: string | number) => {

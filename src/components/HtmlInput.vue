@@ -3,8 +3,9 @@
     import { stripTags } from 'lkt-string-tools';
     import * as lang from 'suneditor/src/lang';
     import plugins from 'suneditor/src/plugins';
-    import { editorOptions } from '@/constants/editor-constants';
+    import { editorOptions } from '../constants/editor-constants';
     import suneditor from 'suneditor';
+    import SunEditor from 'suneditor/src/lib/core';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
@@ -19,28 +20,30 @@
         readonly: boolean,
         tabindex: number,
     }>(), {
-        modelValue: false,
+        modelValue: '',
     });
 
     const input = ref(null);
-    const value = ref(props.modelValue),
-        editor = ref(null),
-        editorTimeout = ref(undefined);
+    const value = ref(props.modelValue);
+
+    let editor: SunEditor|null = null;
+
+    let editorTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
 
     const hasFocus = ref(props.focusing);
 
-    const onFocus = (event: FocusEvent) => {
+    const onFocus = (event?: FocusEvent) => {
             hasFocus.value = true;
             emit('focus', event);
         },
-        onBlur = (event: Event) => {
+        onBlur = (event?: Event) => {
             hasFocus.value = false;
             emit('blur', event);
         },
-        updateValueFromEditor = (content) => {
-            if (editorTimeout.value) clearTimeout(editorTimeout.value);
+        updateValueFromEditor = (content: string) => {
+            if (editorTimeout) clearTimeout(editorTimeout);
 
-            editorTimeout.value = setTimeout(() => {
+            editorTimeout = setTimeout(() => {
                 let strippedContent = stripTags(content);
                 if (strippedContent === '') value.value = '';
                 else value.value = content;
@@ -49,6 +52,7 @@
         initEditor = () => {
 
             let options = {
+                //@ts-ignore
                 lang: lang[props.lang] ? lang[props.lang] : lang.en,
                 plugins: {
                     ...plugins,
@@ -56,24 +60,26 @@
                 ...editorOptions,
             };
 
-            editor.value = suneditor.create(props.id, options);
+            editor = suneditor.create(props.id, options);
 
-            editor.value.onChange = (content) => {
+            editor.onChange = (content: string) => {
                 updateValueFromEditor(content);
 
-                if (props.disabled) editor.value.disabled();
-                else editor.value.enabled();
+                //@ts-ignore
+                if (props.disabled) editor?.disabled();
+                //@ts-ignore
+                else editor?.enabled();
             };
 
-            editor.value.onKeyUp = (event, core) => {
-                updateValueFromEditor(core.getContents());
+            editor.onKeyUp = (event, core) => {
+                updateValueFromEditor(core.getContents(false));
             };
 
-            editor.value.onBlur = () => {
+            editor.onBlur = () => {
                 onBlur();
             };
 
-            editor.value.onClick = () => {
+            editor.onClick = () => {
                 onFocus();
             };
         };
@@ -87,8 +93,8 @@
 
     defineExpose({
         doSetValue: (contents: string) => {
-            if (editor.value) {
-                editor.value.setContents(contents);
+            if (editor) {
+                editor.setContents(contents);
             }
         },
     });

@@ -28,7 +28,7 @@
         optionSlot?: string,
         optionsModal: string | Function,
         optionsDownload: string | Function,
-        optionsLabelFormatter?: string | Function,
+        optionsLabelFormatter?: Function,
         optionsModalData: LktObject,
         pickedOptions: Option[],
         showOptions: boolean,
@@ -85,8 +85,8 @@
         else emit('blur');
     });
 
-    let queryBlurTimeout:Timeout|undefined = undefined,
-        buttonBlurTimeout:Timeout|undefined = undefined;
+    let queryBlurTimeout:ReturnType<typeof setTimeout>|undefined = undefined,
+        buttonBlurTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
 
     const onBlurQueryInput = (event: Event) => {
             queryBlurTimeout = setTimeout(() => {
@@ -132,6 +132,7 @@
         keepFocused: () => {
             clearTimeout(queryBlurTimeout);
             clearTimeout(buttonBlurTimeout);
+            //@ts-ignore
             if (queryField.value) queryField.value.focus();
         },
     });

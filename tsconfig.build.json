@@ -14,7 +14,10 @@
     "allowJs": true,
     "declaration": true,
     "moduleResolution": "Bundler",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "emitDeclarationOnly": true,
+    "strict": true,
+    "types": []
   },
   "include": ["build/"]
 }

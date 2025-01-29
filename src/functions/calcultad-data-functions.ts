@@ -1,7 +1,7 @@
 import { LktObject } from 'lkt-ts-interfaces';
 import { ValidFieldValue } from '../types/ValidFieldValue';
 
-export const extractPropValue = (needle: string|Function, haystack: LktObject): string|Function => {
+export const extractPropValue = (needle: string|number|Function|undefined, haystack: LktObject): undefined|string|number|Function => {
     if (typeof needle === 'string' && needle.startsWith('prop:')) {
         return haystack[needle.substring(5)];
     }

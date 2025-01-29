@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "",
   "keywords": [
     "lkt",
@@ -16,16 +16,16 @@
     "ui"
   ],
   "type": "module",
-  "module": "./dist/build.js",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/build.js"
+      "import": "./dist/index.js"
     },
     "./styles": "./dist/style.css",
     "./theme": "./theme/default.css",
     "./theme/default": "./theme/default.css"
   },
-  "types": "./dist/build.d.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist/*",
     "src/**/*.vue",
@@ -34,7 +34,8 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "build": "vue-tsc --declaration --emitDeclarationOnly; vite build; tsc --project tsconfig.build.json; cp build/* dist/",
+    "build": "vite build && node clean-dts.js",
+    "build-original": "vue-tsc --declaration --emitDeclarationOnly; vite build; tsc --project tsconfig.build.json; cp build/* dist/",
     "rebuild": "rm -rf dist/*; vue-tsc --declaration --emitDeclarationOnly; vite build; tsc --project tsconfig.build.json; cp build/* dist/"
   },
   "author": "Antonio Ibáñez",
@@ -46,6 +47,7 @@
     "rollup": "^4.9.6",
     "typescript": "^5.3.3",
     "vite": "^5.1.3",
+    "vite-plugin-dts": "^4.5.0",
     "vue": "^3.3.0",
     "vue-tsc": "^1.8.27"
   },

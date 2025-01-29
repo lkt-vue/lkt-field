@@ -23,9 +23,9 @@
     const value = ref(props.modelValue);
 
     const hasFocus = ref(props.focusing);
-    let focusTimeout:Timeout|undefined = undefined;
-    let blurTimeout:Timeout|undefined = undefined;
-    let searchTimeout:Timeout|undefined = undefined;
+    let focusTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
+    let blurTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
+    let searchTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
 
     const filters = ref({});
     const updateFilters = () => {

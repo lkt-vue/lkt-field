@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-    import { Option } from '@/instances/Option';
+    import { Option } from '../instances/Option';
     import { ref, watch } from 'vue';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
@@ -25,7 +25,7 @@
 
     const hasFocus = ref(props.focusing);
     const container = ref(null);
-    let blurTimeout:Timeout|undefined = undefined;
+    let blurTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
 
     const focusFormula = () => {
             clearTimeout(blurTimeout);

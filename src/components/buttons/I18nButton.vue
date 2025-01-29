@@ -2,7 +2,7 @@
     import { computed, ref, watch } from 'vue';
     import { Settings } from '../../settings/Settings';
     import { LktObject } from 'lkt-ts-interfaces';
-    import { FieldType } from '@/enums/FieldType';
+    import { FieldType } from '../../enums/FieldType';
 
     const emit = defineEmits(['click', 'update:modelValue']);
 

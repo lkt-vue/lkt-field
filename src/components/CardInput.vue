@@ -29,7 +29,7 @@
 
     const value = ref(props.modelValue);
 
-    const onClick = (event, data) => {
+    const onClick = (event: MouseEvent, data: LktObject) => {
         // console.log(data);
     };
 </script>

@@ -2,7 +2,7 @@
 
     import { computed, ref, watch } from 'vue';
     import { date } from 'lkt-date-tools';
-    import { isValidDateObject } from '@/functions/date-functions';
+    import { isValidDateObject } from '../../functions/date-functions';
 
     const emit = defineEmits(['update:modelValue']);
 
@@ -123,7 +123,3 @@
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

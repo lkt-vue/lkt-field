@@ -1,0 +1,31 @@
+import { LktObject } from 'lkt-ts-interfaces';
+import { Component } from 'vue';
+export declare class Settings {
+    static defaultEmptyValueSlot: string | Component | undefined;
+    static customValueSlots: LktObject;
+    static customEditSlots: LktObject;
+    static searchKeyForResource: string;
+    static optionSlots: LktObject;
+    static defaultDateIcon: string;
+    static defaultNumberFeaturedButton: string;
+    static undoText: string;
+    static clearText: string;
+    static i18nText: string;
+    static switchEditionOnText: string;
+    static switchEditionOffText: string;
+    static showPasswordOnText: string;
+    static showPasswordOffText: string;
+    static dateReadFormat: string;
+    static defaultDateReadFormat: string;
+    static langDateReadFormat: LktObject;
+    static acceptTypes: LktObject;
+    static validationIconSlot: string | Component;
+    static validationMessages: LktObject;
+    static amountOfDecimals?: number;
+    static decimalSeparator: string;
+    static thousandsSeparator: string;
+    static removeDecimalsIfZero: boolean;
+    static langNumberFormat: LktObject;
+    static readTextMaxLength?: number;
+    static modalPerItemType: LktObject;
+}

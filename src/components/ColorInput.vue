@@ -29,7 +29,7 @@
                 pickedColorAlpha.value = decoded.a;
             }
         },
-        onRgbaChanged = ($event) => {
+        onRgbaChanged = () => {
             value.value = calculateColorValue(
                 pickedColorRed.value,
                 pickedColorGreen.value,
@@ -37,7 +37,7 @@
                 pickedColorAlpha.value,
             );
         },
-        onColorChange = ($event) => {
+        onColorChange = () => {
             decodeColor(value.value);
         };
 

@@ -437,14 +437,14 @@ const os = (e, t, i, l) => {
         let s = Fl(B);
         c.value = s.r, o.value = s.g, p.value = s.b, d.value = s.a;
       }
-    }, a = (B) => {
+    }, a = () => {
       v.value = os(
         c.value,
         o.value,
         p.value,
         d.value
       );
-    }, u = (B) => {
+    }, u = () => {
       n(v.value);
     }, c = J(255), o = J(255), p = J(255), d = J(255), v = J(l.modelValue);
     n(v.value), me([c, o, p, d], a), me(() => l.modelValue, (B) => v.value = B), me(v, (B) => i("update:modelValue", B));
@@ -658,6 +658,7 @@ const cs = (e, t, i, l) => {
     t.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length > n && e.push(Te.createMaxSpecialChars(n, ke.Ko));
   }
 }, Vl = (e, t = "default") => {
+  if (!e) return "";
   let i = ee.validationMessages[t] && ee.validationMessages[t][e] ? ee.validationMessages[t][e] : "";
   return i || (i = ""), i;
 };
@@ -15554,7 +15555,7 @@ const Ca = {
 }, ka = ["innerHTML", "id", "tabindex"], xa = /* @__PURE__ */ Ne({
   __name: "HtmlInput",
   props: {
-    modelValue: { default: !1 },
+    modelValue: { default: "" },
     name: {},
     id: {},
     lang: {},
@@ -15566,29 +15567,32 @@ const Ca = {
   },
   emits: ["update:modelValue", "focus", "blur"],
   setup(e, { expose: t, emit: i }) {
-    const l = i, n = e, a = J(null), u = J(n.modelValue), c = J(null), o = J(void 0), p = J(n.focusing), d = (k) => {
+    const l = i, n = e, a = J(null), u = J(n.modelValue);
+    let c = null, o;
+    const p = J(n.focusing), d = (k) => {
       p.value = !0, l("focus", k);
     }, v = (k) => {
       p.value = !1, l("blur", k);
     }, _ = (k) => {
-      o.value && clearTimeout(o.value), o.value = setTimeout(() => {
+      o && clearTimeout(o), o = setTimeout(() => {
         en(k) === "" ? u.value = "" : u.value = k;
       }, 100);
     }, x = () => {
       let k = {
+        //@ts-ignore
         lang: Pl[n.lang] ? Pl[n.lang] : Oi,
         plugins: {
           ...ba
         },
         ...ya
       };
-      c.value = Ca.create(n.id, k), c.value.onChange = (B) => {
-        _(B), n.disabled ? c.value.disabled() : c.value.enabled();
-      }, c.value.onKeyUp = (B, s) => {
-        _(s.getContents());
-      }, c.value.onBlur = () => {
+      c = Ca.create(n.id, k), c.onChange = (B) => {
+        _(B), n.disabled ? c == null || c.disabled() : c == null || c.enabled();
+      }, c.onKeyUp = (B, s) => {
+        _(s.getContents(!1));
+      }, c.onBlur = () => {
         v();
-      }, c.value.onClick = () => {
+      }, c.onClick = () => {
         d();
       };
     };
@@ -15596,7 +15600,7 @@ const Ca = {
       x();
     }), t({
       doSetValue: (k) => {
-        c.value && c.value.setContents(k);
+        c && c.setContents(k);
       }
     }), (k, B) => (W(), se("div", {
       innerHTML: u.value,
@@ -18186,7 +18190,7 @@ const Or = ["onInput", "onKeydown"], Hr = { class: "tooltip-menu" }, Fr = ["onCl
   setup(e, { expose: t, emit: i }) {
     const l = i, n = ul(), a = e, u = Qi(16);
     let c = Vt(a.modal, a.prop), o = Vt(a.modalKey, a.prop), p = Vt(a.icon, a.prop), d = Vt(a.download, a.prop), v = Vt(a.itemType, a.prop);
-    !c && v && typeof ee.modalPerItemType[v] < "u" && (c = ee.modalPerItemType[v]);
+    !c && typeof v != "function" && v && typeof ee.modalPerItemType[v] < "u" && (c = ee.modalPerItemType[v]);
     const _ = J(a.type), x = J(null);
     let k = a.featuredButton, B = a.modelValue;
     a.multiple && Ko.includes(_.value) ? (!B || !Array.isArray(B)) && (B = []) : Rt.includes(_.value) ? typeof B != "boolean" && (B = !1) : _.value === Z.Date && !p ? p = ee.defaultDateIcon : _.value === Z.Number && a.canStep && k === "" && (k = ee.defaultNumberFeaturedButton);
@@ -18420,7 +18424,7 @@ const Or = ["onInput", "onKeydown"], Hr = { class: "tooltip-menu" }, Fr = ["onCl
     }, No = () => {
       let L = a.step ?? 1;
       typeof L == "string" && (L = parseFloat(L)), (!a.max || T.value < a.max) && (T.value += L);
-    }, Bo = (L) => {
+    }, Bo = () => {
       C.value && xl();
     }, zo = (L) => {
       if (!a.enableAutoNumberFix) return !1;
@@ -19035,6 +19039,7 @@ const mu = {
 };
 export {
   pu as Field,
+  qt as LktField,
   Li as Option,
   mu as default,
   yu as setFieldClearText,

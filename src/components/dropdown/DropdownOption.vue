@@ -15,7 +15,7 @@
         modalData?: LktObject | Function
         download?: string | Function
         labelFormatter?: Function
-        isTag: boolean
+        isTag?: boolean
     }>(), {
         option: () => (new Option()),
         optionSlot: '',
