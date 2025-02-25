@@ -12,7 +12,19 @@
     import EllipsisActionsButton from '../components/buttons/EllipsisActionsButton.vue';
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import { extractPropValue, FieldConfig, FieldType, MultipleOptionsDisplay, Option } from 'lkt-vue-kernel';
+    import {
+        booleanFieldTypes,
+        extractPropValue,
+        FieldConfig,
+        fieldsWithMultipleMode,
+        FieldType,
+        fieldTypesWithOptions,
+        fieldTypesWithoutClear,
+        fieldTypesWithoutUndo,
+        MultipleOptionsDisplay,
+        Option,
+        textFieldTypes,
+    } from 'lkt-vue-kernel';
     import {
         filterOptions,
         findOptionByValue,
@@ -22,14 +34,6 @@
         receiveOptions,
     } from '../functions/option-functions';
     import { getVisibleDateValue } from '../functions/date-functions';
-    import {
-        BooleanFieldTypes,
-        FieldsWithMultipleMode,
-        FieldTypesWithOptions,
-        FieldTypesWithoutClear,
-        FieldTypesWithoutUndo,
-        TextFieldTypes,
-    } from '../constants/field-type-constants';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import ColorInput from '../components/ColorInput.vue';
@@ -171,10 +175,10 @@
     let fieldFeaturedButton = props.featuredButton;
 
     let _val = props.modelValue;
-    if (props.multiple && FieldsWithMultipleMode.includes(Type.value)) {
+    if (props.multiple && fieldsWithMultipleMode.includes(Type.value)) {
         if (!_val || !Array.isArray(_val)) _val = [];
 
-    } else if (BooleanFieldTypes.includes(Type.value)) {
+    } else if (booleanFieldTypes.includes(Type.value)) {
         if (typeof _val !== 'boolean') _val = false;
 
     } else if (Type.value === FieldType.Date && !calculatedIcon) {
@@ -344,7 +348,7 @@
             const r = ['lkt-field'];
 
             r.push(`is-${Type.value}`);
-            if (BooleanFieldTypes.includes(Type.value)) {
+            if (booleanFieldTypes.includes(Type.value)) {
                 r.push('is-boolean');
                 if (editableValue.value) r.push('is-checked');
             }
@@ -468,8 +472,8 @@
         computedShowSubtractStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
         computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && Type.value === FieldType.Number && fieldFeaturedButton !== 'subtract'),
         computedShowIncreaseStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
-        computedShowUndo = computed(() => props.canUndo && changed.value && editable.value && !FieldTypesWithoutUndo.includes(Type.value)),
-        computedShowClear = computed(() => props.canClear && isFilled.value && editable.value && !FieldTypesWithoutClear.includes(Type.value)),
+        computedShowUndo = computed(() => props.canUndo && changed.value && editable.value && !fieldTypesWithoutUndo.includes(Type.value)),
+        computedShowClear = computed(() => props.canClear && isFilled.value && editable.value && !fieldTypesWithoutClear.includes(Type.value)),
         computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object' && editable.value),
         computedShowPasswordReveal = computed(() => Type.value === FieldType.Password && props.showPassword && isFilled.value && editable.value),
 
@@ -606,7 +610,7 @@
                 }
             }
 
-            if (TextFieldTypes.includes(Type.value)) {
+            if (textFieldTypes.includes(Type.value)) {
                 validateAmountOfNumbers(localValidationStatus.value, editableValue.value, props.minNumbers, props.maxNumbers);
                 validateAmountOfUpperChars(localValidationStatus.value, editableValue.value, props.minUpperChars, props.maxUpperChars);
                 validateAmountOfLowerChars(localValidationStatus.value, editableValue.value, props.minLowerChars, props.maxLowerChars);
@@ -771,7 +775,7 @@
         getValue = () => editableValue.value,
         onKeyUp = ($event: KeyboardEvent) => {
             doLocalValidation();
-            if (FieldTypesWithOptions.includes(Type.value)) {
+            if (fieldTypesWithOptions.includes(Type.value)) {
                 fetchOptions(editableValue.value);
                 navigateOptions($event);
 
@@ -1016,11 +1020,11 @@
     });
 
     const computedMainComponent = computed(() => {
-            if (BooleanFieldTypes.includes(Type.value) && !computedIsDisabled.value) return 'label';
+            if (booleanFieldTypes.includes(Type.value) && !computedIsDisabled.value) return 'label';
             return 'div';
         }),
         computedMainAttrs = computed(() => {
-            if (BooleanFieldTypes.includes(Type.value)) return {
+            if (booleanFieldTypes.includes(Type.value)) return {
                 'for': Identifier,
             };
             return {};
@@ -1051,7 +1055,7 @@
          ref="container"
     >
         <slot v-if="!!slots.label" name="label"></slot>
-        <label v-if="!!!slots.label && computedLabel !== '' && !BooleanFieldTypes.includes(Type)"
+        <label v-if="!!!slots.label && computedLabel !== '' && !booleanFieldTypes.includes(Type)"
                :for="Identifier"
                class="lkt-field--label"
                v-html="computedLabel"></label>
@@ -1099,7 +1103,7 @@
                 </div>
 
                 <boolean-input
-                    v-else-if="BooleanFieldTypes.includes(Type)"
+                    v-else-if="booleanFieldTypes.includes(Type)"
                     v-model="editableValue"
                     :id="Identifier"
                     :name="name"
@@ -1483,7 +1487,7 @@
             :stack="validationStack" />
 
         <lkt-tooltip
-            v-if="editable && FieldTypesWithOptions.includes(Type)"
+            v-if="editable && fieldTypesWithOptions.includes(Type)"
             ref="dropdownEl"
             class="lkt-field--dropdown"
             v-model="showOptions"

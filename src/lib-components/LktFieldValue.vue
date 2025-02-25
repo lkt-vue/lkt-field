@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
-    import { FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
-    import { BooleanFieldTypes } from '../constants/field-type-constants';
+    import { booleanFieldTypes, FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
     import { Settings } from '../settings/Settings';
@@ -150,7 +149,7 @@
                 :to="calculatedValue">{{ calculatedValue }}
             </lkt-anchor>
             <div
-                v-else-if="BooleanFieldTypes.includes(type)"
+                v-else-if="booleanFieldTypes.includes(type)"
                 class="lkt-field--read-value">
                 <lkt-tag
                     :icon="calculatedValue ? 'lkt-field-icon-ok' : 'lkt-field-icon-cancel'"
