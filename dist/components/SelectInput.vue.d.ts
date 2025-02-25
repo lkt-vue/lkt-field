@@ -1,5 +1,4 @@
-import { ValidFieldValue } from '../types/ValidFieldValue';
-import { Option, LktObject } from 'lkt-vue-kernel';
+import { LktObject, Option, ValidFieldValue } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: ValidFieldValue;

@@ -1,5 +1,5 @@
 import { extractPropValue, LktObject, Option } from 'lkt-vue-kernel';
-import { ValidOptionValue } from '../types/ValidOptionValue';
+import { ValidOptionValue } from 'lkt-vue-kernel';
 import { __ } from 'lkt-i18n';
 
 export const prepareOptions = (options: any, prop: LktObject): Option[] => {

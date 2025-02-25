@@ -1,5 +1,4 @@
-import { FieldType, LktObject } from 'lkt-vue-kernel';
-import { MultipleDisplayType } from '../enums/MultipleDisplayType';
+import { FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     type?: FieldType;
@@ -12,7 +11,7 @@ type __VLS_Props = {
     slotData?: LktObject;
     download?: string | Function;
     multiple?: boolean;
-    multipleDisplay?: MultipleDisplayType;
+    multipleDisplay?: MultipleOptionsDisplay;
     modal?: string;
     modalKey?: string;
     modalData?: LktObject;
@@ -55,7 +54,7 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     valueSlot: string;
     slotData: LktObject;
     multiple: boolean;
-    multipleDisplay: MultipleDisplayType;
+    multipleDisplay: MultipleOptionsDisplay;
     optionsDownload: string | Function;
     optionsModal: string | Function;
     optionsModalData: LktObject | Function;

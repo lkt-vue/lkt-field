@@ -1,6 +1,6 @@
 import { Component, Plugin } from 'vue';
 import { default as LktField } from './lib-components/LktField.vue';
-import { LktFieldConfigType } from './types/LktFieldConfigType.d.ts';
+import { FieldConfig } from 'lkt-vue-kernel';
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 declare const LktFieldPlugin: Plugin;
 export default LktFieldPlugin;
@@ -25,7 +25,7 @@ export declare const setModalPerItemType: (itemType: string, modal: string) => v
 declare module 'vue' {
     interface GlobalComponents {
         LktField: typeof LktField & {
-            props: LktFieldConfigType;
+            props: FieldConfig;
         };
     }
 }

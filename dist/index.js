@@ -248,7 +248,7 @@ var dl = /* @__PURE__ */ ((e) => (e.Button = "button", e.Submit = "submit", e.Re
     K(this, "modal", "");
     this.feed(t);
   }
-}, Xc = class extends co {
+}, It = /* @__PURE__ */ ((e) => (e.List = "list", e.Inline = "inline", e.Count = "count", e))(It || {}), Xc = class extends co {
   constructor(t = {}) {
     super();
     K(this, "modelValue", "");
@@ -781,9 +781,7 @@ const Gs = (e, t, i, l) => {
   if (!e) return "";
   let i = te.validationMessages[t] && te.validationMessages[t][e] ? te.validationMessages[t][e] : "";
   return i || (i = ""), i;
-};
-var It = /* @__PURE__ */ ((e) => (e.List = "list", e.Inline = "inline", e.Count = "count", e))(It || {});
-const Qs = { class: "boolean-input" }, ea = { class: "boolean-input-label" }, ta = { class: "boolean-input--check-on" }, ia = {
+}, Qs = { class: "boolean-input" }, ea = { class: "boolean-input-label" }, ta = { class: "boolean-input--check-on" }, ia = {
   key: 0,
   class: "lkt-field-icon-ok"
 }, la = ["innerHTML"], na = ["name", "id", "disabled", "readonly", "value", "checked"], oa = /* @__PURE__ */ Ne({

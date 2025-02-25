@@ -12,7 +12,7 @@
     import EllipsisActionsButton from '../components/buttons/EllipsisActionsButton.vue';
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import { extractPropValue, FieldConfig, FieldType, Option } from 'lkt-vue-kernel';
+    import { extractPropValue, FieldConfig, FieldType, MultipleOptionsDisplay, Option } from 'lkt-vue-kernel';
     import {
         filterOptions,
         findOptionByValue,
@@ -41,7 +41,6 @@
         validateAmountOfSpecialChars,
         validateAmountOfUpperChars,
     } from '../functions/validation-functions';
-    import { MultipleDisplayType } from '../enums/MultipleDisplayType';
     import BooleanInput from '../components/BooleanInput.vue';
     import HtmlInput from '../components/HtmlInput.vue';
     import SelectInput from '../components/SelectInput.vue';
@@ -132,8 +131,8 @@
         fileName: '',
         options: () => [],
         multiple: false,
-        multipleDisplay: MultipleDisplayType.List,
-        multipleDisplayEdition: MultipleDisplayType.Inline,
+        multipleDisplay: MultipleOptionsDisplay.List,
+        multipleDisplayEdition: MultipleOptionsDisplay.Inline,
         searchable: false,
         autoloadOptionsResource: false,
         optionsDownload: '',

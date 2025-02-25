@@ -1,5 +1,4 @@
-import { LktObject } from 'lkt-vue-kernel';
-import { ValidFieldValue } from '../types/ValidFieldValue';
+import { LktObject, ValidFieldValue } from 'lkt-vue-kernel';
 
 export const extractPropValue = (needle: string|number|Function|undefined, haystack: LktObject): undefined|string|number|Function => {
     if (typeof needle === 'string' && needle.startsWith('prop:')) {

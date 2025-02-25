@@ -1,5 +1,4 @@
-import { LktObject, Option } from 'lkt-vue-kernel';
-import { ValidOptionValue } from '../types/ValidOptionValue';
+import { LktObject, Option, ValidOptionValue } from 'lkt-vue-kernel';
 export declare const prepareOptions: (options: any, prop: LktObject) => Option[];
 export declare const filterOptions: (options: Option[], query?: string, includeEquals?: boolean) => Option[];
 export declare const findOptionByValue: (options: Option[], query: ValidOptionValue) => Option | undefined;

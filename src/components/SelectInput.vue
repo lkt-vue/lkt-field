@@ -1,9 +1,6 @@
 <script setup lang="ts">
-    import { MultipleDisplayType } from '../enums/MultipleDisplayType';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { ValidFieldValue } from '../types/ValidFieldValue';
-    import { Option } from 'lkt-vue-kernel';
-    import { LktObject } from 'lkt-vue-kernel';
+    import { LktObject, MultipleOptionsDisplay, Option, ValidFieldValue } from 'lkt-vue-kernel';
     import { nextTick, ref, watch } from 'vue';
 
     const emit = defineEmits([
@@ -191,7 +188,7 @@
         @focus="onFocusSelectButton"
     >
         <template v-if="tagsEnabled || (multiple && pickedOptions.length > 0)">
-            <div v-if="multipleDisplayEdition === MultipleDisplayType.Count">
+            <div v-if="multipleDisplayEdition === MultipleOptionsDisplay.Count">
                 {{ pickedOptions.length }}
             </div>
 

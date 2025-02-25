@@ -21,7 +21,7 @@ import '../styles/helper-styles.css';
 import { Settings } from './settings/Settings';
 import { addModal } from 'lkt-modal';
 import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditModal.vue';
-import { LktFieldConfigType } from './types/LktFieldConfigType.ts';
+import { FieldConfig } from 'lkt-vue-kernel';
 
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 
@@ -106,7 +106,7 @@ export const setModalPerItemType = (itemType: string, modal: string) => {
 declare module 'vue' {
     export interface GlobalComponents {
         LktField: typeof LktField & {
-            props: LktFieldConfigType;
+            props: FieldConfig;
         };
     }
 }

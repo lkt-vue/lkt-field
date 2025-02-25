@@ -1,8 +1,7 @@
 <script setup lang="ts">
 
-    import { FieldType, LktObject } from 'lkt-vue-kernel';
+    import { FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
     import { BooleanFieldTypes } from '../constants/field-type-constants';
-    import { MultipleDisplayType } from '../enums/MultipleDisplayType';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
     import { Settings } from '../settings/Settings';
@@ -21,7 +20,7 @@
         slotData?: LktObject
         download?: string | Function
         multiple?: boolean
-        multipleDisplay?: MultipleDisplayType
+        multipleDisplay?: MultipleOptionsDisplay
         modal?: string
         modalKey?: string
         modalData?: LktObject
@@ -43,7 +42,7 @@
         slotData: () => ({}),
         download: '',
         multiple: false,
-        multipleDisplay: MultipleDisplayType.List,
+        multipleDisplay: MultipleOptionsDisplay.List,
         modal: '',
         modalKey: '',
         modalData: () => ({}),
@@ -65,7 +64,7 @@
                     if (props.multiple && Array.isArray(props.value) && props.value.length > 0) {
                         return '';
                     }
-                    if (props.multiple && props.multipleDisplay === MultipleDisplayType.Count) return '';
+                    if (props.multiple && props.multipleDisplay === MultipleOptionsDisplay.Count) return '';
                     if (!props.multiple && !!props.value) return '';
                     break;
 
@@ -168,7 +167,7 @@
                 :title="title">
 
                 <template v-if="multiple">
-                    <div v-if="multipleDisplay === MultipleDisplayType.Count">
+                    <div v-if="multipleDisplay === MultipleOptionsDisplay.Count">
                         {{ calculatedValue.length }}
                     </div>
 
