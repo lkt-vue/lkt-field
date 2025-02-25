@@ -1,5 +1,4 @@
-import { FieldValidation } from '../instances/FieldValidation';
-import { ValidationCode } from '../enums/ValidationCode';
+import { FieldValidation, ValidationCode } from 'lkt-vue-kernel';
 export declare const validateAmountOfNumbers: (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => void;
 export declare const validateAmountOfUpperChars: (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => void;
 export declare const validateAmountOfLowerChars: (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => void;

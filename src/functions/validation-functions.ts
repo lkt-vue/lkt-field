@@ -1,7 +1,5 @@
 import { Settings } from '../settings/Settings';
-import { FieldValidation } from '../instances/FieldValidation';
-import { ValidationStatus } from '../enums/ValidationStatus';
-import { ValidationCode } from '../enums/ValidationCode';
+import { FieldValidation, ValidationCode, ValidationStatus } from 'lkt-vue-kernel';
 
 export const validateAmountOfNumbers = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {

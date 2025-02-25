@@ -1,5 +1,4 @@
-import { ValidationCode } from '../enums/ValidationCode';
-import { ValidationStatus } from '../enums/ValidationStatus';
+import { ValidationCode, ValidationStatus } from 'lkt-vue-kernel';
 export declare class FieldValidation {
     code?: ValidationCode | string;
     status: ValidationStatus;

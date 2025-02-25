@@ -1,4 +1,4 @@
-import { FieldValidation } from '../../instances/FieldValidation';
+import { FieldValidation } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     validation: FieldValidation;

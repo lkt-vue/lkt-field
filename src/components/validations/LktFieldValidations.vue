@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import ValidationItem from './ValidationItem.vue';
     import { nextTick, ref, watch } from 'vue';
-    import { FieldValidation } from '../../instances/FieldValidation';
+    import { FieldValidation } from 'lkt-vue-kernel';
 
     const props = withDefaults(defineProps<{
         items: FieldValidation[],
