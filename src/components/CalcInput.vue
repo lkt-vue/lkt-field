@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-    import { Option } from '../instances/Option';
+    import { Option } from 'lkt-vue-kernel';
     import { ref, watch } from 'vue';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);

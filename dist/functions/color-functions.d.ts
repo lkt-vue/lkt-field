@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-ts-interfaces';
+import { LktObject } from 'lkt-vue-kernel';
 export declare class LktColor {
     r: number;
     g: number;

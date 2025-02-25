@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { LktObject } from 'lkt-ts-interfaces';
+    import { LktObject } from 'lkt-vue-kernel';
     import { ref } from 'vue';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);

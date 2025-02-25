@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { computed, ref, watch } from 'vue';
     import { Settings } from '../../settings/Settings';
-    import { LktObject } from 'lkt-ts-interfaces';
-    import { FieldType } from '../../enums/FieldType';
+    import { FieldType, LktObject } from 'lkt-vue-kernel';
 
     const emit = defineEmits(['click', 'update:modelValue']);
 

@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-ts-interfaces';
+import { LktObject } from 'lkt-vue-kernel';
 import { ValidOptionValue } from '../types/ValidOptionValue';
 export declare class Option {
     value: ValidOptionValue;

@@ -1,4 +1,4 @@
-import { Option } from '../instances/Option';
+import { Option } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: string;

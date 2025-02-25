@@ -1,8 +1,6 @@
-import { Option } from '../instances/Option';
+import { extractPropValue, LktObject, Option } from 'lkt-vue-kernel';
 import { ValidOptionValue } from '../types/ValidOptionValue';
 import { __ } from 'lkt-i18n';
-import { LktObject } from 'lkt-ts-interfaces';
-import { extractPropValue } from './calcultad-data-functions';
 
 export const prepareOptions = (options: any, prop: LktObject): Option[] => {
     if (typeof options === 'string') {

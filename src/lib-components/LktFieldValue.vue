@@ -1,12 +1,11 @@
 <script setup lang="ts">
 
-    import { FieldType } from '../enums/FieldType';
+    import { FieldType, LktObject } from 'lkt-vue-kernel';
     import { BooleanFieldTypes } from '../constants/field-type-constants';
     import { MultipleDisplayType } from '../enums/MultipleDisplayType';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
     import { Settings } from '../settings/Settings';
-    import { LktObject } from 'lkt-ts-interfaces';
 
     const emit = defineEmits(['click']);
     const slots = useSlots();
@@ -31,6 +30,8 @@
         optionsModal?: string | Function
         optionsModalData?: LktObject | Function
         optionsIcon?: string | Function
+        optionsText?: string | Function
+        optionsClass?: string | Function
         optionsLabelFormatter?: Function
         optionsResource?: string
         optionsResourceData?: LktObject
@@ -178,6 +179,8 @@
                                     :option="calculatedValue[i]"
                                     :option-slot="optionSlot"
                                     :icon="optionsIcon"
+                                    :text="optionsText"
+                                    :custom-class="optionsClass"
                                     :modal="optionsModal"
                                     :modal-data="optionsModalData"
                                     :download="optionsDownload"
@@ -193,6 +196,8 @@
                     :option="calculatedValue[0]"
                     :option-slot="optionSlot"
                     :icon="optionsIcon"
+                    :text="optionsText"
+                    :custom-class="optionsClass"
                     :modal="optionsModal"
                     :modal-data="optionsModalData"
                     :download="optionsDownload"
@@ -214,6 +219,8 @@
                 v-else-if="download"
                 :option="{value: '', label: calculatedValue}"
                 :download="download"
+                :text="optionsText"
+                :custom-class="optionsClass"
             />
             <div
                 v-else-if="type === FieldType.Number"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue';
-    import { FieldType } from '../enums/FieldType';
+    import { FieldType } from 'lkt-vue-kernel';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 

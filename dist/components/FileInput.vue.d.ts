@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-ts-interfaces';
+import { LktObject } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: string;
@@ -32,8 +32,8 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     "onUpload-error"?: ((...args: any[]) => any) | undefined;
 }>, {
     modelValue: string;
-    placeholder: string;
     disabled: boolean;
+    placeholder: string;
     readonly: boolean;
     resource: string;
     resourceData: LktObject;

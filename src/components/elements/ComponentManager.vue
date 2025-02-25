@@ -23,11 +23,12 @@
             />
 
             <lkt-button
-                class=""
+                :type="ButtonType.Split"
                 icon="icon-tooltip"
-                tooltip-window-margin="30"
-                tooltip-referrer-margin="7"
-                split
+                :tooltip="{
+                    windowMargin: 30,
+                    referrerMargin: 7,
+                }"
             >
                 <template #split="{doClose}">
                     <div class="tooltip-menu">
@@ -52,6 +53,7 @@
 <script lang="ts" setup>
     import { ref, onMounted, defineProps, defineEmits } from 'vue'
     import Sortable from 'sortablejs'
+    import { ButtonType } from 'lkt-vue-kernel';
 
     interface Element {
         type: 'customTag' | 'image' | 'text';

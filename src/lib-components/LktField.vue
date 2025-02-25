@@ -11,9 +11,8 @@
     import EditionButton from '../components/buttons/EditionButton.vue';
     import EllipsisActionsButton from '../components/buttons/EllipsisActionsButton.vue';
     import I18nButton from '../components/buttons/I18nButton.vue';
-    import { FieldType } from '../enums/FieldType';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import { Option } from '../instances/Option';
+    import { extractPropValue, FieldConfig, FieldType, Option } from 'lkt-vue-kernel';
     import {
         filterOptions,
         findOptionByValue,
@@ -24,7 +23,8 @@
     } from '../functions/option-functions';
     import { getVisibleDateValue } from '../functions/date-functions';
     import {
-        BooleanFieldTypes, FieldsWithMultipleMode,
+        BooleanFieldTypes,
+        FieldsWithMultipleMode,
         FieldTypesWithOptions,
         FieldTypesWithoutClear,
         FieldTypesWithoutUndo,
@@ -46,13 +46,12 @@
     import HtmlInput from '../components/HtmlInput.vue';
     import SelectInput from '../components/SelectInput.vue';
     import CalcInput from '../components/CalcInput.vue';
-    import { LktFieldConfigType } from '../types/LktFieldConfigType';
     import LktFieldValidations from '../components/validations/LktFieldValidations.vue';
     import SearchInput from '../components/SearchInput.vue';
     import LktFieldValue from '../lib-components/LktFieldValue.vue';
     import FileInput from '../components/FileInput.vue';
     import DateInput from '../components/DateInput.vue';
-    import { extractEditableValue, extractPropValue } from '../functions/calcultad-data-functions';
+    import { extractEditableValue } from '../functions/calcultad-data-functions';
     import CardInput from '../components/CardInput.vue';
     import MultipleCardInput from '../components/MultipleCardInput.vue';
     import ElementsInput from '../components/ElementsInput.vue';
@@ -80,7 +79,7 @@
     const slots = useSlots();
 
     // Props
-    const props = withDefaults(defineProps<LktFieldConfigType>(), {
+    const props = withDefaults(defineProps<FieldConfig>(), {
         modelValue: '',
         type: FieldType.Text,
         placeholder: '',
@@ -1163,7 +1162,9 @@
                     :search-mode="searchMode"
                     :multiple="multiple"
                     :can-tag="multiple"
+                    :options-text="optionsText"
                     :options-icon="optionsIcon"
+                    :options-class="optionsClass"
                     :option-slot="optionSlot"
                     :options-modal="optionsModal"
                     :options-download="optionsDownload"
@@ -1375,6 +1376,8 @@
                 :options-modal="optionsModal"
                 :options-modal-data="optionsModalData"
                 :options-icon="optionsIcon"
+                :options-text="optionsText"
+                :options-class="optionsClass"
                 :options-label-formatter="optionsLabelFormatter"
                 :options-resource="optionsResource"
                 :options-resource-data="optionsResourceData"
@@ -1516,6 +1519,7 @@
                                 :option="option"
                                 :option-slot="optionSlot"
                                 :icon="optionsIcon"
+                                :text="optionsText"
                                 :modal="optionsModal"
                                 :modal-data="optionsModalData"
                                 :download="optionsDownload"

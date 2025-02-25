@@ -1,4 +1,3 @@
 import { MultiValueObject } from '../interfaces/MultiValueObject';
-import { LktObject } from 'lkt-ts-interfaces';
-import { Option } from '../instances/Option';
+import { LktObject, Option } from 'lkt-vue-kernel';
 export type ValidFieldValue = string | number | boolean | MultiValueObject | LktObject | Option[];

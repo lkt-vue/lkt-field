@@ -1,11 +1,12 @@
-import { Option } from '../../instances/Option';
-import { LktObject } from 'lkt-ts-interfaces';
+import { LktObject, Option } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     option: Option;
     optionSlot?: string;
     editable?: boolean;
     icon?: string | Function;
+    text?: string | Function;
+    customClass?: string | Function;
     modal?: string | Function;
     modalData?: LktObject | Function;
     download?: string | Function;
@@ -19,6 +20,7 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     onClick?: ((...args: any[]) => any) | undefined;
     "onClick-icon"?: ((...args: any[]) => any) | undefined;
 }>, {
+    text: string | Function;
     icon: string | Function;
     option: Option;
     modal: string | Function;

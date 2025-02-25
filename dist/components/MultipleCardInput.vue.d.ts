@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-ts-interfaces';
+import { LktObject } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: LktObject[];

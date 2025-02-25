@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
-    import { LktObject } from 'lkt-ts-interfaces';
+    import { LktObject } from 'lkt-vue-kernel';
 
     const emit = defineEmits([
         'update:modelValue',

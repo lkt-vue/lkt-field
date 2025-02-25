@@ -1,10 +1,9 @@
 <script setup lang="ts">
-
     import { MultipleDisplayType } from '../enums/MultipleDisplayType';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { ValidFieldValue } from '../types/ValidFieldValue';
-    import { Option } from '../instances/Option';
-    import { LktObject } from 'lkt-ts-interfaces';
+    import { Option } from 'lkt-vue-kernel';
+    import { LktObject } from 'lkt-vue-kernel';
     import { nextTick, ref, watch } from 'vue';
 
     const emit = defineEmits([
@@ -25,6 +24,8 @@
         multiple: boolean,
         canTag: boolean,
         optionsIcon: string|Function,
+        optionsText: string|Function,
+        optionsClass: string|Function,
         optionSlot?: string,
         optionsModal: string | Function,
         optionsDownload: string | Function,
@@ -155,6 +156,8 @@
                 :option="pickedOptions[0]"
                 :option-slot="optionSlot"
                 :icon="optionsIcon"
+                :text="optionsText"
+                :custom-class="optionsClass"
                 :modal="optionsModal"
                 :modal-data="optionsModalData"
                 :download="optionsDownload"
@@ -198,6 +201,8 @@
                         :option="pickedOptions[i]"
                         :option-slot="optionSlot"
                         :icon="optionsIcon"
+                        :text="optionsText"
+                        :custom-class="optionsClass"
                         :modal="optionsModal"
                         :modal-data="optionsModalData"
                         :download="optionsDownload"
@@ -214,6 +219,8 @@
             :option="pickedOptions[0]"
             :option-slot="optionSlot"
             :icon="optionsIcon"
+            :text="optionsText"
+            :custom-class="optionsClass"
             :modal="optionsModal"
             :modal-data="optionsModalData"
             :download="optionsDownload"

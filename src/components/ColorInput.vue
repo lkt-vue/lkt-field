@@ -4,6 +4,7 @@
     import RgbaRange from '../components/color/RgbaRange.vue';
     import { computed, ref, watch } from 'vue';
     import { calculateColorValue, decodeHexColor, getContrastFontColor } from '../functions/color-functions';
+    import { TooltipLocationY, TooltipLocationX, ButtonType } from 'lkt-vue-kernel';
 
     const emit = defineEmits(['update:modelValue']);
 
@@ -89,10 +90,12 @@
         class="lkt-field--toggle-button"
         :style="computedColorStyles"
         :text="value"
-        tooltip
-        tooltip-class="lkt-field-color--alpha--tooltip"
-        tooltip-location-y="bottom"
-        tooltip-location-x="left-corner"
+        :type="ButtonType.Tooltip"
+        :tooltip="{
+            class: 'lkt-field-color--tooltip',
+            locationY: TooltipLocationY.Bottom,
+            locationX: TooltipLocationX.LeftCorner,
+        }"
     >
         <template #tooltip="{doClose}">
             <div class="lkt-grid-1">

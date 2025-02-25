@@ -1,6 +1,5 @@
-import { FieldType } from '../enums/FieldType';
+import { FieldType, LktObject } from 'lkt-vue-kernel';
 import { MultipleDisplayType } from '../enums/MultipleDisplayType';
-import { LktObject } from 'lkt-ts-interfaces';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     type?: FieldType;
@@ -22,6 +21,8 @@ type __VLS_Props = {
     optionsModal?: string | Function;
     optionsModalData?: LktObject | Function;
     optionsIcon?: string | Function;
+    optionsText?: string | Function;
+    optionsClass?: string | Function;
     optionsLabelFormatter?: Function;
     optionsResource?: string;
     optionsResourceData?: LktObject;

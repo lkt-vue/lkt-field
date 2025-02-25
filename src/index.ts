@@ -41,8 +41,7 @@ export default LktFieldPlugin;
 
 export { LktField };
 
-export { Option } from './instances/Option';
-export { Field } from './instances/Field';
+export { Field, Option } from 'lkt-vue-kernel';
 
 export const setFieldEmptySlot = (component?: string | Component) => {
     Settings.defaultEmptyValueSlot = component;

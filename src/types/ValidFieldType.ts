@@ -1,4 +1,4 @@
-import {FieldType} from "../enums/FieldType";
+import { FieldType } from 'lkt-vue-kernel';
 
 export type ValidFieldType =
     FieldType.Text

@@ -1,7 +1,5 @@
 import { ValidFieldValue } from '../types/ValidFieldValue';
-import { FieldType } from '../enums/FieldType';
-import { LktObject } from 'lkt-ts-interfaces';
-import { Option } from './Option';
+import { FieldType, LktObject, Option } from 'lkt-vue-kernel';
 import { MultipleDisplayType } from '../enums/MultipleDisplayType';
 import { LktFieldConfigType } from '../types/LktFieldConfigType';
 export declare class Field implements LktFieldConfigType {

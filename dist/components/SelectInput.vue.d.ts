@@ -1,6 +1,5 @@
 import { ValidFieldValue } from '../types/ValidFieldValue';
-import { Option } from '../instances/Option';
-import { LktObject } from 'lkt-ts-interfaces';
+import { Option, LktObject } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: ValidFieldValue;
@@ -9,6 +8,8 @@ type __VLS_Props = {
     multiple: boolean;
     canTag: boolean;
     optionsIcon: string | Function;
+    optionsText: string | Function;
+    optionsClass: string | Function;
     optionSlot?: string;
     optionsModal: string | Function;
     optionsDownload: string | Function;

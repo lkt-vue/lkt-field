@@ -1,4 +1,4 @@
-import { FieldType } from '../enums/FieldType';
+import { FieldType } from 'lkt-vue-kernel';
 import { MultipleDisplayType } from '../enums/MultipleDisplayType';
 export declare const LktFieldConfigDefaults: {
     modelValue: string;

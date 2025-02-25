@@ -1,4 +1,4 @@
-import { FieldType } from '../enums/FieldType';
+import { FieldType } from 'lkt-vue-kernel';
 import { generateRandomString } from 'lkt-string-tools';
 import { MultipleDisplayType } from '../enums/MultipleDisplayType';
 

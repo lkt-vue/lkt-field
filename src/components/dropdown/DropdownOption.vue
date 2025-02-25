@@ -1,8 +1,7 @@
 <script setup lang="ts">
-    import { Option } from '../../instances/Option';
+    import { LktObject, Option } from 'lkt-vue-kernel';
     import { computed } from 'vue';
     import { Settings } from '../../settings/Settings';
-    import { LktObject } from 'lkt-ts-interfaces';
 
     const emit = defineEmits(['click', 'click-icon']);
 
@@ -11,6 +10,8 @@
         optionSlot?: string,
         editable?: boolean
         icon?: string | Function
+        text?: string | Function
+        customClass?: string | Function
         modal?: string | Function
         modalData?: LktObject | Function
         download?: string | Function
@@ -21,6 +22,7 @@
         optionSlot: '',
         editable: false,
         icon: '',
+        text: '',
         modal: '',
         modalData: () => ({}),
         download: '',
@@ -35,11 +37,25 @@
             }
             return props.icon;
         }),
+        computedText = computed(() => {
+            if (typeof props.text !== 'undefined') {
+                if (typeof props.text === 'function') {
+                    return props.text(props.option);
+                }
+
+                if (props.text !== '') return props.text;
+            }
+
+
+            return computedLabel.value;
+        }),
         computedLabel = computed(() => {
             if (typeof props.labelFormatter === 'function') return props.labelFormatter(props.option);
             return props.option.label;
         }),
         computedClass = computed(() => {
+            if (typeof props.customClass === 'function') return props.customClass(props.option);
+            if (typeof props.customClass !== 'undefined') return props.customClass;
             return `lkt-opt-${props.option.value}`;
         }),
         optionSlot = computed(() => {
@@ -118,7 +134,7 @@
         v-bind="computedContainerAttrs"
         class="lkt-field--dropdown-option"
         :class="computedClass"
-        :title="option.label"
+        :title="computedText"
         @click="onClick"
         @click-icon="onClickIcon"
     >
@@ -128,7 +144,7 @@
             <i :class="computedIcon"></i>
         </div>
         <div class="lkt-field--dropdown-option--label-container">
-            {{ computedLabel }}
+            {{ computedText }}
         </div>
     </component>
 </template>

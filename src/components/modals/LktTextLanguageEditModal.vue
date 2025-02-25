@@ -1,9 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import LktFieldText from '../../lib-components/LktField.vue';
-    import { LktObject } from 'lkt-ts-interfaces';
+    import { FieldType, LktObject } from 'lkt-vue-kernel';
     import { availableLanguages, currentLanguage } from 'lkt-i18n';
-    import { FieldType } from '../../enums/FieldType';
 
     const props = withDefaults(defineProps<{
         modalName: string

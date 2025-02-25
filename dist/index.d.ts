@@ -5,8 +5,7 @@ export { setTextValueSlot, setTextEditSlot } from './functions/settings-function
 declare const LktFieldPlugin: Plugin;
 export default LktFieldPlugin;
 export { LktField };
-export { Option } from './instances/Option';
-export { Field } from './instances/Field';
+export { Field, Option } from 'lkt-vue-kernel';
 export declare const setFieldEmptySlot: (component?: string | Component) => void;
 export declare const setFieldOptionSlot: (name: string, component?: string | Component) => void;
 export declare const setFieldUndoText: (text: string) => string;

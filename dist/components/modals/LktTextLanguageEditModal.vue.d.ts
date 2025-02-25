@@ -1,5 +1,4 @@
-import { LktObject } from 'lkt-ts-interfaces';
-import { FieldType } from '../../enums/FieldType';
+import { FieldType, LktObject } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modalName: string;

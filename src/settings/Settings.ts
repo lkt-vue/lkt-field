@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-ts-interfaces';
+import { LktObject } from 'lkt-vue-kernel';
 import { Component } from 'vue';
 
 export class Settings {

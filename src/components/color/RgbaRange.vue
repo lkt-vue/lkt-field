@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import LktField from '../../lib-components/LktField.vue';
     import { ref, watch } from 'vue';
-    import { FieldType } from '../../enums/FieldType';
+    import { FieldType } from 'lkt-vue-kernel';
 
     const emit = defineEmits(['update:modelValue']);
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, ref, useSlots } from 'vue';
-    import { LktObject } from 'lkt-ts-interfaces';
+    import { LktObject } from 'lkt-vue-kernel';
     import CardInput from '../components/CardInput.vue';
 
     const slots = useSlots();

@@ -1,4 +1,4 @@
-import { FieldType } from '../enums/FieldType';
+import { FieldType } from 'lkt-vue-kernel';
 
 export const FieldTypesWithOptions = [
     FieldType.Text, FieldType.Search, FieldType.Select
@@ -10,10 +10,6 @@ export const FieldTypesWithoutClear = [
 
 export const FieldTypesWithoutUndo = [
     FieldType.Switch, FieldType.Check
-];
-
-export const TextFieldTypesWithOptions = [
-    FieldType.Text, FieldType.Search
 ];
 
 export const BooleanFieldTypes = [
