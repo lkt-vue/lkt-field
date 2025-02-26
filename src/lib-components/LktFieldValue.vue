@@ -210,7 +210,7 @@
                 :modal-key="modalKey"
                 :modal-data="modalData"
             >
-                <div v-html="calculatedValue" />
+                <div v-html="calculatedValue"/>
             </lkt-button>
             <dropdown-option
                 class="lkt-field--read-value"
