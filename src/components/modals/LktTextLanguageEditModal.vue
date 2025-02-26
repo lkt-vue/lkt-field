@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import LktFieldText from '../../lib-components/LktField.vue';
+    import LktField from '../../lib-components/LktField.vue';
     import { FieldType, LktObject } from 'lkt-vue-kernel';
     import { availableLanguages, currentLanguage } from 'lkt-i18n';
 
@@ -31,7 +31,7 @@
         :z-index="zIndex"
     >
         <div class="lkt-grid-1">
-            <lkt-field-text
+            <lkt-field
                 :type="type"
                 label="Idioma actual (ES)"
                 v-model="translations['es']"
@@ -39,7 +39,7 @@
                 can-undo
             />
 
-            <lkt-field-text
+            <lkt-field
                 :type="type"
                 v-for="lang in computedAvailableLanguages"
                 :label="'Idioma (' + lang+')'"
