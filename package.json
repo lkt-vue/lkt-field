@@ -54,19 +54,20 @@
     "vue-tsc": "^2.2.0"
   },
   "dependencies": {
-    "lkt-button": "^2.0.4",
-    "lkt-date-tools": "^1.0.4",
-    "lkt-http-client": "^1.0.34",
-    "lkt-i18n": "^1.0.6",
-    "lkt-modal": "^2.0.1",
-    "lkt-object-tools": "^1.0.3",
-    "lkt-string-tools": "^1.0.8",
-    "lkt-tooltip": "^1.0.10",
-    "lkt-vue-kernel": "^1.0.23",
     "sortablejs": "^1.15.6",
     "suneditor": "^2.47.5"
   },
   "peerDependencies": {
+    "lkt-anchor": "^1.2.3",
+    "lkt-button": "^2.0.6",
+    "lkt-date-tools": "^1.0.4",
+    "lkt-http-client": "^1.0.34",
+    "lkt-i18n": "^1.0.6",
+    "lkt-modal": "^2.0.3",
+    "lkt-object-tools": "^1.0.3",
+    "lkt-string-tools": "^1.0.8",
+    "lkt-tooltip": "^1.0.10",
+    "lkt-vue-kernel": "^1.0.28",
     "vue": "^3.3.0"
   }
 }

@@ -159,7 +159,7 @@
             <div
                 v-else-if="type === FieldType.Date"
                 class="lkt-field--read-value"
-                v-html="calculatedValue" :title="title"></div>
+                v-html="calculatedValue" :title="title"/>
             <div
                 v-else-if="type === FieldType.Select"
                 class="lkt-field--read-value"
@@ -223,11 +223,11 @@
             <div
                 v-else-if="type === FieldType.Number"
                 class="lkt-field--read-value"
-                v-html="title" :title="title"></div>
+                v-html="title" :title="title"/>
             <div
                 v-else
                 class="lkt-field--read-value"
-                v-html="calculatedValue" :title="title"></div>
+                v-html="calculatedValue" :title="title"/>
         </template>
     </div>
 </template>
