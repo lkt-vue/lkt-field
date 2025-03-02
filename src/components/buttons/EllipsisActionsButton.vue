@@ -30,7 +30,7 @@ watch(showEditionChecked, (v) => emit('update:showEditionCheck', v));
 <template>
     <lkt-button
         split
-        split-icon="lkt-field-icon-ellipsis-vert"
+        split-icon="lkt-icn-ellipsis-menu-vertical"
         class="lkt-field--info-btn"
     >
         <template #split="{doClose}">

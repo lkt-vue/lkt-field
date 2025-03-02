@@ -23,7 +23,7 @@ const computedText = computed(() => {
     }),
 
     computedIcon = computed(() => {
-        return isChecked.value === true ? 'lkt-field-icon-eye' : 'lkt-field-icon-pencil';
+        return isChecked.value === true ? 'lkt-icon-see' : 'lkt-icn-edit';
     }),
 
     computedClass = computed(() => {

@@ -152,7 +152,7 @@
                 v-else-if="booleanFieldTypes.includes(type)"
                 class="lkt-field--read-value">
                 <lkt-tag
-                    :icon="calculatedValue ? 'lkt-field-icon-ok' : 'lkt-field-icon-cancel'"
+                    :icon="calculatedValue ? 'lkt-icn-check' : 'lkt-icn-cancel'"
                     :featured-text="label"
                     :title="title" />
             </div>

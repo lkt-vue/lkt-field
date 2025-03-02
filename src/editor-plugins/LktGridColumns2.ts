@@ -9,7 +9,7 @@ export var LktGridColumns2 = {
     // @Options
     title: 'Grid: 2 columns',
     buttonClass: '',
-    innerHTML: '<i class="lkt-field-icon-ellipsis-vert">2</i>',
+    innerHTML: '<i class="lkt-icn-ellipsis-menu-vertical">2</i>',
 
     // @Required
     // add function - It is called only once when the plugin is first run.

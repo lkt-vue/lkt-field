@@ -26,7 +26,7 @@ const onClick = () => emit('click');
         :text="insideEllipsis ? computedText : ''"
         :title="computedText"
         :class="computedClass"
-        icon="lkt-field-icon-cancel"
+        icon="lkt-icn-cancel"
         @click="onClick"
     />
 </template>

@@ -113,7 +113,7 @@
             if (computedContainerComponent.value === 'lkt-tag') {
                 return {
                     type: 'action-icon',
-                    icon: 'lkt-field-icon-cancel',
+                    icon: 'lkt-icn-cancel',
                 };
             }
 

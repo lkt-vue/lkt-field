@@ -21,7 +21,7 @@ const onClick = () => emit('click');
         :title="computedText"
         :class="computedClass"
         class="lkt-field--btn-dropdown"
-        icon="lkt-field-icon-angle-down"
+        icon="lkt-icn-angle-down"
         @click="onClick"
         tabindex="-1"
     />

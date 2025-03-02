@@ -28,7 +28,7 @@ const onClick = () => emit('click');
         :title="computedText"
         :class="computedClass"
         class="lkt-field--btn-undo"
-        icon="lkt-field-icon-undo"
+        icon="lkt-icn-undo"
         @click="onClick"
     />
 </template>

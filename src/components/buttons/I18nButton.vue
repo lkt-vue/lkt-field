@@ -36,7 +36,7 @@ const computedText = computed(() => {
         :text="insideEllipsis ? computedText : ''"
         :title="computedText"
         :class="computedClass"
-        icon="lkt-field-icon-language"
+        icon="lkt-icn-lang-picker"
         modal="lkt-field-language-edit"
         :modal-data="{translations, type}"
     />

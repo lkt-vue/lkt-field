@@ -1078,7 +1078,7 @@
                 <lkt-button
                     v-if="computedShowSubtractStep && fieldFeaturedButton === 'subtract'"
                     class="lkt-field--atn-btn"
-                    icon="lkt-field-icon-minus"
+                    icon="lkt-icn-less"
                     @click="onClickSubtract"
                 />
             </div>
@@ -1403,14 +1403,14 @@
                     v-if="Type === FieldType.Number"
                     v-show="computedShowSubtractStepInNav"
                     class="lkt-field--info-btn"
-                    icon="lkt-field-icon-minus"
+                    icon="lkt-icn-less"
                     @click="onClickSubtract"
                 />
                 <lkt-button
                     v-if="Type === FieldType.Number"
                     v-show="computedShowIncreaseStep"
                     class="lkt-field--info-btn"
-                    icon="lkt-field-icon-plus"
+                    icon="lkt-icn-more"
                     @click="onClickIncrease"
                 />
 
@@ -1418,13 +1418,13 @@
                     v-if="computedShowError"
                     :title="errorMessage"
                     class="lkt-field--info-btn"
-                    icon="lkt-field-icon-warning"
+                    icon="lkt-icn-attention"
                     @click="onClickError"
                 />
                 <lkt-button
                     v-if="computedShowInfo"
                     class="lkt-field--info-btn"
-                    icon="lkt-field-icon-info"
+                    icon="lkt-icn-info"
                     @click="onClickInfo"
                     tooltip
                     show-tooltip-on-hover

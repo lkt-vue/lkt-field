@@ -9,7 +9,7 @@ export var FakeLktBoxPlugin = {
     // @Options
     title: 'LKT Box',
     buttonClass: '',
-    innerHTML: '<i class="lkt-field-icon-ellipsis-vert"></i>',
+    innerHTML: '<i class="lkt-icn-ellipsis-menu-vertical"></i>',
 
     // @Required
     // add function - It is called only once when the plugin is first run.

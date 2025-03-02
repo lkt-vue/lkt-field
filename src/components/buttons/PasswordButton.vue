@@ -25,7 +25,7 @@ const computedText = computed(() => {
     }),
 
     computedIcon = computed(() => {
-        return isChecked.value === true ? 'lkt-field-icon-lock-open' : 'lkt-field-icon-lock';
+        return isChecked.value === true ? 'lkt-icn-see' : 'lkt-icn-not-see';
     }),
 
     computedClass = computed(() => {

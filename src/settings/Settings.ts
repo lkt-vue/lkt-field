@@ -10,7 +10,7 @@ export class Settings {
 
     static optionSlots: LktObject = {};
 
-    static defaultDateIcon: string = 'lkt-field-icon-calendar-empty';
+    static defaultDateIcon: string = 'lkt-icn-calendar-empty-outline';
     static defaultNumberFeaturedButton: string = 'subtract';
 
     static undoText: string = '';
