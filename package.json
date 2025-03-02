@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "keywords": [
     "lkt",
@@ -21,7 +21,7 @@
     ".": {
       "import": "./dist/index.js"
     },
-    "./styles": "./dist/style.css",
+    "./styles": "./dist/index.css",
     "./theme": "./theme/default.css",
     "./theme/default": "./theme/default.css"
   },
@@ -58,8 +58,8 @@
     "suneditor": "^2.47.5"
   },
   "peerDependencies": {
-    "lkt-anchor": "^1.2.3",
-    "lkt-button": "^2.0.6",
+    "lkt-anchor": "^1.2.4",
+    "lkt-button": "^2.0.7",
     "lkt-date-tools": "^1.0.4",
     "lkt-http-client": "^1.0.34",
     "lkt-i18n": "^1.0.6",
