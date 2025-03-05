@@ -1,10 +1,29 @@
 <script lang="ts" setup>
-    import { formatNumber, generateRandomString, isEmail as checkIsEmail, stripTags } from 'lkt-string-tools';
+    import { formatNumber, generateRandomString, isEmail, stripTags } from 'lkt-string-tools';
     import { ComponentPublicInstance, computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
-    import { __, currentLanguage } from 'lkt-i18n';
-    import { FieldValidation } from 'lkt-field-validation';
+    import { currentLanguage } from 'lkt-i18n';
+    import {
+        booleanFieldTypes,
+        extractI18nValue,
+        extractPropValue,
+        Field,
+        FieldAutoValidationTrigger,
+        FieldConfig,
+        fieldsWithMultipleMode,
+        FieldType,
+        fieldTypesWithOptions,
+        fieldTypesWithoutClear,
+        fieldTypesWithoutUndo,
+        FieldValidation,
+        FieldValidationType,
+        getDefaultValues,
+        LktObject,
+        Option,
+        textFieldTypes,
+        ValidationStatus,
+    } from 'lkt-vue-kernel';
     import UndoButton from '../components/buttons/UndoButton.vue';
     import ClearButton from '../components/buttons/ClearButton.vue';
     import PasswordButton from '../components/buttons/PasswordButton.vue';
@@ -12,19 +31,6 @@
     import EllipsisActionsButton from '../components/buttons/EllipsisActionsButton.vue';
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import {
-        booleanFieldTypes,
-        extractPropValue,
-        FieldConfig,
-        fieldsWithMultipleMode,
-        FieldType,
-        fieldTypesWithOptions,
-        fieldTypesWithoutClear,
-        fieldTypesWithoutUndo,
-        MultipleOptionsDisplay,
-        Option,
-        textFieldTypes,
-    } from 'lkt-vue-kernel';
     import {
         filterOptions,
         findOptionByValue,
@@ -82,76 +88,7 @@
     const slots = useSlots();
 
     // Props
-    const props = withDefaults(defineProps<FieldConfig>(), {
-        modelValue: '',
-        type: FieldType.Text,
-        placeholder: '',
-        searchPlaceholder: '',
-        label: '',
-        name: generateRandomString(16),
-        valid: false,
-        autocomplete: true,
-        disabled: false,
-        readonly: false,
-        readMode: false,
-        allowReadModeSwitch: false,
-        tabindex: undefined,
-        mandatory: false,
-        showPassword: false,
-        canClear: false,
-        canStep: true,
-        canTag: false,
-        mandatoryMessage: '',
-        infoMessage: '',
-        errorMessage: '',
-        min: undefined,
-        max: undefined,
-        step: 1,
-        enableAutoNumberFix: true,
-        emptyValueSlot: '',
-        valueSlot: '',
-        editSlot: '',
-        slotData: () => ({}),
-        resource: '',
-        resourceData: () => ({}),
-        validationResource: '',
-        validationResourceData: () => ({}),
-        autoValidation: false,
-        autoValidationType: 'blur',
-        validationStack: 'default',
-        minNumbers: undefined,
-        maxNumbers: undefined,
-        minChars: undefined,
-        maxChars: undefined,
-        minUpperChars: undefined,
-        maxUpperChars: undefined,
-        minLowerChars: undefined,
-        maxLowerChars: undefined,
-        minSpecialChars: undefined,
-        maxSpecialChars: undefined,
-        checkEqualTo: undefined,
-        featuredButton: '',
-        infoButtonEllipsis: false,
-        fileName: '',
-        options: () => [],
-        multiple: false,
-        multipleDisplay: MultipleOptionsDisplay.List,
-        multipleDisplayEdition: MultipleOptionsDisplay.Inline,
-        searchable: false,
-        autoloadOptionsResource: false,
-        optionsDownload: '',
-        optionsModal: '',
-        optionsModalData: () => ({}),
-        optionsIcon: '',
-        optionsResource: '',
-        optionsResourceData: () => ({}),
-        icon: '',
-        modal: '',
-        modalKey: '',
-        modalData: () => ({}),
-        prop: () => ({}),
-        optionValueType: 'value',
-    });
+    const props = withDefaults(defineProps<FieldConfig>(), getDefaultValues(Field));
 
     // Constant data
     const Identifier = generateRandomString(16);
@@ -209,12 +146,12 @@
         isLoading = ref(false),
         ready = ref(false);
 
-    const searchString = ref('');
-    const focusedOptionIndex = ref(-1);
-    const pickedOptions = ref(<Option[]>[]);
-    const searchMode = ref(false);
-    const optionsAutoLoaded = ref(false);
-    const optionsAutoLoading = ref(false);
+    const searchString = ref(''),
+        focusedOptionIndex = ref(-1),
+        pickedOptions = ref(<Option[]>[]),
+        searchMode = ref(false),
+        optionsAutoLoaded = ref(false),
+        optionsAutoLoading = ref(false);
 
     const computedLang = computed(() => currentLanguage.value);
     const computedDateReadFormat = computed(() => {
@@ -225,6 +162,7 @@
         return 'Y-m-d';
     });
 
+    //@todo Check if should replace "value.value" with "value" in case of true
     const editableValue = Type.value === FieldType.Card ? value.value : ref(extractEditableValue(value.value, computedLang.value));
     const originalEditableValue = ref(editableValue);
 
@@ -362,7 +300,7 @@
             if (showOptions.value) r.push('show-options');
             if (props.searchable && searchMode.value) r.push('is-searching');
 
-            if (Type.value !== FieldType.Range && props.autoValidation && hadFirstFocus.value && hadFirstBlur.value) {
+            if (Type.value !== FieldType.Range && props.validation?.type === FieldValidationType.Auto && hadFirstFocus.value && hadFirstBlur.value) {
                 if (localValidationStatus.value.length > 0) r.push('is-invalid');
                 else r.push('is-valid');
             }
@@ -429,12 +367,7 @@
         }),
         computedLabel = computed(() => {
 
-            let label = '';
-            if (props.label.startsWith('__:')) {
-                label = __(props.label.substring(3));
-            } else {
-                label = props.label;
-            }
+            let label = extractI18nValue(props.label);
 
             if (props.labelIcon) {
                 let icon = '<i class="' + props.labelIcon + '"></i>';
@@ -448,16 +381,10 @@
             return label;
         }),
         computedPlaceholder = computed(() => {
-            if (props.placeholder.startsWith('__:')) {
-                return __(props.placeholder.substring(3));
-            }
-            return props.placeholder;
+            return extractI18nValue(props.placeholder);
         }),
         computedSearchPlaceholder = computed(() => {
-            if (props.searchPlaceholder.startsWith('__:')) {
-                return __(props.searchPlaceholder.substring(3));
-            }
-            return props.searchPlaceholder;
+            return extractI18nValue(props.searchPlaceholder);
         }),
 
         computedAccept = computed(() => {
@@ -484,6 +411,7 @@
         computedShowDropdownButton = computed(() => {
             if (Type.value === FieldType.Calc) return false;
             if (Type.value === FieldType.Search) return false;
+            if (![FieldType.Select, FieldType.Text].includes(Type.value)) return false;
             return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || props.optionsResource !== '';
         }),
         computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis)
@@ -499,10 +427,10 @@
     };
 
     const doRemoteValidation = async () => {
-        if (props.validationResource) {
+        if (props.validation?.resource) {
             emits('validating');
-            const response: HTTPResponse = await httpCall(props.validationResource, {
-                ...props.validationResourceData,
+            const response: HTTPResponse = await httpCall(props.validation.resource, {
+                ...props.validation.resourceData,
                 value: editableValue.value,
             });
             emits('validation', response);
@@ -511,7 +439,7 @@
 
 
     // Watch data
-    watch(() => props.checkEqualTo, (v) => doLocalValidation());
+    watch(() => props.validation?.checkEqualTo, (v) => doLocalValidation());
     watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
@@ -557,7 +485,7 @@
     });
 
     const doLocalValidation = () => {
-        if (props.autoValidationType === 'blur' && (!hadFirstBlur.value || !hadFirstFocus.value)) {
+        if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
             return;
         }
 
@@ -571,55 +499,55 @@
 
             if (Type.value === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
                 if (editableValue.value < min || editableValue.value > max) {
-                    localValidationStatus.value.push(FieldValidation.createNumBetween(min, max, 'ko'));
+                    localValidationStatus.value.push(FieldValidation.createNumBetween(min, max, ValidationStatus.Ko));
                     isValid.value = false;
                     return;
                 }
             }
 
             if (![FieldType.Number, FieldType.Email].includes(Type.value) && props.mandatory && editableValue.value === '') {
-                localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
+                localValidationStatus.value.push(FieldValidation.createEmpty(ValidationStatus.Ko));
 
             } else if (Type.value !== FieldType.Email) {
 
                 if (min > 0) {
                     if (Type.value !== FieldType.Number && editableValue.value.length < min) {
-                        localValidationStatus.value.push(FieldValidation.createMinStr(min, 'ko'));
+                        localValidationStatus.value.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
 
                     } else if (editableValue.value < min) {
-                        localValidationStatus.value.push(FieldValidation.createMinNum(min, 'ko'));
+                        localValidationStatus.value.push(FieldValidation.createMinNum(min, ValidationStatus.Ko));
                     }
                 }
             }
 
             if (max > 0) {
                 if (Type.value !== FieldType.Number && editableValue.value.length > max) {
-                    localValidationStatus.value.push(FieldValidation.createMaxStr(max, 'ko'));
+                    localValidationStatus.value.push(FieldValidation.createMaxStr(max, ValidationStatus.Ko));
 
                 } else if (editableValue.value > max) {
-                    localValidationStatus.value.push(FieldValidation.createMaxNum(max, 'ko'));
+                    localValidationStatus.value.push(FieldValidation.createMaxNum(max, ValidationStatus.Ko));
                 }
             }
 
             if (Type.value === FieldType.Email) {
                 if (props.mandatory && editableValue.value === '') {
-                    localValidationStatus.value.push(FieldValidation.createEmpty('ko'));
+                    localValidationStatus.value.push(FieldValidation.createEmpty(ValidationStatus.Ko));
 
-                } else if (!checkIsEmail(editableValue.value)) {
-                    localValidationStatus.value.push(FieldValidation.createEmail('ko'));
+                } else if (!isEmail(editableValue.value)) {
+                    localValidationStatus.value.push(FieldValidation.createEmail(ValidationStatus.Ko));
                 }
             }
 
             if (textFieldTypes.includes(Type.value)) {
-                validateAmountOfNumbers(localValidationStatus.value, editableValue.value, props.minNumbers, props.maxNumbers);
-                validateAmountOfUpperChars(localValidationStatus.value, editableValue.value, props.minUpperChars, props.maxUpperChars);
-                validateAmountOfLowerChars(localValidationStatus.value, editableValue.value, props.minLowerChars, props.maxLowerChars);
-                validateAmountOfChars(localValidationStatus.value, editableValue.value, props.minChars, props.maxChars);
-                validateAmountOfSpecialChars(localValidationStatus.value, editableValue.value, props.minSpecialChars, props.maxSpecialChars);
+                validateAmountOfNumbers(localValidationStatus.value, editableValue.value, props.validation?.minNumbers, props.validation?.maxNumbers);
+                validateAmountOfUpperChars(localValidationStatus.value, editableValue.value, props.validation?.minUpperChars, props.validation?.maxUpperChars);
+                validateAmountOfLowerChars(localValidationStatus.value, editableValue.value, props.validation?.minLowerChars, props.validation?.maxLowerChars);
+                validateAmountOfChars(localValidationStatus.value, editableValue.value, props.validation?.minChars, props.validation?.maxChars);
+                validateAmountOfSpecialChars(localValidationStatus.value, editableValue.value, props.validation?.minSpecialChars, props.validation?.maxSpecialChars);
             }
 
-            if (props.checkEqualTo && editableValue.value !== props.checkEqualTo) {
-                localValidationStatus.value.push(FieldValidation.createEqualTo(props.checkEqualTo, 'ko'));
+            if (props.validation?.checkEqualTo && editableValue.value !== props.validation?.checkEqualTo) {
+                localValidationStatus.value.push(FieldValidation.createEqualTo(props.validation?.checkEqualTo, ValidationStatus.Ko));
             }
 
             isValid.value = localValidationStatus.value.length === 0;
@@ -674,8 +602,12 @@
 
             if (props.optionsResource !== '') {
                 isLoading.value = true;
-                if (Settings.searchKeyForResource !== '') props.optionsResourceData[Settings.searchKeyForResource] = query;
-                const results: HTTPResponse = await httpCall(props.optionsResource, props.optionsResourceData);
+                let resourceData: LktObject = {}
+                if (typeof props.optionsResourceData === 'object') {
+                    resourceData = {...props.optionsResourceData};
+                }
+                if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query;
+                const results: HTTPResponse = await httpCall(props.optionsResource, resourceData);
                 const isValidData = Array.isArray(results.data) && results.data.length > 0;
                 if (isValidData) {
                     optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data, props.prop);
@@ -1482,9 +1414,9 @@
         </div>
 
         <lkt-field-validations
-            v-if="editable && autoValidation && localValidationStatus.length > 0"
+            v-if="editable && validation?.type === FieldValidationType.Auto && localValidationStatus.length > 0"
             :items="localValidationStatus"
-            :stack="validationStack" />
+            :stack="validation?.stack" />
 
         <lkt-tooltip
             v-if="editable && fieldTypesWithOptions.includes(Type)"

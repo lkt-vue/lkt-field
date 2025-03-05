@@ -3,7 +3,10 @@
     import { computed } from 'vue';
     import { Settings } from '../../settings/Settings';
 
-    const emit = defineEmits(['click', 'click-icon']);
+    const emit = defineEmits([
+        'click',
+        'click-icon'
+    ]);
 
     const props = withDefaults(defineProps<{
         option: Option,
@@ -146,5 +149,10 @@
         <div class="lkt-field--dropdown-option--label-container">
             {{ computedText }}
         </div>
+
+        <lkt-tag
+            v-for="tag in option.tags"
+            v-bind="tag"
+        />
     </component>
 </template>
