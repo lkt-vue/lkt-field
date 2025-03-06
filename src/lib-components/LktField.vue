@@ -610,7 +610,13 @@
                     resourceData = {...props.optionsConfig.http.data};
                 }
                 if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query;
+                if (props.optionsConfig?.http?.events?.onStart && typeof props.optionsConfig?.http?.events?.onStart === 'function') {
+                    props.optionsConfig.http.events.onStart();
+                }
                 const results: HTTPResponse = await httpCall(props.optionsConfig?.http?.resource, resourceData);
+                if (props.optionsConfig?.http?.events?.onEnd && typeof props.optionsConfig?.http?.events?.onEnd === 'function') {
+                    props.optionsConfig.http.events.onEnd();
+                }
                 const isValidData = Array.isArray(results.data) && results.data.length > 0;
                 isLoading.value = false;
                 if (isValidData) {
