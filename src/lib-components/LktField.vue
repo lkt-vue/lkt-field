@@ -162,8 +162,7 @@
         return 'Y-m-d';
     });
 
-    //@todo Check if should replace "value.value" with "value" in case of true
-    const editableValue = Type.value === FieldType.Card ? value.value : ref(extractEditableValue(value.value, computedLang.value));
+    const editableValue = Type.value === FieldType.Card ? value : ref(extractEditableValue(value.value, computedLang.value));
     const originalEditableValue = ref(editableValue);
 
     const optionsHaystack = ref(<Option[]>[]),
@@ -186,6 +185,7 @@
                         if (pickedOptions.value.length === 0) {
                             pickedOptions.value.push(option);
                         } else {
+                            //@ts-ignore
                             pickedOptions.value.splice(k, 1, option);
                         }
                     }
@@ -197,7 +197,7 @@
             let option = undefined;
 
             if (props.optionValueType === 'option') {
-                option = findOptionByValue(optionsHaystack.value, editableValue.value.map(opt => opt.value));
+                option = findOptionByValue(optionsHaystack.value, editableValue.value.map((opt: Option) => opt.value));
             } else {
                 option = findOptionByValue(optionsHaystack.value, editableValue.value);
             }
@@ -283,7 +283,7 @@
             return 'text';
         }),
         classes = computed(() => {
-            const r = ['lkt-field'];
+            const r = [];
 
             r.push(`is-${Type.value}`);
             if (booleanFieldTypes.includes(Type.value)) {
@@ -412,7 +412,7 @@
             if (Type.value === FieldType.Calc) return false;
             if (Type.value === FieldType.Search) return false;
             if (![FieldType.Select, FieldType.Text].includes(Type.value)) return false;
-            return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || props.optionsResource !== '';
+            return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '');
         }),
         computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis)
     ;
@@ -439,7 +439,7 @@
 
 
     // Watch data
-    watch(() => props.validation?.checkEqualTo, (v) => doLocalValidation());
+    watch(() => props.validation?.checkEqualTo, () => doLocalValidation());
     watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
@@ -452,6 +452,7 @@
     });
     watch(editableValue, (v) => {
         if (typeof value.value === 'object' && Type.value === FieldType.Card) {
+            //@ts-ignore
             value.value[computedLang.value] = v;
         } else {
             value.value = v;
@@ -494,7 +495,9 @@
         localValidationStatus.value = [];
 
         nextTick(() => {
+            //@ts-ignore
             let min = typeof props.min === 'undefined' ? 0 : parseFloat(props.min),
+                //@ts-ignore
                 max = typeof props.max === 'undefined' ? 0 : parseFloat(props.max);
 
             if (Type.value === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
@@ -568,7 +571,7 @@
                         visibleOptions.value = optionsHaystack.value;
                     }
                     isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = props.optionsResource !== '' || visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') || visibleOptions.value.length > 0;
 
                     updatePickedOption();
                     return;
@@ -577,12 +580,12 @@
                 case FieldType.Search:
                     visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
                     isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = props.optionsResource !== '' || visibleOptions.value.length > 0;
+                    if (ableToShowOptions) showOptions.value = (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') || visibleOptions.value.length > 0;
                     return;
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
-            if (!editable.value && (!props.autoloadOptionsResource && !optionsAutoLoaded.value)) return;
+            if (!editable.value && (!props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value)) return;
             if ([
                 FieldType.Tel,
                 FieldType.Date,
@@ -596,25 +599,26 @@
             ].includes(Type.value)) return;
 
             isLoading.value = false;
-            if (props.autoloadOptionsResource && !optionsAutoLoaded.value) {
+            if (props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value) {
                 optionsAutoLoading.value = true;
             }
 
-            if (props.optionsResource !== '') {
+            if (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') {
                 isLoading.value = true;
                 let resourceData: LktObject = {}
-                if (typeof props.optionsResourceData === 'object') {
-                    resourceData = {...props.optionsResourceData};
+                if (typeof props.optionsConfig?.http?.data === 'object') {
+                    resourceData = {...props.optionsConfig.http.data};
                 }
                 if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query;
-                const results: HTTPResponse = await httpCall(props.optionsResource, resourceData);
+                const results: HTTPResponse = await httpCall(props.optionsConfig?.http?.resource, resourceData);
                 const isValidData = Array.isArray(results.data) && results.data.length > 0;
+                isLoading.value = false;
                 if (isValidData) {
-                    optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data, props.prop);
+                    optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data as Option[], props.prop);
                     buildVisibleOptions(query, ableToShowOptions);
 
-                    if (props.autoloadOptionsResource && !optionsAutoLoaded.value) {
-                        if (props.autoloadOptionsResource === 'feed') {
+                    if (props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value) {
+                        if (props.optionsConfig?.autoloadResource === 'feed') {
                             if (props.multiple) {
                                 visibleOptions.value.forEach(opt => {
                                     onClickOption(opt);
@@ -820,7 +824,7 @@
             focusing.value = false;
             emits('blur', event);
         },
-        onNavigateSelectInput = (event) => {
+        onNavigateSelectInput = (event: KeyboardEvent) => {
             navigateOptions(event);
         },
         onSearchSelectInput = (query: string) => {
@@ -863,7 +867,7 @@
             hadFirstFocus.value = true;
             focusing.value = true;
 
-            if (!props.optionsResource && visibleOptions.value.length === 0) {
+            if (!props.optionsConfig?.http?.resource && visibleOptions.value.length === 0) {
                 showOptions.value = false;
                 return;
             }
@@ -943,7 +947,7 @@
                 searchMode.value = true;
             }
 
-            if (props.autoloadOptionsResource) {
+            if (props.optionsConfig?.autoloadResource) {
                 fetchOptions('', false);
             }
         }
@@ -981,7 +985,9 @@
 </script>
 
 <template>
-    <div :class="classes"
+    <div
+        class="lkt-field"
+        :class="classes"
          :data-show-ui="showInfoUi"
          :data-labeled="!!!slots.label"
          ref="container"
@@ -1067,8 +1073,8 @@
                     v-model:file-name="visibleFileName"
                     :id="Identifier"
                     :tabindex="tabindex"
-                    :resource="resource"
-                    :resource-data="resourceData"
+                    :resource="optionsConfig?.http?.resource"
+                    :resource-data="optionsConfig?.http?.data"
                     :name="name"
                     :placeholder="computedPlaceholder"
                     :accept="computedAccept"
@@ -1097,14 +1103,14 @@
                     :search-mode="searchMode"
                     :multiple="multiple"
                     :can-tag="multiple"
-                    :options-text="optionsText"
-                    :options-icon="optionsIcon"
-                    :options-class="optionsClass"
+                    :options-text="optionsConfig?.text"
+                    :options-icon="optionsConfig?.icon"
+                    :options-class="optionsConfig?.class"
                     :option-slot="optionSlot"
-                    :options-modal="optionsModal"
-                    :options-download="optionsDownload"
-                    :options-label-formatter="optionsLabelFormatter"
-                    :options-modal-data="optionsModalData"
+                    :options-modal="optionsConfig?.modal"
+                    :options-download="optionsConfig?.download"
+                    :options-label-formatter="optionsConfig?.labelFormatter"
+                    :options-modal-data="optionsConfig?.modalData"
                     :picked-options="pickedOptions"
                     :editable="editable"
                     :focusing="focusing"
@@ -1145,7 +1151,7 @@
                     :had-first-focus="hadFirstFocus"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
-                    :options-resource="optionsResource"
+                    :options-resource="optionsConfig?.http?.resource"
                     :container="container"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
@@ -1163,7 +1169,7 @@
                     :had-first-focus="hadFirstFocus"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
-                    :options-resource="optionsResource"
+                    :options-resource="optionsConfig?.http?.resource"
                     :container="container"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
@@ -1180,7 +1186,7 @@
                     :had-first-focus="hadFirstFocus"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
-                    :options-resource="optionsResource"
+                    :options-resource="optionsConfig?.http?.resource"
                     :modal="calculatedModal"
                     :modal-key="calculatedModalKey"
                     :modal-data="modalData"
@@ -1211,7 +1217,7 @@
                     :had-first-focus="hadFirstFocus"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
-                    :options-resource="optionsResource"
+                    :options-resource="optionsConfig?.http?.resource"
                     :modal="calculatedModal"
                     :modal-key="calculatedModalKey"
                     :modal-data="modalData"
@@ -1307,15 +1313,15 @@
                 :modal-key="calculatedModalKey"
                 :modal-data="modalData"
                 :option-slot="optionSlot"
-                :options-download="optionsDownload"
-                :options-modal="optionsModal"
-                :options-modal-data="optionsModalData"
-                :options-icon="optionsIcon"
-                :options-text="optionsText"
-                :options-class="optionsClass"
-                :options-label-formatter="optionsLabelFormatter"
-                :options-resource="optionsResource"
-                :options-resource-data="optionsResourceData"
+                :options-download="optionsConfig?.download"
+                :options-modal="optionsConfig?.modal"
+                :options-modal-data="optionsConfig?.modalData"
+                :options-icon="optionsConfig?.icon"
+                :options-text="optionsConfig?.text"
+                :options-class="optionsConfig?.class"
+                :options-label-formatter="optionsConfig?.labelFormatter"
+                :options-resource="optionsConfig?.http?.resource"
+                :options-resource-data="optionsConfig?.http?.data"
                 @click="onClick"
             >
                 <template v-if="slots['value']" #value>
@@ -1443,9 +1449,9 @@
                             <slot name="option"
                                   :option="option"
                                   :data="slotData"
-                                  :modal="optionsModal"
-                                  :modal-data="optionsModalData"
-                                  :download="optionsDownload"
+                                  :modal="optionsConfig?.modal"
+                                  :modal-data="optionsConfig?.modalData"
+                                  :download="optionsConfig?.download"
                                   :editable="editable"
                             />
                         </template>
@@ -1453,12 +1459,12 @@
                             <dropdown-option
                                 :option="option"
                                 :option-slot="optionSlot"
-                                :icon="optionsIcon"
-                                :text="optionsText"
-                                :modal="optionsModal"
-                                :modal-data="optionsModalData"
-                                :download="optionsDownload"
-                                :label-formatter="optionsLabelFormatter"
+                                :icon="optionsConfig?.icon"
+                                :text="optionsConfig?.text"
+                                :modal="optionsConfig?.modal"
+                                :modal-data="optionsConfig?.modalData"
+                                :download="optionsConfig?.download"
+                                :label-formatter="optionsConfig?.labelFormatter"
                                 :editable="editable"
                             />
                         </template>

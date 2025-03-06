@@ -35,11 +35,11 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     disabled: boolean;
     placeholder: string;
     readonly: boolean;
-    resource: string;
-    resourceData: LktObject;
     fileName: string;
     focusing: boolean;
     uploading: boolean;
+    resource: string;
+    resourceData: LktObject;
     isImage: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     inputElement: HTMLInputElement;

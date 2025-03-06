@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "keywords": [
     "lkt",
@@ -67,7 +67,7 @@
     "lkt-object-tools": "^1.0.3",
     "lkt-string-tools": "^1.0.8",
     "lkt-tooltip": "^1.0.10",
-    "lkt-vue-kernel": "^1.0.38",
+    "lkt-vue-kernel": "^1.0.40",
     "vue": "^3.3.0"
   }
 }
