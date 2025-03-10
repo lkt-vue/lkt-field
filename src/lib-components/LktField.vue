@@ -1439,6 +1439,7 @@
             referrer-width
             location-x="left-corner"
             location-y="bottom"
+            v-bind="tooltipConfig"
         >
             <div v-if="showOptions">
                 <lkt-loader v-if="isLoading" />

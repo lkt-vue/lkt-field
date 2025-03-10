@@ -178,8 +178,8 @@
     </div>
 
     <lkt-button
-        :type="tagsEnabled ? 'content' : ''"
         ref="selectButton"
+        :type="tagsEnabled ? 'content' : ''"
         v-show="multiple || (!searchable || !searchMode)"
         class="lkt-field--toggle-button lkt-field--select-button"
         v-model:open-tooltip="visibleOptions"
