@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "",
   "keywords": [
     "lkt",
@@ -59,15 +59,15 @@
   },
   "peerDependencies": {
     "lkt-anchor": "^1.2.4",
-    "lkt-button": "^2.0.7",
+    "lkt-button": "^2.0.9",
     "lkt-date-tools": "^1.0.4",
     "lkt-http-client": "^1.0.34",
     "lkt-i18n": "^1.1.0",
-    "lkt-modal": "^2.0.3",
+    "lkt-modal": "^2.0.4",
     "lkt-object-tools": "^1.0.3",
-    "lkt-string-tools": "^1.0.8",
-    "lkt-tooltip": "^1.0.10",
-    "lkt-vue-kernel": "^1.0.40",
+    "lkt-string-tools": "^1.1.0",
+    "lkt-tooltip": "^1.1.3",
+    "lkt-vue-kernel": "^1.0.44",
     "vue": "^3.3.0"
   }
 }

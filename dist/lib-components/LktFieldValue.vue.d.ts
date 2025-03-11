@@ -1,4 +1,4 @@
-import { FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
+import { FieldReadModeConfig, FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     type?: FieldType;
@@ -25,6 +25,7 @@ type __VLS_Props = {
     optionsLabelFormatter?: Function;
     optionsResource?: string;
     optionsResourceData?: LktObject;
+    readModeConfig?: FieldReadModeConfig;
 };
 declare function __VLS_template(): {
     attrs: Partial<{}>;

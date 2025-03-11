@@ -387,6 +387,11 @@
             return extractI18nValue(props.searchPlaceholder);
         }),
 
+        computedModalData = computed(() => {
+            if (typeof props.modalData === 'function') return props.modalData(props.prop);
+            return props.modalData;
+        }),
+
         computedAccept = computed(() => {
             if (Type.value === FieldType.File) return Settings.acceptTypes.file;
             if (Type.value === FieldType.Image) return Settings.acceptTypes.image;
@@ -615,7 +620,7 @@
                 }
                 const results: HTTPResponse = await httpCall(props.optionsConfig?.http?.resource, resourceData);
                 if (props.optionsConfig?.http?.events?.onEnd && typeof props.optionsConfig?.http?.events?.onEnd === 'function') {
-                    props.optionsConfig.http.events.onEnd();
+                    props.optionsConfig.http.events.onEnd(results);
                 }
                 const isValidData = Array.isArray(results.data) && results.data.length > 0;
                 isLoading.value = false;
@@ -1195,7 +1200,7 @@
                     :options-resource="optionsConfig?.http?.resource"
                     :modal="calculatedModal"
                     :modal-key="calculatedModalKey"
-                    :modal-data="modalData"
+                    :modal-data="computedModalData"
                     :item-type="calculatedItemType"
                 >
                     <template v-if="slots['item-' + calculatedItemType]" v-slot:item="{item}">
@@ -1226,7 +1231,7 @@
                     :options-resource="optionsConfig?.http?.resource"
                     :modal="calculatedModal"
                     :modal-key="calculatedModalKey"
-                    :modal-data="modalData"
+                    :modal-data="computedModalData"
                     :item-type="calculatedItemType"
                 >
                     <template v-if="slots['item-' + calculatedItemType]" v-slot:item="{item}">
@@ -1317,7 +1322,7 @@
                 :multipleDisplay="multipleDisplay"
                 :modal="calculatedModal"
                 :modal-key="calculatedModalKey"
-                :modal-data="modalData"
+                :modal-data="computedModalData"
                 :option-slot="optionSlot"
                 :options-download="optionsConfig?.download"
                 :options-modal="optionsConfig?.modal"
@@ -1328,6 +1333,7 @@
                 :options-label-formatter="optionsConfig?.labelFormatter"
                 :options-resource="optionsConfig?.http?.resource"
                 :options-resource-data="optionsConfig?.http?.data"
+                :read-mode-config="readModeConfig"
                 @click="onClick"
             >
                 <template v-if="slots['value']" #value>

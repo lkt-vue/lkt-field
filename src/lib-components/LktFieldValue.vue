@@ -1,6 +1,12 @@
 <script setup lang="ts">
 
-    import { booleanFieldTypes, FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
+    import {
+        booleanFieldTypes,
+        FieldReadModeConfig,
+        FieldType,
+        LktObject,
+        MultipleOptionsDisplay,
+    } from 'lkt-vue-kernel';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
     import { Settings } from '../settings/Settings';
@@ -33,6 +39,7 @@
         optionsLabelFormatter?: Function
         optionsResource?: string
         optionsResourceData?: LktObject
+        readModeConfig?: FieldReadModeConfig
     }>(), {
         type: FieldType.Text,
         title: '',
@@ -52,7 +59,6 @@
         optionsIcon: '',
         optionsResource: '',
         optionsResourceData: () => ({}),
-
     });
 
     const onClick = () => emit('click');
@@ -86,7 +92,10 @@
     }
 
     if (props.type === FieldType.Textarea || props.type === FieldType.Text) {
-        if (typeof Settings.readTextMaxLength !== 'undefined' && calculatedValue.length > Settings.readTextMaxLength) {
+        if (typeof props.readModeConfig?.textMaxLength !== 'undefined' && calculatedValue.length > props.readModeConfig.textMaxLength) {
+            calculatedValue = calculatedValue.substring(0, props.readModeConfig.textMaxLength) + '...';
+        }
+        else if (typeof Settings.readTextMaxLength !== 'undefined' && calculatedValue.length > Settings.readTextMaxLength) {
             calculatedValue = calculatedValue.substring(0, Settings.readTextMaxLength) + '...';
         }
     }
