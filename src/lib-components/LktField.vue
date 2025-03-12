@@ -387,9 +387,19 @@
             return extractI18nValue(props.searchPlaceholder);
         }),
 
+        computedModal = computed(() => {
+            if (typeof calculatedModal === 'function') return calculatedModal(props.prop);
+            return extractPropValue(calculatedModal, props.prop);
+        }),
+
+
         computedModalData = computed(() => {
             if (typeof props.modalData === 'function') return props.modalData(props.prop);
             return props.modalData;
+        }),
+        computedIcon = computed(() => {
+            if (typeof calculatedIcon === 'function') return calculatedIcon(props.prop);
+            return extractPropValue(calculatedIcon, props.prop);
         }),
 
         computedAccept = computed(() => {
@@ -1032,8 +1042,8 @@
                 />
             </div>
 
-            <div v-if="calculatedIcon" class="lkt-field--icon">
-                <i :class="calculatedIcon" />
+            <div v-if="computedIcon" class="lkt-field--icon">
+                <i :class="computedIcon" />
             </div>
 
             <component
@@ -1198,7 +1208,7 @@
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :options-resource="optionsConfig?.http?.resource"
-                    :modal="calculatedModal"
+                    :modal="computedModal"
                     :modal-key="calculatedModalKey"
                     :modal-data="computedModalData"
                     :item-type="calculatedItemType"
@@ -1229,7 +1239,7 @@
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :options-resource="optionsConfig?.http?.resource"
-                    :modal="calculatedModal"
+                    :modal="computedModal"
                     :modal-key="calculatedModalKey"
                     :modal-data="computedModalData"
                     :item-type="calculatedItemType"
@@ -1320,7 +1330,7 @@
                 :download="calculatedDownload"
                 :multiple="multiple"
                 :multipleDisplay="multipleDisplay"
-                :modal="calculatedModal"
+                :modal="computedModal"
                 :modal-key="calculatedModalKey"
                 :modal-data="computedModalData"
                 :option-slot="optionSlot"
