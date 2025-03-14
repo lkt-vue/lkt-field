@@ -19,9 +19,9 @@
         FieldValidation,
         FieldValidationType,
         getDefaultValues,
-        LktObject,
+        LktObject, LktSettings,
         Option,
-        textFieldTypes,
+        textFieldTypes, ToastConfig, ToastPositionX,
         ValidationStatus,
     } from 'lkt-vue-kernel';
     import UndoButton from '../components/buttons/UndoButton.vue';
@@ -60,10 +60,12 @@
     import LktFieldValue from '../lib-components/LktFieldValue.vue';
     import FileInput from '../components/FileInput.vue';
     import DateInput from '../components/DateInput.vue';
-    import { extractEditableValue } from '../functions/calcultad-data-functions';
+    import { appendIconToLabel, extractEditableValue } from '../functions/calcultad-data-functions';
     import CardInput from '../components/CardInput.vue';
     import MultipleCardInput from '../components/MultipleCardInput.vue';
     import ElementsInput from '../components/ElementsInput.vue';
+    import FileUploadButton from '@/components/buttons/FileUploadButton.vue';
+    import { openToast } from 'lkt-toast';
 
     // Emits
     const emits = defineEmits([
@@ -81,7 +83,9 @@
         'validation',
         'validating',
         'options-loaded',
-        'selected-option'
+        'selected-option',
+        'upload-error',
+        'upload-success',
     ]);
 
     // Slots
@@ -105,23 +109,21 @@
         calculatedModal = Settings.modalPerItemType[calculatedItemType];
     }
 
-    const Type = ref(props.type);
-
     // Components refs
     const inputElement = ref(null);
     let fieldFeaturedButton = props.featuredButton;
 
     let _val = props.modelValue;
-    if (props.multiple && fieldsWithMultipleMode.includes(Type.value)) {
+    if (props.multiple && fieldsWithMultipleMode.includes(props.type)) {
         if (!_val || !Array.isArray(_val)) _val = [];
 
-    } else if (booleanFieldTypes.includes(Type.value)) {
+    } else if (booleanFieldTypes.includes(props.type)) {
         if (typeof _val !== 'boolean') _val = false;
 
-    } else if (Type.value === FieldType.Date && !calculatedIcon) {
+    } else if (props.type === FieldType.Date && !calculatedIcon) {
         calculatedIcon = Settings.defaultDateIcon;
 
-    } else if (Type.value === FieldType.Number && props.canStep && fieldFeaturedButton === '') {
+    } else if (props.type === FieldType.Number && props.canStep && fieldFeaturedButton === '') {
         fieldFeaturedButton = Settings.defaultNumberFeaturedButton;
     }
 
@@ -162,7 +164,7 @@
         return 'Y-m-d';
     });
 
-    const editableValue = Type.value === FieldType.Card ? value : ref(extractEditableValue(value.value, computedLang.value));
+    const editableValue = props.type === FieldType.Card ? value : ref(extractEditableValue(value.value, computedLang.value));
     const originalEditableValue = ref(editableValue);
 
     const optionsHaystack = ref(<Option[]>[]),
@@ -210,25 +212,25 @@
             }
         };
 
-        if (Type.value === FieldType.Text) {
+        if (props.type === FieldType.Text) {
             _doUpdate(editableValue.value);
-        } else if (Type.value === FieldType.Select) {
+        } else if (props.type === FieldType.Select) {
             _doUpdate(searchString.value);
         }
     };
 
-    const computedIsDate = computed(() => Type.value === FieldType.Date);
-    const computedIsFile = computed(() => Type.value === FieldType.File);
-    const computedIsImage = computed(() => Type.value === FieldType.Image);
+    const computedIsDate = computed(() => props.type === FieldType.Date),
+        computedIsFile = computed(() => props.type === FieldType.File),
+        computedIsImage = computed(() => props.type === FieldType.Image);
 
     const computedInputElement = computed(() => {
-        if (Type.value === FieldType.Textarea) return 'textarea';
-        if (Type.value === FieldType.Html) return 'div';
+        if (props.type === FieldType.Textarea) return 'textarea';
+        if (props.type === FieldType.Html) return 'div';
         return 'input';
     });
 
     const changed = computed(() => {
-            if (Type.value === FieldType.Date) {
+            if (props.type === FieldType.Date) {
                 return value.value !== originalValue.value;
             }
             return editableValue.value !== originalEditableValue.value;
@@ -245,13 +247,14 @@
             if (computedShowPasswordRevealInNav.value) ++r;
             if (computedShowI18nInNav.value) ++r;
             if (computedShowSwitchEditionInNav.value) ++r;
+            if (computedShowFileUploadInNav.value) ++r;
             if (computedShowDropdownButton.value) ++r;
             if (computedShowSubtractStepInNav.value) ++r;
             if (computedShowIncreaseStep.value) ++r;
             if (props.customButtonText || props.customButtonClass) ++r;
 
-            if (r > 0 && Type.value === FieldType.Textarea) return 1;
-            if (r > 0 && Type.value === FieldType.Html) return 1;
+            if (r > 0 && props.type === FieldType.Textarea) return 1;
+            if (r > 0 && props.type === FieldType.Html) return 1;
             if (r > 0 && props.infoButtonEllipsis) return 1;
 
             return r;
@@ -266,27 +269,27 @@
         }),
         autocompleteText = computed(() => props.autocomplete === true ? 'on' : 'off'),
         isFilled = computed(() => {
-            if (Type.value === FieldType.Date) {
+            if (props.type === FieldType.Date) {
                 return value.value !== '';
             }
             return editableValue.value !== '';
         }),
         computedInputType = computed(() => {
-            if (Type.value === FieldType.Password && showPasswordIcon.value === true) return 'text';
-            if (Type.value === FieldType.Email) return 'email';
-            if (Type.value === FieldType.Password) return 'password';
-            if (Type.value === FieldType.Number) return 'number';
-            if (Type.value === FieldType.Tel) return 'tel';
-            if (Type.value === FieldType.Search) return 'search';
-            if (Type.value === FieldType.Color) return 'color';
-            if (Type.value === FieldType.Range) return 'range';
+            if (props.type === FieldType.Password && showPasswordIcon.value === true) return 'text';
+            if (props.type === FieldType.Email) return 'email';
+            if (props.type === FieldType.Password) return 'password';
+            if (props.type === FieldType.Number) return 'number';
+            if (props.type === FieldType.Tel) return 'tel';
+            if (props.type === FieldType.Search) return 'search';
+            if (props.type === FieldType.Color) return 'color';
+            if (props.type === FieldType.Range) return 'range';
             return 'text';
         }),
         classes = computed(() => {
             const r = [];
 
-            r.push(`is-${Type.value}`);
-            if (booleanFieldTypes.includes(Type.value)) {
+            r.push(`is-${props.type}`);
+            if (booleanFieldTypes.includes(props.type)) {
                 r.push('is-boolean');
                 if (editableValue.value) r.push('is-checked');
             }
@@ -299,15 +302,16 @@
             if (editable.value && focusing.value) r.push('has-focus');
             if (showOptions.value) r.push('show-options');
             if (props.searchable && searchMode.value) r.push('is-searching');
+            if (props.hidden) r.push('lkt-hidden-field');
 
-            if (Type.value !== FieldType.Range && props.validation?.type === FieldValidationType.Auto && hadFirstFocus.value && hadFirstBlur.value) {
+            if (props.type !== FieldType.Range && props.validation?.type === FieldValidationType.Auto && hadFirstFocus.value && hadFirstBlur.value) {
                 if (localValidationStatus.value.length > 0) r.push('is-invalid');
                 else r.push('is-valid');
             }
 
-            if ([FieldType.Textarea, FieldType.Html].includes(Type.value)) r.push('is-lg');
-            if ([FieldType.Image].includes(Type.value)) r.push('is-xl');
-            if (props.multiple && Type.value === FieldType.Select) r.push('is-lg');
+            if ([FieldType.Textarea, FieldType.Html].includes(props.type)) r.push('is-lg');
+            if ([FieldType.Image].includes(props.type)) r.push('is-xl');
+            if (props.multiple && props.type === FieldType.Select) r.push('is-lg');
 
             if (props.multiple) {
                 if (editable.value) {
@@ -320,7 +324,7 @@
             if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
             r.push(editable.value ? 'is-editable' : 'is-read');
 
-            if (Type.value !== FieldType.Range) {
+            if (props.type !== FieldType.Range) {
                 r.push(isValid.value ? 'is-valid' : 'is-error');
                 r.push(isFilled.value ? 'is-filled' : 'is-empty');
             }
@@ -350,7 +354,7 @@
                 }
                 return editableValue.value.toString();
             }
-            if (Type.value === FieldType.Html) return stripTags(editableValue.value);
+            if (props.type === FieldType.Html) return stripTags(editableValue.value);
             return editableValue.value;
         }),
         MinimumValue = computed((): number => {
@@ -367,18 +371,28 @@
         }),
         computedLabel = computed(() => {
 
-            let label = extractI18nValue(props.label);
+            if (booleanFieldTypes.includes(props.type)) {
+                if (editableValue.value === true && typeof props.configOn === 'object') {
+                    return appendIconToLabel(
+                        extractI18nValue(props.configOn?.label ?? props.label),
+                        props.configOn?.labelIcon ?? props.labelIcon,
+                        props.labelIconAtEnd
+                    );
+                }
 
-            if (props.labelIcon) {
-                let icon = '<i class="' + props.labelIcon + '"></i>';
-                if (props.labelIconAtEnd) {
-                    label += icon;
-                } else {
-                    label = icon + label;
+                if (editableValue.value !== true && typeof props.configOff === 'object') {
+                    return appendIconToLabel(
+                        extractI18nValue(props.configOff?.label ?? props.label),
+                        props.configOff?.labelIcon ?? props.labelIcon,
+                        props.labelIconAtEnd
+                    );
                 }
             }
-
-            return label;
+            return appendIconToLabel(
+                extractI18nValue(props.label),
+                props.labelIcon,
+                props.labelIconAtEnd
+            );
         }),
         computedPlaceholder = computed(() => {
             return extractI18nValue(props.placeholder);
@@ -403,33 +417,34 @@
         }),
 
         computedAccept = computed(() => {
-            if (Type.value === FieldType.File) return Settings.acceptTypes.file;
-            if (Type.value === FieldType.Image) return Settings.acceptTypes.image;
+            if (props.type === FieldType.File) return Settings.acceptTypes.file;
+            if (props.type === FieldType.Image) return Settings.acceptTypes.image;
             return '';
         }),
 
         computedShowError = computed(() => props.errorMessage),
         computedShowInfo = computed(() => props.infoMessage),
 
-        computedShowSubtractStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
-        computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && Type.value === FieldType.Number && fieldFeaturedButton !== 'subtract'),
-        computedShowIncreaseStep = computed(() => props.canStep && editable.value && Type.value === FieldType.Number),
-        computedShowUndo = computed(() => props.canUndo && changed.value && editable.value && !fieldTypesWithoutUndo.includes(Type.value)),
-        computedShowClear = computed(() => props.canClear && isFilled.value && editable.value && !fieldTypesWithoutClear.includes(Type.value)),
+        computedShowSubtractStep = computed(() => props.canStep && editable.value && props.type === FieldType.Number),
+        computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && props.type === FieldType.Number && fieldFeaturedButton !== 'subtract'),
+        computedShowIncreaseStep = computed(() => props.canStep && editable.value && props.type === FieldType.Number),
+        computedShowUndo = computed(() => props.canUndo && changed.value && editable.value && !fieldTypesWithoutUndo.includes(props.type)),
+        computedShowClear = computed(() => props.canClear && isFilled.value && editable.value && !fieldTypesWithoutClear.includes(props.type)),
         computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object' && editable.value),
-        computedShowPasswordReveal = computed(() => Type.value === FieldType.Password && props.showPassword && isFilled.value && editable.value),
+        computedShowPasswordReveal = computed(() => props.type === FieldType.Password && props.showPassword && isFilled.value && editable.value),
 
         computedShowUndoInNav = computed(() => computedShowUndo.value && !props.infoButtonEllipsis),
         computedShowClearInNav = computed(() => computedShowClear.value && !props.infoButtonEllipsis),
         computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && fieldFeaturedButton !== 'password'),
         computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && fieldFeaturedButton !== 'i18n'),
         computedShowDropdownButton = computed(() => {
-            if (Type.value === FieldType.Calc) return false;
-            if (Type.value === FieldType.Search) return false;
-            if (![FieldType.Select, FieldType.Text].includes(Type.value)) return false;
+            if (props.type === FieldType.Calc) return false;
+            if (props.type === FieldType.Search) return false;
+            if (![FieldType.Select, FieldType.Text].includes(props.type)) return false;
             return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '');
         }),
-        computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis)
+        computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis),
+        computedShowFileUploadInNav = computed(() => typeof props.fileUploadButton === 'object' && Object.keys(props.fileUploadButton).length > 0)
     ;
 
     const focus = () => {
@@ -458,22 +473,22 @@
     watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
-        if (Type.value === FieldType.Card) {
+        if (props.type === FieldType.Card) {
             editableValue.value = v;
         }
-        else if (Type.value !== FieldType.Date) {
+        else if (props.type !== FieldType.Date) {
             editableValue.value = extractEditableValue(v, computedLang.value);
         }
     });
     watch(editableValue, (v) => {
-        if (typeof value.value === 'object' && Type.value === FieldType.Card) {
+        if (typeof value.value === 'object' && props.type === FieldType.Card) {
             //@ts-ignore
             value.value[computedLang.value] = v;
         } else {
             value.value = v;
         }
 
-        if (Type.value === FieldType.Number) reAssignNumericValue(v);
+        if (props.type === FieldType.Number) reAssignNumericValue(v);
     });
     watch(value, (v) => {
         if (ready.value && editable.value) {
@@ -493,7 +508,7 @@
 
     watch(() => props.options, (v) => {
         optionsHaystack.value = prepareOptions(v, props.prop);
-        if (Type.value === FieldType.Select) {
+        if (props.type === FieldType.Select) {
             buildVisibleOptions(searchString.value, false);
         } else {
             buildVisibleOptions(editableValue.value, false);
@@ -505,7 +520,7 @@
             return;
         }
 
-        if (Type.value === FieldType.Range) return;
+        if (props.type === FieldType.Range) return;
 
         localValidationStatus.value = [];
 
@@ -515,7 +530,7 @@
                 //@ts-ignore
                 max = typeof props.max === 'undefined' ? 0 : parseFloat(props.max);
 
-            if (Type.value === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
+            if (props.type === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
                 if (editableValue.value < min || editableValue.value > max) {
                     localValidationStatus.value.push(FieldValidation.createNumBetween(min, max, ValidationStatus.Ko));
                     isValid.value = false;
@@ -523,13 +538,13 @@
                 }
             }
 
-            if (![FieldType.Number, FieldType.Email].includes(Type.value) && props.mandatory && editableValue.value === '') {
+            if (![FieldType.Number, FieldType.Email].includes(props.type) && props.mandatory && editableValue.value === '') {
                 localValidationStatus.value.push(FieldValidation.createEmpty(ValidationStatus.Ko));
 
-            } else if (Type.value !== FieldType.Email) {
+            } else if (props.type !== FieldType.Email) {
 
                 if (min > 0) {
-                    if (Type.value !== FieldType.Number && editableValue.value.length < min) {
+                    if (props.type !== FieldType.Number && editableValue.value.length < min) {
                         localValidationStatus.value.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
 
                     } else if (editableValue.value < min) {
@@ -539,7 +554,7 @@
             }
 
             if (max > 0) {
-                if (Type.value !== FieldType.Number && editableValue.value.length > max) {
+                if (props.type !== FieldType.Number && editableValue.value.length > max) {
                     localValidationStatus.value.push(FieldValidation.createMaxStr(max, ValidationStatus.Ko));
 
                 } else if (editableValue.value > max) {
@@ -547,7 +562,7 @@
                 }
             }
 
-            if (Type.value === FieldType.Email) {
+            if (props.type === FieldType.Email) {
                 if (props.mandatory && editableValue.value === '') {
                     localValidationStatus.value.push(FieldValidation.createEmpty(ValidationStatus.Ko));
 
@@ -556,7 +571,7 @@
                 }
             }
 
-            if (textFieldTypes.includes(Type.value)) {
+            if (textFieldTypes.includes(props.type)) {
                 validateAmountOfNumbers(localValidationStatus.value, editableValue.value, props.validation?.minNumbers, props.validation?.maxNumbers);
                 validateAmountOfUpperChars(localValidationStatus.value, editableValue.value, props.validation?.minUpperChars, props.validation?.maxUpperChars);
                 validateAmountOfLowerChars(localValidationStatus.value, editableValue.value, props.validation?.minLowerChars, props.validation?.maxLowerChars);
@@ -578,7 +593,7 @@
                 return;
             }
 
-            switch (Type.value) {
+            switch (props.type) {
                 case FieldType.Select:
                     if (props.searchable) {
                         visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
@@ -611,7 +626,7 @@
                 FieldType.Password,
                 FieldType.Range,
                 FieldType.Textarea,
-            ].includes(Type.value)) return;
+            ].includes(props.type)) return;
 
             isLoading.value = false;
             if (props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value) {
@@ -694,15 +709,15 @@
 
     const
         doUndo = () => {
-            if (Type.value === FieldType.Html) {
+            if (props.type === FieldType.Html) {
                 if (inputElement.value) {
                     inputElement.value.setValue(originalEditableValue.value);
                 }
                 return;
-            } else if (Type.value === FieldType.Date) {
+            } else if (props.type === FieldType.Date) {
                 value.value = originalValue.value;
                 return;
-            } else if (Type.value === FieldType.File) {
+            } else if (props.type === FieldType.File) {
                 value.value = originalValue.value;
                 visibleFileName.value = originalFileName.value;
                 return;
@@ -710,19 +725,19 @@
             editableValue.value = originalEditableValue.value;
         },
         doClear = () => {
-            if (Type.value === FieldType.Html) {
+            if (props.type === FieldType.Html) {
                 if (inputElement.value) {
                     inputElement.value.setValue('');
                 }
                 return;
-            } else if (Type.value === FieldType.Date) {
+            } else if (props.type === FieldType.Date) {
                 value.value = '';
                 return;
-            } else if (Type.value === FieldType.File) {
+            } else if (props.type === FieldType.File) {
                 value.value = '';
                 visibleFileName.value = '';
                 return;
-            } else if (Type.value === FieldType.Select) {
+            } else if (props.type === FieldType.Select) {
                 editableValue.value = props.multiple ? [] : '';
                 pickedOptions.value = [];
                 return;
@@ -732,11 +747,11 @@
         getValue = () => editableValue.value,
         onKeyUp = ($event: KeyboardEvent) => {
             doLocalValidation();
-            if (fieldTypesWithOptions.includes(Type.value)) {
+            if (fieldTypesWithOptions.includes(props.type)) {
                 fetchOptions(editableValue.value);
                 navigateOptions($event);
 
-            } else if (Type.value === FieldType.Select) {
+            } else if (props.type === FieldType.Select) {
                 navigateOptions($event);
             }
             emits('keyup', $event);
@@ -749,14 +764,14 @@
         },
         onClickDropdownButton = () => {
             if (showOptions.value) {
-                if (Type.value === FieldType.Select) {
+                if (props.type === FieldType.Select) {
                     onBlurSelectInput();
                     return;
                 }
 
                 return onBlur();
             }
-            if (Type.value === FieldType.Select) {
+            if (props.type === FieldType.Select) {
                 onFocusSelectInput();
                 return;
             }
@@ -932,12 +947,29 @@
         onClickSwitchEdition = () => {
             if (editable.value) focus();
         },
+        onUploadSuccess = () => {
+            openToast(<ToastConfig>{
+                text: LktSettings.defaultUploadSuccessText,
+                details: LktSettings.defaultUploadSuccessDetails,
+                icon: LktSettings.defaultUploadSuccessIcon,
+                positionX: ToastPositionX.Right,
+            });
+            emits('upload-success');
+        },
+        onUploadError = () => {
+            openToast(<ToastConfig>{
+                text: LktSettings.defaultUploadErrorText,
+                details: LktSettings.defaultUploadErrorDetails,
+                icon: LktSettings.defaultUploadErrorIcon,
+                positionX: ToastPositionX.Right,
+            });
+            emits('upload-error');
+        },
         reAssignNumericValue = (n: string | number) => {
 
             if (!props.enableAutoNumberFix) return false;
 
             let N = Number(n);
-
             let ensured = ensureNumberBetween(N, MinimumValue.value, MaximumValue.value);
 
             if (N !== ensured) {
@@ -953,6 +985,16 @@
         focus,
         value: getValue,
         isMandatory: () => props.mandatory,
+        click: () => {
+            console.log('field click method: ', props.type, container.value);
+            switch (props.type) {
+                case FieldType.File:
+                    return inputElement.value?.click();
+                    break;
+            }
+            //@ts-ignore
+            container.value.click();
+        }
     });
 
     const hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
@@ -963,7 +1005,7 @@
         buildVisibleOptions('', false);
         updatePickedOption();
 
-        if (Type.value === FieldType.Select) {
+        if (props.type === FieldType.Select) {
             if (props.multiple) {
                 searchMode.value = true;
             }
@@ -977,18 +1019,18 @@
     });
 
     const computedMainComponent = computed(() => {
-            if (booleanFieldTypes.includes(Type.value) && !computedIsDisabled.value) return 'label';
+            if (booleanFieldTypes.includes(props.type) && !computedIsDisabled.value) return 'label';
             return 'div';
         }),
         computedMainAttrs = computed(() => {
-            if (booleanFieldTypes.includes(Type.value)) return {
+            if (booleanFieldTypes.includes(props.type)) return {
                 'for': Identifier,
             };
             return {};
         });
 
     const computedReadValue = computed(() => {
-        switch (Type.value) {
+        switch (props.type) {
             case FieldType.Select:
                 return pickedOptions.value;
 
@@ -1013,11 +1055,11 @@
          :data-labeled="!!!slots.label"
          ref="container"
     >
-        <slot v-if="!!slots.label" name="label"></slot>
-        <label v-if="!!!slots.label && computedLabel !== '' && !booleanFieldTypes.includes(Type)"
+        <slot v-if="!!slots.label" name="label"/>
+        <label v-if="!!!slots.label && computedLabel !== '' && !booleanFieldTypes.includes(type)"
                :for="Identifier"
                class="lkt-field--label"
-               v-html="computedLabel"></label>
+               v-html="computedLabel"/>
 
         <div class="lkt-field-content">
 
@@ -1032,7 +1074,7 @@
                     v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n"
                     v-model="value"
                     is-featured
-                    :type="Type" />
+                    :type="type" />
 
                 <lkt-button
                     v-if="computedShowSubtractStep && fieldFeaturedButton === 'subtract'"
@@ -1062,11 +1104,12 @@
                 </div>
 
                 <boolean-input
-                    v-else-if="booleanFieldTypes.includes(Type)"
+                    v-else-if="booleanFieldTypes.includes(type)"
                     v-model="editableValue"
+                    ref="inputElement"
                     :id="Identifier"
                     :name="name"
-                    :type="Type"
+                    :type="type"
                     :label="computedLabel"
                     :editable="editable"
                     :focusing="focusing"
@@ -1077,33 +1120,38 @@
                 />
 
                 <multiple-color-input
-                    v-else-if="Type === FieldType.Color && multiple"
+                    v-else-if="type === FieldType.Color && multiple"
                     v-model="editableValue"
+                    ref="inputElement"
                     :edit-mode="editable"
                     :min="MinimumValue"
                     :max="MaximumValue"
                 />
 
                 <color-input
-                    v-else-if="Type === FieldType.Color"
-                    v-model="editableValue" />
+                    v-else-if="type === FieldType.Color"
+                    v-model="editableValue"
+                    ref="inputElement" />
 
                 <file-input
                     v-else-if="computedIsFile || computedIsImage"
                     v-model="value"
                     v-model:file-name="visibleFileName"
+                    ref="inputElement"
                     :id="Identifier"
                     :tabindex="tabindex"
-                    :resource="optionsConfig?.http?.resource"
-                    :resource-data="optionsConfig?.http?.data"
+                    :resource="fileUploadHttp?.resource"
+                    :resource-data="fileUploadHttp?.data"
                     :name="name"
                     :placeholder="computedPlaceholder"
                     :accept="computedAccept"
                     :focusing="focusing"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
-                    :is-image="Type === FieldType.Image"
+                    :is-image="type === FieldType.Image"
                     @change="onChange"
+                    @upload-success="onUploadSuccess"
+                    @upload-error="onUploadError"
                 />
 
                 <date-input
@@ -1116,7 +1164,7 @@
                 />
 
                 <select-input
-                    v-else-if="Type === FieldType.Select"
+                    v-else-if="type === FieldType.Select"
                     ref="inputElement"
                     v-model="editableValue"
                     v-model:show-options="showOptions"
@@ -1146,7 +1194,7 @@
                 />
                 <calc-input
                     ref="inputElement"
-                    v-else-if="Type === FieldType.Calc"
+                    v-else-if="type === FieldType.Calc"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1162,7 +1210,7 @@
 
                 <search-input
                     ref="inputElement"
-                    v-else-if="Type === FieldType.Search"
+                    v-else-if="type === FieldType.Search"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1180,7 +1228,7 @@
 
                 <elements-input
                     ref="inputElement"
-                    v-else-if="Type === FieldType.Elements"
+                    v-else-if="type === FieldType.Elements"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1197,7 +1245,7 @@
                 />
 
                 <multiple-card-input
-                    v-else-if="Type === FieldType.Card && props.multiple"
+                    v-else-if="type === FieldType.Card && props.multiple"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1228,7 +1276,7 @@
                 </multiple-card-input>
 
                 <card-input
-                    v-else-if="Type === FieldType.Card"
+                    v-else-if="type === FieldType.Card"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1302,7 +1350,7 @@
                 />
                 <html-input
                     ref="inputElement"
-                    v-else-if="Type === FieldType.Html"
+                    v-else-if="type === FieldType.Html"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1320,7 +1368,7 @@
             <lkt-field-value
                 v-if="!editable"
                 :value="computedReadValue"
-                :type="Type"
+                :type="type"
                 :label="computedLabel"
                 :title="readModeTitle"
                 :file-name="visibleFileName"
@@ -1360,14 +1408,14 @@
                 <clear-button v-show="computedShowClearInNav" @click="doClear" />
 
                 <lkt-button
-                    v-if="Type === FieldType.Number"
+                    v-if="type === FieldType.Number"
                     v-show="computedShowSubtractStepInNav"
                     class="lkt-field--info-btn"
                     icon="lkt-icn-less"
                     @click="onClickSubtract"
                 />
                 <lkt-button
-                    v-if="Type === FieldType.Number"
+                    v-if="type === FieldType.Number"
                     v-show="computedShowIncreaseStep"
                     class="lkt-field--info-btn"
                     icon="lkt-icn-more"
@@ -1396,8 +1444,14 @@
                     </template>
                 </lkt-button>
 
+                <file-upload-button
+                    v-if="editable && computedShowFileUploadInNav"
+                    :config="fileUploadButton"
+                    :file-upload-http="fileUploadHttp"
+                />
+
                 <password-button
-                    v-if="Type === FieldType.Password"
+                    v-if="type === FieldType.Password"
                     v-show="computedShowPasswordRevealInNav"
                     v-model="showPasswordIcon"
                 />
@@ -1405,7 +1459,7 @@
                 <i18n-button
                     v-show="computedShowI18nInNav"
                     v-model="value"
-                    :type="Type"
+                    :type="type"
                 />
 
                 <edition-button
@@ -1447,7 +1501,7 @@
             :stack="validation?.stack" />
 
         <lkt-tooltip
-            v-if="editable && fieldTypesWithOptions.includes(Type)"
+            v-if="editable && fieldTypesWithOptions.includes(type)"
             ref="dropdownEl"
             class="lkt-field--dropdown"
             v-model="showOptions"

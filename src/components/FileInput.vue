@@ -21,11 +21,11 @@
         fileName?: string
         resource?: string
         resourceData?: LktObject
-        uploading?: boolean,
-        focusing?: boolean,
-        disabled?: boolean,
-        readonly?: boolean,
-        tabindex: number,
+        uploading?: boolean
+        focusing?: boolean
+        disabled?: boolean
+        readonly?: boolean
+        tabindex: number
         isImage?: boolean
     }>(), {
         modelValue: '',
@@ -41,6 +41,7 @@
     });
 
     const inputElement = ref(null);
+    const buttonRef = ref(null);
 
     const value = ref(props.modelValue),
         visibleFileName = ref(props.fileName);
@@ -64,10 +65,15 @@
                     params.files = input.files[0];
 
                     httpCall(props.resource, params).then((r: HTTPResponse) => {
-                        // @todo check with uploaded file
+                        isUploading.value = false;
+
+                        if (!r.success) {
+                            emit('upload-error', r);
+                            return;
+                        }
+
                         // @ts-ignore
                         value.value = r.data;
-                        isUploading.value = false;
                         emit('upload-success', r);
                     }).catch(r => {
                         isUploading.value = false;
@@ -83,6 +89,14 @@
 
     watch(value, (v) => emit('update:modelValue', v));
     watch(visibleFileName, (v) => emit('update:fileName', v));
+
+    defineExpose({
+        click: () => {
+            console.log('file-input click', buttonRef.value, props.resource, props.resourceData);
+            //@ts-ignore
+            buttonRef.value?.click();
+        }
+    })
 </script>
 
 <template>
@@ -98,6 +112,7 @@
         @change="onChange"
     >
     <lkt-button
+        ref="buttonRef"
         class="lkt-field--toggle-button"
         :click-ref="inputElement"
         :text="!isImage ? visibleFileName : ''"

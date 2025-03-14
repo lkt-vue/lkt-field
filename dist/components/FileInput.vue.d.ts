@@ -16,20 +16,22 @@ type __VLS_Props = {
     tabindex: number;
     isImage?: boolean;
 };
-declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+declare const _default: DefineComponent<__VLS_Props, {
+    click: () => void;
+}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     "update:modelValue": (...args: any[]) => void;
     change: (...args: any[]) => void;
+    "upload-error": (...args: any[]) => void;
+    "upload-success": (...args: any[]) => void;
     "update:fileName": (...args: any[]) => void;
     uploading: (...args: any[]) => void;
-    "upload-success": (...args: any[]) => void;
-    "upload-error": (...args: any[]) => void;
 }, string, PublicProps, Readonly<__VLS_Props> & Readonly<{
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     onChange?: ((...args: any[]) => any) | undefined;
+    "onUpload-error"?: ((...args: any[]) => any) | undefined;
+    "onUpload-success"?: ((...args: any[]) => any) | undefined;
     "onUpdate:fileName"?: ((...args: any[]) => any) | undefined;
     onUploading?: ((...args: any[]) => any) | undefined;
-    "onUpload-success"?: ((...args: any[]) => any) | undefined;
-    "onUpload-error"?: ((...args: any[]) => any) | undefined;
 }>, {
     modelValue: string;
     disabled: boolean;
@@ -43,5 +45,6 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     isImage: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     inputElement: HTMLInputElement;
+    buttonRef: unknown;
 }, any>;
 export default _default;

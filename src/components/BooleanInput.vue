@@ -2,18 +2,22 @@
     import { ref, watch } from 'vue';
     import { FieldType } from 'lkt-vue-kernel';
 
-    const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
+    const emit = defineEmits([
+        'update:modelValue',
+        'focus',
+        'blur'
+    ]);
 
     const props = withDefaults(defineProps<{
-        modelValue: boolean,
-        name: string,
-        type: string,
-        label: string,
-        id: string,
-        editable: boolean,
-        focusing: boolean,
-        disabled: boolean,
-        readonly: boolean,
+        modelValue: boolean
+        name: string
+        type: string
+        label: string
+        id: string
+        editable: boolean
+        focusing: boolean
+        disabled: boolean
+        readonly: boolean
     }>(), {
         modelValue: false,
     });

@@ -2,7 +2,9 @@
 import {computed} from "vue";
 import {Settings} from "../../settings/Settings";
 
-const emit = defineEmits(['click']);
+const emit = defineEmits([
+    'click'
+]);
 
 const props = withDefaults(defineProps<{
     insideEllipsis?: boolean

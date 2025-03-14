@@ -6,15 +6,15 @@
     const slots = useSlots();
 
     const props = withDefaults(defineProps<{
-        modelValue: LktObject[],
-        editable?: boolean,
-        min: number|false,
-        max: number|false,
-        focusing: boolean,
-        hadFirstFocus: boolean,
-        disabled: boolean,
-        readonly: boolean,
-        tabindex: number,
+        modelValue: LktObject[]
+        editable?: boolean
+        min: number|false
+        max: number|false
+        focusing: boolean
+        hadFirstFocus: boolean
+        disabled: boolean
+        readonly: boolean
+        tabindex: number
         modal?: string | Function
         modalKey?: string | number | Function
         modalData?: LktObject

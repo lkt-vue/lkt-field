@@ -3,7 +3,10 @@
     import { Settings } from '../../settings/Settings';
     import { FieldType, LktObject } from 'lkt-vue-kernel';
 
-    const emit = defineEmits(['click', 'update:modelValue']);
+    const emit = defineEmits([
+        'click',
+        'update:modelValue'
+    ]);
 
 const props = withDefaults(defineProps<{
     modelValue: LktObject

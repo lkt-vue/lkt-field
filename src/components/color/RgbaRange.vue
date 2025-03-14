@@ -1,13 +1,15 @@
 <script setup lang="ts">
     import LktField from '../../lib-components/LktField.vue';
     import { ref, watch } from 'vue';
-    import { FieldType } from 'lkt-vue-kernel';
+    import { FieldConfig, FieldType } from 'lkt-vue-kernel';
 
-    const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits([
+        'update:modelValue'
+    ]);
 
     const props = withDefaults(defineProps<{
-        modelValue: number,
-        label: string,
+        modelValue: number
+        label: string
         rangeClass: string
     }>(), {
         modelValue: 0,
@@ -27,21 +29,25 @@
             <label class="like-lkt-field-label">{{ label }}</label>
             <lkt-field
                 v-model="pickedColor"
-                :type="FieldType.Number"
-                :min="0"
-                :max="255"
-                :step="1"
-                :can-step="false"
+                v-bind="<FieldConfig>{
+                    type: FieldType.Number,
+                    min: 0,
+                    max: 255,
+                    step: 1,
+                    canStep: false
+                }"
             />
         </div>
         <lkt-field
             class="color-range"
             :class="rangeClass"
             v-model="pickedColor"
-            :type="FieldType.Range"
-            :min="0"
-            :max="255"
-            :step="1"
+            v-bind="<FieldConfig>{
+                type: FieldType.Range,
+                min: 0,
+                max: 255,
+                step: 1,
+            }"
         />
     </div>
 </template>

@@ -42,8 +42,8 @@
             <lkt-field
                 :type="type"
                 v-for="lang in computedAvailableLanguages"
-                :label="'Idioma (' + lang+')'"
                 v-model="translations[lang]"
+                :label="'Idioma (' + lang+')'"
                 can-clear
                 can-undo
             />

@@ -3,10 +3,10 @@
     import ColorInput from '../components/ColorInput.vue';
 
     const props = withDefaults(defineProps<{
-        modelValue: string[],
-        editMode?: boolean,
-        min: number|false,
-        max: number|false,
+        modelValue: string[]
+        editMode?: boolean
+        min: number|false
+        max: number|false
     }>(), {
         modelValue: () => [],
         editMode: false,

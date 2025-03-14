@@ -1,3 +1,3 @@
-import { LktObject, ValidFieldValue } from 'lkt-vue-kernel';
-export declare const extractPropValue: (needle: string | number | Function | undefined, haystack: LktObject) => undefined | string | number | Function;
+import { ValidFieldValue } from 'lkt-vue-kernel';
 export declare const extractEditableValue: (value: ValidFieldValue, lang: string) => any;
+export declare const appendIconToLabel: (label: string, icon: string | number | undefined, iconAtEnd: boolean | undefined) => string;

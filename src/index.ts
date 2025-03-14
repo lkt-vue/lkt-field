@@ -1,6 +1,7 @@
 import { App, Component, Plugin } from 'vue';
 
 import LktField, { default as libComponent } from './lib-components/LktField.vue';
+import 'suneditor/dist/css/suneditor.min.css';
 import '../styles/common-styles.css';
 import '../styles/select-styles.css';
 import '../styles/dropdown-styles.css';

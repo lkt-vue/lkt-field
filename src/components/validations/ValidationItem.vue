@@ -7,8 +7,8 @@
     import { FieldValidation } from 'lkt-vue-kernel';
 
     const props = withDefaults(defineProps<{
-        validation: FieldValidation,
-        stack: string,
+        validation: FieldValidation
+        stack: string
     }>(), {
         stack: 'default',
     });

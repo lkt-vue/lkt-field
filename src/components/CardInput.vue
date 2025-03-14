@@ -9,12 +9,12 @@
         name?: string
         id?: string
         optionsResource?: string
-        editable?: boolean,
-        focusing?: boolean,
-        hadFirstFocus?: boolean,
-        disabled?: boolean,
-        readonly?: boolean,
-        tabindex?: number,
+        editable?: boolean
+        focusing?: boolean
+        hadFirstFocus?: boolean
+        disabled?: boolean
+        readonly?: boolean
+        tabindex?: number
         modal?: string | Function
         modalKey?: string | number | Function
         modalData?: LktObject

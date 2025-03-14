@@ -41,6 +41,7 @@ export default {
         'lkt-object-tools',
         'lkt-string-tools',
         'lkt-date-tools',
+        'lkt-toast',
         'axios',
         'lkt-data-state',
       ],

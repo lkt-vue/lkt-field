@@ -2,7 +2,10 @@
 import {computed, ref, watch} from "vue";
 import {Settings} from "../../settings/Settings";
 
-const emit = defineEmits(['click', 'update:modelValue']);
+const emit = defineEmits([
+    'click',
+    'update:modelValue'
+]);
 
 const props = withDefaults(defineProps<{
     modelValue: boolean

@@ -15,25 +15,25 @@
     ]);
 
     const props = withDefaults(defineProps<{
-        modelValue: ValidFieldValue,
-        searchable: boolean,
-        searchMode: boolean,
-        multiple: boolean,
-        canTag: boolean,
-        optionsIcon: string|Function,
-        optionsText: string|Function,
-        optionsClass: string|Function,
-        optionSlot?: string,
-        optionsModal: string | Function,
-        optionsDownload: string | Function,
-        optionsLabelFormatter?: Function,
-        optionsModalData: LktObject,
-        pickedOptions: Option[],
-        showOptions: boolean,
-        editable: boolean,
-        focusing: boolean,
-        searchPlaceholder: string,
-        multipleDisplayEdition: string,
+        modelValue: ValidFieldValue
+        searchable: boolean
+        searchMode: boolean
+        multiple: boolean
+        canTag: boolean
+        optionsIcon: string|Function
+        optionsText: string|Function
+        optionsClass: string|Function
+        optionSlot?: string
+        optionsModal: string | Function
+        optionsDownload: string | Function
+        optionsLabelFormatter?: Function
+        optionsModalData: LktObject
+        pickedOptions: Option[]
+        showOptions: boolean
+        editable: boolean
+        focusing: boolean
+        searchPlaceholder: string
+        multipleDisplayEdition: string
     }>(), {
         modelValue: false,
     });

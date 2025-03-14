@@ -8,11 +8,11 @@
     const props = withDefaults(defineProps<{
         modelValue: string
         options?: Option[]
-        editable: boolean,
-        focusing: boolean,
-        disabled: boolean,
-        readonly: boolean,
-        tabindex: number,
+        editable: boolean
+        focusing: boolean
+        disabled: boolean
+        readonly: boolean
+        tabindex: number
     }>(), {
         modelValue: '',
         options: () => [],

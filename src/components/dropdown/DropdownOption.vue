@@ -9,8 +9,8 @@
     ]);
 
     const props = withDefaults(defineProps<{
-        option: Option,
-        optionSlot?: string,
+        option: Option
+        optionSlot?: string
         editable?: boolean
         icon?: string | Function
         text?: string | Function

@@ -6,7 +6,12 @@ import PasswordButton from "./PasswordButton.vue";
 import EditionButton from "./EditionButton.vue";
 import {ref, watch} from "vue";
 
-const emit = defineEmits(['undo', 'clear', 'update:showPasswordCheck', 'update:showEditionCheck']);
+const emit = defineEmits([
+    'undo',
+    'clear',
+    'update:showPasswordCheck',
+    'update:showEditionCheck'
+]);
 const props = withDefaults(defineProps<{
     showUndo?: boolean
     showClear?: boolean
@@ -41,7 +46,3 @@ watch(showEditionChecked, (v) => emit('update:showEditionCheck', v));
         </template>
     </lkt-button>
 </template>
-
-<style scoped>
-
-</style>

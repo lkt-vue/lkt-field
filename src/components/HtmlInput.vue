@@ -10,15 +10,15 @@
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
     const props = withDefaults(defineProps<{
-        modelValue: string,
-        name: string,
-        id: string,
-        lang: string,
-        editable: boolean,
-        focusing: boolean,
-        disabled: boolean,
-        readonly: boolean,
-        tabindex: number,
+        modelValue: string
+        name: string
+        id: string
+        lang: string
+        editable: boolean
+        focusing: boolean
+        disabled: boolean
+        readonly: boolean
+        tabindex: number
     }>(), {
         modelValue: '',
     });

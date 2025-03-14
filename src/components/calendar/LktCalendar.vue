@@ -4,7 +4,9 @@
     import { date } from 'lkt-date-tools';
     import { isValidDateObject } from '../../functions/date-functions';
 
-    const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits([
+        'update:modelValue'
+    ]);
 
     const props = withDefaults(defineProps<{
         modelValue: Date | undefined
