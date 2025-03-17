@@ -19,6 +19,10 @@
             text: 'contenido del acordeón',
             header: 'título del acordeón',
         } },
+        { type: 'lkt-image', props: {
+            text: '',
+            src: '',
+        } },
         { type: 'customTag', component: 'CustomTag', props: { text: 'un componente dinámico' } },
         { type: 'text', text: ' entre el texto.' }
     ])

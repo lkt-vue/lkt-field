@@ -143,6 +143,18 @@
                     @keydown="handleKeydown($event, index)"
                 />
             </lkt-accordion>
+
+            <lkt-image v-else-if="element.type === 'lkt-image'"
+                       v-bind="element.props"
+            >
+                <template #text>
+                    <text-element-editor
+                        v-model="element.props.text"
+                        @input="handleInputText(index, $event, 'text')"
+                        @keydown="handleKeydown($event, index)"
+                    />
+                </template>
+            </lkt-image>
             <component
                 v-else
                 :is="element.component"
