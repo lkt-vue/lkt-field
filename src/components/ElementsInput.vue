@@ -1,7 +1,7 @@
 
 
 <script lang="ts" setup>
-    import { ref } from 'vue'
+    import { defineEmits, ref, watch } from 'vue';
     import ComponentManager from './elements/ComponentManager.vue'
 
     // Definir el tipo para los elementos en el editor
@@ -14,9 +14,17 @@
 
     const elements = ref<Element[]>([
         { type: 'text', text: 'Escribe algo aquí o ' },
-        { type: 'LktBox', props: { text: 'un componente dinámico' } },
+        { type: 'lkt-box', props: { text: 'un componente dinámico' } },
+        { type: 'lkt-accordion', props: {
+            text: 'contenido del acordeón',
+            header: 'título del acordeón',
+        } },
         { type: 'customTag', component: 'CustomTag', props: { text: 'un componente dinámico' } },
         { type: 'text', text: ' entre el texto.' }
+    ])
+
+    const emit = defineEmits([
+        'update:modelValue',
     ])
 
     // Historial de cambios
@@ -128,6 +136,10 @@
             saveHistory() // Guardamos el estado después de la modificación
         }
     }
+
+    watch(elements, (v) => {
+        emit('update:modelValue', v);
+    }, {deep: true})
 </script>
 
 <template>

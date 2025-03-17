@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { ref, onMounted, defineProps, defineEmits, watch } from 'vue'
+    import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
     import Sortable from 'sortablejs'
     import { ButtonConfig, ButtonType } from 'lkt-vue-kernel';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
@@ -53,7 +53,7 @@
     })
 
     // Manejo del texto y componentes personalizados
-    const handleInputText = (index: number, event: Event) => {
+    const handleInputText = (index: number, event: Event, prop: string = 'text') => {
         const text = (event.target as HTMLElement).innerHTML.trim()
         if (items.value[index].type === 'text') {
             if (text !== items.value[index].text) {
@@ -61,8 +61,8 @@
                 // emit('update-text', { index, text })
             }
         } else {
-            if (text !== items.value[index].props?.text) {
-                items.value[index].props.text = text;
+            if (text !== items.value[index].props[prop]) {
+                items.value[index].props[prop] = text;
                 // emit('update-text', { index, text })
             }
         }
@@ -120,13 +120,29 @@
                 @input="handleInputText(index, $event)"
                 @keydown="handleKeydown($event, index)"
             />
-            <lkt-box v-else-if="element.type === 'LktBox'">
+
+            <lkt-box v-else-if="element.type === 'lkt-box'">
                 <text-element-editor
                     v-model="element.props.text"
-                    @input="handleInputText(index, $event)"
+                    @input="handleInputText(index, $event, 'text')"
                     @keydown="handleKeydown($event, index)"
                 />
             </lkt-box>
+
+            <lkt-accordion v-else-if="element.type === 'lkt-accordion'">
+                <template #header>
+                    <text-element-editor
+                        v-model="element.props.header"
+                        @input="handleInputText(index, $event, 'header')"
+                        @keydown="handleKeydown($event, index)"
+                    />
+                </template>
+                <text-element-editor
+                    v-model="element.props.text"
+                    @input="handleInputText(index, $event, 'text')"
+                    @keydown="handleKeydown($event, index)"
+                />
+            </lkt-accordion>
             <component
                 v-else
                 :is="element.component"
