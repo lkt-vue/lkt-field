@@ -23,7 +23,9 @@
     <div contenteditable="true"
          class="editable-text"
          @input="handleInputText($event)"
-         @keydown="handleKeydown($event)">
-        {{ modelValue }}
+         @keydown="handleKeydown($event)"
+         v-html="modelValue"
+         v-once
+    >
     </div>
 </template>

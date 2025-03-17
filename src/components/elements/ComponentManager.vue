@@ -54,7 +54,7 @@
 
     // Manejo del texto y componentes personalizados
     const handleInputText = (index: number, event: Event) => {
-        const text = (event.target as HTMLElement).innerText.trim()
+        const text = (event.target as HTMLElement).innerHTML.trim()
         if (items.value[index].type === 'text') {
             if (text !== items.value[index].text) {
                 items.value[index].text = text;
@@ -99,7 +99,6 @@
     }
 
     watch(items, (v) => {
-        console.log('watched items updated', v);
         emit('update:modelValue', v);
     })
 </script>
@@ -115,20 +114,13 @@
             <div class="drag-handle">☰</div>
 
             <!-- Contenido editable o componente -->
-            <div v-if="element.type === 'text'"
-                 contenteditable="true"
-                 class="editable-text"
-                 @input="handleInputText(index, $event)"
-                 @keydown="handleKeydown($event, index)">
-                {{ element.text }}
-            </div>
+            <text-element-editor
+                v-if="element.type === 'text'"
+                v-model="element.text"
+                @input="handleInputText(index, $event)"
+                @keydown="handleKeydown($event, index)"
+            />
             <lkt-box v-else-if="element.type === 'LktBox'">
-                <div contenteditable="true"
-                     class="editable-text"
-                     @input="handleInputText(index, $event)"
-                     @keydown="handleKeydown($event, index)">
-                    {{ element.props.text }}
-                </div>
                 <text-element-editor
                     v-model="element.props.text"
                     @input="handleInputText(index, $event)"
