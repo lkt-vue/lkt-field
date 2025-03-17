@@ -1,54 +1,4 @@
-<template>
-    <div class="wysiwyg-container">
-        <!-- Barra de herramientas y demás elementos del editor -->
-        <div class="toolbar">
-            <button @click="applyFormat('bold')">Negrita</button>
-            <button @click="applyFormat('italic')">Cursiva</button>
-            <button @click="applyFormat('underline')">Subrayado</button>
 
-            <!-- Nuevas opciones de formato -->
-            <button @click="applyFormat('strikeThrough')">Tachado</button>
-            <button @click="applyFormat('subscript')">Subíndice</button>
-            <button @click="applyFormat('superscript')">Superíndice</button>
-
-            <!-- Nuevas opciones de color -->
-            <input type="color" @input="changeTextColor" title="Color del texto"/>
-            <input type="color" @input="changeBackgroundColor" title="Color de fondo"/>
-
-            <!-- Tamaño de fuente y tipo de fuente -->
-            <select @change="changeFontSize($event)">
-                <option value="3">Mediano</option>
-                <option value="5">Grande</option>
-                <option value="7">Extra Grande</option>
-            </select>
-
-            <select @change="changeFontFamily($event)">
-                <option value="Arial">Arial</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Times New Roman">Times New Roman</option>
-            </select>
-
-            <!-- Alineación del texto -->
-            <button @click="applyAlignment('left')">Alineación izquierda</button>
-            <button @click="applyAlignment('center')">Centrar</button>
-            <button @click="applyAlignment('right')">Alineación derecha</button>
-
-            <!-- Espaciado de párrafos -->
-            <button @click="applyFormat('insertUnorderedList')">Lista no ordenada</button>
-            <button @click="applyFormat('insertOrderedList')">Lista ordenada</button>
-
-            <button @click="insertLink">Insertar Enlace</button>
-
-            <!-- Deshacer y rehacer -->
-            <button @click="undo">Deshacer</button>
-            <button @click="redo">Rehacer</button>
-        </div>
-
-        <!-- Renderizamos el componente intermedio para gestionar los elementos -->
-        <ComponentManager :elements="elements" @delete-element="deleteElement" @add-element="onAddElement" />
-    </div>
-</template>
 
 <script lang="ts" setup>
     import { ref } from 'vue'
@@ -56,7 +6,7 @@
 
     // Definir el tipo para los elementos en el editor
     interface Element {
-        type: 'customTag' | 'image' | 'text';
+        type: 'customTag' | 'image' | 'text' | 'LktBox';
         component?: string;
         props?: Record<string, any>;
         text?: string;
@@ -64,6 +14,7 @@
 
     const elements = ref<Element[]>([
         { type: 'text', text: 'Escribe algo aquí o ' },
+        { type: 'LktBox', props: { text: 'un componente dinámico' } },
         { type: 'customTag', component: 'CustomTag', props: { text: 'un componente dinámico' } },
         { type: 'text', text: ' entre el texto.' }
     ])
@@ -178,6 +129,62 @@
         }
     }
 </script>
+
+<template>
+    <div class="wysiwyg-container">
+        <!-- Barra de herramientas y demás elementos del editor -->
+        <div class="toolbar">
+            <button @click="applyFormat('bold')">Negrita</button>
+            <button @click="applyFormat('italic')">Cursiva</button>
+            <button @click="applyFormat('underline')">Subrayado</button>
+
+            <!-- Nuevas opciones de formato -->
+            <button @click="applyFormat('strikeThrough')">Tachado</button>
+            <button @click="applyFormat('subscript')">Subíndice</button>
+            <button @click="applyFormat('superscript')">Superíndice</button>
+
+            <!-- Nuevas opciones de color -->
+            <input type="color" @input="changeTextColor" title="Color del texto"/>
+            <input type="color" @input="changeBackgroundColor" title="Color de fondo"/>
+
+            <!-- Tamaño de fuente y tipo de fuente -->
+            <select @change="changeFontSize($event)">
+                <option value="3">Mediano</option>
+                <option value="5">Grande</option>
+                <option value="7">Extra Grande</option>
+            </select>
+
+            <select @change="changeFontFamily($event)">
+                <option value="Arial">Arial</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Times New Roman">Times New Roman</option>
+            </select>
+
+            <!-- Alineación del texto -->
+            <button @click="applyAlignment('left')">Alineación izquierda</button>
+            <button @click="applyAlignment('center')">Centrar</button>
+            <button @click="applyAlignment('right')">Alineación derecha</button>
+
+            <!-- Espaciado de párrafos -->
+            <button @click="applyFormat('insertUnorderedList')">Lista no ordenada</button>
+            <button @click="applyFormat('insertOrderedList')">Lista ordenada</button>
+
+            <button @click="insertLink">Insertar Enlace</button>
+
+            <!-- Deshacer y rehacer -->
+            <button @click="undo">Deshacer</button>
+            <button @click="redo">Rehacer</button>
+        </div>
+
+        <!-- Renderizamos el componente intermedio para gestionar los elementos -->
+        <ComponentManager
+            v-model="elements"
+            @delete-element="deleteElement"
+            @add-element="onAddElement"
+        />
+    </div>
+</template>
 
 <style scoped>
     /* Estilos del editor */

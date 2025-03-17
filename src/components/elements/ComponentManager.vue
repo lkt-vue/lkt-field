@@ -1,59 +1,8 @@
-<template>
-    <div ref="sortableContainer" class="sortable-container">
-        <div
-            v-for="(element, index) in items"
-            :key="index"
-            class="sortable-item"
-        >
-            <!-- Manejador de arrastre -->
-            <div class="drag-handle">☰</div>
-
-            <!-- Contenido editable o componente -->
-            <div v-if="element.type === 'text'"
-                 contenteditable="true"
-                 class="editable-text"
-                 @input="handleInputText(index, $event)"
-                 @keydown="handleKeydown($event, index)">
-                {{ element.text }}
-            </div>
-            <component
-                v-else
-                :is="element.component"
-                v-bind="element.props"
-            />
-
-            <lkt-button
-                :type="ButtonType.Split"
-                icon="icon-tooltip"
-                :tooltip="{
-                    windowMargin: 30,
-                    referrerMargin: 7,
-                }"
-            >
-                <template #split="{doClose}">
-                    <div class="tooltip-menu">
-                        <button class="delete-button" @click="deleteElement(index)">Eliminar</button>
-                    </div>
-                </template>
-            </lkt-button>
-        </div>
-
-        <!-- Mostrar menú de componentes si se está escribiendo '/' -->
-        <div v-if="isTypingSlash && activeIndex !== null" class="component-menu">
-            <ul>
-                <li @click="addCustomElement('lkt-tag', { text: 'Etiqueta personalizada' })">Etiqueta personalizada</li>
-                <li @click="addCustomElement('ImageComponent', { src: prompt('Ingrese la URL de la imagen:') })">Imagen</li>
-                <li @click="addCustomElement('TableComponent', {})">Tabla</li>
-                <li @click="addCustomElement('FormComponent', {})">Formulario</li>
-            </ul>
-        </div>
-    </div>
-</template>
-
 <script lang="ts" setup>
-    import { ref, onMounted, defineProps, defineEmits } from 'vue'
+    import { ref, onMounted, defineProps, defineEmits, watch } from 'vue'
     import Sortable from 'sortablejs'
-    import { ButtonType } from 'lkt-vue-kernel';
+    import { ButtonConfig, ButtonType } from 'lkt-vue-kernel';
+    import TextElementEditor from '@/components/elements/TextElementEditor.vue';
 
     interface Element {
         type: 'customTag' | 'image' | 'text';
@@ -63,15 +12,22 @@
     }
 
     const props = defineProps({
-        elements: {
+        modelValue: {
             type: Array as () => Element[],
             required: true
         }
     })
 
-    const items = ref(props.elements);
+    const items = ref(props.modelValue);
 
-    const emit = defineEmits(['delete-element', 'update-text', 'add-text', 'add-element', 'elements-reordered'])
+    const emit = defineEmits([
+        'delete-element',
+        'update-text',
+        'add-text',
+        'add-element',
+        'elements-reordered',
+        'update:modelValue',
+    ])
 
     const isTypingSlash = ref(false) // Para controlar si el usuario está escribiendo '/'
     const activeIndex = ref<number | null>(null) // Índice del elemento actualmente activo
@@ -99,8 +55,16 @@
     // Manejo del texto y componentes personalizados
     const handleInputText = (index: number, event: Event) => {
         const text = (event.target as HTMLElement).innerText.trim()
-        if (text !== items.value[index].text) {
-            emit('update-text', { index, text })
+        if (items.value[index].type === 'text') {
+            if (text !== items.value[index].text) {
+                items.value[index].text = text;
+                // emit('update-text', { index, text })
+            }
+        } else {
+            if (text !== items.value[index].props?.text) {
+                items.value[index].props.text = text;
+                // emit('update-text', { index, text })
+            }
         }
 
         isTypingSlash.value = text.endsWith('/') // Detecta si el último carácter es '/'
@@ -133,7 +97,84 @@
     const deleteElement = (index: number) => {
         emit('delete-element', index)
     }
+
+    watch(items, (v) => {
+        console.log('watched items updated', v);
+        emit('update:modelValue', v);
+    })
 </script>
+
+<template>
+    <div ref="sortableContainer" class="sortable-container">
+        <div
+            v-for="(element, index) in items"
+            :key="index"
+            class="sortable-item"
+        >
+            <!-- Manejador de arrastre -->
+            <div class="drag-handle">☰</div>
+
+            <!-- Contenido editable o componente -->
+            <div v-if="element.type === 'text'"
+                 contenteditable="true"
+                 class="editable-text"
+                 @input="handleInputText(index, $event)"
+                 @keydown="handleKeydown($event, index)">
+                {{ element.text }}
+            </div>
+            <lkt-box v-else-if="element.type === 'LktBox'">
+                <div contenteditable="true"
+                     class="editable-text"
+                     @input="handleInputText(index, $event)"
+                     @keydown="handleKeydown($event, index)">
+                    {{ element.props.text }}
+                </div>
+                <text-element-editor
+                    v-model="element.props.text"
+                    @input="handleInputText(index, $event)"
+                    @keydown="handleKeydown($event, index)"
+                />
+            </lkt-box>
+            <component
+                v-else
+                :is="element.component"
+                v-bind="element.props"
+            />
+
+            <lkt-button
+                :type="ButtonType.Split"
+                icon="icon-tooltip"
+                :tooltip="{
+                    windowMargin: 30,
+                    referrerMargin: 7,
+                }"
+            >
+                <template #split="{doClose}">
+                    <div class="tooltip-menu">
+                        <lkt-button
+                            v-bind="<ButtonConfig>{
+                                text: 'Remove',
+                                events: {
+                                    click: () => deleteElement(index)
+                                }
+                            }"
+                        />
+                    </div>
+                </template>
+            </lkt-button>
+        </div>
+
+        <!-- Mostrar menú de componentes si se está escribiendo '/' -->
+        <div v-if="isTypingSlash && activeIndex !== null" class="component-menu">
+            <ul>
+                <li @click="addCustomElement('lkt-tag', { text: 'Etiqueta personalizada' })">Etiqueta personalizada</li>
+                <li @click="addCustomElement('ImageComponent', { src: prompt('Ingrese la URL de la imagen:') })">Imagen</li>
+                <li @click="addCustomElement('TableComponent', {})">Tabla</li>
+                <li @click="addCustomElement('FormComponent', {})">Formulario</li>
+            </ul>
+        </div>
+    </div>
+</template>
 
 <style scoped>
     .sortable-container {
