@@ -21,7 +21,7 @@
 
 <template>
     <div contenteditable="true"
-         class="editable-text"
+         class="lkt-element-editable-text"
          @input="handleInputText($event)"
          @keydown="handleKeydown($event)"
          v-html="modelValue"

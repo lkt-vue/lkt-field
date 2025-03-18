@@ -44,6 +44,7 @@ export default {
         'lkt-toast',
         'axios',
         'lkt-data-state',
+        'lkt-vue-kernel',
       ],
       output: {
         globals: {

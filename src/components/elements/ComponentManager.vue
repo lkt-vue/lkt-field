@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-    import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
-    import Sortable from 'sortablejs'
-    import { ButtonConfig, ButtonType } from 'lkt-vue-kernel';
+    import { defineEmits, defineProps, ref, watch } from 'vue';
+    import { ButtonConfig, ButtonType, LktObject, TableConfig, TablePermission, TableType } from 'lkt-vue-kernel';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
 
     interface Element {
@@ -9,6 +8,8 @@
         component?: string;
         props?: Record<string, any>;
         text?: string;
+        config?:LktObject
+        children?: Element[]
     }
 
     const props = defineProps({
@@ -31,26 +32,6 @@
 
     const isTypingSlash = ref(false) // Para controlar si el usuario está escribiendo '/'
     const activeIndex = ref<number | null>(null) // Índice del elemento actualmente activo
-
-    const sortableContainer = ref<HTMLElement | null>(null)
-
-    // Inicializar SortableJS al montar el componente
-    onMounted(() => {
-        if (sortableContainer.value) {
-            Sortable.create(sortableContainer.value, {
-                handle: '.drag-handle',
-                animation: 150,
-                onEnd: (event) => {
-                    const { oldIndex, newIndex } = event
-                    if (oldIndex !== undefined && newIndex !== undefined) {
-                        const movedItem = items.value.splice(oldIndex, 1)[0]
-                        items.value.splice(newIndex, 0, movedItem)
-                        emit('elements-reordered', items.value)
-                    }
-                }
-            })
-        }
-    })
 
     // Manejo del texto y componentes personalizados
     const handleInputText = (index: number, event: Event, prop: string = 'text') => {
@@ -99,90 +80,189 @@
     }
 
     watch(items, (v) => {
+        console.log('updated items: ', v);
         emit('update:modelValue', v);
     })
+
+    const hasConfigModal = (element: Element) => {
+        switch (element.type) {
+            case 'lkt-box':
+            case 'lkt-accordion':
+            case 'lkt-icon':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    const getConfigModal = (element: Element) => {
+        switch (element.type) {
+            case 'lkt-box':
+                return 'lkt-field-box-element-config';
+            case 'lkt-accordion':
+                return 'lkt-field-accordion-element-config';
+            case 'lkt-icon':
+                return 'lkt-field-icon-element-config';
+            default:
+                return '';
+        }
+    }
 </script>
 
 <template>
-    <div ref="sortableContainer" class="sortable-container">
-        <div
-            v-for="(element, index) in items"
-            :key="index"
-            class="sortable-item"
+    <div>
+        <lkt-table
+            class="lkt-elements-table"
+            v-model="items"
+            v-bind="<TableConfig>{
+                type: TableType.Table,
+                slotItemVar: 'element',
+                editMode: true,
+                perms: [TablePermission.Update, TablePermission.Sort],
+                itemsContainerClass: 'lkt-grid-1',
+                drag: {
+                    enabled: true,
+                    isDisabled: false,
+                    canRender: true,
+                    isValid: true,
+                }
+            }"
         >
-            <!-- Manejador de arrastre -->
-            <div class="drag-handle">☰</div>
+            <template #item="{element, index}">
+                <div class="lkt-element">
+                    <div v-if="false" class="handle">☰</div>
 
-            <!-- Contenido editable o componente -->
-            <text-element-editor
-                v-if="element.type === 'text'"
-                v-model="element.text"
-                @input="handleInputText(index, $event)"
-                @keydown="handleKeydown($event, index)"
-            />
+                    <div class="lkt-element-content">
+                        <!-- Contenido editable o componente -->
+                        <text-element-editor
+                            v-if="element.type === 'text'"
+                            v-model="element.text"
+                            @input="handleInputText(index, $event)"
+                            @keydown="handleKeydown($event, index)"
+                        />
 
-            <lkt-box v-else-if="element.type === 'lkt-box'">
-                <text-element-editor
-                    v-model="element.props.text"
-                    @input="handleInputText(index, $event, 'text')"
-                    @keydown="handleKeydown($event, index)"
-                />
-            </lkt-box>
+                        <lkt-box
+                            v-else-if="element.type === 'lkt-box'"
+                            v-bind="element.props"
+                            :icon="element.config.hasHeader && element.config.hasIcon ? element.props.icon : ''"
+                        >
+                            <template #header v-if="element.config?.hasHeader">
+                                <text-element-editor
+                                    v-model="element.props.header"
+                                    @input="handleInputText(index, $event, 'header')"
+                                    @keydown="handleKeydown($event, index)"
+                                />
+                            </template>
+                            <text-element-editor
+                                v-model="element.props.text"
+                                @input="handleInputText(index, $event, 'text')"
+                                @keydown="handleKeydown($event, index)"
+                            />
+                        </lkt-box>
 
-            <lkt-accordion v-else-if="element.type === 'lkt-accordion'">
-                <template #header>
-                    <text-element-editor
-                        v-model="element.props.header"
-                        @input="handleInputText(index, $event, 'header')"
-                        @keydown="handleKeydown($event, index)"
-                    />
-                </template>
-                <text-element-editor
-                    v-model="element.props.text"
-                    @input="handleInputText(index, $event, 'text')"
-                    @keydown="handleKeydown($event, index)"
-                />
-            </lkt-accordion>
+                        <lkt-accordion
+                            v-else-if="element.type === 'lkt-accordion'"
+                            v-bind="element.props"
+                            :icon="element.config.hasIcon ? element.props.icon : ''"
+                        >
+                            <template #header>
+                                <text-element-editor
+                                    v-model="element.props.header"
+                                    @input="handleInputText(index, $event, 'header')"
+                                    @keydown="handleKeydown($event, index)"
+                                />
+                            </template>
+                            <text-element-editor
+                                v-model="element.props.text"
+                                @input="handleInputText(index, $event, 'text')"
+                                @keydown="handleKeydown($event, index)"
+                            />
+                        </lkt-accordion>
 
-            <lkt-image v-else-if="element.type === 'lkt-image'"
-                       v-bind="element.props"
-            >
-                <template #text>
-                    <text-element-editor
-                        v-model="element.props.text"
-                        @input="handleInputText(index, $event, 'text')"
-                        @keydown="handleKeydown($event, index)"
-                    />
-                </template>
-            </lkt-image>
-            <component
-                v-else
-                :is="element.component"
-                v-bind="element.props"
-            />
+                        <lkt-image
+                            v-else-if="element.type === 'lkt-image'"
+                            v-bind="element.props"
+                        >
+                            <template #text>
+                                <text-element-editor
+                                    v-model="element.props.text"
+                                    @input="handleInputText(index, $event, 'text')"
+                                    @keydown="handleKeydown($event, index)"
+                                />
+                            </template>
+                        </lkt-image>
 
-            <lkt-button
-                :type="ButtonType.Split"
-                icon="icon-tooltip"
-                :tooltip="{
-                    windowMargin: 30,
-                    referrerMargin: 7,
-                }"
-            >
-                <template #split="{doClose}">
-                    <div class="tooltip-menu">
-                        <lkt-button
-                            v-bind="<ButtonConfig>{
-                                text: 'Remove',
-                                events: {
-                                    click: () => deleteElement(index)
-                                }
-                            }"
+                        <lkt-icon
+                            v-else-if="element.type === 'lkt-icon'"
+                            v-bind="element.props"
+                        >
+                            <template #text>
+                                <text-element-editor
+                                    v-model="element.props.text"
+                                    @input="handleInputText(index, $event, 'text')"
+                                    @keydown="handleKeydown($event, index)"
+                                />
+                            </template>
+                        </lkt-icon>
+                        <component
+                            v-else
+                            :is="element.component"
+                            v-bind="element.props"
                         />
                     </div>
-                </template>
-            </lkt-button>
-        </div>
+
+                    <div class="lkt-element-actions">
+                        <lkt-button
+                            v-bind="<ButtonConfig>{
+                                type: ButtonType.Tooltip,
+                                icon: 'lkt-icn-settings-cogs',
+                                tooltip: {
+                                    windowMargin: 15,
+                                    referrerMargin: 0,
+                                    hideOnReferrerLeave: true,
+                                    hideOnReferrerLeaveDelay: 500,
+                                }
+                            }"
+                        >
+                            <template #tooltip="{doClose}">
+                                <div class="lkt-element-tooltip-menu">
+                                    <lkt-button
+                                        v-if="hasConfigModal(element)"
+                                        v-bind="<ButtonConfig>{
+                                        text: 'Config',
+                                        icon: 'lkt-icn-settings-files-1',
+                                        modal: getConfigModal(element),
+                                        modalData: {
+                                            config: element,
+                                            onUpdate: (updatedConfig: LktObject) => {
+                                                element = updatedConfig;
+                                            }
+                                        },
+                                        events: {
+                                            click: () => {
+                                            }
+                                        }
+                                    }"
+                                    />
+                                    <lkt-button
+                                        v-bind="<ButtonConfig>{
+                                        text: 'Remove',
+                                        icon: 'lkt-icn-trash',
+                                        events: {
+                                            click: () => {
+                                                deleteElement(index);
+                                                doClose();
+                                            }
+                                        }
+                                    }"
+                                    />
+                                </div>
+                            </template>
+                        </lkt-button>
+                    </div>
+                </div>
+            </template>
+        </lkt-table>
 
         <!-- Mostrar menú de componentes si se está escribiendo '/' -->
         <div v-if="isTypingSlash && activeIndex !== null" class="component-menu">
@@ -196,37 +276,7 @@
     </div>
 </template>
 
-<style scoped>
-    .sortable-container {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .sortable-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px;
-        border: 1px solid #ddd;
-        background-color: #f9f9f9;
-        cursor: pointer;
-    }
-
-    .editable-text {
-        flex: 1;
-        min-height: 30px;
-        border: none;
-        padding: 8px;
-        margin: 0;
-        outline: none;
-    }
-
-    .drag-handle {
-        cursor: grab;
-        font-size: 18px;
-    }
-
+<style>
     .component-menu {
         background-color: white;
         border: 1px solid #ccc;
@@ -248,5 +298,53 @@
 
     .component-menu li:hover {
         background-color: #f0f0f0;
+    }
+
+    .lkt-element {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-left: 15px;
+    }
+
+    .lkt-element-content {
+        width: 100%;
+    }
+
+    .lkt-element-actions {
+        margin-left: auto;
+        align-self: flex-start;
+        opacity: 0;
+    }
+
+    .lkt-element:hover .lkt-element-actions {
+        opacity: 1;
+    }
+
+    .lkt-element-actions .lkt-button {
+        --lkt-btn-min-width: auto;
+        --lkt-btn-padding: 0 5px;
+        --lkt-btn-text-align: left;
+        justify-content: flex-start;
+    }
+
+    .lkt-element-editable-text {
+        min-width: 50px;
+    }
+
+    .lkt-element-tooltip-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        min-width: 200px;
+    }
+
+    .lkt-element-actions .lkt-tooltip {
+        --lkt-tooltip-min-width: 250px;
+    }
+
+    .lkt-elements-table .lkt-table {
+        --lkt-table-border-collapse: separate;
+        --lkt-table-border-spacing: 0 10px;
     }
 </style>

@@ -1,9 +1,12 @@
+import { LktObject } from 'lkt-vue-kernel';
 import { DefineComponent, ExtractPropTypes, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 interface Element {
     type: 'customTag' | 'image' | 'text';
     component?: string;
     props?: Record<string, any>;
     text?: string;
+    config?: LktObject;
+    children?: Element[];
 }
 declare const _default: DefineComponent<ExtractPropTypes<{
     modelValue: {
@@ -29,7 +32,5 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     "onAdd-text"?: ((...args: any[]) => any) | undefined;
     "onAdd-element"?: ((...args: any[]) => any) | undefined;
     "onElements-reordered"?: ((...args: any[]) => any) | undefined;
-}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {
-    sortableContainer: HTMLDivElement;
-}, HTMLDivElement>;
+}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, HTMLDivElement>;
 export default _default;
