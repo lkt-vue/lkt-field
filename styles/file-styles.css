@@ -93,7 +93,7 @@
 .lkt-field .lkt-field--toggle-button .lkt-image.lkt-field--image-main img {
     max-height: var(--lkt-field-height);
 }
-.lkt-field--image-cover {
+.lkt-image.lkt-field--image-cover {
     position: absolute;
     top: 50%;
     left: 50%;

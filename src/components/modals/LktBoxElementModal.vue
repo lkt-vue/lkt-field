@@ -43,6 +43,7 @@
             view: ItemCrudView.Modal,
             editing: true,
             perms: ['update'],
+            title: 'LktBox Config',
             modalConfig: {
                 modalName,
                 modalKey,

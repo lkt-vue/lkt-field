@@ -1,13 +1,21 @@
 <script lang="ts" setup>
-    import { defineEmits, defineProps, ref, watch } from 'vue';
-    import { ButtonConfig, ButtonType, LktObject, TableConfig, TablePermission, TableType } from 'lkt-vue-kernel';
+    import { defineEmits, defineProps, nextTick, ref, watch } from 'vue';
+    import {
+        ButtonConfig,
+        ButtonType,
+        ColumnType,
+        LktObject,
+        TableConfig,
+        TablePermission,
+        TableType,
+    } from 'lkt-vue-kernel';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
 
     interface Element {
-        type: 'customTag' | 'image' | 'text';
-        component?: string;
-        props?: Record<string, any>;
-        text?: string;
+        type: 'customTag' | 'image' | 'text'
+        component?: string
+        props?: Record<string, any>
+        text?: string
         config?:LktObject
         children?: Element[]
     }
@@ -20,6 +28,7 @@
     })
 
     const items = ref(props.modelValue);
+    const appendingItems = ref(false);
 
     const emit = defineEmits([
         'delete-element',
@@ -80,9 +89,18 @@
     }
 
     watch(items, (v) => {
-        console.log('updated items: ', v);
         emit('update:modelValue', v);
     })
+
+    const elementCanHaveChildren = (element: Element) => {
+        switch (element.type) {
+            case 'lkt-box':
+            case 'lkt-accordion':
+                return true;
+            default:
+                return false;
+        }
+    }
 
     const hasConfigModal = (element: Element) => {
         switch (element.type) {
@@ -110,6 +128,10 @@
                 return '';
         }
     }
+
+    const onDeleteChildElement = (index: number, element) => {
+        element.children.splice(index, 1);
+    };
 </script>
 
 <template>
@@ -121,6 +143,7 @@
                 type: TableType.Table,
                 slotItemVar: 'element',
                 editMode: true,
+                hideTableHeader: true,
                 perms: [TablePermission.Update, TablePermission.Sort],
                 itemsContainerClass: 'lkt-grid-1',
                 drag: {
@@ -128,15 +151,20 @@
                     isDisabled: false,
                     canRender: true,
                     isValid: true,
-                }
+                },
+                columns: [
+                    {
+                        type: ColumnType.None,
+                        key: 'text',
+                        label: '',
+                        isForRowKey: true,
+                    }
+                ]
             }"
         >
             <template #item="{element, index}">
                 <div class="lkt-element">
-                    <div v-if="false" class="handle">☰</div>
-
-                    <div class="lkt-element-content">
-                        <!-- Contenido editable o componente -->
+                    <div class="lkt-element-content" v-if="!appendingItems">
                         <text-element-editor
                             v-if="element.type === 'text'"
                             v-model="element.text"
@@ -156,7 +184,9 @@
                                     @keydown="handleKeydown($event, index)"
                                 />
                             </template>
+                            <component-manager v-model="element.children" @delete-element="(index) => onDeleteChildElement(index, element)"/>
                             <text-element-editor
+                                v-if="false"
                                 v-model="element.props.text"
                                 @input="handleInputText(index, $event, 'text')"
                                 @keydown="handleKeydown($event, index)"
@@ -175,7 +205,9 @@
                                     @keydown="handleKeydown($event, index)"
                                 />
                             </template>
+                            <component-manager v-model="element.children"/>
                             <text-element-editor
+                                v-if="false"
                                 v-model="element.props.text"
                                 @input="handleInputText(index, $event, 'text')"
                                 @keydown="handleKeydown($event, index)"
@@ -198,6 +230,7 @@
                         <lkt-icon
                             v-else-if="element.type === 'lkt-icon'"
                             v-bind="element.props"
+                            :icon="element.config.hasIcon ? element.props.icon : ''"
                         >
                             <template #text>
                                 <text-element-editor
@@ -207,6 +240,34 @@
                                 />
                             </template>
                         </lkt-icon>
+
+                        <lkt-button
+                            v-else-if="element.type === 'lkt-button'"
+                            v-bind="element.props"
+                            :icon="element.config.hasIcon ? element.props.icon : ''"
+                        >
+                            <template #text>
+                                <text-element-editor
+                                    v-model="element.props.text"
+                                    @input="handleInputText(index, $event, 'text')"
+                                    @keydown="handleKeydown($event, index)"
+                                />
+                            </template>
+                        </lkt-button>
+
+                        <lkt-anchor
+                            v-else-if="element.type === 'lkt-anchor'"
+                            v-bind="element.props"
+                            :icon="element.config.hasIcon ? element.props.icon : ''"
+                        >
+                            <template #text>
+                                <text-element-editor
+                                    v-model="element.props.text"
+                                    @input="handleInputText(index, $event, 'text')"
+                                    @keydown="handleKeydown($event, index)"
+                                />
+                            </template>
+                        </lkt-anchor>
                         <component
                             v-else
                             :is="element.component"
@@ -214,10 +275,11 @@
                         />
                     </div>
 
-                    <div class="lkt-element-actions">
+                    <div class="lkt-element-actions" v-if="!appendingItems">
                         <lkt-button
                             v-bind="<ButtonConfig>{
                                 type: ButtonType.Tooltip,
+                                text: element.type,
                                 icon: 'lkt-icn-settings-cogs',
                                 tooltip: {
                                     windowMargin: 15,
@@ -232,32 +294,72 @@
                                     <lkt-button
                                         v-if="hasConfigModal(element)"
                                         v-bind="<ButtonConfig>{
-                                        text: 'Config',
-                                        icon: 'lkt-icn-settings-files-1',
-                                        modal: getConfigModal(element),
-                                        modalData: {
-                                            config: element,
-                                            onUpdate: (updatedConfig: LktObject) => {
-                                                element = updatedConfig;
+                                            text: 'Config',
+                                            icon: 'lkt-icn-settings-files-1',
+                                            modal: getConfigModal(element),
+                                            modalData: {
+                                                config: element,
+                                                onUpdate: (updatedConfig: LktObject) => {
+                                                    element = updatedConfig;
+                                                }
                                             }
-                                        },
-                                        events: {
-                                            click: () => {
-                                            }
-                                        }
-                                    }"
+                                        }"
                                     />
                                     <lkt-button
                                         v-bind="<ButtonConfig>{
-                                        text: 'Remove',
-                                        icon: 'lkt-icn-trash',
-                                        events: {
-                                            click: () => {
-                                                deleteElement(index);
-                                                doClose();
+                                            text: 'Add element',
+                                            icon: 'lkt-icn-more',
+                                            modal: 'lkt-field-add-element-config',
+                                            modalData: {
+                                                items: items,
+                                                element: element,
+                                                index,
+                                                onAppend: () => {
+                                                    appendingItems = true;
+                                                    nextTick(() => {
+                                                        appendingItems = false;
+                                                    })
+                                                },
+                                                onUpdate: (updatedConfig: LktObject) => {
+                                                    element = updatedConfig;
+                                                }
                                             }
-                                        }
-                                    }"
+                                        }"
+                                    />
+                                    <lkt-button
+                                        v-if="elementCanHaveChildren(element)"
+                                        v-bind="<ButtonConfig>{
+                                            text: 'Add children',
+                                            icon: 'lkt-icn-more',
+                                            modal: 'lkt-field-add-element-config',
+                                            modalData: {
+                                                items: items,
+                                                element: element,
+                                                index,
+                                                addingChildren: true,
+                                                onAppend: () => {
+                                                    appendingItems = true;
+                                                    nextTick(() => {
+                                                        appendingItems = false;
+                                                    })
+                                                },
+                                                onUpdate: (updatedConfig: LktObject) => {
+                                                    element = updatedConfig;
+                                                }
+                                            }
+                                        }"
+                                    />
+                                    <lkt-button
+                                        v-bind="<ButtonConfig>{
+                                            text: 'Remove',
+                                            icon: 'lkt-icn-trash',
+                                            events: {
+                                                click: () => {
+                                                    deleteElement(index);
+                                                    doClose();
+                                                }
+                                            }
+                                        }"
                                     />
                                 </div>
                             </template>
@@ -308,6 +410,7 @@
         align-items: center;
         gap: 15px;
         padding-left: 15px;
+        position: relative;
     }
 
     .lkt-element-content {
@@ -318,6 +421,8 @@
         margin-left: auto;
         align-self: flex-start;
         opacity: 0;
+        position: absolute;
+        right: 0;
     }
 
     .lkt-element:hover .lkt-element-actions {

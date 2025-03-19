@@ -46,5 +46,6 @@ declare const _default: DefineComponent<__VLS_Props, {
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     inputElement: HTMLInputElement;
     buttonRef: unknown;
+    fileBrowserButtonRef: unknown;
 }, any>;
 export default _default;

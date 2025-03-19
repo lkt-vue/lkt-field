@@ -28,9 +28,9 @@
     const onClickUpdate = () => {
         props.onUpdate(editableConfig.value);
         closeModal(props.modalName, props.modalKey);
-    }
+    };
 
-    const customClassField: FieldConfig|undefined = Object.keys(LktSettings.defaultFieldLktIconElementCustomClassField).length > 0
+    const customClassField: FieldConfig | undefined = Object.keys(LktSettings.defaultFieldLktIconElementCustomClassField).length > 0
         ? ensureFieldConfig(LktSettings.defaultFieldLktIconElementCustomClassField, LktSettings.defaultFieldElementCustomClassField)
         : undefined;
 </script>
@@ -43,11 +43,12 @@
             view: ItemCrudView.Modal,
             editing: true,
             perms: ['update'],
+            title: 'LktIcon Config',
             modalConfig: {
                 modalName,
                 modalKey,
                 zIndex,
-                title: 'LktBox Config'
+                title: 'LktIcon Config'
             },
             updateButton: false
         }"
@@ -62,6 +63,21 @@
                         canClear: true
                     }"
                     v-model="item.props.class"
+                />
+                <lkt-field
+                    v-bind="<FieldConfig>{
+                        type: FieldType.Switch,
+                        label: 'Has icon',
+                    }"
+                    v-model="item.config.hasIcon"
+                />
+                <lkt-field
+                    v-bind="<FieldConfig>{
+                        type: FieldType.Text,
+                        label: 'Icon',
+                    }"
+                    v-model="item.props.icon"
+                    :disabled="!item.config.hasIcon"
                 />
             </div>
         </template>

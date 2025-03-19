@@ -56,6 +56,13 @@
         <template #item="{item}">
             <div class="lkt-grid-1">
                 <lkt-field
+                    v-bind="<FieldConfig>{
+                        type: FieldType.Image,
+                        label: 'Image',
+                    }"
+                    v-model="item.props.src"
+                />
+                <lkt-field
                     v-if="customClassField"
                     v-bind="<FieldConfig>{
                         type: FieldType.Select,

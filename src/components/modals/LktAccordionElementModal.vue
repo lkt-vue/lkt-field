@@ -79,6 +79,7 @@
             view: ItemCrudView.Modal,
             editing: true,
             perms: ['update'],
+            title: 'LktAccordion Config',
             modalConfig: {
                 modalName,
                 modalKey,

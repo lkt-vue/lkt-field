@@ -1,13 +1,16 @@
 <script lang="ts" setup>
     import { defineEmits, ref, watch } from 'vue';
     import ComponentManager from './elements/ComponentManager.vue';
+    import { LktObject } from 'lkt-vue-kernel';
 
     // Definir el tipo para los elementos en el editor
     interface Element {
-        type: 'customTag' | 'image' | 'text' | 'LktBox';
-        component?: string;
-        props?: Record<string, any>;
-        text?: string;
+        type: 'customTag' | 'image' | 'text' | 'lkt-box'| 'lkt-accordion'| 'lkt-icon'| 'lkt-image'
+        component?: string
+        props?: Record<string, any>
+        text?: string
+        config?:LktObject
+        children?: Element[]
     }
 
     const elements = ref<Element[]>([
@@ -22,7 +25,8 @@
             config: {
                 hasHeader: true,
                 hasIcon: true,
-            }
+            },
+            children: []
         },
         {
             type: 'lkt-accordion',
@@ -36,6 +40,7 @@
             config: {
                 hasIcon: true,
             },
+            children: [],
         },
         {
             type: 'lkt-image',
@@ -43,12 +48,38 @@
                 text: 'Dr. Evil',
                 src: 'https://i.pinimg.com/736x/d4/dc/7a/d4dc7a642bb490972c3443af25e0d179.jpg',
             },
+            config: {
+                hasIcon: true,
+            },
         },
         {
             type: 'lkt-icon',
             props: {
                 text: 'Texto del icono',
                 icon: 'lkt-icn-download',
+            },
+            config: {
+                hasIcon: true,
+            },
+        },
+        {
+            type: 'lkt-button',
+            props: {
+                text: 'Texto del botón',
+                icon: 'lkt-icn-download',
+            },
+            config: {
+                hasIcon: true,
+            },
+        },
+        {
+            type: 'lkt-anchor',
+            props: {
+                text: 'Texto del anchor',
+                icon: 'lkt-icn-download',
+            },
+            config: {
+                hasIcon: true,
             },
         },
         { type: 'customTag', component: 'CustomTag', props: { text: 'un componente dinámico' } },

@@ -26,6 +26,7 @@ import LktBoxElementModal from '@/components/modals/LktBoxElementModal.vue';
 import LktAccordionElementModal from '@/components/modals/LktAccordionElementModal.vue';
 import LktIconElementModal from '@/components/modals/LktIconElementModal.vue';
 import LktImageElementModal from '@/components/modals/LktImageElementModal.vue';
+import LktAddElementModal from '@/components/modals/LktAddElementModal.vue';
 
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 
@@ -37,6 +38,7 @@ const LktFieldPlugin: Plugin = {
 
             // Register modals
             addModal('lkt-field-language-edit', LktTextLanguageEditModal);
+            addModal('lkt-field-add-element-config', LktAddElementModal);
             addModal('lkt-field-box-element-config', LktBoxElementModal);
             addModal('lkt-field-accordion-element-config', LktAccordionElementModal);
             addModal('lkt-field-icon-element-config', LktIconElementModal);

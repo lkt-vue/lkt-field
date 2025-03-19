@@ -97,6 +97,8 @@
             buttonRef.value?.click();
         }
     })
+
+    const hasFileBrowserConfig = ref(false);
 </script>
 
 <template>
@@ -112,6 +114,7 @@
         @change="onChange"
     >
     <lkt-button
+        v-if="!hasFileBrowserConfig"
         ref="buttonRef"
         class="lkt-field--toggle-button"
         :click-ref="inputElement"
@@ -129,4 +132,49 @@
             class="lkt-field--image-main"
         />
     </lkt-button>
+
+    <lkt-button
+        v-else-if="!isImage"
+        ref="buttonRef"
+        class="lkt-field--toggle-button"
+        :click-ref="inputElement"
+        :text="visibleFileName"
+        :disabled="disabled"
+    />
+    <div
+        v-else-if="isImage"
+        :click-ref="inputElement"
+        :disabled="disabled"
+    >
+        <lkt-image
+            v-if="isImage"
+            :src="value"
+            class="lkt-field--image-cover"
+        />
+        <lkt-image
+            v-if="isImage"
+            :src="value"
+            class="lkt-field--image-main"
+        >
+            <template #overlay>
+                <div>
+                    <div class="lkt-grid-1">
+                        <lkt-button
+                            ref="buttonRef"
+                            :click-ref="inputElement"
+                            text="Upload"
+                            icon="lkt-icn-upload"
+                            :disabled="disabled"
+                        />
+                        <lkt-button
+                            ref="fileBrowserButtonRef"
+                            text="Explore files"
+                            icon="lkt-icn-search"
+                            :disabled="disabled"
+                        />
+                    </div>
+                </div>
+            </template>
+        </lkt-image>
+    </div>
 </template>
