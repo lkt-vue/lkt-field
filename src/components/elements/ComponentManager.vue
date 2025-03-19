@@ -462,6 +462,10 @@
 
     .lkt-element-editable-text {
         min-width: 50px;
+        white-space: pre-wrap;
+        display: block;
+        outline: none;
+        word-break: break-all;
     }
 
     .lkt-element-tooltip-menu {
