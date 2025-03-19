@@ -16935,9 +16935,13 @@ const ar = {
         default:
           return "";
       }
-    }, R = (s) => s.layout ? [
-      s.layout.amountOfItems.join(" ")
-    ].join(" ") : "";
+    }, R = (s) => {
+      if (!s.layout) return "";
+      let r = [
+        s.layout.amountOfItems.join(" ")
+      ].join(" ");
+      return r !== "" && (r += " layout-mode"), r;
+    };
     return (s, r) => {
       const c = re("component-manager", !0), h = re("lkt-box"), m = re("lkt-accordion"), b = re("lkt-image"), p = re("lkt-icon"), y = re("lkt-button"), C = re("lkt-anchor"), _ = re("lkt-table");
       return F(), se("div", null, [

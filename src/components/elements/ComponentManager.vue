@@ -137,9 +137,13 @@
     const getLayoutSelector = (element) => {
         if (!element.layout) return '';
 
-        return [
+        let r = [
             element.layout.amountOfItems.join(' '),
         ].join(' ');
+
+        if (r !== '') r += ' layout-mode';
+
+        return r;
     }
 </script>
 
@@ -474,5 +478,13 @@
     .lkt-elements-table .lkt-table {
         --lkt-table-border-collapse: separate;
         --lkt-table-border-spacing: 0 10px;
+    }
+
+    .layout-mode tbody tr {
+        display: flex;
+        flex-direction: row;
+    }
+    .layout-mode td:not([data-role="drag-indicator"]) {
+        width: 100%;
     }
 </style>
