@@ -89,6 +89,7 @@
             case 'lkt-box':
             case 'lkt-accordion':
             case 'lkt-icon':
+            case 'lkt-image':
                 return true;
             default:
                 return false;
@@ -103,6 +104,8 @@
                 return 'lkt-field-accordion-element-config';
             case 'lkt-icon':
                 return 'lkt-field-icon-element-config';
+            case 'lkt-image':
+                return 'lkt-field-image-element-config';
             default:
                 return '';
         }

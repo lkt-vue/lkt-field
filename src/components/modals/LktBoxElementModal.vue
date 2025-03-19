@@ -24,8 +24,6 @@
         zIndex: 500,
     });
 
-    console.log('props: ', props);
-
     const editableConfig = ref(props.config);
     const onClickUpdate = () => {
         props.onUpdate(editableConfig.value);

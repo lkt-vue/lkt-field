@@ -30,8 +30,8 @@
         closeModal(props.modalName, props.modalKey);
     }
 
-    const customClassField: FieldConfig|undefined = Object.keys(LktSettings.defaultFieldLktIconElementCustomClassField).length > 0
-        ? ensureFieldConfig(LktSettings.defaultFieldLktIconElementCustomClassField, LktSettings.defaultFieldElementCustomClassField)
+    const customClassField: FieldConfig|undefined = Object.keys(LktSettings.defaultFieldLktImageElementCustomClassField).length > 0
+        ? ensureFieldConfig(LktSettings.defaultFieldLktImageElementCustomClassField, LktSettings.defaultFieldElementCustomClassField)
         : undefined;
 </script>
 
@@ -43,11 +43,12 @@
             view: ItemCrudView.Modal,
             editing: true,
             perms: ['update'],
+            title: 'LktImage Config',
             modalConfig: {
                 modalName,
                 modalKey,
                 zIndex,
-                title: 'LktBox Config'
+                title: 'LktImage Config'
             },
             updateButton: false
         }"
