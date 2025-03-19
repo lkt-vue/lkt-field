@@ -13,10 +13,11 @@ declare const _default: DefineComponent<ExtractPropTypes<{
         type: () => Element[];
         required: true;
     };
+    layoutSelector: {
+        type: StringConstructor;
+    };
 }>, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     "update:modelValue": (...args: any[]) => void;
-    "delete-element": (...args: any[]) => void;
-    "update-text": (...args: any[]) => void;
     "add-text": (...args: any[]) => void;
     "add-element": (...args: any[]) => void;
     "elements-reordered": (...args: any[]) => void;
@@ -25,12 +26,15 @@ declare const _default: DefineComponent<ExtractPropTypes<{
         type: () => Element[];
         required: true;
     };
+    layoutSelector: {
+        type: StringConstructor;
+    };
 }>> & Readonly<{
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
-    "onDelete-element"?: ((...args: any[]) => any) | undefined;
-    "onUpdate-text"?: ((...args: any[]) => any) | undefined;
     "onAdd-text"?: ((...args: any[]) => any) | undefined;
     "onAdd-element"?: ((...args: any[]) => any) | undefined;
     "onElements-reordered"?: ((...args: any[]) => any) | undefined;
-}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, HTMLDivElement>;
+}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {
+    tableRef: unknown;
+}, HTMLDivElement>;
 export default _default;

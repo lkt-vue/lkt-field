@@ -59,6 +59,10 @@
                 children: [
                     getDefaultTextElement('Content goes here'),
                 ],
+                layout: {
+                    type: 'grid',
+                    amountOfItems: [],
+                }
             };
         },
         getDefaultLktAccordionElement = () => {
@@ -78,6 +82,10 @@
                 children: [
                     getDefaultTextElement('Content goes here'),
                 ],
+                layout: {
+                    type: 'grid',
+                    amountOfItems: [],
+                }
             }
         },
         getDefaultLktIconElement = () => {

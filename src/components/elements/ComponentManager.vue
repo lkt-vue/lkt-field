@@ -24,15 +24,17 @@
         modelValue: {
             type: Array as () => Element[],
             required: true
+        },
+        layoutSelector: {
+            type: String,
         }
     })
 
     const items = ref(props.modelValue);
     const appendingItems = ref(false);
+    const tableRef = ref(null);
 
     const emit = defineEmits([
-        'delete-element',
-        'update-text',
         'add-text',
         'add-element',
         'elements-reordered',
@@ -48,12 +50,10 @@
         if (items.value[index].type === 'text') {
             if (text !== items.value[index].text) {
                 items.value[index].text = text;
-                // emit('update-text', { index, text })
             }
         } else {
             if (text !== items.value[index].props[prop]) {
                 items.value[index].props[prop] = text;
-                // emit('update-text', { index, text })
             }
         }
 
@@ -85,7 +85,7 @@
     }
 
     const deleteElement = (index: number) => {
-        emit('delete-element', index)
+        tableRef.value?.doRemoveIndex(index);
     }
 
     watch(items, (v) => {
@@ -131,12 +131,22 @@
 
     const onDeleteChildElement = (index: number, element) => {
         element.children.splice(index, 1);
+        // tableRef.value?.doRemoveIndex(index);
     };
+
+    const getLayoutSelector = (element) => {
+        if (!element.layout) return '';
+
+        return [
+            element.layout.amountOfItems.join(' '),
+        ].join(' ');
+    }
 </script>
 
 <template>
     <div>
         <lkt-table
+            ref="tableRef"
             class="lkt-elements-table"
             v-model="items"
             v-bind="<TableConfig>{
@@ -145,7 +155,7 @@
                 editMode: true,
                 hideTableHeader: true,
                 perms: [TablePermission.Update, TablePermission.Sort],
-                itemsContainerClass: 'lkt-grid-1',
+                itemsContainerClass: layoutSelector,
                 drag: {
                     enabled: true,
                     isDisabled: false,
@@ -153,18 +163,18 @@
                     isValid: true,
                 },
                 columns: [
-                    {
-                        type: ColumnType.None,
-                        key: 'text',
-                        label: '',
-                        isForRowKey: true,
-                    }
+                    // {
+                    //     type: ColumnType.None,
+                    //     key: 'text',
+                    //     label: '',
+                    //     isForRowKey: true,
+                    // }
                 ]
             }"
         >
             <template #item="{element, index}">
                 <div class="lkt-element">
-                    <div class="lkt-element-content" v-if="!appendingItems">
+                    <div class="lkt-element-content">
                         <text-element-editor
                             v-if="element.type === 'text'"
                             v-model="element.text"
@@ -184,12 +194,9 @@
                                     @keydown="handleKeydown($event, index)"
                                 />
                             </template>
-                            <component-manager v-model="element.children" @delete-element="(index) => onDeleteChildElement(index, element)"/>
-                            <text-element-editor
-                                v-if="false"
-                                v-model="element.props.text"
-                                @input="handleInputText(index, $event, 'text')"
-                                @keydown="handleKeydown($event, index)"
+                            <component-manager
+                                v-model="element.children"
+                                :layout-selector="getLayoutSelector(element)"
                             />
                         </lkt-box>
 
@@ -205,12 +212,9 @@
                                     @keydown="handleKeydown($event, index)"
                                 />
                             </template>
-                            <component-manager v-model="element.children"/>
-                            <text-element-editor
-                                v-if="false"
-                                v-model="element.props.text"
-                                @input="handleInputText(index, $event, 'text')"
-                                @keydown="handleKeydown($event, index)"
+                            <component-manager
+                                v-model="element.children"
+                                :layout-selector="getLayoutSelector(element)"
                             />
                         </lkt-accordion>
 
@@ -350,6 +354,22 @@
                                         }"
                                     />
                                     <lkt-button
+                                        v-if="elementCanHaveChildren(element)"
+                                        v-bind="<ButtonConfig>{
+                                            text: 'Config layout',
+                                            icon: 'lkt-icn-settings-cogs',
+                                            modal: 'lkt-field-element-layout-config',
+                                            modalData: {
+                                                items: items,
+                                                element: element,
+                                                index,
+                                                onUpdate: (updatedConfig: LktObject) => {
+                                                    element = updatedConfig;
+                                                }
+                                            }
+                                        }"
+                                    />
+                                    <lkt-button
                                         v-bind="<ButtonConfig>{
                                             text: 'Remove',
                                             icon: 'lkt-icn-trash',
@@ -370,7 +390,7 @@
         </lkt-table>
 
         <!-- Mostrar menú de componentes si se está escribiendo '/' -->
-        <div v-if="isTypingSlash && activeIndex !== null" class="component-menu">
+        <div v-if="false && isTypingSlash && activeIndex !== null" class="component-menu">
             <ul>
                 <li @click="addCustomElement('lkt-tag', { text: 'Etiqueta personalizada' })">Etiqueta personalizada</li>
                 <li @click="addCustomElement('ImageComponent', { src: prompt('Ingrese la URL de la imagen:') })">Imagen</li>

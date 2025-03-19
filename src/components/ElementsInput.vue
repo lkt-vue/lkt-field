@@ -11,6 +11,7 @@
         text?: string
         config?:LktObject
         children?: Element[]
+        layout?:LktObject
     }
 
     const elements = ref<Element[]>([
@@ -26,7 +27,11 @@
                 hasHeader: true,
                 hasIcon: true,
             },
-            children: []
+            children: [],
+            layout: {
+                type: 'grid',
+                amountOfItems: [],
+            }
         },
         {
             type: 'lkt-accordion',
@@ -41,6 +46,10 @@
                 hasIcon: true,
             },
             children: [],
+            layout: {
+                type: 'grid',
+                amountOfItems: [],
+            }
         },
         {
             type: 'lkt-image',

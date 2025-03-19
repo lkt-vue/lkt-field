@@ -27,6 +27,7 @@ import LktAccordionElementModal from '@/components/modals/LktAccordionElementMod
 import LktIconElementModal from '@/components/modals/LktIconElementModal.vue';
 import LktImageElementModal from '@/components/modals/LktImageElementModal.vue';
 import LktAddElementModal from '@/components/modals/LktAddElementModal.vue';
+import LktElementLayoutConfigModal from '@/components/modals/LktElementLayoutConfigModal.vue';
 
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 
@@ -43,6 +44,7 @@ const LktFieldPlugin: Plugin = {
             addModal('lkt-field-accordion-element-config', LktAccordionElementModal);
             addModal('lkt-field-icon-element-config', LktIconElementModal);
             addModal('lkt-field-image-element-config', LktImageElementModal);
+            addModal('lkt-field-element-layout-config', LktElementLayoutConfigModal);
         }
     },
 };
