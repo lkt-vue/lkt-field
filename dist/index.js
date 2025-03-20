@@ -17198,65 +17198,6 @@ const ar = {
           amountOfItems: []
         }
       },
-      {
-        type: "lkt-accordion",
-        props: {
-          text: "contenido del acordeón",
-          header: "título del acordeón",
-          type: "auto",
-          toggleMode: "display",
-          icon: "lkt-icn-upload"
-        },
-        config: {
-          hasIcon: !0
-        },
-        children: [],
-        layout: {
-          type: "grid",
-          amountOfItems: []
-        }
-      },
-      {
-        type: "lkt-image",
-        props: {
-          text: "Dr. Evil",
-          src: "https://i.pinimg.com/736x/d4/dc/7a/d4dc7a642bb490972c3443af25e0d179.jpg"
-        },
-        config: {
-          hasIcon: !0
-        }
-      },
-      {
-        type: "lkt-icon",
-        props: {
-          text: "Texto del icono",
-          icon: "lkt-icn-download"
-        },
-        config: {
-          hasIcon: !0
-        }
-      },
-      {
-        type: "lkt-button",
-        props: {
-          text: "Texto del botón",
-          icon: "lkt-icn-download"
-        },
-        config: {
-          hasIcon: !0
-        }
-      },
-      {
-        type: "lkt-anchor",
-        props: {
-          text: "Texto del anchor",
-          icon: "lkt-icn-download"
-        },
-        config: {
-          hasIcon: !0
-        }
-      },
-      { type: "customTag", component: "CustomTag", props: { text: "un componente dinámico" } },
       { type: "text", text: " entre el texto." }
     ]), o = t, l = Y([]);
     let a = Y(-1);
@@ -17369,7 +17310,7 @@ const ar = {
   for (const [o, l] of t)
     i[o] = l;
   return i;
-}, ru = /* @__PURE__ */ au(su, [["__scopeId", "data-v-0aac587d"]]), uu = /* @__PURE__ */ ve({
+}, ru = /* @__PURE__ */ au(su, [["__scopeId", "data-v-1477cecd"]]), uu = /* @__PURE__ */ ve({
   __name: "FileUploadButton",
   props: {
     config: {},

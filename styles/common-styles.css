@@ -191,6 +191,12 @@
     padding: var(--lkt-field-padding-input);
 }
 
+.lkt-field input::-webkit-outer-spin-button,
+.lkt-field input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .lkt-field input[type="number"] {
     -moz-appearance: textfield;
 }
