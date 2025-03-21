@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "",
   "keywords": [
     "lkt",
@@ -58,8 +58,8 @@
     "suneditor": "^2.47.5"
   },
   "peerDependencies": {
-    "lkt-anchor": "^1.2.5",
-    "lkt-button": "^2.0.10",
+    "lkt-anchor": "^2.0.0",
+    "lkt-button": "^2.0.12",
     "lkt-date-tools": "^1.0.4",
     "lkt-http-client": "^1.0.34",
     "lkt-i18n": "^1.1.0",
@@ -68,7 +68,7 @@
     "lkt-string-tools": "^1.1.0",
     "lkt-toast": "^1.1.1",
     "lkt-tooltip": "^1.1.3",
-    "lkt-vue-kernel": "^1.0.45",
+    "lkt-vue-kernel": "^1.0.51",
     "vue": "^3.3.0"
   }
 }
