@@ -2,17 +2,17 @@
     z-index: 9;
     outline: 0;
     box-shadow: var(--lkt-field-shadow);
-    --lkt-tooltip-padding: 0;
-    --lkt-tooltip-text-align: left;
-    --lkt-tooltip-bg: var(--lkt-field-bg);
-    --lkt-tooltip-transition: var(--lkt-field-transition-input);
-    --lkt-tooltip-border-radius: var(--lkt-field-border-radius);
-    --lkt-tooltip-border-style: var(--lkt-field-border-style);
-    --lkt-tooltip-border-style-hover: var(--lkt-field-border-style);
-    --lkt-tooltip-border-width: var(--lkt-field-border-width);
-    --lkt-tooltip-border-width-hover: var(--lkt-field-border-width);
-    --lkt-tooltip-border-color: var(--lkt-field-border-color);
-    --lkt-tooltip-border-color-hover: var(--lkt-field-border-color);
+    --lkt-tooltip--padding: 0;
+    --lkt-tooltip--text-align: left;
+    --lkt-tooltip--background: var(--lkt-field-bg);
+    --lkt-tooltip--transition: var(--lkt-field-transition-input);
+    --lkt-tooltip--border-radius: var(--lkt-field-border-radius);
+    --lkt-tooltip--border-style: var(--lkt-field-border-style);
+    --lkt-tooltip--hover--border-style: var(--lkt-field-border-style);
+    --lkt-tooltip--border-width: var(--lkt-field-border-width);
+    --lkt-tooltip--hover--border-width: var(--lkt-field-border-width);
+    --lkt-tooltip--border-color: var(--lkt-field-border-color);
+    --lkt-tooltip--hover--border-color: var(--lkt-field-border-color);
 }
 
 .lkt-field--dropdown .lkt-tooltip-content {
