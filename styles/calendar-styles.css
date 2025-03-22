@@ -23,22 +23,22 @@
 .lkt-calendar--day {
     width: var(--lkt-field-input-height);
     height: var(--lkt-field-input-height);
-    --lkt-btn-min-width: var(--lkt-field-input-height);
-    --lkt-btn-width: var(--lkt-field-input-height);
-    --lkt-btn-height: var(--lkt-field-input-height);
-    --lkt-btn-color: var(--lkt-field-color);
-    --lkt-btn-bg: transparent;
-    --lkt-btn-bg-hover: #dedede;
-    --lkt-btn-border-width: 0;
-    --lkt-btn-border-width-hover: 0;
-    --lkt-btn-border-width-focus: 0;
-    --lkt-btn-shadow-focus: none;
+    --lkt-button--min-width: var(--lkt-field-input-height);
+    --lkt-button--width: var(--lkt-field-input-height);
+    --lkt-button--height: var(--lkt-field-input-height);
+    --lkt-button--color: var(--lkt-field-color);
+    --lkt-button--background: transparent;
+    --lkt-button--hover--background: #dedede;
+    --lkt-button--border-width: 0;
+    --lkt-button--hover--border-width: 0;
+    --lkt-button--focus--border-width: 0;
+    --lkt-button--focus--shadow: none;
 }
 
 .lkt-calendar--day.is-picked {
-    --lkt-btn-border-width: 1px;
-    --lkt-btn-border-width-hover: 1px;
-    --lkt-btn-border-width-focus: 1px;
+    --lkt-button--border-width: 1px;
+    --lkt-button--hover--border-width: 1px;
+    --lkt-button--focus--border-width: 1px;
 }
 
 .lkt-field--date--tooltip {

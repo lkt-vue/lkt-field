@@ -31,13 +31,13 @@
 }
 
 .lkt-field--calc .lkt-button {
-    --lkt-btn-bg: #e6e6e6;
-    --lkt-btn-color: #2e2e2e;
-    --lkt-btn-width: auto;
-    --lkt-btn-min-width: 40px;
+    --lkt-button--background: #e6e6e6;
+    --lkt-button--color: #2e2e2e;
+    --lkt-button--width: auto;
+    --lkt-button--min-width: 40px;
 }
 
 .lkt-field--calc .lkt-button.lkt-calc--btn-number {
-    --lkt-btn-bg: #d2d2d2;
-    --lkt-btn-font-weight: 600;
+    --lkt-button--background: #d2d2d2;
+    --lkt-button--font-weight: 600;
 }

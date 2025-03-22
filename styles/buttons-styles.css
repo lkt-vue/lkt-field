@@ -1,15 +1,15 @@
 .lkt-field .lkt-field--toggle-button {
-    --lkt-btn-bg: transparent;
-    --lkt-btn-border-width: 0;
-    --lkt-btn-border-width-hover: 0;
-    --lkt-btn-border-width-focus: 0;
-    --lkt-btn-height: var(--lkt-field-height);
-    --lkt-btn-max-height: var(--lkt-field-height);
-    --lkt-btn-min-height: var(--lkt-field-height);
-    --lkt-btn-border-radius: var(--lkt-field-border-radius);
-    --lkt-btn-font-size: var(--lkt-field-font-size);
-    --lkt-btn-color: var(--lkt-field-color);
-    --lkt-btn-padding: var(--lkt-field-padding-input);
+    --lkt-button--background: transparent;
+    --lkt-button--border-width: 0;
+    --lkt-button--hover--border-width: 0;
+    --lkt-button--focus--border-width: 0;
+    --lkt-button--height: var(--lkt-field-height);
+    --lkt-button--max-height: var(--lkt-field-height);
+    --lkt-button--min-height: var(--lkt-field-height);
+    --lkt-button--border-radius: var(--lkt-field-border-radius);
+    --lkt-button--font-size: var(--lkt-field-font-size);
+    --lkt-button--color: var(--lkt-field-color);
+    --lkt-button--padding: var(--lkt-field-padding-input);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     justify-content: flex-start;
@@ -17,25 +17,25 @@
 
 .lkt-field .lkt-field--select-button,
 .lkt-field .lkt-field--btn-dropdown {
-    --lkt-btn-bg-hover: transparent;
-    --lkt-btn-bg-focus: transparent;
-    --lkt-btn-color-hover: var(--lkt-field-color);
-    --lkt-btn-color-focus: var(--lkt-field-color);
-    --lkt-btn-shadow-focus: none;
-    --lkt-btn-border-color-focus: var(--lkt-field-border-color);
+    --lkt-button--hover--background: transparent;
+    --lkt-button--focus--background: transparent;
+    --lkt-button--hover--color: var(--lkt-field-color);
+    --lkt-button--focus--color: var(--lkt-field-color);
+    --lkt-button--focus--shadow: none;
+    --lkt-button--focus--border-color: var(--lkt-field-border-color);
 }
 
 .lkt-field.is-select.is-multiple .lkt-field--select-button {
-    --lkt-btn-transition: none;
-    --lkt-btn-padding: var(--lkt-field-padding-textarea);
+    --lkt-button--transition: none;
+    --lkt-button--padding: var(--lkt-field-padding-textarea);
     align-items: start;
     line-height: 1.425;
 }
 
 .lkt-field.is-select.is-multiple.is-searching .lkt-field--select-button {
-    --lkt-btn-min-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
-    --lkt-btn-max-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
-    --lkt-btn-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
+    --lkt-button--min-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
+    --lkt-button--max-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
+    --lkt-button--height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
     line-height: 1.425;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .lkt-field.is-image.is-filled .lkt-field--toggle-button {
-    --lkt-btn-padding: 0;
+    --lkt-button--padding: 0;
 }
 
 .lkt-field .lkt-field-color--tooltip--numeric-input-container,
