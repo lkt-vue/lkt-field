@@ -6,10 +6,12 @@
     --lkt-button--height: var(--lkt-field-height);
     --lkt-button--max-height: var(--lkt-field-height);
     --lkt-button--min-height: var(--lkt-field-height);
-    --lkt-button--border-radius: var(--lkt-field-border-radius);
-    --lkt-button--font-size: var(--lkt-field-font-size);
-    --lkt-button--color: var(--lkt-field-color);
-    --lkt-button--padding: var(--lkt-field-padding-input);
+    --lkt-button--border-radius: var(--lkt-field--border-radius);
+    --lkt-button--font-size: var(--lkt-field--font-size);
+    --lkt-button--color: var(--lkt-field--color);
+    --lkt-button--padding: var(--lkt-field--input--padding);
+    --lkt-button--container--display: flex;
+    --lkt-button--container--width: 100%;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     justify-content: flex-start;
@@ -19,23 +21,23 @@
 .lkt-field .lkt-field--btn-dropdown {
     --lkt-button--hover--background: transparent;
     --lkt-button--focus--background: transparent;
-    --lkt-button--hover--color: var(--lkt-field-color);
-    --lkt-button--focus--color: var(--lkt-field-color);
+    --lkt-button--hover--color: var(--lkt-field--color);
+    --lkt-button--focus--color: var(--lkt-field--color);
     --lkt-button--focus--shadow: none;
-    --lkt-button--focus--border-color: var(--lkt-field-border-color);
+    --lkt-button--focus--border-color: var(--lkt-field--border-color);
 }
 
 .lkt-field.is-select.is-multiple .lkt-field--select-button {
     --lkt-button--transition: none;
-    --lkt-button--padding: var(--lkt-field-padding-textarea);
+    --lkt-button--padding: var(--lkt-field--textarea--padding);
     align-items: start;
     line-height: 1.425;
 }
 
 .lkt-field.is-select.is-multiple.is-searching .lkt-field--select-button {
-    --lkt-button--min-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
-    --lkt-button--max-height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
-    --lkt-button--height: calc(var(--lkt-field-height) - var(--lkt-field-input-height) - var(--lkt-field-border-width));
+    --lkt-button--min-height: calc(var(--lkt-field-height) - var(--lkt-field--input--height) - var(--lkt-field--border-width));
+    --lkt-button--max-height: calc(var(--lkt-field-height) - var(--lkt-field--input--height) - var(--lkt-field--border-width));
+    --lkt-button--height: calc(var(--lkt-field-height) - var(--lkt-field--input--height) - var(--lkt-field--border-width));
     line-height: 1.425;
 }
 

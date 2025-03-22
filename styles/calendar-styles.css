@@ -1,5 +1,5 @@
 .lkt-calendar {
-    width: calc(7 * var(--lkt-field-input-height) + 6 * 7px);
+    width: calc(7 * var(--lkt-field--input--height) + 6 * 7px);
 }
 
 .lkt-calendar--day-grid {
@@ -17,16 +17,16 @@
 }
 
 .lkt-calendar--header-text {
-    width: calc(5 * var(--lkt-field-input-height) + 4 * 7px);
+    width: calc(5 * var(--lkt-field--input--height) + 4 * 7px);
 }
 
 .lkt-calendar--day {
-    width: var(--lkt-field-input-height);
-    height: var(--lkt-field-input-height);
-    --lkt-button--min-width: var(--lkt-field-input-height);
-    --lkt-button--width: var(--lkt-field-input-height);
-    --lkt-button--height: var(--lkt-field-input-height);
-    --lkt-button--color: var(--lkt-field-color);
+    width: var(--lkt-field--input--height);
+    height: var(--lkt-field--input--height);
+    --lkt-button--min-width: var(--lkt-field--input--height);
+    --lkt-button--width: var(--lkt-field--input--height);
+    --lkt-button--height: var(--lkt-field--input--height);
+    --lkt-button--color: var(--lkt-field--color);
     --lkt-button--background: transparent;
     --lkt-button--hover--background: #dedede;
     --lkt-button--border-width: 0;
@@ -42,15 +42,15 @@
 }
 
 .lkt-field--date--tooltip {
-    --lkt-tooltip--background: var(--lkt-field-bg);
-    --lkt-tooltip--hover--background: var(--lkt-field-bg);
-    --lkt-tooltip--border-width: var(--lkt-field-border-width);
-    --lkt-tooltip--hover--border-width: var(--lkt-field-border-width);
-    --lkt-tooltip--border-style: var(--lkt-field-border-style);
-    --lkt-tooltip--hover--border-style: var(--lkt-field-border-style);
-    --lkt-tooltip--border-color: var(--lkt-field-border-color);
-    --lkt-tooltip--hover--border-color: var(--lkt-field-border-color);
-    --lkt-tooltip--box-shadow: var(--lkt-field-shadow);
-    --lkt-tooltip--hover--box-shadow: var(--lkt-field-shadow);
-    --lkt-tooltip--border-radius: var(--lkt-field-border-radius);
+    --lkt-tooltip--background: var(--lkt-field--background);
+    --lkt-tooltip--hover--background: var(--lkt-field--background);
+    --lkt-tooltip--border-width: var(--lkt-field--border-width);
+    --lkt-tooltip--hover--border-width: var(--lkt-field--border-width);
+    --lkt-tooltip--border-style: var(--lkt-field--border-style);
+    --lkt-tooltip--hover--border-style: var(--lkt-field--border-style);
+    --lkt-tooltip--border-color: var(--lkt-field--border-color);
+    --lkt-tooltip--hover--border-color: var(--lkt-field--border-color);
+    --lkt-tooltip--box-shadow: var(--lkt-field--shadow);
+    --lkt-tooltip--hover--box-shadow: var(--lkt-field--shadow);
+    --lkt-tooltip--border-radius: var(--lkt-field--border-radius);
 }

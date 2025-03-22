@@ -1,6 +1,6 @@
 .lkt-field-main--select {
-    padding: var(--lkt-field-padding-input);
-    height: var(--lkt-field-input-height);
+    padding: var(--lkt-field--input--padding);
+    height: var(--lkt-field--input--height);
 }
 
 .lkt-field-select.is-multiple:not(.size-sm) .lkt-field__select {
@@ -13,7 +13,7 @@
 .lkt-field__select-value {
     width: 100%;
     height: 100%;
-    line-height: var(--lkt-field-input-height);
+    line-height: var(--lkt-field--input--height);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -23,8 +23,8 @@
 .lkt-field__select-value-multiple {
     width: 100%;
     height: 100%;
-    line-height: var(--lkt-field-input-height);
-    min-height: var(--lkt-field-input-height);
+    line-height: var(--lkt-field--input--height);
+    min-height: var(--lkt-field--input--height);
     display: flex;
     text-wrap: nowrap;
     text-overflow: ellipsis;
@@ -37,9 +37,9 @@
     box-sizing: border-box;
     outline: 0;
     border: none;
-    font-size: var(--lkt-field-font-size);
-    padding-right: var(--lkt-field-right-state);
-    line-height: var(--lkt-field-input-height);
+    font-size: var(--lkt-field--font-size);
+    padding-right: var(--lkt-field--state--right);
+    line-height: var(--lkt-field--input--height);
 }
 
 
@@ -58,12 +58,12 @@
     max-width: 100%;
     outline: 0;
     border: none;
-    font-size: var(--lkt-field-font-size);
-    padding-right: var(--lkt-field-right-state);
+    font-size: var(--lkt-field--font-size);
+    padding-right: var(--lkt-field--state--right);
     text-wrap: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-height: var(--lkt-field-input-height);
+    line-height: var(--lkt-field--input--height);
 }
 
 .lkt-field-select__read-multiple {
@@ -71,7 +71,7 @@
     flex-direction: column;
     position: relative;
     width: 100%;
-    gap: var(--lkt-field-gap);
+    gap: var(--lkt-field--gap);
 }
 
 .lkt-field.has-multiple-display-inline .lkt-field-select-read {
@@ -90,7 +90,7 @@
 .lkt-field.has-multiple-display-inline .lkt-field-select-read li:not(:last-child):after {
     content: ',';
     display: inline-block;
-    margin-right: var(--lkt-field-right-state);
+    margin-right: var(--lkt-field--state--right);
 }
 
 .lkt-field.has-multiple-display-inline .lkt-field-select-read .lkt-field-select__read-value {
@@ -98,14 +98,14 @@
 }
 
 .with-tags .lkt-field-option {
-    border-width: var(--lkt-field-tag-border-width);
-    border-style: var(--lkt-field-tag-border-style);
-    border-color: var(--lkt-field-tag-border-color);
-    border-radius: var(--lkt-field-tag-border-radius);
-    padding: var(--lkt-field-tag-border-radius);
-    background: var(--lkt-field-tag-bg);
-    color: var(--lkt-field-tag-color);
-    font-weight: var(--lkt-field-tag-font-weight);
+    border-width: var(--lkt-field--tag--border-width);
+    border-style: var(--lkt-field--tag--border-style);
+    border-color: var(--lkt-field--tag--border-color);
+    border-radius: var(--lkt-field--tag--border-radius);
+    padding: var(--lkt-field--tag--border-radius);
+    background: var(--lkt-field--tag--background);
+    color: var(--lkt-field--tag--color);
+    font-weight: var(--lkt-field--tag--font-weight);
     width: auto;
 }
 .lkt-field--btn-dropdown i {
@@ -119,8 +119,8 @@
 .lkt-field--searchable-box {
     display: flex;
     align-items: center;
-    padding: var(--lkt-field-padding-input);
-    border-bottom: var(--lkt-field-border-width) var(--lkt-field-border-style) var(--lkt-field-border-color);
+    padding: var(--lkt-field--input--padding);
+    border-bottom: var(--lkt-field--border-width) var(--lkt-field--border-style) var(--lkt-field--border-color);
 }
 
 /*.lkt-field--select-button > .lkt-field--dropdown-option {*/

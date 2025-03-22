@@ -1,13 +1,13 @@
 .lkt-field .lkt-field-color-view {
-    height: var(--lkt-field-input-height);
+    height: var(--lkt-field--input--height);
     width: 100%;
     max-width: 240px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top-left-radius: var(--lkt-field-border-radius);
-    border-bottom-left-radius: var(--lkt-field-border-radius);
+    border-top-left-radius: var(--lkt-field--border-radius);
+    border-bottom-left-radius: var(--lkt-field--border-radius);
 }
 .lkt-field.is-empty .lkt-field-color-view {
     background: repeating-linear-gradient(
@@ -26,7 +26,7 @@
 
 .lkt-field .lkt-field-main > .lkt-button-container {
     width: 100%;
-    border-radius: var(--lkt-field-border-radius);
+    border-radius: var(--lkt-field--border-radius);
 }
 
 .lkt-field .lkt-field-color--alpha--tooltip {

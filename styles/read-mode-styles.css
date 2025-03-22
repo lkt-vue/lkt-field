@@ -16,14 +16,14 @@
     --lkt-button--min-width: 0;
     --lkt-button--outline: 0;
     --lkt-button--border: none;
-    --lkt-button--font-size: var(--lkt-field-font-size);
+    --lkt-button--font-size: var(--lkt-field--font-size);
     --lkt-button--padding: 0;
     --lkt-button--text-wrap: nowrap;
     --lkt-button--text-overflow: ellipsis;
     --lkt-button--overflow: hidden;
-    --lkt-button--line-height: var(--lkt-field-input-height);
+    --lkt-button--line-height: var(--lkt-field--input--height);
     --lkt-button--background: transparent;
-    --lkt-button--color: var(--lkt-field-color);
+    --lkt-button--color: var(--lkt-field--color);
     --lkt-button--height: auto;
     --lkt-button--min-height: 0;
     justify-content: flex-start;
@@ -39,12 +39,12 @@
     max-width: 100%;
     outline: 0;
     border: none;
-    font-size: var(--lkt-field-font-size);
-    padding-right: var(--lkt-field-right-state);
+    font-size: var(--lkt-field--font-size);
+    padding-right: var(--lkt-field--state--right);
     text-wrap: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-height: var(--lkt-field-input-height);
+    line-height: var(--lkt-field--input--height);
 }
 
 .lkt-field.is-text .lkt-field--read-value {
@@ -54,32 +54,32 @@
 .lkt-field.is-textarea .lkt-field--read-value,
 .lkt-field.is-html .lkt-field--read-value {
     text-wrap: wrap;
-    line-height: var(--lkt-field-textarea-read-mode-line-height);
+    line-height: var(--lkt-field--read-mode--textarea--line-height);
     max-height: var(--lkt-field-large-field-max-height);
     overflow-y: auto;
     white-space: break-spaces;
 }
 
 .lkt-field.is-boolean .lkt-field--read-value .lkt-tag {
-    --lkt-tag-bg: var(--lkt-field-bg-switch-off);
-    --lkt-tag-bg-hover: var(--lkt-field-bg-switch-off);
-    --lkt-tag-color: var(--lkt-field-color);
-    --lkt-tag-color-content: var(--lkt-field-color);
-    --lkt-tag-color-featured: var(--lkt-field-color);
-    --lkt-tag-border-width: var(--lkt-field-border-width);
-    --lkt-tag-border-style: var(--lkt-field-border-style);
-    --lkt-tag-border-color: var(--lkt-field-border-color);
-    --lkt-tag-border-radius: var(--lkt-field-border-radius-input);
+    --lkt-tag--background: var(--lkt-field--switch-off--background);
+    --lkt-tag-hover--background: var(--lkt-field--switch-off--background);
+    --lkt-tag--color: var(--lkt-field--color);
+    --lkt-tag--content--color: var(--lkt-field--color);
+    --lkt-tag--featured--color: var(--lkt-field--color);
+    --lkt-tag--border-width: var(--lkt-field--border-width);
+    --lkt-tag--border-style: var(--lkt-field--border-style);
+    --lkt-tag--border-color: var(--lkt-field--border-color);
+    --lkt-tag--border-radius: var(--lkt-field--input--border-radius);
 
-    --lkt-tag-bg-content: var(--lkt-field-bg-switch-dot-off);
-    --lkt-tag-border-radius-content: var(--lkt-field-border-radius-input) 0 0 var(--lkt-field-border-radius-input);
+    --lkt-tag--content--background: var(--lkt-field--switch-off-dot--background);
+    --lkt-tag--content--border-radius: var(--lkt-field--input--border-radius) 0 0 var(--lkt-field--input--border-radius);
 
     align-items: stretch;
     line-height: 1.425;
 }
 
 .lkt-field.is-boolean.is-checked .lkt-field--read-value .lkt-tag {
-    --lkt-tag-bg: var(--lkt-field-bg-switch-on);
-    --lkt-tag-bg-hover: var(--lkt-field-bg-switch-on);
-    --lkt-tag-bg-content: var(--lkt-field-bg-switch-dot-on);
+    --lkt-tag--background: var(--lkt-field--switch-on--background);
+    --lkt-tag--hover--background: var(--lkt-field--switch-on--background);
+    --lkt-tag-content--background: var(--lkt-field--switch-on-dot--background);
 }

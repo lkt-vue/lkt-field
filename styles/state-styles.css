@@ -3,8 +3,8 @@
     flex-direction: row;
     align-items: center;
     z-index: 1;
-    height: var(--lkt-field-input-height);
-    width: var(--lkt-field-input-height);
+    height: var(--lkt-field--input--height);
+    width: var(--lkt-field--input--height);
 }
 
 .lkt-field--info-nav {
@@ -12,17 +12,17 @@
     flex-direction: row;
     align-items: center;
     z-index: 1;
-    height: var(--lkt-field-input-height);
+    height: var(--lkt-field--input--height);
 }
 
 .lkt-field--atn-btn,
 .lkt-field--info-btn {
-    --lkt-button--min-height: var(--lkt-field-input-height);
-    --lkt-button--min-width: var(--lkt-field-input-height);
-    --lkt-button--width: var(--lkt-field-input-height);
-    --lkt-button--border-radius: var(--lkt-field-border-radius);
-    --lkt-button--hover--border-radius: var(--lkt-field-border-radius);
-    --lkt-button--color: var(--lkt-field-color);
+    --lkt-button--min-height: var(--lkt-field--input--height);
+    --lkt-button--min-width: var(--lkt-field--input--height);
+    --lkt-button--width: var(--lkt-field--input--height);
+    --lkt-button--border-radius: var(--lkt-field--border-radius);
+    --lkt-button--hover--border-radius: var(--lkt-field--border-radius);
+    --lkt-button--color: var(--lkt-field--color);
     --lkt-button--background: transparent;
 }
 
@@ -50,7 +50,7 @@
 .lkt-field.is-xl .lkt-field--info-btn,
 .lkt-field.is-xl .lkt-field--info-btn:hover
 {
-    border-bottom-width: var(--lkt-field-border-width);
+    border-bottom-width: var(--lkt-field--border-width);
     border-bottom-right-radius: 0;
 }
 

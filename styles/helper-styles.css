@@ -1,8 +1,8 @@
 .like-lkt-field-label {
     display: block;
-    color: var(--lkt-field-color);
-    font-weight: var(--lkt-field-font-weight-label);
-    font-size: var(--lkt-field-font-size-label);
-    line-height: var(--lkt-field-line-height-label);
-    margin: var(--lkt-field-margin-label);
+    color: var(--lkt-field--color);
+    font-weight: var(--lkt-field--label--font-weight);
+    font-size: var(--lkt-field--label--font-size);
+    line-height: var(--lkt-field--label--line-height);
+    margin: var(--lkt-field--label--margin);
 }

@@ -23,11 +23,11 @@
     justify-content: center;
     position: relative;
     margin: 0;
-    background-color: var(--lkt-field-bg-switch-off);
-    border-width: var(--lkt-field-border-width);
-    border-style: var(--lkt-field-border-style);
-    border-color: var(--lkt-field-border-color);
-    border-radius: var(--lkt-field-border-radius-input);
+    background-color: var(--lkt-field--switch-off--background);
+    border-width: var(--lkt-field--border-width);
+    border-style: var(--lkt-field--border-style);
+    border-color: var(--lkt-field--border-color);
+    border-radius: var(--lkt-field--input--border-radius);
 }
 .lkt-field.is-boolean .lkt-field-content {
     border: none;
@@ -44,55 +44,55 @@
 /** Switch styles */
 .lkt-field.is-switch .boolean-input-label {
     justify-content: flex-start;
-    width: var(--lkt-field-switch-width);
-    height: var(--lkt-field-switch-height);
+    width: var(--lkt-field--switch--width);
+    height: var(--lkt-field--switch--height);
 }
 
 .lkt-field.is-switch .boolean-input--check-on {
     transition: all linear 200ms;
     position: absolute;
     top: 50%;
-    left: var(--lkt-field-switch-dot-left-start);
+    left: var(--lkt-field--switch-dot--left-start);
     transform: translateY(-50%);
-    width: var(--lkt-field-switch-dot-size);
-    height: var(--lkt-field-switch-dot-size);
-    background: var(--lkt-field-bg-switch-dot-off);
-    border-radius: var(--lkt-field-border-radius-input);
+    width: var(--lkt-field--switch-dot--size);
+    height: var(--lkt-field--switch-dot--size);
+    background: var(--lkt-field--switch-off-dot--background);
+    border-radius: var(--lkt-field--input--border-radius);
     z-index: 3;
 }
 
 .lkt-field.is-switch.is-checked .boolean-input-label {
-    background-color: var(--lkt-field-bg-switch-on);
+    background-color: var(--lkt-field--switch-on--background);
 }
 
 .lkt-field.is-switch.is-checked .boolean-input--check-on {
-    background: var(--lkt-field-bg-switch-dot-on);
-    left: var(--lkt-field-switch-dot-left-end);
+    background: var(--lkt-field--switch-on-dot--background);
+    left: var(--lkt-field--switch-dot--left-end);
 }
 
 .lkt-field.is-switch.is-disabled .boolean-input-label {
-    background: var(--lkt-field-bg-switch-disabled);
+    background: var(--lkt-field--disabled--switch--background);
 }
 
 .lkt-field.is-switch.is-disabled .boolean-input--check-on {
-    background: var(--lkt-field-bg-switch-dot-disabled);
+    background: var(--lkt-field--disabled--switch-dot--background);
 }
 
 .lkt-field.is-switch.is-checked.is-disabled .boolean-input-label {
-    background-color: var(--lkt-field-bg-switch-on-disabled);
+    background-color: var(--lkt-field--disabled--switch-on--background);
 }
 
 .lkt-field.is-switch.is-checked.is-disabled .boolean-input--check-on {
-    background: var(--lkt-field-bg-switch-dot-on-disabled);
+    background: var(--lkt-field--disabled--switch-on-dot--background);
 }
 
 /* Check styles */
 .lkt-field.is-check .boolean-input-label {
-    width: var(--lkt-field-switch-dot-size);
-    height: var(--lkt-field-switch-dot-size);
+    width: var(--lkt-field--switch-dot--size);
+    height: var(--lkt-field--switch-dot--size);
     color: #ffffff;
 }
 
 .lkt-field.is-check.is-checked .boolean-input-label {
-    background: var(--lkt-field-bg-switch-dot-on);
+    background: var(--lkt-field--switch-on-dot--background);
 }

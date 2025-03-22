@@ -1,102 +1,131 @@
-:root {
-    --lkt-field-color: #444444;
+.lkt-field {
+    --lkt-field--color: #444444;
+    --lkt-field--font-size: 16px;
+    --lkt-field--font-weight: 400;
+    --lkt-field--gap: 15px;
+    --lkt-field--border-width: 1px;
+    --lkt-field--border-style: solid;
+    --lkt-field--border-color: #444444;
+    --lkt-field--border-radius: 0px;
+    --lkt-field--background: transparent;
+    --lkt-field--shadow: none;
 
-    --lkt-field-font-size: 16px;
-    --lkt-field-font-weight: 400;
+    /** State: Disabled */
+    --lkt-field--disabled--border-color: #dddddd;
 
-    --lkt-field-right-state: 5px;
-    --lkt-field-gap-state: 10px;
-    --lkt-field-font-size-state: 40px;
+    /** State: Valid */
+    --lkt-field--valid--border-color: green;
+    --lkt-field--valid--border-width: 1px;
+    --lkt-field--valid--background: transparent;
+    --lkt-field--valid--shadow: 0 0 0 2px green;
 
+    /** State: Invalid */
+    --lkt-field--invalid--border-color: #ff0000;
+    --lkt-field--invalid--border-width: 1px;
+    --lkt-field--invalid--background: transparent;
+    --lkt-field--invalid--shadow: 0 0 0 2px #ff0000;
 
-    --lkt-field-font-size-label: 16px;
-    --lkt-field-font-weight-label: 600;
-    --lkt-field-line-height-label: 40px;
-    --lkt-field-textarea-read-mode-line-height: 40px;
+    /** Event: Focus */
+    --lkt-field--focus--border-color: #444444;
+    --lkt-field--focus--shadow: 0 0 0 2px #444444;
 
+    /** Element: Label */
+    --lkt-field--label--font-size: 16px;
+    --lkt-field--label--font-weight: 600;
+    --lkt-field--label--line-height: 40px;
+    --lkt-field--label--margin: 0;
 
-    --lkt-field-font-size-input: 16px;
-    --lkt-field-font-weight-input: 400;
-    --lkt-field-input-height: 40px;
-    --lkt-field-line-height-input: 40px;
-    --lkt-field-padding-input: 10px;
-    --lkt-field-padding-textarea: 10px;
-    --lkt-field-transition-input: all linear 150ms;
-    --lkt-field-border-radius-input: 0px;
-    --lkt-field-bg-input: transparent;
-    --lkt-field-bg-input-disabled: transparent;
+    /** Element: Input */
+    --lkt-field--input--font-size: 16px;
+    --lkt-field--input--font-weight: 400;
+    --lkt-field--input--height: 40px;
+    --lkt-field--input--line-height: 40px;
+    --lkt-field--input--padding: 10px;
+    --lkt-field--input--transition: all linear 150ms;
+    --lkt-field--input--border-radius: 0px;
+    --lkt-field--input--background: transparent;
 
-    --lkt-field-gap: 15px;
-    --lkt-field-padding-option: 7px;
+    /** Element: Input, State: Disabled */
+    --lkt-field--disabled--input--background: transparent;
 
-    --lkt-field-bg: transparent;
-    --lkt-field-bg-invalid: transparent;
-    --lkt-field-bg-valid: transparent;
-    --lkt-field-bg-opt-active: transparent;
-    --lkt-field-bg-opt-odd: transparent;
-    --lkt-field-bg-opt-odd-hover: transparent;
-    --lkt-field-bg-opt-even: transparent;
-    --lkt-field-bg-opt-even-hover: transparent;
+    /** Element: Textarea */
+    --lkt-field--textarea--padding: 10px;
 
-    --lkt-field-bg-switch-off: #cccccc;
-    --lkt-field-bg-switch-on: #cccccc;
-    --lkt-field-bg-switch-disabled: #cacaca;
-    --lkt-field-bg-switch-on-disabled: #cccccc;
-    --lkt-field-bg-switch-dot-off: #ffffff;
-    --lkt-field-bg-switch-dot-on: green;
-    --lkt-field-bg-switch-dot-disabled: #ffffff;
-    --lkt-field-bg-switch-dot-on-disabled: #ffffff;
+    /** Element: Textarea, State: Read Mode */
+    --lkt-field--read-mode--textarea--line-height: 40px;
 
-    --lkt-field-color-opt: #444;
-    --lkt-field-color-opt-odd: #444;
-    --lkt-field-color-opt-even: #444;
-    --lkt-field-color-opt-active: #444;
-    --lkt-field-color-opt-odd-hover: #444;
-    --lkt-field-color-opt-even-hover: #444;
-    --lkt-field-max-height-dropdown: 200px;
+    /** Element: Switch */
+    --lkt-field--switch--border-radius: 100%;
+    --lkt-field--switch--width: 42px;
+    --lkt-field--switch--height: 22px;
 
-    --lkt-field-border-width: 1px;
-    --lkt-field-border-width-valid: 1px;
-    --lkt-field-border-width-invalid: 1px;
-    --lkt-field-border-style: solid;
-    --lkt-field-border-color: #444444;
-    --lkt-field-border-color-focus: #444444;
-    --lkt-field-border-color-disabled: #dddddd;
-    --lkt-field-border-color-invalid: #ff0000;
-    --lkt-field-border-color-valid: green;
-    --lkt-field-border-radius: 0px;
-    --lkt-field-border-radius-switch: 100%;
+    /** Element: Switch Dot */
+    --lkt-field--switch-dot--size: 18px;
+    --lkt-field--switch-dot--left-start: 2px;
+    --lkt-field--switch-dot--left-end: 22px;
 
+    /** Element: Switch, State: On */
+    --lkt-field--switch-on--background: #cccccc;
+    --lkt-field--switch-on-dot--background: green;
 
-    --lkt-field-shadow: none;
-    --lkt-field-shadow-focus: 0 0 0 2px #444444;
-    --lkt-field-shadow-invalid: 0 0 0 2px #ff0000;
-    --lkt-field-shadow-valid: 0 0 0 2px green;
+    /** Element: Switch, State: Off */
+    --lkt-field--switch-off--background: #cccccc;
+    --lkt-field--switch-off-dot--background: #ffffff;
 
-    --lkt-field-margin-label: 0px;
+    /** Element: Switch, State: Disabled */
+    --lkt-field--disabled--switch--background: #cacaca;
+    --lkt-field--disabled--switch-on--background: #cccccc;
+    --lkt-field--disabled--switch-dot--background: #ffffff;
+    --lkt-field--disabled--switch-on-dot--background: #ffffff;
 
-
-    --lkt-field-tag-border-width: 1px;
-    --lkt-field-tag-border-style: solid;
-    --lkt-field-tag-border-color: #444;
-    --lkt-field-tag-border-radius: 0;
-    --lkt-field-tag-padding: 5px;
-    --lkt-field-tag-bg: #fff;
-    --lkt-field-tag-color: #444;
-    --lkt-field-tag-font-weight: 600;
-
-
-    --lkt-field-switch-width: 42px;
-    --lkt-field-switch-height: 22px;
-    --lkt-field-switch-dot-size: 18px;
-    --lkt-field-switch-dot-left-start: 2px;
-    --lkt-field-switch-dot-left-end: 22px;
-
-
+    /** Element: HTML */
     --lkt-field--html-floating-gap: 2px;
 
-    --lkt-field-validation-font-family: system-ui, Helvetica;
-    --lkt-field-validation-font-size: 12px;
-    --lkt-field-validation-font-weight: 300;
-    --lkt-field-validation-color: #ff0000;
+    /** Element: Option */
+    --lkt-field--option--padding: 7px;
+    --lkt-field--option--color: #444;
+
+    /** Element: Option, State: Active */
+    --lkt-field--active--option--background: transparent;
+    --lkt-field--active--option--color: #444;
+
+    /** Element: Odd Option */
+    --lkt-field--odd-option--background: transparent;
+    --lkt-field--odd-option--color: #444;
+
+    /** Element: Odd Option, State: Hover */
+    --lkt-field--hover--odd-option--background: var(--lkt-field--odd-option--background);
+    --lkt-field--hover--odd-option--color: #444;
+
+    /** Element: Even Option */
+    --lkt-field--even-option--background: transparent;
+    --lkt-field--even-option--color: #444;
+
+    /** Element: Even Option, State: Hover */
+    --lkt-field--hover--even-option--background: var(--lkt-field--even-option--background);
+    --lkt-field--hover--even-option--color: #444;
+
+    /** Element: Options Dropdown */
+    --lkt-field--dropdown--max-height: 200px;
+
+    /** Element: Tag */
+    --lkt-field--tag--border-width: 1px;
+    --lkt-field--tag--border-style: solid;
+    --lkt-field--tag--border-color: #444;
+    --lkt-field--tag--border-radius: 0;
+    --lkt-field--tag--padding: 5px;
+    --lkt-field--tag--background: #fff;
+    --lkt-field--tag--color: #444;
+    --lkt-field--tag--font-weight: 600;
+
+    /** Element: Validation */
+    --lkt-field--validation--font-family: system-ui, Helvetica;
+    --lkt-field--validation--font-size: 12px;
+    --lkt-field--validation--font-weight: 300;
+    --lkt-field--validation--color: #ff0000;
+
+    /** Element: State bar */
+    --lkt-field--state--right: 5px;
+    --lkt-field--state--gap: 10px;
+    --lkt-field--state--font-size: 40px;
 }

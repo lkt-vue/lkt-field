@@ -1,17 +1,15 @@
-:root {
-    --lkt-field-height: var(--lkt-field-input-height);
-    --lkt-field-large-field-min-height: calc(var(--lkt-field-height) * 2 + var(--lkt-field-gap) + var(--lkt-field-line-height-label));
-    --lkt-field-large-field-max-height: calc(var(--lkt-field-height) * 4 + var(--lkt-field-gap) * 3 + var(--lkt-field-line-height-label) * 3);
-    --lkt-field--icons-amount: 0;
-}
-
 .lkt-field {
+    --lkt-field-height: var(--lkt-field--input--height);
+    --lkt-field-large-field-min-height: calc(var(--lkt-field-height) * 2 + var(--lkt-field--gap) + var(--lkt-field--label--line-height));
+    --lkt-field-large-field-max-height: calc(var(--lkt-field-height) * 4 + var(--lkt-field--gap) * 3 + var(--lkt-field--label--line-height) * 3);
+    --lkt-field--icons-amount: 0;
+
     display: flex;
     flex-direction: column;
     position: relative;
-    color: var(--lkt-field-color);
-    font-size: var(--lkt-field-font-size);
-    font-weight: var(--lkt-field-font-weight);
+    color: var(--lkt-field--color);
+    font-size: var(--lkt-field--font-size);
+    font-weight: var(--lkt-field--font-weight);
     width: 100%;
 }
 
@@ -44,13 +42,13 @@
 }
 
 .lkt-field.is-editable .lkt-field-content {
-    background-color: var(--lkt-field-bg);
-    border-width: var(--lkt-field-border-width);
-    border-style: var(--lkt-field-border-style);
-    border-color: var(--lkt-field-border-color);
-    box-shadow: var(--lkt-field-shadow);
-    border-radius: var(--lkt-field-border-radius);
-    transition: var(--lkt-field-transition-input);
+    background-color: var(--lkt-field--background);
+    border-width: var(--lkt-field--border-width);
+    border-style: var(--lkt-field--border-style);
+    border-color: var(--lkt-field--border-color);
+    box-shadow: var(--lkt-field--shadow);
+    border-radius: var(--lkt-field--border-radius);
+    transition: var(--lkt-field--input--transition);
 }
 
 .lkt-field-main {
@@ -64,7 +62,7 @@
 }
 
 .lkt-field.is-editable .lkt-field-main {
-    max-width: calc(100% - var(--lkt-field--icons-amount) * var(--lkt-field-input-height));
+    max-width: calc(100% - var(--lkt-field--icons-amount) * var(--lkt-field--input--height));
     text-overflow: ellipsis;
     overflow: hidden;
     text-wrap: nowrap;
@@ -90,20 +88,20 @@
     width: 100%;
     max-width: 100%;
     outline: 0;
-    background-color: var(--lkt-field-bg);
-    border-width: var(--lkt-field-border-width);
-    border-style: var(--lkt-field-border-style);
-    border-color: var(--lkt-field-border-color);
-    box-shadow: var(--lkt-field-shadow);
-    border-radius: var(--lkt-field-border-radius);
-    transition: var(--lkt-field-transition-input);
+    background-color: var(--lkt-field--background);
+    border-width: var(--lkt-field--border-width);
+    border-style: var(--lkt-field--border-style);
+    border-color: var(--lkt-field--border-color);
+    box-shadow: var(--lkt-field--shadow);
+    border-radius: var(--lkt-field--border-radius);
+    transition: var(--lkt-field--input--transition);
 }
 
 .lkt-field.has-focus .lkt-field-content,
 .lkt-field-select.has-focus .lkt-field-main {
     outline: 0;
-    border-color: var(--lkt-field-border-color-focus);
-    box-shadow: var(--lkt-field-shadow-focus);
+    border-color: var(--lkt-field--focus--border-color);
+    box-shadow: var(--lkt-field--focus--shadow);
 }
 
 .lkt-field input:-webkit-autofill,
@@ -120,19 +118,19 @@
 
 .lkt-field input:-internal-autofill-selected,
 .lkt-field textarea:-internal-autofill-selected {
-    background-color: var(--lkt-field-bg) !important;
+    background-color: var(--lkt-field--background) !important;
 }
 .lkt-field input:-webkit-autofill,
 .lkt-field textarea:-webkit-autofill {
-    -webkit-text-fill-color: var(--lkt-field-color);
+    -webkit-text-fill-color: var(--lkt-field--color);
 }
 
 .lkt-field--label {
     display: block;
-    font-weight: var(--lkt-field-font-weight-label);
-    font-size: var(--lkt-field-font-size-label);
-    line-height: var(--lkt-field-line-height-label);
-    margin: var(--lkt-field-margin-label);
+    font-weight: var(--lkt-field--label--font-weight);
+    font-size: var(--lkt-field--label--font-size);
+    line-height: var(--lkt-field--label--line-height);
+    margin: var(--lkt-field--label--margin);
 }
 
 .is-mandatory-field .lkt-field--label:after {
@@ -160,12 +158,12 @@
     max-width: 100%;
     outline: 0;
     border: none;
-    color: var(--lkt-field-color);
-    transition: var(--lkt-field-transition-input);
-    font-size: var(--lkt-field-font-size-input);
-    font-weight: var(--lkt-field-font-weight-input);
-    border-radius: var(--lkt-field-border-radius-input);
-    background-color: var(--lkt-field-bg-input);
+    color: var(--lkt-field--color);
+    transition: var(--lkt-field--input--transition);
+    font-size: var(--lkt-field--input--font-size);
+    font-weight: var(--lkt-field--input--font-weight);
+    border-radius: var(--lkt-field--input--border-radius);
+    background-color: var(--lkt-field--input--background);
 }
 
 .lkt-field input[type="range"] {
@@ -174,7 +172,7 @@
     max-width: 100%;
     outline: 0;
     border: none;
-    border-radius: var(--lkt-field-border-radius-input);
+    border-radius: var(--lkt-field--input--border-radius);
     -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
     background: transparent; /* Otherwise white in Chrome */
 }
@@ -186,9 +184,9 @@
 .lkt-field input[type="search"],
 .lkt-field input[type="range"],
 .lkt-field input[type="tel"] {
-    height: var(--lkt-field-input-height);
-    line-height: var(--lkt-field-line-height-input);
-    padding: var(--lkt-field-padding-input);
+    height: var(--lkt-field--input--height);
+    line-height: var(--lkt-field--input--line-height);
+    padding: var(--lkt-field--input--padding);
 }
 
 .lkt-field input::-webkit-outer-spin-button,
@@ -210,7 +208,7 @@
     height: var(--lkt-field-large-field-min-height);
     min-height: var(--lkt-field-large-field-min-height);
     max-height: var(--lkt-field-large-field-max-height);
-    padding: var(--lkt-field-padding-textarea);
+    padding: var(--lkt-field--textarea--padding);
     resize: vertical;
 }
 
@@ -224,8 +222,8 @@
 }
 
 .lkt-field-validation-message {
-    font-family: var(--lkt-field-validation-font-family), serif;
-    font-size: var(--lkt-field-validation-font-size);
-    font-weight: var(--lkt-field-validation-font-weight);
-    color: var(--lkt-field-validation-color);
+    font-family: var(--lkt-field--validation--font-family), serif;
+    font-size: var(--lkt-field--validation--font-size);
+    font-weight: var(--lkt-field--validation--font-weight);
+    color: var(--lkt-field--validation--color);
 }

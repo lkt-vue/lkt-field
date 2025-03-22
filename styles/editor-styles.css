@@ -4,12 +4,12 @@
 }
 
 .lkt-field .sun-editor-editable {
-    color: var(--lkt-field-color);
-    padding: var(--lkt-field-padding-textarea);
+    color: var(--lkt-field--color);
+    padding: var(--lkt-field--textarea--padding);
 }
 
 .lkt-field .sun-editor .se-wrapper {
-    border-radius: var(--lkt-field-border-radius);
+    border-radius: var(--lkt-field--border-radius);
 }
 
 .lkt-field .sun-editor .se-wrapper .se-wrapper-inner {
@@ -23,15 +23,15 @@
 
 .lkt-field .sun-editor .se-toolbar {
     position: absolute;
-    bottom: calc(100% + var(--lkt-field-border-width) + var(--lkt-field--html-floating-gap));
-    outline: var(--lkt-field-border-width) var(--lkt-field-border-style) var(--lkt-field-border-color);
+    bottom: calc(100% + var(--lkt-field--border-width) + var(--lkt-field--html-floating-gap));
+    outline: var(--lkt-field--border-width) var(--lkt-field--border-style) var(--lkt-field--border-color);
     display: none;
     z-index: 2;
 }
 
 .lkt-field .sun-editor .se-resizing-bar {
     position: absolute;
-    top: calc(100% + var(--lkt-field-border-width) + var(--lkt-field--html-floating-gap));
+    top: calc(100% + var(--lkt-field--border-width) + var(--lkt-field--html-floating-gap));
     width: 100%;
     z-index: 2;
     display: none;
