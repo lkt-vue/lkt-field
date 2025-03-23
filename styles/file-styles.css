@@ -8,7 +8,7 @@
     border-width: var(--lkt-field--border-width);
     border-style: var(--lkt-field--border-style);
     border-color: var(--lkt-field--border-color);
-    box-shadow: var(--lkt-field--shadow);
+    box-shadow: var(--lkt-field--box-shadow);
     padding: var(--lkt-field--input--padding);
     transition: var(--lkt-field--input--transition);
     font-size: var(--lkt-field--label--font-size);

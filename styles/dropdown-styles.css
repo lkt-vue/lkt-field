@@ -1,7 +1,7 @@
 .lkt-field--dropdown {
     z-index: 9;
     outline: 0;
-    box-shadow: var(--lkt-field--shadow);
+    box-shadow: var(--lkt-field--box-shadow);
     --lkt-tooltip--padding: 0;
     --lkt-tooltip--text-align: left;
     --lkt-tooltip--background: var(--lkt-field--background);

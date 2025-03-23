@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
   "keywords": [
     "lkt",
@@ -58,8 +58,8 @@
     "suneditor": "^2.47.5"
   },
   "peerDependencies": {
-    "lkt-anchor": "^2.0.1",
-    "lkt-button": "^2.0.15",
+    "lkt-anchor": "^2.0.2",
+    "lkt-button": "^2.0.18",
     "lkt-date-tools": "^1.0.4",
     "lkt-http-client": "^1.0.34",
     "lkt-i18n": "^1.1.0",

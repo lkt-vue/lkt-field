@@ -50,7 +50,7 @@
     --lkt-tooltip--hover--border-style: var(--lkt-field--border-style);
     --lkt-tooltip--border-color: var(--lkt-field--border-color);
     --lkt-tooltip--hover--border-color: var(--lkt-field--border-color);
-    --lkt-tooltip--box-shadow: var(--lkt-field--shadow);
-    --lkt-tooltip--hover--box-shadow: var(--lkt-field--shadow);
+    --lkt-tooltip--box-shadow: var(--lkt-field--box-shadow);
+    --lkt-tooltip--hover--box-shadow: var(--lkt-field--box-shadow);
     --lkt-tooltip--border-radius: var(--lkt-field--border-radius);
 }

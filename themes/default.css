@@ -1,29 +1,29 @@
 .lkt-field {
+    --lkt-field--background: transparent;
+    --lkt-field--border-color: #444444;
+    --lkt-field--border-radius: 0px;
+    --lkt-field--border-style: solid;
+    --lkt-field--border-width: 1px;
+    --lkt-field--box-shadow: none;
     --lkt-field--color: #444444;
     --lkt-field--font-size: 16px;
     --lkt-field--font-weight: 400;
     --lkt-field--gap: 15px;
-    --lkt-field--border-width: 1px;
-    --lkt-field--border-style: solid;
-    --lkt-field--border-color: #444444;
-    --lkt-field--border-radius: 0px;
-    --lkt-field--background: transparent;
-    --lkt-field--shadow: none;
 
     /** State: Disabled */
     --lkt-field--disabled--border-color: #dddddd;
 
     /** State: Valid */
+    --lkt-field--valid--background: transparent;
     --lkt-field--valid--border-color: green;
     --lkt-field--valid--border-width: 1px;
-    --lkt-field--valid--background: transparent;
-    --lkt-field--valid--shadow: 0 0 0 2px green;
+    --lkt-field--valid--box-shadow: 0 0 0 2px green;
 
     /** State: Invalid */
+    --lkt-field--invalid--background: transparent;
     --lkt-field--invalid--border-color: #ff0000;
     --lkt-field--invalid--border-width: 1px;
-    --lkt-field--invalid--background: transparent;
-    --lkt-field--invalid--shadow: 0 0 0 2px #ff0000;
+    --lkt-field--invalid--box-shadow: 0 0 0 2px #ff0000;
 
     /** Event: Focus */
     --lkt-field--focus--border-color: #444444;
@@ -36,14 +36,14 @@
     --lkt-field--label--margin: 0;
 
     /** Element: Input */
+    --lkt-field--input--background: transparent;
+    --lkt-field--input--border-radius: 0px;
     --lkt-field--input--font-size: 16px;
     --lkt-field--input--font-weight: 400;
     --lkt-field--input--height: 40px;
     --lkt-field--input--line-height: 40px;
     --lkt-field--input--padding: 10px;
     --lkt-field--input--transition: all linear 150ms;
-    --lkt-field--input--border-radius: 0px;
-    --lkt-field--input--background: transparent;
 
     /** Element: Input, State: Disabled */
     --lkt-field--disabled--input--background: transparent;
@@ -56,8 +56,8 @@
 
     /** Element: Switch */
     --lkt-field--switch--border-radius: 100%;
-    --lkt-field--switch--width: 42px;
     --lkt-field--switch--height: 22px;
+    --lkt-field--switch--width: 42px;
 
     /** Element: Switch Dot */
     --lkt-field--switch-dot--size: 18px;
@@ -82,8 +82,8 @@
     --lkt-field--html-floating-gap: 2px;
 
     /** Element: Option */
-    --lkt-field--option--padding: 7px;
     --lkt-field--option--color: #444;
+    --lkt-field--option--padding: 7px;
 
     /** Element: Option, State: Active */
     --lkt-field--active--option--background: transparent;
@@ -109,23 +109,23 @@
     --lkt-field--dropdown--max-height: 200px;
 
     /** Element: Tag */
-    --lkt-field--tag--border-width: 1px;
-    --lkt-field--tag--border-style: solid;
+    --lkt-field--tag--background: #fff;
     --lkt-field--tag--border-color: #444;
     --lkt-field--tag--border-radius: 0;
-    --lkt-field--tag--padding: 5px;
-    --lkt-field--tag--background: #fff;
+    --lkt-field--tag--border-style: solid;
+    --lkt-field--tag--border-width: 1px;
     --lkt-field--tag--color: #444;
     --lkt-field--tag--font-weight: 600;
+    --lkt-field--tag--padding: 5px;
 
     /** Element: Validation */
+    --lkt-field--validation--color: #ff0000;
     --lkt-field--validation--font-family: system-ui, Helvetica;
     --lkt-field--validation--font-size: 12px;
     --lkt-field--validation--font-weight: 300;
-    --lkt-field--validation--color: #ff0000;
 
     /** Element: State bar */
-    --lkt-field--state--right: 5px;
-    --lkt-field--state--gap: 10px;
     --lkt-field--state--font-size: 40px;
+    --lkt-field--state--gap: 10px;
+    --lkt-field--state--right: 5px;
 }

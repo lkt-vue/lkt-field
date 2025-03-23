@@ -2,18 +2,18 @@
     background: var(--lkt-field--invalid--background);
     border-width: var(--lkt-field--invalid--border-width);
     border-color: var(--lkt-field--invalid--border-color);
-    box-shadow: var(--lkt-field--invalid--shadow);
+    box-shadow: var(--lkt-field--invalid--box-shadow);
 }
 
 .lkt-field.is-valid > .lkt-field-main {
     background: var(--lkt-field--valid--background);
     border-width: var(--lkt-field--valid--border-width);
     border-color: var(--lkt-field--valid--border-color);
-    box-shadow: var(--lkt-field--valid--shadow);
+    box-shadow: var(--lkt-field--valid--box-shadow);
 }
 
 .lkt-field.is-invalid.has-focus input:focus {
-    box-shadow: var(--lkt-field--invalid--shadow);
+    box-shadow: var(--lkt-field--invalid--box-shadow);
 }
 .lkt-field.is-valid.has-focus input:focus {
     border-color: var(--lkt-field--valid--border-color);
