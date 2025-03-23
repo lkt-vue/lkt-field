@@ -16,13 +16,13 @@
     /** State: Valid */
     --lkt-field--valid--background: transparent;
     --lkt-field--valid--border-color: green;
-    --lkt-field--valid--border-width: 1px;
+    --lkt-field--valid--border-width: var(--lkt-field--border-width);
     --lkt-field--valid--box-shadow: 0 0 0 2px green;
 
     /** State: Invalid */
     --lkt-field--invalid--background: transparent;
     --lkt-field--invalid--border-color: #ff0000;
-    --lkt-field--invalid--border-width: 1px;
+    --lkt-field--invalid--border-width: var(--lkt-field--border-width);
     --lkt-field--invalid--box-shadow: 0 0 0 2px #ff0000;
 
     /** Event: Focus */
@@ -32,7 +32,7 @@
     /** Element: Label */
     --lkt-field--label--font-size: 16px;
     --lkt-field--label--font-weight: 600;
-    --lkt-field--label--line-height: 40px;
+    --lkt-field--label--line-height: 1.425;
     --lkt-field--label--margin: 0;
 
     /** Element: Input */
@@ -42,7 +42,7 @@
     --lkt-field--input--font-weight: 400;
     --lkt-field--input--height: 40px;
     --lkt-field--input--line-height: 40px;
-    --lkt-field--input--padding: 10px;
+    --lkt-field--input--padding: 0 10px;
     --lkt-field--input--transition: all linear 150ms;
 
     /** Element: Input, State: Disabled */
@@ -52,7 +52,7 @@
     --lkt-field--textarea--padding: 10px;
 
     /** Element: Textarea, State: Read Mode */
-    --lkt-field--read-mode--textarea--line-height: 40px;
+    --lkt-field--read-mode--textarea--line-height: 1.425;
 
     /** Element: Switch */
     --lkt-field--switch--border-radius: 100%;
