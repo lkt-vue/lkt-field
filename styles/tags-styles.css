@@ -1,4 +1,4 @@
 .lkt-field .lkt-tag {
     --lkt-tag--content--padding: var(--lkt-field--input--padding);
-    --lkt-tag-content--font-size: var(--lkt-field--input--font-size);
+    --lkt-tag--content--font-size: var(--lkt-field--input--font-size);
 }

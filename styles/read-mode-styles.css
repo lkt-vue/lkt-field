@@ -26,11 +26,11 @@
     --lkt-button--color: var(--lkt-field--color);
     --lkt-button--height: auto;
     --lkt-button--min-height: 0;
-    justify-content: flex-start;
+    --lkt-button--justify-content: flex-start;
 }
 
 .lkt-anchor.lkt-field--read-value {
-    --lkt-anchor-justify-content: flex-start;
+    --lkt-anchor--justify-content: flex-start;
 }
 
 .lkt-field--read-value {
@@ -62,7 +62,7 @@
 
 .lkt-field.is-boolean .lkt-field--read-value .lkt-tag {
     --lkt-tag--background: var(--lkt-field--switch-off--background);
-    --lkt-tag-hover--background: var(--lkt-field--switch-off--background);
+    --lkt-tag--hover--background: var(--lkt-field--switch-off--background);
     --lkt-tag--color: var(--lkt-field--color);
     --lkt-tag--content--color: var(--lkt-field--color);
     --lkt-tag--featured--color: var(--lkt-field--color);
@@ -81,5 +81,5 @@
 .lkt-field.is-boolean.is-checked .lkt-field--read-value .lkt-tag {
     --lkt-tag--background: var(--lkt-field--switch-on--background);
     --lkt-tag--hover--background: var(--lkt-field--switch-on--background);
-    --lkt-tag-content--background: var(--lkt-field--switch-on-dot--background);
+    --lkt-tag--content--background: var(--lkt-field--switch-on-dot--background);
 }

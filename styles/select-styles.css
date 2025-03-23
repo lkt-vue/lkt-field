@@ -122,7 +122,3 @@
     padding: var(--lkt-field--input--padding);
     border-bottom: var(--lkt-field--border-width) var(--lkt-field--border-style) var(--lkt-field--border-color);
 }
-
-/*.lkt-field--select-button > .lkt-field--dropdown-option {*/
-/*    */
-/*}*/
