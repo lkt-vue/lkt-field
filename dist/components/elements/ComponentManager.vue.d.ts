@@ -1,16 +1,8 @@
-import { LktObject } from 'lkt-vue-kernel';
+import { FieldElementConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ExtractPropTypes, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
-interface Element {
-    type: 'customTag' | 'image' | 'text';
-    component?: string;
-    props?: Record<string, any>;
-    text?: string;
-    config?: LktObject;
-    children?: Element[];
-}
 declare const _default: DefineComponent<ExtractPropTypes<{
     modelValue: {
-        type: () => Element[];
+        type: () => FieldElementConfig[];
         required: true;
     };
     layoutSelector: {
@@ -23,7 +15,7 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     "elements-reordered": (...args: any[]) => void;
 }, string, PublicProps, Readonly< ExtractPropTypes<{
     modelValue: {
-        type: () => Element[];
+        type: () => FieldElementConfig[];
         required: true;
     };
     layoutSelector: {

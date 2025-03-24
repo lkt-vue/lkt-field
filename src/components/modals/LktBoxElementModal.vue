@@ -3,11 +3,11 @@
     import {
         ensureFieldConfig,
         FieldConfig,
+        FieldElementConfig,
         FieldType,
         ItemCrudConfig,
         ItemCrudMode,
         ItemCrudView,
-        LktObject,
         LktSettings,
     } from 'lkt-vue-kernel';
     import { closeModal } from 'lkt-modal';
@@ -16,7 +16,7 @@
         modalName: string
         modalKey: string
         zIndex: number
-        config: LktObject
+        config: FieldElementConfig
         onUpdate: Function
     }>(), {
         modalName: '',

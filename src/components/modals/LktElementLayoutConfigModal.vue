@@ -1,13 +1,14 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import {
-        AccordionConfig, AccordionType, ButtonConfig,
+        AccordionConfig,
+        AccordionType,
         FieldConfig,
+        FieldElementConfig,
         FieldType,
         ItemCrudConfig,
         ItemCrudMode,
         ItemCrudView,
-        LktObject,
         OptionConfig,
     } from 'lkt-vue-kernel';
     import LktField from '@/lib-components/LktField.vue';
@@ -16,7 +17,7 @@
         modalName: string
         modalKey: string
         zIndex: number
-        element: LktObject
+        element: FieldElementConfig
         onUpdate: Function
     }>(), {
         modalName: '',

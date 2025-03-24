@@ -4,7 +4,7 @@
         Accordion,
         AccordionConfig,
         AccordionType, Box, BoxConfig,
-        ButtonConfig,
+        ButtonConfig, FieldElementConfig, FieldElementType,
         getDefaultValues, Icon, IconConfig, Image, ImageConfig,
         LktObject,
         ModalConfig,
@@ -16,7 +16,7 @@
         modalKey: string
         zIndex: number
         items: LktObject[]
-        element: LktObject
+        element: FieldElementConfig
         onUpdate: Function
         onAppend: Function
         index: number
@@ -42,9 +42,9 @@
                 text,
             };
         },
-        getDefaultLktBoxElement = () => {
+        getDefaultLktBoxElement = (): FieldElementConfig => {
             return {
-                type: 'lkt-box',
+                type: FieldElementType.LktBox,
                 props: {
                     ...getDefaultValues(Box),
                     ...<BoxConfig>{
@@ -65,9 +65,9 @@
                 }
             };
         },
-        getDefaultLktAccordionElement = () => {
+        getDefaultLktAccordionElement = (): FieldElementConfig => {
             return {
-                type: 'lkt-accordion',
+                type: FieldElementType.LktAccordion,
                 props: {
                     ...getDefaultValues(Accordion),
                     ...<AccordionConfig>{
@@ -88,9 +88,9 @@
                 }
             }
         },
-        getDefaultLktIconElement = () => {
+        getDefaultLktIconElement = (): FieldElementConfig => {
             return {
-                type: 'lkt-icon',
+                type: FieldElementType.LktIcon,
                 props: {
                     ...getDefaultValues(Icon),
                     ...<IconConfig>{
@@ -103,9 +103,9 @@
                 },
             }
         },
-        getDefaultLktImageElement = () => {
+        getDefaultLktImageElement = (): FieldElementConfig => {
             return {
-                type: 'lkt-image',
+                type: FieldElementType.LktImage,
                 props: {
                     ...getDefaultValues(Image),
                     ...<ImageConfig>{

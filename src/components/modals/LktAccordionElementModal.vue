@@ -3,13 +3,15 @@
     import LktField from '../../lib-components/LktField.vue';
     import {
         AccordionToggleMode,
-        AccordionType, ensureFieldConfig,
+        AccordionType,
+        ensureFieldConfig,
         FieldConfig,
+        FieldElementConfig,
         FieldType,
         ItemCrudConfig,
         ItemCrudMode,
         ItemCrudView,
-        LktObject, LktSettings,
+        LktSettings,
         OptionConfig,
     } from 'lkt-vue-kernel';
     import { closeModal } from 'lkt-modal';
@@ -18,7 +20,7 @@
         modalName: string
         modalKey: string
         zIndex: number
-        config: LktObject
+        config: FieldElementConfig
         onUpdate: Function
     }>(), {
         modalName: '',

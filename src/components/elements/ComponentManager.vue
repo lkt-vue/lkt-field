@@ -3,7 +3,8 @@
     import {
         ButtonConfig,
         ButtonType,
-        ColumnType,
+        FieldElementConfig,
+        FieldElementType,
         LktObject,
         TableConfig,
         TablePermission,
@@ -11,18 +12,9 @@
     } from 'lkt-vue-kernel';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
 
-    interface Element {
-        type: 'customTag' | 'image' | 'text'
-        component?: string
-        props?: Record<string, any>
-        text?: string
-        config?:LktObject
-        children?: Element[]
-    }
-
     const props = defineProps({
         modelValue: {
-            type: Array as () => Element[],
+            type: Array as () => FieldElementConfig[],
             required: true
         },
         layoutSelector: {
@@ -92,37 +84,37 @@
         emit('update:modelValue', v);
     })
 
-    const elementCanHaveChildren = (element: Element) => {
+    const elementCanHaveChildren = (element: FieldElementConfig) => {
         switch (element.type) {
-            case 'lkt-box':
-            case 'lkt-accordion':
+            case FieldElementType.LktAccordion:
+            case FieldElementType.LktBox:
                 return true;
             default:
                 return false;
         }
     }
 
-    const hasConfigModal = (element: Element) => {
+    const hasConfigModal = (element: FieldElementConfig) => {
         switch (element.type) {
-            case 'lkt-box':
-            case 'lkt-accordion':
-            case 'lkt-icon':
-            case 'lkt-image':
+            case FieldElementType.LktAccordion:
+            case FieldElementType.LktBox:
+            case FieldElementType.LktIcon:
+            case FieldElementType.LktImage:
                 return true;
             default:
                 return false;
         }
     }
 
-    const getConfigModal = (element: Element) => {
+    const getConfigModal = (element: FieldElementConfig) => {
         switch (element.type) {
-            case 'lkt-box':
+            case FieldElementType.LktBox:
                 return 'lkt-field-box-element-config';
-            case 'lkt-accordion':
+            case FieldElementType.LktAccordion:
                 return 'lkt-field-accordion-element-config';
-            case 'lkt-icon':
+            case FieldElementType.LktIcon:
                 return 'lkt-field-icon-element-config';
-            case 'lkt-image':
+            case FieldElementType.LktImage:
                 return 'lkt-field-image-element-config';
             default:
                 return '';

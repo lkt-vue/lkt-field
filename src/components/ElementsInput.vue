@@ -1,20 +1,9 @@
 <script lang="ts" setup>
     import { defineEmits, ref, watch } from 'vue';
     import ComponentManager from './elements/ComponentManager.vue';
-    import { LktObject } from 'lkt-vue-kernel';
+    import { FieldElementConfig } from 'lkt-vue-kernel';
 
-    // Definir el tipo para los elementos en el editor
-    interface Element {
-        type: 'customTag' | 'image' | 'text' | 'lkt-box'| 'lkt-accordion'| 'lkt-icon'| 'lkt-image'
-        component?: string
-        props?: Record<string, any>
-        text?: string
-        config?:LktObject
-        children?: Element[]
-        layout?:LktObject
-    }
-
-    const elements = ref<Element[]>([
+    const elements = ref<FieldElementConfig[]>([
         { type: 'text', text: 'Escribe algo aquí o ' },
         {
             type: 'lkt-box',
@@ -100,7 +89,7 @@
     ]);
 
     // Historial de cambios
-    const history = ref<Element[][]>([]); // Almacenamos un arreglo de estados anteriores
+    const history = ref<FieldElementConfig[][]>([]); // Almacenamos un arreglo de estados anteriores
     let historyIndex = ref(-1); // Apunta al estado actual en el historial
 
     // Guardar el estado en el historial

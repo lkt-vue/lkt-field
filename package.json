@@ -68,7 +68,7 @@
     "lkt-string-tools": "^1.1.0",
     "lkt-toast": "^1.1.4",
     "lkt-tooltip": "^1.2.1",
-    "lkt-vue-kernel": "^1.0.51",
+    "lkt-vue-kernel": "^1.0.54",
     "vue": "^3.3.0"
   }
 }
