@@ -3,9 +3,20 @@
     import {
         Accordion,
         AccordionConfig,
-        AccordionType, Box, BoxConfig,
-        ButtonConfig, FieldElementConfig, FieldElementType,
-        getDefaultValues, Icon, IconConfig, Image, ImageConfig,
+        AccordionType,
+        Box,
+        BoxConfig,
+        ButtonConfig,
+        FieldElementConfig,
+        FieldElementType,
+        getDefaultLktAccordionElement, getDefaultLktAnchorElement,
+        getDefaultLktBoxElement, getDefaultLktButtonElement,
+        getDefaultLktIconElement, getDefaultLktImageElement, getDefaultLktLayoutElement, getDefaultTextElement,
+        getDefaultValues,
+        Icon,
+        IconConfig,
+        Image,
+        ImageConfig,
         LktObject,
         ModalConfig,
     } from 'lkt-vue-kernel';
@@ -36,159 +47,52 @@
         closeModal(props.modalName, props.modalKey);
     };
 
-    const getDefaultTextElement = (text: string = 'Time to create') => {
-            return {
-                type: 'text',
-                text,
-            };
-        },
-        getDefaultLktBoxElement = (): FieldElementConfig => {
-            return {
-                type: FieldElementType.LktBox,
-                props: {
-                    ...getDefaultValues(Box),
-                    ...<BoxConfig>{
-                        header: 'Title goes here',
-                        text: 'Content goes here',
-                    },
-                },
-                config: {
-                    hasHeader: true,
-                    hasIcon: true,
-                },
-                children: [
-                    getDefaultTextElement('Content goes here'),
-                ],
-                layout: {
-                    type: 'grid',
-                    amountOfItems: [],
-                }
-            };
-        },
-        getDefaultLktAccordionElement = (): FieldElementConfig => {
-            return {
-                type: FieldElementType.LktAccordion,
-                props: {
-                    ...getDefaultValues(Accordion),
-                    ...<AccordionConfig>{
-                        header: 'Title goes here',
-                        text: 'Content goes here',
-                    },
-                },
-                config: {
-                    hasHeader: true,
-                    hasIcon: true,
-                },
-                children: [
-                    getDefaultTextElement('Content goes here'),
-                ],
-                layout: {
-                    type: 'grid',
-                    amountOfItems: [],
-                }
+    const doReadAddElement = (element: FieldElementConfig) => {
+        if (props.addingChildren) {
+            if (!Array.isArray(editableItems.value[childrenIndex.value].children)){
+                editableItems.value[childrenIndex.value].children = [];
             }
-        },
-        getDefaultLktIconElement = (): FieldElementConfig => {
-            return {
-                type: FieldElementType.LktIcon,
-                props: {
-                    ...getDefaultValues(Icon),
-                    ...<IconConfig>{
-                        text: 'Content goes here',
-                    },
-                },
-                config: {
-                    hasHeader: true,
-                    hasIcon: true,
-                },
-            }
-        },
-        getDefaultLktImageElement = (): FieldElementConfig => {
-            return {
-                type: FieldElementType.LktImage,
-                props: {
-                    ...getDefaultValues(Image),
-                    ...<ImageConfig>{
-                        text: 'Image description goes here',
-                    },
-                },
-                config: {
-                    hasHeader: true,
-                    hasIcon: true,
-                },
-            }
-        };
+            editableItems.value[childrenIndex.value].children.push(element);
+
+        } else {
+            editableItems.value.splice(appendIndex.value, 0, element);
+        }
+        ++appendIndex.value;
+        props.onAppend();
+    }
 
     const doAddElement = (element: string) => {
         switch (element) {
-            case 'lkt-box':
-                if (props.addingChildren) {
-                    if (!Array.isArray(editableItems.value[childrenIndex.value].children)){
-                        editableItems.value[childrenIndex.value].children = [];
-                    }
-                    editableItems.value[childrenIndex.value].children.push(getDefaultLktBoxElement());
-
-                } else {
-                    editableItems.value.splice(appendIndex.value, 0, getDefaultLktBoxElement());
-                }
-                ++appendIndex.value;
-                props.onAppend();
+            case FieldElementType.LktBox:
+                doReadAddElement(getDefaultLktBoxElement());
                 break;
 
-            case 'lkt-accordion':
-                if (props.addingChildren) {
-                    if (!Array.isArray(editableItems.value[childrenIndex.value].children)){
-                        editableItems.value[childrenIndex.value].children = [];
-                    }
-                    editableItems.value[childrenIndex.value].children.push(getDefaultLktAccordionElement());
-
-                } else {
-                    editableItems.value.splice(appendIndex.value, 0, getDefaultLktAccordionElement());
-                }
-                ++appendIndex.value;
-                props.onAppend();
+            case FieldElementType.LktAccordion:
+                doReadAddElement(getDefaultLktAccordionElement());
                 break;
 
-            case 'lkt-icon':
-                if (props.addingChildren) {
-                    if (!Array.isArray(editableItems.value[childrenIndex.value].children)){
-                        editableItems.value[childrenIndex.value].children = [];
-                    }
-                    editableItems.value[childrenIndex.value].children.push(getDefaultLktIconElement());
-
-                } else {
-                    editableItems.value.splice(appendIndex.value, 0, getDefaultLktIconElement());
-                }
-                ++appendIndex.value;
-                props.onAppend();
+            case FieldElementType.LktIcon:
+                doReadAddElement(getDefaultLktIconElement());
                 break;
 
-            case 'lkt-image':
-                if (props.addingChildren) {
-                    if (!Array.isArray(editableItems.value[childrenIndex.value].children)){
-                        editableItems.value[childrenIndex.value].children = [];
-                    }
-                    editableItems.value[childrenIndex.value].children.push(getDefaultLktImageElement());
-
-                } else {
-                    editableItems.value.splice(appendIndex.value, 0, getDefaultLktImageElement());
-                }
-                ++appendIndex.value;
-                props.onAppend();
+            case FieldElementType.LktImage:
+                doReadAddElement(getDefaultLktImageElement());
                 break;
 
-            case 'text':
-                if (props.addingChildren) {
-                    if (!Array.isArray(editableItems.value[childrenIndex.value].children)){
-                        editableItems.value[childrenIndex.value].children = [];
-                    }
-                    editableItems.value[childrenIndex.value].children.push(getDefaultTextElement());
+            case FieldElementType.LktAnchor:
+                doReadAddElement(getDefaultLktAnchorElement());
+                break;
 
-                } else {
-                    editableItems.value.splice(appendIndex.value, 0, getDefaultTextElement());
-                }
-                ++appendIndex.value;
-                props.onAppend();
+            case FieldElementType.LktButton:
+                doReadAddElement(getDefaultLktButtonElement());
+                break;
+
+            case FieldElementType.LktLayout:
+                doReadAddElement(getDefaultLktLayoutElement());
+                break;
+
+            case FieldElementType.Text:
+                doReadAddElement(getDefaultTextElement());
                 break;
         }
     };
@@ -213,14 +117,14 @@
                 <div class="lkt-grid-3">
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                        icon: 'lkt-icn-angle-bottom',
-                        text: 'Text',
-                        events: {
-                            click: () => {
-                                doAddElement('text');
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'Text',
+                            events: {
+                                click: () => {
+                                    doAddElement('text');
+                                }
                             }
-                        }
-                    }"
+                        }"
                     />
                 </div>
 
@@ -235,47 +139,80 @@
                 <div class="lkt-grid-3">
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                        icon: 'lkt-icn-angle-bottom',
-                        text: 'LktBox',
-                        events: {
-                            click: () => {
-                                doAddElement('lkt-box');
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktBox',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-box');
+                                }
                             }
-                        }
-                    }"
+                        }"
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                        icon: 'lkt-icn-angle-bottom',
-                        text: 'LktAccordion',
-                        events: {
-                            click: () => {
-                                doAddElement('lkt-accordion');
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktAccordion',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-accordion');
+                                }
                             }
-                        }
-                    }"
+                        }"
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                        icon: 'lkt-icn-angle-bottom',
-                        text: 'LktImage',
-                        events: {
-                            click: () => {
-                                doAddElement('lkt-image');
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktImage',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-image');
+                                }
                             }
-                        }
-                    }"
+                        }"
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                        icon: 'lkt-icn-angle-bottom',
-                        text: 'LktIcon',
-                        events: {
-                            click: () => {
-                                doAddElement('lkt-icon');
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktIcon',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-icon');
+                                }
                             }
-                        }
-                    }"
+                        }"
+                    />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktAnchor',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-anchor');
+                                }
+                            }
+                        }"
+                    />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktButton',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-button');
+                                }
+                            }
+                        }"
+                    />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktLayout',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-layout');
+                                }
+                            }
+                        }"
                     />
                 </div>
             </lkt-accordion>

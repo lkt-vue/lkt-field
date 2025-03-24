@@ -88,6 +88,7 @@
         switch (element.type) {
             case FieldElementType.LktAccordion:
             case FieldElementType.LktBox:
+            case FieldElementType.LktLayout:
                 return true;
             default:
                 return false;
@@ -268,6 +269,14 @@
                                 />
                             </template>
                         </lkt-anchor>
+
+
+                        <component-manager
+                            v-else-if="element.type === FieldElementType.LktLayout"
+                            v-model="element.children"
+                            :layout-selector="getLayoutSelector(element)"
+                        />
+
                         <component
                             v-else
                             :is="element.component"
@@ -441,7 +450,7 @@
         right: 0;
     }
 
-    .lkt-element:hover .lkt-element-actions {
+    .lkt-element:hover > .lkt-element-actions {
         opacity: 1;
     }
 
