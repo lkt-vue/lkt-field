@@ -985,8 +985,8 @@
         focus,
         value: getValue,
         isMandatory: () => props.mandatory,
+        isValid: () => isValid.value,
         click: () => {
-            console.log('field click method: ', props.type, container.value);
             switch (props.type) {
                 case FieldType.File:
                     return inputElement.value?.click();

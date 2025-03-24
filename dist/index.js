@@ -17783,9 +17783,10 @@ const ar = {
       focus: rl,
       value: Yn,
       isMandatory: () => a.mandatory,
+      isValid: () => r.value,
       click: () => {
         var T;
-        switch (console.log("field click method: ", a.type, A.value), a.type) {
+        switch (a.type) {
           case Z.File:
             return (T = k.value) == null ? void 0 : T.click();
         }
