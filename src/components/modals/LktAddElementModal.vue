@@ -10,7 +10,7 @@
         FieldElementConfig,
         FieldElementType,
         getDefaultLktAccordionElement, getDefaultLktAnchorElement,
-        getDefaultLktBoxElement, getDefaultLktButtonElement,
+        getDefaultLktBoxElement, getDefaultLktButtonElement, getDefaultLktHeaderElement,
         getDefaultLktIconElement, getDefaultLktImageElement, getDefaultLktLayoutElement, getDefaultTextElement,
         getDefaultValues,
         Icon,
@@ -91,6 +91,10 @@
                 doReadAddElement(getDefaultLktLayoutElement());
                 break;
 
+            case FieldElementType.LktHeader:
+                doReadAddElement(getDefaultLktHeaderElement());
+                break;
+
             case FieldElementType.Text:
                 doReadAddElement(getDefaultTextElement());
                 break;
@@ -111,7 +115,7 @@
             <lkt-accordion
                 v-bind="<AccordionConfig>{
                     type: AccordionType.Always,
-                    title: 'Text Content'
+                    title: 'Content'
                 }"
             >
                 <div class="lkt-grid-3">
@@ -126,14 +130,46 @@
                             }
                         }"
                     />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktHeder',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-header');
+                                }
+                            }
+                        }"
+                    />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktImage',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-image');
+                                }
+                            }
+                        }"
+                    />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktIcon',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-icon');
+                                }
+                            }
+                        }"
+                    />
                 </div>
-
             </lkt-accordion>
 
             <lkt-accordion
                 v-bind="<AccordionConfig>{
-                    type: AccordionType.Auto,
-                    title: 'LKT Content'
+                    type: AccordionType.Always,
+                    title: 'Containers'
                 }"
             >
                 <div class="lkt-grid-3">
@@ -162,25 +198,24 @@
                     <lkt-button
                         v-bind="<ButtonConfig>{
                             icon: 'lkt-icn-angle-bottom',
-                            text: 'LktImage',
+                            text: 'LktLayout',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-image');
+                                    doAddElement('lkt-layout');
                                 }
                             }
                         }"
                     />
-                    <lkt-button
-                        v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
-                            text: 'LktIcon',
-                            events: {
-                                click: () => {
-                                    doAddElement('lkt-icon');
-                                }
-                            }
-                        }"
-                    />
+                </div>
+            </lkt-accordion>
+
+            <lkt-accordion
+                v-bind="<AccordionConfig>{
+                    type: AccordionType.Auto,
+                    title: 'Actions'
+                }"
+            >
+                <div class="lkt-grid-3">
                     <lkt-button
                         v-bind="<ButtonConfig>{
                             icon: 'lkt-icn-angle-bottom',
@@ -199,17 +234,6 @@
                             events: {
                                 click: () => {
                                     doAddElement('lkt-button');
-                                }
-                            }
-                        }"
-                    />
-                    <lkt-button
-                        v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
-                            text: 'LktLayout',
-                            events: {
-                                click: () => {
-                                    doAddElement('lkt-layout');
                                 }
                             }
                         }"

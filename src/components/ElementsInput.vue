@@ -1,92 +1,107 @@
 <script lang="ts" setup>
-    import { defineEmits, ref, watch } from 'vue';
+    import { defineEmits, defineProps, nextTick, ref, watch } from 'vue';
     import ComponentManager from './elements/ComponentManager.vue';
-    import { FieldElementConfig } from 'lkt-vue-kernel';
+    import { ButtonConfig, FieldElementConfig, LktObject } from 'lkt-vue-kernel';
 
-    const elements = ref<FieldElementConfig[]>([
-        { type: 'text', text: 'Escribe algo aquí o ' },
-        {
-            type: 'lkt-box',
-            props: {
-                header: 'cabecera de box',
-                text: 'un componente dinámico',
-                icon: 'lkt-icn-upload',
-            },
-            config: {
-                hasHeader: true,
-                hasIcon: true,
-            },
-            children: [],
-            layout: {
-                type: 'grid',
-                amountOfItems: [],
-            }
+    const props = defineProps({
+        modelValue: {
+            type: Array as () => FieldElementConfig[],
+            required: true
         },
-        {
-            type: 'lkt-accordion',
-            props: {
-                text: 'contenido del acordeón',
-                header: 'título del acordeón',
-                type: 'auto',
-                toggleMode: 'display',
-                icon: 'lkt-icn-upload',
-            },
-            config: {
-                hasIcon: true,
-            },
-            children: [],
-            layout: {
-                type: 'grid',
-                amountOfItems: [],
-            }
-        },
-        {
-            type: 'lkt-image',
-            props: {
-                text: 'Dr. Evil',
-                src: 'https://i.pinimg.com/736x/d4/dc/7a/d4dc7a642bb490972c3443af25e0d179.jpg',
-            },
-            config: {
-                hasIcon: true,
-            },
-        },
-        {
-            type: 'lkt-icon',
-            props: {
-                text: 'Texto del icono',
-                icon: 'lkt-icn-download',
-            },
-            config: {
-                hasIcon: true,
-            },
-        },
-        {
-            type: 'lkt-button',
-            props: {
-                text: 'Texto del botón',
-                icon: 'lkt-icn-download',
-            },
-            config: {
-                hasIcon: true,
-            },
-        },
-        {
-            type: 'lkt-anchor',
-            props: {
-                text: 'Texto del anchor',
-                icon: 'lkt-icn-download',
-            },
-            config: {
-                hasIcon: true,
-            },
-        },
-        { type: 'customTag', component: 'CustomTag', props: { text: 'un componente dinámico' } },
-        { type: 'text', text: ' entre el texto.' },
-    ]);
+        layoutSelector: {
+            type: String,
+        }
+    });
+    const elements = ref(props.modelValue);
+
+    // const elements = ref<FieldElementConfig[]>([
+    //     { type: 'text', text: 'Escribe algo aquí o ' },
+    //     {
+    //         type: 'lkt-box',
+    //         props: {
+    //             header: 'cabecera de box',
+    //             text: 'un componente dinámico',
+    //             icon: 'lkt-icn-upload',
+    //         },
+    //         config: {
+    //             hasHeader: true,
+    //             hasIcon: true,
+    //         },
+    //         children: [],
+    //         layout: {
+    //             type: 'grid',
+    //             amountOfItems: [],
+    //         }
+    //     },
+    //     {
+    //         type: 'lkt-accordion',
+    //         props: {
+    //             text: 'contenido del acordeón',
+    //             header: 'título del acordeón',
+    //             type: 'auto',
+    //             toggleMode: 'display',
+    //             icon: 'lkt-icn-upload',
+    //         },
+    //         config: {
+    //             hasIcon: true,
+    //         },
+    //         children: [],
+    //         layout: {
+    //             type: 'grid',
+    //             amountOfItems: [],
+    //         }
+    //     },
+    //     {
+    //         type: 'lkt-image',
+    //         props: {
+    //             text: 'Dr. Evil',
+    //             src: 'https://i.pinimg.com/736x/d4/dc/7a/d4dc7a642bb490972c3443af25e0d179.jpg',
+    //         },
+    //         config: {
+    //             hasIcon: true,
+    //         },
+    //     },
+    //     {
+    //         type: 'lkt-icon',
+    //         props: {
+    //             text: 'Texto del icono',
+    //             icon: 'lkt-icn-download',
+    //         },
+    //         config: {
+    //             hasIcon: true,
+    //         },
+    //     },
+    //     {
+    //         type: 'lkt-button',
+    //         props: {
+    //             text: 'Texto del botón',
+    //             icon: 'lkt-icn-download',
+    //         },
+    //         config: {
+    //             hasIcon: true,
+    //         },
+    //     },
+    //     {
+    //         type: 'lkt-anchor',
+    //         props: {
+    //             text: 'Texto del anchor',
+    //             icon: 'lkt-icn-download',
+    //         },
+    //         config: {
+    //             hasIcon: true,
+    //         },
+    //     },
+    //     { type: 'customTag', component: 'CustomTag', props: { text: 'un componente dinámico' } },
+    //     { type: 'text', text: ' entre el texto.' },
+    // ]);
 
     const emit = defineEmits([
         'update:modelValue',
     ]);
+
+    watch(elements, (v) => {
+        emit('update:modelValue', v);
+    })
 
     // Historial de cambios
     const history = ref<FieldElementConfig[][]>([]); // Almacenamos un arreglo de estados anteriores
@@ -201,18 +216,51 @@
     watch(elements, (v) => {
         emit('update:modelValue', v);
     }, { deep: true });
+
+    const containerRef = ref(null),
+        toolbarTop = ref(0);
+
+    watch(containerRef, (v) => {
+        if (v) {
+            toolbarTop.value = containerRef.value.getBoundingClientRect().top;
+        } else {
+            toolbarTop.value = 0;
+        }
+    })
 </script>
 
 <template>
-    <div class="lkt-wysiwyg-container">
+    <div ref="containerRef" class="lkt-wysiwyg-container">
         <!-- Barra de herramientas y demás elementos del editor -->
-        <div class="lkt-wysiwyg-toolbar">
-            <button @click="applyFormat('bold')">Negrita</button>
-            <button @click="applyFormat('italic')">Cursiva</button>
-            <button @click="applyFormat('underline')">Subrayado</button>
+        <div class="lkt-wysiwyg-toolbar lkt-tooltip" :style="{top: toolbarTop + 'px'}">
+            <div class="lkt-elements-toolbar-group">
+                <lkt-button
+                    v-bind="<ButtonConfig>{
+                        text: 'b',
+                    }"
+                    @click="applyFormat('bold')"
+                />
+                <lkt-button
+                    v-bind="<ButtonConfig>{
+                        text: 'i',
+                    }"
+                    @click="applyFormat('italic')"
+                />
+                <lkt-button
+                    v-bind="<ButtonConfig>{
+                        text: 'u',
+                    }"
+                    @click="applyFormat('underline')"
+                />
+                <lkt-button
+                    v-bind="<ButtonConfig>{
+                        text: 'strikeThrough',
+                    }"
+                    @click="applyFormat('strikeThrough')"
+                />
+            </div>
 
             <!-- Nuevas opciones de formato -->
-            <button @click="applyFormat('strikeThrough')">Tachado</button>
             <button @click="applyFormat('subscript')">Subíndice</button>
             <button @click="applyFormat('superscript')">Superíndice</button>
 
@@ -248,6 +296,18 @@
             <!-- Deshacer y rehacer -->
             <button @click="undo">Deshacer</button>
             <button @click="redo">Rehacer</button>
+
+            <lkt-button
+                v-bind="<ButtonConfig>{
+                    text: 'Add element',
+                    icon: 'lkt-icn-more',
+                    modal: 'lkt-field-add-element-config',
+                    modalData: {
+                        items: elements,
+                        index: elements.length
+                    }
+                }"
+            />
         </div>
 
         <!-- Renderizamos el componente intermedio para gestionar los elementos -->
@@ -278,8 +338,8 @@
         margin-bottom: 10px;
         position: sticky;
         top: 0;
-        left: 0;
-        right: 0;
+        z-index: 8;
+        max-width: 100%;
     }
 
     button {
@@ -295,5 +355,12 @@
     select {
         padding: 5px;
         font-size: 14px;
+    }
+
+    .lkt-elements-toolbar-group {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
 </style>

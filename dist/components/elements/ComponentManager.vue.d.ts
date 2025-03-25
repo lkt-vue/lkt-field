@@ -8,6 +8,10 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     layoutSelector: {
         type: StringConstructor;
     };
+    isChild: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
 }>, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     "update:modelValue": (...args: any[]) => void;
     "add-text": (...args: any[]) => void;
@@ -21,12 +25,18 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     layoutSelector: {
         type: StringConstructor;
     };
+    isChild: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
 }>> & Readonly<{
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     "onAdd-text"?: ((...args: any[]) => any) | undefined;
     "onAdd-element"?: ((...args: any[]) => any) | undefined;
     "onElements-reordered"?: ((...args: any[]) => any) | undefined;
-}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {
+}>, {
+    isChild: boolean;
+}, {}, {}, {}, string, ComponentProvideOptions, true, {
     tableRef: unknown;
 }, HTMLDivElement>;
 export default _default;

@@ -19,9 +19,12 @@
         FieldValidation,
         FieldValidationType,
         getDefaultValues,
-        LktObject, LktSettings,
+        LktObject,
+        LktSettings,
         Option,
-        textFieldTypes, ToastConfig, ToastPositionX,
+        textFieldTypes,
+        ToastConfig,
+        ToastPositionX,
         ValidationStatus,
     } from 'lkt-vue-kernel';
     import UndoButton from '../components/buttons/UndoButton.vue';
@@ -164,7 +167,7 @@
         return 'Y-m-d';
     });
 
-    const editableValue = props.type === FieldType.Card ? value : ref(extractEditableValue(value.value, computedLang.value));
+    const editableValue = [FieldType.Card, FieldType.Elements].includes(props.type) ? value : ref(extractEditableValue(value.value, computedLang.value));
     const originalEditableValue = ref(editableValue);
 
     const optionsHaystack = ref(<Option[]>[]),
@@ -173,7 +176,7 @@
     const updatePickedOption = () => {
 
         const _doUpdate = (query: string) => {
-            visibleOptions.value = filterOptions(optionsHaystack.value, query);
+            visibleOptions.value = filterOptions(optionsHaystack.value, query, true, props.optionsConfig?.filter);
             if (props.multiple) {
                 for (let k in editableValue.value) {
                     let option = undefined;
@@ -473,7 +476,7 @@
     watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
-        if (props.type === FieldType.Card) {
+        if ([FieldType.Card, FieldType.Elements].includes(props.type)) {
             editableValue.value = v;
         }
         else if (props.type !== FieldType.Date) {
@@ -481,7 +484,7 @@
         }
     });
     watch(editableValue, (v) => {
-        if (typeof value.value === 'object' && props.type === FieldType.Card) {
+        if (typeof value.value === 'object' && [FieldType.Card, FieldType.Elements].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
         } else {
@@ -596,7 +599,7 @@
             switch (props.type) {
                 case FieldType.Select:
                     if (props.searchable) {
-                        visibleOptions.value = filterOptions(optionsHaystack.value, query, true);
+                        visibleOptions.value = filterOptions(optionsHaystack.value, query, true, props.optionsConfig?.filter);
                     } else {
                         visibleOptions.value = optionsHaystack.value;
                     }
@@ -608,7 +611,7 @@
 
                 case FieldType.Text:
                 case FieldType.Search:
-                    visibleOptions.value = filterOptions(optionsHaystack.value, query, false);
+                    visibleOptions.value = filterOptions(optionsHaystack.value, query, false, props.optionsConfig?.filter);
                     isLoading.value = false;
                     if (ableToShowOptions) showOptions.value = (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') || visibleOptions.value.length > 0;
                     return;

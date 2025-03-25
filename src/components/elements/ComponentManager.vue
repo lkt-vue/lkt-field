@@ -19,6 +19,10 @@
         },
         layoutSelector: {
             type: String,
+        },
+        isChild: {
+            type: Boolean,
+            default: false
         }
     })
 
@@ -151,26 +155,34 @@
                 slotItemVar: 'element',
                 editMode: true,
                 hideTableHeader: true,
-                perms: [TablePermission.Update, TablePermission.Sort],
+                perms: isChild ? [TablePermission.Update, TablePermission.Sort] : [TablePermission.Create, TablePermission.Update, TablePermission.Sort],
                 itemsContainerClass: layoutSelector,
+                requiredItemsForBottomCreate: 10,
                 drag: {
                     enabled: true,
                     isDisabled: false,
                     canRender: true,
                     isValid: true,
                 },
-                columns: [
-                    // {
-                    //     type: ColumnType.None,
-                    //     key: 'text',
-                    //     label: '',
-                    //     isForRowKey: true,
-                    // }
-                ]
+                createButton: isChild ? false : {
+                    text: 'Add element',
+                    icon: 'lkt-icn-more',
+                    modal: 'lkt-field-add-element-config',
+                    modalData: {
+                        items: items,
+                        index: items.length,
+                        onAppend: () => {
+                            appendingItems = true;
+                            nextTick(() => {
+                                appendingItems = false;
+                            })
+                        }
+                    }
+                },
             }"
         >
             <template #item="{element, index}">
-                <div class="lkt-element">
+                <div class="lkt-element" :class="`is-${element.type}`">
                     <div class="lkt-element-content">
                         <text-element-editor
                             v-if="element.type === 'text'"
@@ -194,6 +206,7 @@
                             <component-manager
                                 v-model="element.children"
                                 :layout-selector="getLayoutSelector(element)"
+                                is-child
                             />
                         </lkt-box>
 
@@ -212,6 +225,7 @@
                             <component-manager
                                 v-model="element.children"
                                 :layout-selector="getLayoutSelector(element)"
+                                is-child
                             />
                         </lkt-accordion>
 
@@ -241,6 +255,20 @@
                                 />
                             </template>
                         </lkt-icon>
+
+                        <lkt-header
+                            v-else-if="element.type === FieldElementType.LktHeader"
+                            v-bind="element.props"
+                            :icon="element.config.hasIcon ? element.props.icon : ''"
+                        >
+                            <template #text>
+                                <text-element-editor
+                                    v-model="element.props.text"
+                                    @input="handleInputText(index, $event, 'text')"
+                                    @keydown="handleKeydown($event, index)"
+                                />
+                            </template>
+                        </lkt-header>
 
                         <lkt-button
                             v-else-if="element.type === 'lkt-button'"
@@ -275,6 +303,7 @@
                             v-else-if="element.type === FieldElementType.LktLayout"
                             v-model="element.children"
                             :layout-selector="getLayoutSelector(element)"
+                            is-child
                         />
 
                         <component
@@ -448,6 +477,11 @@
         opacity: 0;
         position: absolute;
         right: 0;
+        top: -15px;
+    }
+
+    .lkt-element.is-text .lkt-element-actions {
+        top: -60px;
     }
 
     .lkt-element:hover > .lkt-element-actions {

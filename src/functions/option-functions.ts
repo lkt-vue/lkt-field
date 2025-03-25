@@ -1,4 +1,4 @@
-import { extractPropValue, LktObject, Option } from 'lkt-vue-kernel';
+import { extractPropValue, LktObject, Option, OptionConfig } from 'lkt-vue-kernel';
 import { ValidOptionValue } from 'lkt-vue-kernel';
 import { __ } from 'lkt-i18n';
 
@@ -29,16 +29,25 @@ export const prepareOptions = (options: any, prop: LktObject): Option[] => {
     }).filter(opt => typeof opt !== 'undefined');
 };
 
-export const filterOptions = (options: Option[], query: string = '', includeEquals: boolean = true) => {
-    if (query === '') return options;
+export const filterOptions = (options: Option[], query: string = '', includeEquals: boolean = true, customFilter: Function|undefined = undefined) => {
+    if (query === '' && typeof customFilter !== 'function') return options;
+
+    let r = options;
 
     const q = String(query).toLowerCase();
 
-    return options.filter((z: Option) => {
-        let label = String(z.label).toLowerCase();
-        return label.indexOf(q) !== -1
-            && (includeEquals || label !== q);
-    });
+    if (q !== '') {}
+        r = r.filter((z: Option) => {
+            let label = String(z.label).toLowerCase();
+            return label.indexOf(q) !== -1
+                && (includeEquals || label !== q);
+        });
+
+    if (typeof customFilter === 'function') {
+        r = r.filter((z: OptionConfig) => customFilter(z));
+    }
+
+    return r;
 };
 
 export const findOptionByValue = (options: Option[], query: ValidOptionValue) => {

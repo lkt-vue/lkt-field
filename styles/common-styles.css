@@ -68,6 +68,10 @@
     text-wrap: nowrap;
     white-space: nowrap;
 }
+.lkt-field.is-editable.is-elements .lkt-field-main {
+    overflow: initial;
+    flex-direction: column;
+}
 .lkt-field.is-editable.is-html .lkt-field-main {
     overflow: initial;
 }
