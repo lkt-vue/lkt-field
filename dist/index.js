@@ -1,8 +1,8 @@
-import { defineComponent as ve, computed as ee, resolveComponent as ae, createBlock as G, openBlock as H, normalizeClass as je, ref as Y, watch as fe, withCtx as ue, createCommentVNode as oe, resolveDynamicComponent as zt, mergeProps as he, createElementBlock as se, createElementVNode as le, toDisplayString as xt, Fragment as We, renderList as at, createVNode as J, unref as V, normalizeStyle as $i, withDirectives as $e, vModelCheckbox as mo, onMounted as Ki, vModelText as Ri, vShow as _t, nextTick as Tt, createTextVNode as Mt, useSlots as Yi, renderSlot as lt, createStaticVNode as go, createSlots as Wt, setBlockTracking as kl, normalizeProps as Te, guardReactiveProps as Me, mergeDefaults as vo, isRef as Ge, vModelDynamic as bo } from "vue";
+import { defineComponent as ve, computed as ee, resolveComponent as ae, createBlock as G, openBlock as H, normalizeClass as je, ref as Y, watch as fe, withCtx as ue, createCommentVNode as oe, resolveDynamicComponent as zt, mergeProps as he, createElementBlock as se, createElementVNode as le, toDisplayString as xt, Fragment as We, renderList as at, createVNode as J, unref as V, normalizeStyle as $i, withDirectives as $e, vModelCheckbox as mo, onMounted as Ki, vModelText as Ri, vShow as _t, nextTick as Tt, createTextVNode as Mt, useSlots as Yi, renderSlot as lt, createStaticVNode as go, createSlots as Wt, setBlockTracking as kl, normalizeProps as Te, guardReactiveProps as De, mergeDefaults as vo, isRef as Ge, vModelDynamic as bo } from "vue";
 import { stripTags as fn, fill as yo, generateRandomString as _o, formatNumber as xl, isEmail as Co } from "lkt-string-tools";
 import { httpCall as Zi } from "lkt-http-client";
 import { __ as hn, currentLanguage as pn, availableLanguages as wo } from "lkt-i18n";
-import { extractPropValue as Ct, Option as Ni, FieldType as Z, LktColor as mn, TooltipLocationX as gn, TooltipLocationY as vn, ButtonType as Ii, FieldValidation as Re, ValidationStatus as Ie, MultipleOptionsDisplay as li, TableType as bn, booleanFieldTypes as wt, TablePermission as Ut, FieldElementType as ze, fieldsWithMultipleMode as ko, FieldValidationType as Sl, extractI18nValue as Pt, fieldTypesWithoutUndo as xo, fieldTypesWithoutClear as So, FieldAutoValidationTrigger as Eo, textFieldTypes as Lo, fieldTypesWithOptions as El, getDefaultValues as To, Field as zo, ToastPositionX as Ll, LktSettings as De, ensureFieldConfig as Mi, ItemCrudView as Zt, ItemCrudMode as qt, AccordionType as kt, AccordionToggleMode as Ui, getDefaultTextElement as Bo, getDefaultLktHeaderElement as No, getDefaultLktLayoutElement as Ao, getDefaultLktButtonElement as Ro, getDefaultLktAnchorElement as Io, getDefaultLktImageElement as Mo, getDefaultLktIconElement as Do, getDefaultLktAccordionElement as Vo, getDefaultLktBoxElement as Ho } from "lkt-vue-kernel";
+import { extractPropValue as Ct, LktSettings as Ae, Option as Ni, FieldType as Z, LktColor as mn, TooltipLocationX as gn, TooltipLocationY as vn, ButtonType as Ii, FieldValidation as Ie, ValidationStatus as Me, MultipleOptionsDisplay as li, TableType as bn, booleanFieldTypes as wt, TablePermission as Ut, FieldElementType as ze, fieldsWithMultipleMode as ko, FieldValidationType as Sl, extractI18nValue as Pt, fieldTypesWithoutUndo as xo, fieldTypesWithoutClear as So, FieldAutoValidationTrigger as Eo, textFieldTypes as Lo, fieldTypesWithOptions as El, getDefaultValues as To, Field as zo, ToastPositionX as Ll, ensureFieldConfig as Mi, ItemCrudView as Zt, ItemCrudMode as qt, AccordionType as kt, AccordionToggleMode as Ui, getDefaultTextElement as Bo, getDefaultLktHeaderElement as No, getDefaultLktLayoutElement as Ao, getDefaultLktButtonElement as Ro, getDefaultLktAnchorElement as Io, getDefaultLktImageElement as Mo, getDefaultLktIconElement as Do, getDefaultLktAccordionElement as Vo, getDefaultLktBoxElement as Ho } from "lkt-vue-kernel";
 import { Field as vd, Option as bd } from "lkt-vue-kernel";
 import { date as $t } from "lkt-date-tools";
 import { openToast as Tl } from "lkt-toast";
@@ -236,7 +236,7 @@ const yn = /* @__PURE__ */ ve({
   if (typeof e == "string" && (e = Ct(e, t), typeof e == "string" && e.startsWith("__:"))) {
     let i = e.substring(3), o = hn(i), l = [];
     for (let a in o) l.push({ value: a, label: o[a] });
-    return Ai(l, t);
+    return Ae.i18nOptionsFormatter[i] && (l = Ae.i18nOptionsFormatter[i](l)), Ai(l, t);
   }
   return Array.isArray(e) ? e.length === 0 ? e : e.map((i) => {
     if (typeof i == "object") return new Ni(i);
@@ -541,47 +541,47 @@ const yn = /* @__PURE__ */ ve({
 }), ts = (e, t, i, o) => {
   if (typeof i < "u") {
     let l = parseInt(i);
-    t.replace(/\D+/g, "").length < l && e.push(Re.createMinNumbers(l, Ie.Ko));
+    t.replace(/\D+/g, "").length < l && e.push(Ie.createMinNumbers(l, Me.Ko));
   }
   if (typeof o < "u") {
     let l = parseInt(o);
-    t.replace(/\D+/g, "").length > l && e.push(Re.createMaxNumbers(l, Ie.Ko));
+    t.replace(/\D+/g, "").length > l && e.push(Ie.createMaxNumbers(l, Me.Ko));
   }
 }, is = (e, t, i, o) => {
   if (typeof i < "u") {
     let l = parseInt(i);
-    t.replace(/[^A-Z]+/g, "").length < l && e.push(Re.createMinUpperChars(l, Ie.Ko));
+    t.replace(/[^A-Z]+/g, "").length < l && e.push(Ie.createMinUpperChars(l, Me.Ko));
   }
   if (typeof o < "u") {
     let l = parseInt(o);
-    t.replace(/[^A-Z]+/g, "").length > l && e.push(Re.createMaxUpperChars(l, Ie.Ko));
+    t.replace(/[^A-Z]+/g, "").length > l && e.push(Ie.createMaxUpperChars(l, Me.Ko));
   }
 }, ls = (e, t, i, o) => {
   if (typeof i < "u") {
     let l = parseInt(i);
-    t.replace(/[A-Z]+/g, "").length < l && e.push(Re.createMinLowerChars(l, Ie.Ko));
+    t.replace(/[A-Z]+/g, "").length < l && e.push(Ie.createMinLowerChars(l, Me.Ko));
   }
   if (typeof o < "u") {
     let l = parseInt(o);
-    t.replace(/[A-Z]+/g, "").length > l && e.push(Re.createMaxLowerChars(l, Ie.Ko));
+    t.replace(/[A-Z]+/g, "").length > l && e.push(Ie.createMaxLowerChars(l, Me.Ko));
   }
 }, ns = (e, t, i, o) => {
   if (typeof i < "u") {
     let l = parseInt(i);
-    t.replace(/\d+/g, "").length < l && e.push(Re.createMinChars(l, Ie.Ko));
+    t.replace(/\d+/g, "").length < l && e.push(Ie.createMinChars(l, Me.Ko));
   }
   if (typeof o < "u") {
     let l = parseInt(o);
-    t.replace(/\d+/g, "").length > l && e.push(Re.createMaxChars(l, Ie.Ko));
+    t.replace(/\d+/g, "").length > l && e.push(Ie.createMaxChars(l, Me.Ko));
   }
 }, os = (e, t, i, o) => {
   if (typeof i < "u") {
     let l = parseInt(i);
-    t.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length < l && e.push(Re.createMinSpecialChars(l, Ie.Ko));
+    t.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length < l && e.push(Ie.createMinSpecialChars(l, Me.Ko));
   }
   if (typeof o < "u") {
     let l = parseInt(o);
-    t.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length > l && e.push(Re.createMaxSpecialChars(l, Ie.Ko));
+    t.replace(/\d+/g, "").replace(/[a-zA-Z]+/g, "").length > l && e.push(Ie.createMaxSpecialChars(l, Me.Ko));
   }
 }, Al = (e, t = "default") => {
   if (!e) return "";
@@ -17111,7 +17111,7 @@ const hr = {
                   }, null, 8, ["modelValue", "onUpdate:modelValue", "layout-selector"])) : (H(), G(zt(z.component), Te(he({ key: 9 }, z.props)), null, 16))
                 ]),
                 l.value ? oe("", !0) : (H(), se("div", su, [
-                  J(C, Te(Me({
+                  J(C, Te(De({
                     type: V(Ii).Tooltip,
                     text: z.type,
                     icon: "lkt-icn-settings-cogs",
@@ -17135,7 +17135,7 @@ const hr = {
                             }
                           }
                         })), null, 16)) : oe("", !0),
-                        J(C, Te(Me({
+                        J(C, Te(De({
                           text: "Add element",
                           icon: "lkt-icn-more",
                           modal: "lkt-field-add-element-config",
@@ -17185,7 +17185,7 @@ const hr = {
                             }
                           }
                         })), null, 16)) : oe("", !0),
-                        J(C, Te(Me({
+                        J(C, Te(De({
                           text: "Remove",
                           icon: "lkt-icn-trash",
                           events: {
@@ -17347,7 +17347,7 @@ const hr = {
           le("button", { onClick: c }, "Insertar Enlace"),
           le("button", { onClick: s }, "Deshacer"),
           le("button", { onClick: r }, "Rehacer"),
-          J(y, Te(Me({
+          J(y, Te(De({
             text: "Add element",
             icon: "lkt-icn-more",
             modal: "lkt-field-add-element-config",
@@ -17501,14 +17501,14 @@ const hr = {
       const T = (K) => {
         var Se;
         if (q.value = Pi(j.value, K, !0, (Se = a.optionsConfig) == null ? void 0 : Se.filter), a.multiple) {
-          for (let Ae in k.value) {
+          for (let Re in k.value) {
             let Le;
-            a.optionValueType === "option" ? Le = ti(j.value, k.value[Ae].value) : Le = ti(j.value, k.value[Ae]), typeof Le < "u" && (D.value.length === 0 ? D.value.push(Le) : D.value.splice(Ae, 1, Le));
+            a.optionValueType === "option" ? Le = ti(j.value, k.value[Re].value) : Le = ti(j.value, k.value[Re]), typeof Le < "u" && (D.value.length === 0 ? D.value.push(Le) : D.value.splice(Re, 1, Le));
           }
           return;
         }
         let de;
-        a.optionValueType === "option" ? de = ti(j.value, k.value.map((Ae) => Ae.value)) : de = ti(j.value, k.value), typeof de < "u" && (D.value.length === 0 ? D.value.push(de) : D.value.splice(0, 1, de));
+        a.optionValueType === "option" ? de = ti(j.value, k.value.map((Re) => Re.value)) : de = ti(j.value, k.value), typeof de < "u" && (D.value.length === 0 ? D.value.push(de) : D.value.splice(0, 1, de));
       };
       a.type === Z.Text ? T(k.value) : a.type === Z.Select && T($.value);
     }, X = ee(() => a.type === Z.Date), Q = ee(() => a.type === Z.File), ne = ee(() => a.type === Z.Image), pe = ee(() => a.type === Z.Textarea ? "textarea" : a.type === Z.Html ? "div" : "input"), ge = ee(() => a.type === Z.Date ? s.value !== R.value : k.value !== M.value), re = ee(() => typeof a.disabled == "function" ? a.disabled(a.prop) : a.disabled), be = ee(() => {
@@ -17591,23 +17591,23 @@ const hr = {
     const It = () => {
       var T;
       ((T = a.validation) == null ? void 0 : T.trigger) === Eo.Blur && (!m.value || !g.value) || a.type !== Z.Range && (h.value = [], Tt(() => {
-        var Se, Ae, Le, Ye, Xe, Je, Qe, et, tt, rt, ut, dt, ct;
+        var Se, Re, Le, Ye, Xe, Je, Qe, et, tt, rt, ut, dt, ct;
         let K = typeof a.min > "u" ? 0 : parseFloat(a.min), de = typeof a.max > "u" ? 0 : parseFloat(a.max);
         if (a.type === Z.Number && typeof a.min < "u" && typeof a.max < "u" && (k.value < K || k.value > de)) {
-          h.value.push(Re.createNumBetween(K, de, Ie.Ko)), r.value = !1;
+          h.value.push(Ie.createNumBetween(K, de, Me.Ko)), r.value = !1;
           return;
         }
-        ![Z.Number, Z.Email].includes(a.type) && a.mandatory && k.value === "" ? h.value.push(Re.createEmpty(Ie.Ko)) : a.type !== Z.Email && K > 0 && (a.type !== Z.Number && k.value.length < K ? h.value.push(Re.createMinStr(K, Ie.Ko)) : k.value < K && h.value.push(Re.createMinNum(K, Ie.Ko))), de > 0 && (a.type !== Z.Number && k.value.length > de ? h.value.push(Re.createMaxStr(de, Ie.Ko)) : k.value > de && h.value.push(Re.createMaxNum(de, Ie.Ko))), a.type === Z.Email && (a.mandatory && k.value === "" ? h.value.push(Re.createEmpty(Ie.Ko)) : Co(k.value) || h.value.push(Re.createEmail(Ie.Ko))), Lo.includes(a.type) && (ts(h.value, k.value, (Se = a.validation) == null ? void 0 : Se.minNumbers, (Ae = a.validation) == null ? void 0 : Ae.maxNumbers), is(h.value, k.value, (Le = a.validation) == null ? void 0 : Le.minUpperChars, (Ye = a.validation) == null ? void 0 : Ye.maxUpperChars), ls(h.value, k.value, (Xe = a.validation) == null ? void 0 : Xe.minLowerChars, (Je = a.validation) == null ? void 0 : Je.maxLowerChars), ns(h.value, k.value, (Qe = a.validation) == null ? void 0 : Qe.minChars, (et = a.validation) == null ? void 0 : et.maxChars), os(h.value, k.value, (tt = a.validation) == null ? void 0 : tt.minSpecialChars, (rt = a.validation) == null ? void 0 : rt.maxSpecialChars)), (ut = a.validation) != null && ut.checkEqualTo && k.value !== ((dt = a.validation) == null ? void 0 : dt.checkEqualTo) && h.value.push(Re.createEqualTo((ct = a.validation) == null ? void 0 : ct.checkEqualTo, Ie.Ko)), r.value = h.value.length === 0;
+        ![Z.Number, Z.Email].includes(a.type) && a.mandatory && k.value === "" ? h.value.push(Ie.createEmpty(Me.Ko)) : a.type !== Z.Email && K > 0 && (a.type !== Z.Number && k.value.length < K ? h.value.push(Ie.createMinStr(K, Me.Ko)) : k.value < K && h.value.push(Ie.createMinNum(K, Me.Ko))), de > 0 && (a.type !== Z.Number && k.value.length > de ? h.value.push(Ie.createMaxStr(de, Me.Ko)) : k.value > de && h.value.push(Ie.createMaxNum(de, Me.Ko))), a.type === Z.Email && (a.mandatory && k.value === "" ? h.value.push(Ie.createEmpty(Me.Ko)) : Co(k.value) || h.value.push(Ie.createEmail(Me.Ko))), Lo.includes(a.type) && (ts(h.value, k.value, (Se = a.validation) == null ? void 0 : Se.minNumbers, (Re = a.validation) == null ? void 0 : Re.maxNumbers), is(h.value, k.value, (Le = a.validation) == null ? void 0 : Le.minUpperChars, (Ye = a.validation) == null ? void 0 : Ye.maxUpperChars), ls(h.value, k.value, (Xe = a.validation) == null ? void 0 : Xe.minLowerChars, (Je = a.validation) == null ? void 0 : Je.maxLowerChars), ns(h.value, k.value, (Qe = a.validation) == null ? void 0 : Qe.minChars, (et = a.validation) == null ? void 0 : et.maxChars), os(h.value, k.value, (tt = a.validation) == null ? void 0 : tt.minSpecialChars, (rt = a.validation) == null ? void 0 : rt.maxSpecialChars)), (ut = a.validation) != null && ut.checkEqualTo && k.value !== ((dt = a.validation) == null ? void 0 : dt.checkEqualTo) && h.value.push(Ie.createEqualTo((ct = a.validation) == null ? void 0 : ct.checkEqualTo, Me.Ko)), r.value = h.value.length === 0;
       }));
     }, Dt = (T, K = !0) => {
-      var de, Se, Ae, Le, Ye, Xe, Je, Qe, et, tt;
+      var de, Se, Re, Le, Ye, Xe, Je, Qe, et, tt;
       if (j.value.length === 0) {
         q.value = [];
         return;
       }
       switch (a.type) {
         case Z.Select:
-          a.searchable ? q.value = Pi(j.value, T, !0, (de = a.optionsConfig) == null ? void 0 : de.filter) : q.value = j.value, B.value = !1, K && (N.value = typeof ((Ae = (Se = a.optionsConfig) == null ? void 0 : Se.http) == null ? void 0 : Ae.resource) < "u" && ((Ye = (Le = a.optionsConfig) == null ? void 0 : Le.http) == null ? void 0 : Ye.resource) !== "" || q.value.length > 0), ie();
+          a.searchable ? q.value = Pi(j.value, T, !0, (de = a.optionsConfig) == null ? void 0 : de.filter) : q.value = j.value, B.value = !1, K && (N.value = typeof ((Re = (Se = a.optionsConfig) == null ? void 0 : Se.http) == null ? void 0 : Re.resource) < "u" && ((Ye = (Le = a.optionsConfig) == null ? void 0 : Le.http) == null ? void 0 : Ye.resource) !== "" || q.value.length > 0), ie();
           return;
         case Z.Text:
         case Z.Search:
@@ -17615,7 +17615,7 @@ const hr = {
           return;
       }
     }, Kt = async (T, K = !0) => {
-      var de, Se, Ae, Le, Ye, Xe, Je, Qe, et, tt, rt, ut, dt, ct, Ft, Ot, we, ft, ht, pt, mt, gt, vt, bt;
+      var de, Se, Re, Le, Ye, Xe, Je, Qe, et, tt, rt, ut, dt, ct, Ft, Ot, we, ft, ht, pt, mt, gt, vt, bt;
       if (!(!y.value && !((de = a.optionsConfig) != null && de.autoloadResource) && !I.value) && ![
         Z.Tel,
         Z.Date,
@@ -17627,7 +17627,7 @@ const hr = {
         Z.Range,
         Z.Textarea
       ].includes(a.type))
-        if (B.value = !1, (Se = a.optionsConfig) != null && Se.autoloadResource && !I.value && (F.value = !0), typeof ((Le = (Ae = a.optionsConfig) == null ? void 0 : Ae.http) == null ? void 0 : Le.resource) < "u" && ((Xe = (Ye = a.optionsConfig) == null ? void 0 : Ye.http) == null ? void 0 : Xe.resource) !== "") {
+        if (B.value = !1, (Se = a.optionsConfig) != null && Se.autoloadResource && !I.value && (F.value = !0), typeof ((Le = (Re = a.optionsConfig) == null ? void 0 : Re.http) == null ? void 0 : Le.resource) < "u" && ((Xe = (Ye = a.optionsConfig) == null ? void 0 : Ye.http) == null ? void 0 : Xe.resource) !== "") {
           B.value = !0;
           let st = {};
           typeof ((Qe = (Je = a.optionsConfig) == null ? void 0 : Je.http) == null ? void 0 : Qe.data) == "object" && (st = { ...a.optionsConfig.http.data }), te.searchKeyForResource !== "" && (st[te.searchKeyForResource] = T), (rt = (tt = (et = a.optionsConfig) == null ? void 0 : et.http) == null ? void 0 : tt.events) != null && rt.onStart && typeof ((ct = (dt = (ut = a.optionsConfig) == null ? void 0 : ut.http) == null ? void 0 : dt.events) == null ? void 0 : ct.onStart) == "function" && a.optionsConfig.http.events.onStart();
@@ -17640,7 +17640,7 @@ const hr = {
         } else
           Dt(T, K);
     }, Hi = (T) => {
-      var Se, Ae;
+      var Se, Re;
       let K = q.value.length - 1;
       if (K === -1) return;
       const de = T.key ?? "";
@@ -17651,7 +17651,7 @@ const hr = {
           Le && Le.scrollIntoView({ behavior: "instant", block: "start", inline: "nearest" });
         } else if (de === "ArrowUp") {
           --O.value, O.value < 0 && (O.value = K);
-          let Le = (Ae = L.value) == null ? void 0 : Ae.querySelector('[data-index="' + O.value + '"]');
+          let Le = (Re = L.value) == null ? void 0 : Re.querySelector('[data-index="' + O.value + '"]');
           Le && Le.scrollIntoView({ behavior: "instant", block: "start", inline: "nearest" });
         } else de === "Enter" && O.value > -1 && Vt(q.value[O.value]);
     }, Fi = () => {
@@ -17763,16 +17763,16 @@ const hr = {
       y.value && dl();
     }, so = () => {
       Tl({
-        text: De.defaultUploadSuccessText,
-        details: De.defaultUploadSuccessDetails,
-        icon: De.defaultUploadSuccessIcon,
+        text: Ae.defaultUploadSuccessText,
+        details: Ae.defaultUploadSuccessDetails,
+        icon: Ae.defaultUploadSuccessIcon,
         positionX: Ll.Right
       }), o("upload-success");
     }, ao = () => {
       Tl({
-        text: De.defaultUploadErrorText,
-        details: De.defaultUploadErrorDetails,
-        icon: De.defaultUploadErrorIcon,
+        text: Ae.defaultUploadErrorText,
+        details: Ae.defaultUploadErrorDetails,
+        icon: Ae.defaultUploadErrorIcon,
         positionX: Ll.Right
       }), o("upload-error");
     }, ro = (T) => {
@@ -17818,7 +17818,7 @@ const hr = {
     });
     return (T, K) => {
       var Le, Ye, Xe, Je, Qe, et, tt, rt, ut, dt, ct, Ft, Ot;
-      const de = ae("lkt-button"), Se = ae("lkt-loader"), Ae = ae("lkt-tooltip");
+      const de = ae("lkt-button"), Se = ae("lkt-loader"), Re = ae("lkt-tooltip");
       return H(), se("div", {
         class: je(["lkt-field", nt.value]),
         "data-show-ui": Pe.value,
@@ -18296,7 +18296,7 @@ const hr = {
           items: h.value,
           stack: (Ot = T.validation) == null ? void 0 : Ot.stack
         }, null, 8, ["items", "stack"])) : oe("", !0),
-        y.value && V(El).includes(T.type) ? (H(), G(Ae, he({
+        y.value && V(El).includes(T.type) ? (H(), G(Re, he({
           key: 3,
           ref_key: "dropdownEl",
           ref: x,
@@ -18411,7 +18411,7 @@ const hr = {
     onUpdate: {}
   },
   setup(e) {
-    const i = Y(e.config), o = Object.keys(De.defaultFieldLktBoxElementCustomClassField).length > 0 ? Mi(De.defaultFieldLktBoxElementCustomClassField, De.defaultFieldElementCustomClassField) : void 0;
+    const i = Y(e.config), o = Object.keys(Ae.defaultFieldLktBoxElementCustomClassField).length > 0 ? Mi(Ae.defaultFieldLktBoxElementCustomClassField, Ae.defaultFieldElementCustomClassField) : void 0;
     return (l, a) => {
       const d = ae("lkt-field"), f = ae("lkt-item-crud");
       return H(), G(f, he({
@@ -18480,7 +18480,7 @@ const hr = {
     onUpdate: {}
   },
   setup(e) {
-    const i = Y(e.config), o = Object.keys(De.defaultFieldLktAccordionElementCustomClassField).length > 0 ? Mi(De.defaultFieldLktAccordionElementCustomClassField, De.defaultFieldElementCustomClassField) : void 0, l = [
+    const i = Y(e.config), o = Object.keys(Ae.defaultFieldLktAccordionElementCustomClassField).length > 0 ? Mi(Ae.defaultFieldLktAccordionElementCustomClassField, Ae.defaultFieldElementCustomClassField) : void 0, l = [
       {
         value: kt.Auto,
         label: "Auto"
@@ -18587,7 +18587,7 @@ const hr = {
     onUpdate: {}
   },
   setup(e) {
-    const i = Y(e.config), o = Object.keys(De.defaultFieldLktIconElementCustomClassField).length > 0 ? Mi(De.defaultFieldLktIconElementCustomClassField, De.defaultFieldElementCustomClassField) : void 0;
+    const i = Y(e.config), o = Object.keys(Ae.defaultFieldLktIconElementCustomClassField).length > 0 ? Mi(Ae.defaultFieldLktIconElementCustomClassField, Ae.defaultFieldElementCustomClassField) : void 0;
     return (l, a) => {
       const d = ae("lkt-field"), f = ae("lkt-item-crud");
       return H(), G(f, he({
@@ -18648,7 +18648,7 @@ const hr = {
     onUpdate: {}
   },
   setup(e) {
-    const i = Y(e.config), o = Object.keys(De.defaultFieldLktImageElementCustomClassField).length > 0 ? Mi(De.defaultFieldLktImageElementCustomClassField, De.defaultFieldElementCustomClassField) : void 0;
+    const i = Y(e.config), o = Object.keys(Ae.defaultFieldLktImageElementCustomClassField).length > 0 ? Mi(Ae.defaultFieldLktImageElementCustomClassField, Ae.defaultFieldElementCustomClassField) : void 0;
     return (l, a) => {
       const d = ae("lkt-field"), f = ae("lkt-item-crud");
       return H(), G(f, he({
@@ -18742,7 +18742,7 @@ const hr = {
     };
     return (f, n) => {
       const v = ae("lkt-button"), u = ae("lkt-accordion"), b = ae("lkt-modal");
-      return H(), G(b, Te(Me({
+      return H(), G(b, Te(De({
         modalName: f.modalName,
         modalKey: f.modalKey,
         zIndex: f.zIndex,
@@ -18750,13 +18750,13 @@ const hr = {
       })), {
         default: ue(() => [
           le("div", Iu, [
-            J(u, Te(Me({
+            J(u, Te(De({
               type: V(kt).Always,
               title: "Content"
             })), {
               default: ue(() => [
                 le("div", Mu, [
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "Text",
                     events: {
@@ -18765,7 +18765,7 @@ const hr = {
                       }
                     }
                   })), null, 16),
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktHeder",
                     events: {
@@ -18774,7 +18774,7 @@ const hr = {
                       }
                     }
                   })), null, 16),
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktImage",
                     events: {
@@ -18783,7 +18783,7 @@ const hr = {
                       }
                     }
                   })), null, 16),
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktIcon",
                     events: {
@@ -18796,13 +18796,13 @@ const hr = {
               ]),
               _: 1
             }, 16),
-            J(u, Te(Me({
+            J(u, Te(De({
               type: V(kt).Always,
               title: "Containers"
             })), {
               default: ue(() => [
                 le("div", Du, [
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktBox",
                     events: {
@@ -18811,7 +18811,7 @@ const hr = {
                       }
                     }
                   })), null, 16),
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktAccordion",
                     events: {
@@ -18820,7 +18820,7 @@ const hr = {
                       }
                     }
                   })), null, 16),
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktLayout",
                     events: {
@@ -18833,13 +18833,13 @@ const hr = {
               ]),
               _: 1
             }, 16),
-            J(u, Te(Me({
+            J(u, Te(De({
               type: V(kt).Auto,
               title: "Actions"
             })), {
               default: ue(() => [
                 le("div", Vu, [
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktAnchor",
                     events: {
@@ -18848,7 +18848,7 @@ const hr = {
                       }
                     }
                   })), null, 16),
-                  J(v, Te(Me({
+                  J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktButton",
                     events: {
@@ -18958,7 +18958,7 @@ const hr = {
               "onUpdate:modelValue": (u) => v.layout.type = u
             }), null, 16, ["modelValue", "onUpdate:modelValue"])
           ]),
-          J(f, Te(Me({
+          J(f, Te(De({
             type: V(kt).Auto,
             title: "Responsive configuration"
           })), {

@@ -25,6 +25,7 @@
     --lkt-button--focus--color: var(--lkt-field--color);
     --lkt-button--focus--shadow: none;
     --lkt-button--focus--border-color: var(--lkt-field--border-color);
+    --lkt-button--justify-content: flex-start;
 }
 
 .lkt-field.is-select.is-multiple .lkt-field--select-button {

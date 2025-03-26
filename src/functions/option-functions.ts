@@ -1,4 +1,4 @@
-import { extractPropValue, LktObject, Option, OptionConfig } from 'lkt-vue-kernel';
+import { extractPropValue, LktObject, LktSettings, Option, OptionConfig } from 'lkt-vue-kernel';
 import { ValidOptionValue } from 'lkt-vue-kernel';
 import { __ } from 'lkt-i18n';
 
@@ -11,6 +11,10 @@ export const prepareOptions = (options: any, prop: LktObject): Option[] => {
             let haystack = __(key),
                 r = [];
             for (let k in haystack) r.push({value: k, label: haystack[k]});
+
+            if (LktSettings.i18nOptionsFormatter[key]) {
+                r = LktSettings.i18nOptionsFormatter[key](r);
+            }
             return prepareOptions(r, prop);
         }
     }
