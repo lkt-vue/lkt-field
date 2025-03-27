@@ -192,7 +192,7 @@
                 {{ pickedOptions.length }}
             </div>
 
-            <ul v-else class="lkt-field-select-read">
+            <ul v-else class="lkt-field-select-read" :class="`multiple-display-${multipleDisplayEdition}`">
                 <li v-for="(option, i) in pickedOptions" :title="option.label">
                     <dropdown-option
                         :option="pickedOptions[i]"

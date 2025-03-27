@@ -40,12 +40,13 @@ export const filterOptions = (options: Option[], query: string = '', includeEqua
 
     const q = String(query).toLowerCase();
 
-    if (q !== '') {}
+    if (q !== '') {
         r = r.filter((z: Option) => {
             let label = String(z.label).toLowerCase();
             return label.indexOf(q) !== -1
                 && (includeEquals || label !== q);
         });
+    }
 
     if (typeof customFilter === 'function') {
         r = r.filter((z: OptionConfig) => customFilter(z));

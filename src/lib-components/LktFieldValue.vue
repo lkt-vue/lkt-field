@@ -129,6 +129,7 @@
                     <lkt-button
                         class="lkt-field--toggle-button"
                         :text="type === FieldType.File ? fileName : ''"
+                        disabled
                     >
                         <lkt-image
                             v-if="type === FieldType.Image"
@@ -179,7 +180,7 @@
                         {{ calculatedValue.length }}
                     </div>
 
-                    <ul v-else-if="calculatedValue.length > 0" class="lkt-field-select-read">
+                    <ul v-else-if="calculatedValue.length > 0" class="lkt-field-select-read" :class="`multiple-display-${multipleDisplay}`">
                         <template v-for="(option, i) in calculatedValue">
                             <li :title="calculatedValue[i]?.label">
                                 <dropdown-option

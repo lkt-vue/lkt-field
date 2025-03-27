@@ -1,9 +1,9 @@
-import { defineComponent as ve, computed as ee, resolveComponent as ae, createBlock as G, openBlock as H, normalizeClass as je, ref as Y, watch as fe, withCtx as ue, createCommentVNode as oe, resolveDynamicComponent as zt, mergeProps as he, createElementBlock as se, createElementVNode as le, toDisplayString as xt, Fragment as We, renderList as at, createVNode as J, unref as V, normalizeStyle as $i, withDirectives as $e, vModelCheckbox as mo, onMounted as Ki, vModelText as Ri, vShow as _t, nextTick as Tt, createTextVNode as Mt, useSlots as Yi, renderSlot as lt, createStaticVNode as go, createSlots as Wt, setBlockTracking as kl, normalizeProps as Te, guardReactiveProps as De, mergeDefaults as vo, isRef as Ge, vModelDynamic as bo } from "vue";
+import { defineComponent as ve, computed as ee, resolveComponent as ae, createBlock as G, openBlock as H, normalizeClass as We, ref as Y, watch as fe, withCtx as ue, createCommentVNode as oe, resolveDynamicComponent as zt, mergeProps as he, createElementBlock as se, createElementVNode as le, toDisplayString as xt, Fragment as $e, renderList as at, createVNode as J, unref as V, normalizeStyle as $i, withDirectives as Ze, vModelCheckbox as mo, onMounted as Ki, vModelText as Ri, vShow as _t, nextTick as Tt, createTextVNode as Mt, useSlots as Yi, renderSlot as lt, createStaticVNode as go, createSlots as Wt, setBlockTracking as kl, normalizeProps as Te, guardReactiveProps as De, mergeDefaults as vo, isRef as Ge, vModelDynamic as bo } from "vue";
 import { stripTags as fn, fill as yo, generateRandomString as _o, formatNumber as xl, isEmail as Co } from "lkt-string-tools";
 import { httpCall as Zi } from "lkt-http-client";
 import { __ as hn, currentLanguage as pn, availableLanguages as wo } from "lkt-i18n";
 import { extractPropValue as Ct, LktSettings as Ae, Option as Ni, FieldType as Z, LktColor as mn, TooltipLocationX as gn, TooltipLocationY as vn, ButtonType as Ii, FieldValidation as Ie, ValidationStatus as Me, MultipleOptionsDisplay as li, TableType as bn, booleanFieldTypes as wt, TablePermission as Ut, FieldElementType as ze, fieldsWithMultipleMode as ko, FieldValidationType as Sl, extractI18nValue as Pt, fieldTypesWithoutUndo as xo, fieldTypesWithoutClear as So, FieldAutoValidationTrigger as Eo, textFieldTypes as Lo, fieldTypesWithOptions as El, getDefaultValues as To, Field as zo, ToastPositionX as Ll, ensureFieldConfig as Mi, ItemCrudView as Zt, ItemCrudMode as qt, AccordionType as kt, AccordionToggleMode as Ui, getDefaultTextElement as Bo, getDefaultLktHeaderElement as No, getDefaultLktLayoutElement as Ao, getDefaultLktButtonElement as Ro, getDefaultLktAnchorElement as Io, getDefaultLktImageElement as Mo, getDefaultLktIconElement as Do, getDefaultLktAccordionElement as Vo, getDefaultLktBoxElement as Ho } from "lkt-vue-kernel";
-import { Field as vd, Option as bd } from "lkt-vue-kernel";
+import { Field as md, Option as gd } from "lkt-vue-kernel";
 import { date as $t } from "lkt-date-tools";
 import { openToast as Tl } from "lkt-toast";
 import { addModal as Lt } from "lkt-modal";
@@ -65,7 +65,7 @@ const yn = /* @__PURE__ */ ve({
       return H(), G(v, {
         text: f.insideEllipsis ? l.value : "",
         title: l.value,
-        class: je([a.value, "lkt-field--btn-undo"]),
+        class: We([a.value, "lkt-field--btn-undo"]),
         icon: "lkt-icn-undo",
         onClick: d
       }, null, 8, ["text", "title", "class"]);
@@ -86,7 +86,7 @@ const yn = /* @__PURE__ */ ve({
       return H(), G(v, {
         text: f.insideEllipsis ? l.value : "",
         title: l.value,
-        class: je(a.value),
+        class: We(a.value),
         icon: "lkt-icn-cancel",
         onClick: d
       }, null, 8, ["text", "title", "class"]);
@@ -112,7 +112,7 @@ const yn = /* @__PURE__ */ ve({
       return H(), G(b, {
         text: v.insideEllipsis ? a.value : "",
         title: a.value,
-        class: je(f.value),
+        class: We(f.value),
         icon: d.value,
         onClick: n,
         checked: l.value,
@@ -140,7 +140,7 @@ const yn = /* @__PURE__ */ ve({
       return H(), G(b, {
         text: v.insideEllipsis ? a.value : "",
         title: a.value,
-        class: je(f.value),
+        class: We(f.value),
         icon: d.value,
         onClick: n,
         checked: l.value,
@@ -225,7 +225,7 @@ const yn = /* @__PURE__ */ ve({
       return H(), G(v, {
         text: f.insideEllipsis ? a.value : "",
         title: a.value,
-        class: je(d.value),
+        class: We(d.value),
         icon: "lkt-icn-lang-picker",
         modal: "lkt-field-language-edit",
         "modal-data": { translations: l.value, type: f.type }
@@ -250,10 +250,10 @@ const yn = /* @__PURE__ */ ve({
   if (t === "" && typeof o != "function") return e;
   let l = e;
   const a = String(t).toLowerCase();
-  return l = l.filter((d) => {
+  return a !== "" && (l = l.filter((d) => {
     let f = String(d.label).toLowerCase();
     return f.indexOf(a) !== -1 && (i || f !== a);
-  }), typeof o == "function" && (l = l.filter((d) => o(d))), l;
+  })), typeof o == "function" && (l = l.filter((d) => o(d))), l;
 }, ti = (e, t) => {
   if (t !== "")
     return e.find((i) => Array.isArray(t) ? t.includes(i.value) : i.value == t);
@@ -287,7 +287,7 @@ const yn = /* @__PURE__ */ ve({
       return H(), G(n, {
         text: o.value,
         title: o.value,
-        class: je([l.value, "lkt-field--btn-dropdown"]),
+        class: We([l.value, "lkt-field--btn-dropdown"]),
         icon: "lkt-icn-angle-bottom",
         onClick: a,
         tabindex: "-1"
@@ -369,11 +369,11 @@ const yn = /* @__PURE__ */ ve({
         default: ue(() => [
           l.value && v.value !== "lkt-button" ? (H(), se("div", $o, [
             le("i", {
-              class: je(l.value)
+              class: We(l.value)
             }, null, 2)
           ])) : oe("", !0),
           le("div", Zo, xt(a.value), 1),
-          (H(!0), se(We, null, at(E.option.tags, (s) => (H(), G(R, he({ ref_for: !0 }, s), null, 16))), 256))
+          (H(!0), se($e, null, at(E.option.tags, (s) => (H(), G(R, he({ ref_for: !0 }, s), null, 16))), 256))
         ]),
         _: 1
       }, 16, ["class", "title"]);
@@ -394,7 +394,7 @@ const yn = /* @__PURE__ */ ve({
     return fe(() => o.modelValue, (a) => l.value = a), fe(l, (a) => i("update:modelValue", a)), (a, d) => (H(), se("div", qo, [
       le("div", jo, [
         le("label", Go, xt(a.label), 1),
-        J(qe, he({
+        J(je, he({
           modelValue: l.value,
           "onUpdate:modelValue": d[0] || (d[0] = (f) => l.value = f)
         }, {
@@ -405,7 +405,7 @@ const yn = /* @__PURE__ */ ve({
           canStep: !1
         }), null, 16, ["modelValue"])
       ]),
-      J(qe, he({
+      J(je, he({
         class: ["color-range", a.rangeClass],
         modelValue: l.value,
         "onUpdate:modelValue": d[1] || (d[1] = (f) => l.value = f)
@@ -469,7 +469,7 @@ const yn = /* @__PURE__ */ ve({
             le("div", Jo, [
               le("div", Qo, [
                 s[5] || (s[5] = le("label", { class: "like-lkt-field-label" }, "HEX", -1)),
-                J(qe, {
+                J(je, {
                   modelValue: b.value,
                   "onUpdate:modelValue": s[0] || (s[0] = (p) => b.value = p),
                   style: $i(S.value),
@@ -625,7 +625,7 @@ const yn = /* @__PURE__ */ ve({
         class: "lkt-field--label",
         innerHTML: u.label
       }, null, 8, ds)) : oe("", !0),
-      $e(le("input", {
+      Ze(le("input", {
         "onUpdate:modelValue": b[0] || (b[0] = (w) => a.value = w),
         type: "checkbox",
         ref_key: "input",
@@ -12570,16 +12570,16 @@ function fr(e, t, i, o, l, a) {
       if (!C && N === g.parentNode && N.nodeName === r.nodeName && n.onlyZeroWidthSpace(p.textContent.slice(0, m)) && n.onlyZeroWidthSpace(g.textContent.slice(h))) {
         const _e = N.childNodes;
         let Ne = !0;
-        for (let xe = 0, nt = _e.length, Ve, Ze, He, ye; xe < nt; xe++) {
+        for (let xe = 0, nt = _e.length, Ve, qe, He, ye; xe < nt; xe++) {
           if (Ve = _e[xe], ye = !n.onlyZeroWidthSpace(Ve), Ve === p) {
-            Ze = !0;
+            qe = !0;
             continue;
           }
           if (Ve === g) {
             He = !0;
             continue;
           }
-          if (!Ze && ye || Ze && He && ye) {
+          if (!qe && ye || qe && He && ye) {
             Ne = !1;
             break;
           }
@@ -12604,7 +12604,7 @@ function fr(e, t, i, o, l, a) {
       }
       if (function _e(Ne, xe) {
         const nt = Ne.childNodes;
-        for (let Ve = 0, Ze = nt.length, He; Ve < Ze; Ve++) {
+        for (let Ve = 0, qe = nt.length, He; Ve < qe; Ve++) {
           let ye = nt[Ve];
           if (!ye) continue;
           let Bt = xe, ot;
@@ -12708,9 +12708,9 @@ function fr(e, t, i, o, l, a) {
           if (_)
             xe = n.createTextNode(n.zeroWidthSpace), $.replaceChild(xe, Ne);
           else {
-            const Ze = Ne.childNodes;
-            for (nt = Ze[0]; Ze[0]; )
-              Ve = Ze[0], $.insertBefore(Ve, Ne);
+            const qe = Ne.childNodes;
+            for (nt = qe[0]; qe[0]; )
+              Ve = qe[0], $.insertBefore(Ve, Ne);
             n.removeItem(Ne);
           }
           _e === 0 && (_ ? D = I = xe : (D = nt, I = Ve));
@@ -15765,10 +15765,7 @@ const hr = {
 }), gr = {
   key: 0,
   class: "lkt-field--searchable-box"
-}, vr = ["value", "placeholder"], br = { key: 0 }, yr = {
-  key: 1,
-  class: "lkt-field-select-read"
-}, _r = ["title"], Cr = /* @__PURE__ */ ve({
+}, vr = ["value", "placeholder"], br = { key: 0 }, yr = ["title"], _r = /* @__PURE__ */ ve({
   __name: "SelectInput",
   props: {
     modelValue: { type: [String, Number, Boolean, Object, Array], default: !1 },
@@ -15844,7 +15841,7 @@ const hr = {
       }
     }), (h, y) => {
       const C = ae("lkt-tag"), _ = ae("lkt-button");
-      return H(), se(We, null, [
+      return H(), se($e, null, [
         h.searchable && (h.multiple || h.searchMode) || V(a) ? (H(), se("div", gr, [
           h.multiple ? (H(), G(C, {
             key: 0,
@@ -15867,7 +15864,7 @@ const hr = {
             ]),
             _: 1
           })) : oe("", !0),
-          $e(le("input", {
+          Ze(le("input", {
             "onUpdate:modelValue": y[0] || (y[0] = (x) => d.value = x),
             ref_key: "queryField",
             ref: f,
@@ -15883,7 +15880,7 @@ const hr = {
             [Ri, d.value]
           ])
         ])) : oe("", !0),
-        $e(J(_, {
+        Ze(J(_, {
           ref: "selectButton",
           type: V(a) ? "content" : "",
           class: "lkt-field--toggle-button lkt-field--select-button",
@@ -15894,9 +15891,12 @@ const hr = {
           onFocus: m
         }, {
           default: ue(() => [
-            V(a) || h.multiple && h.pickedOptions.length > 0 ? (H(), se(We, { key: 0 }, [
-              h.multipleDisplayEdition === V(li).Count ? (H(), se("div", br, xt(h.pickedOptions.length), 1)) : (H(), se("ul", yr, [
-                (H(!0), se(We, null, at(h.pickedOptions, (x, z) => (H(), se("li", {
+            V(a) || h.multiple && h.pickedOptions.length > 0 ? (H(), se($e, { key: 0 }, [
+              h.multipleDisplayEdition === V(li).Count ? (H(), se("div", br, xt(h.pickedOptions.length), 1)) : (H(), se("ul", {
+                key: 1,
+                class: We(["lkt-field-select-read", `multiple-display-${h.multipleDisplayEdition}`])
+              }, [
+                (H(!0), se($e, null, at(h.pickedOptions, (x, z) => (H(), se("li", {
                   title: x.label
                 }, [
                   J(St, {
@@ -15913,8 +15913,8 @@ const hr = {
                     "is-tag": V(a),
                     onClickIcon: g
                   }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter", "editable", "is-tag"])
-                ], 8, _r))), 256))
-              ]))
+                ], 8, yr))), 256))
+              ], 2))
             ], 64)) : !h.multiple && h.pickedOptions.length > 0 ? (H(), G(St, {
               key: 1,
               option: h.pickedOptions[0],
@@ -15936,7 +15936,7 @@ const hr = {
       ], 64);
     };
   }
-}), wr = { class: "lkt-calc--formula" }, kr = { class: "lkt-calc--custom-pad" }, xr = { class: "lkt-calc--pad" }, Sr = { class: "lkt-calc--numeric-pad" }, Er = { class: "lkt-calc--math-pad" }, Lr = { class: "lkt-calc--advance-math-pad" }, Tr = /* @__PURE__ */ ve({
+}), Cr = { class: "lkt-calc--formula" }, wr = { class: "lkt-calc--custom-pad" }, kr = { class: "lkt-calc--pad" }, xr = { class: "lkt-calc--numeric-pad" }, Sr = { class: "lkt-calc--math-pad" }, Er = { class: "lkt-calc--advance-math-pad" }, Lr = /* @__PURE__ */ ve({
   __name: "CalcInput",
   props: {
     modelValue: { default: "" },
@@ -15986,8 +15986,8 @@ const hr = {
         ref_key: "container",
         ref: f
       }, [
-        le("div", wr, [
-          $e(le("input", {
+        le("div", Cr, [
+          Ze(le("input", {
             type: "text",
             ref_key: "input",
             ref: a,
@@ -16009,15 +16009,15 @@ const hr = {
           "location-y": "bottom"
         }, {
           default: ue(() => [
-            le("div", kr, [
-              (H(!0), se(We, null, at(m.options, (C) => (H(), G(h, {
+            le("div", wr, [
+              (H(!0), se($e, null, at(m.options, (C) => (H(), G(h, {
                 icon: C.icon,
                 text: C.label,
                 onClick: (_) => r(C)
               }, null, 8, ["icon", "text", "onClick"]))), 256))
             ]),
-            le("div", xr, [
-              le("div", Sr, [
+            le("div", kr, [
+              le("div", xr, [
                 J(h, {
                   onClick: g[1] || (g[1] = (C) => u(7)),
                   text: "7",
@@ -16077,7 +16077,7 @@ const hr = {
                   text: " "
                 })
               ]),
-              le("div", Er, [
+              le("div", Sr, [
                 J(h, {
                   onClick: g[13] || (g[13] = (C) => S("[")),
                   text: "["
@@ -16111,7 +16111,7 @@ const hr = {
                   text: "÷"
                 })
               ]),
-              le("div", Lr, [
+              le("div", Er, [
                 J(h, {
                   onClick: g[21] || (g[21] = (C) => E()),
                   text: "√"
@@ -16144,7 +16144,7 @@ const hr = {
       ], 512);
     };
   }
-}), zr = /* @__PURE__ */ ve({
+}), Tr = /* @__PURE__ */ ve({
   __name: "ValidationItem",
   props: {
     validation: {},
@@ -16163,16 +16163,16 @@ const hr = {
       return d.push("code-" + t.validation.code), d.push("is-" + t.validation.status), d.join(" ");
     });
     return (d, f) => (H(), se("div", {
-      class: je(["lkt-field-validation-message", a.value])
+      class: We(["lkt-field-validation-message", a.value])
     }, [
       o.value ? (H(), G(zt(l.value), { key: 0 })) : oe("", !0),
       Mt(" " + xt(i.value), 1)
     ], 2));
   }
-}), Br = {
+}), zr = {
   key: 0,
   class: "lkt-field-validation-info"
-}, Nr = /* @__PURE__ */ ve({
+}, Br = /* @__PURE__ */ ve({
   __name: "LktFieldValidations",
   props: {
     items: { default: () => [] },
@@ -16182,15 +16182,15 @@ const hr = {
     const t = e, i = Y(t.items), o = Y(!1);
     return fe(() => t.items, (l) => {
       o.value = !0, Tt(() => o.value = !1);
-    }, { deep: !0 }), (l, a) => o.value ? oe("", !0) : (H(), se("div", Br, [
-      (H(!0), se(We, null, at(i.value, (d) => (H(), G(zr, {
+    }, { deep: !0 }), (l, a) => o.value ? oe("", !0) : (H(), se("div", zr, [
+      (H(!0), se($e, null, at(i.value, (d) => (H(), G(Tr, {
         validation: d,
         stack: l.stack,
         key: d.code
       }, null, 8, ["validation", "stack"]))), 128))
     ]));
   }
-}), Ar = ["id"], Rr = /* @__PURE__ */ ve({
+}), Nr = ["id"], Ar = /* @__PURE__ */ ve({
   __name: "SearchInput",
   props: {
     modelValue: { default: "" },
@@ -16232,8 +16232,8 @@ const hr = {
     };
     return (E, S) => {
       const R = ae("lkt-table"), s = ae("lkt-tooltip");
-      return H(), se(We, null, [
-        $e(le("input", {
+      return H(), se($e, null, [
+        Ze(le("input", {
           id: E.id,
           type: "text",
           ref: "input",
@@ -16241,7 +16241,7 @@ const hr = {
           onFocus: u,
           onBlur: b,
           onKeyup: v
-        }, null, 40, Ar), [
+        }, null, 40, Nr), [
           [Ri, l.value]
         ]),
         E.editable && E.hadFirstFocus ? (H(), G(s, {
@@ -16281,16 +16281,13 @@ const hr = {
       ], 64);
     };
   }
-}), Ir = {
+}), Rr = {
   key: 0,
   class: "lkt-field-main"
-}, Mr = {
+}, Ir = {
   key: 3,
   class: "lkt-field--read-value"
-}, Dr = ["innerHTML", "title"], Vr = ["title"], Hr = { key: 0 }, Fr = {
-  key: 1,
-  class: "lkt-field-select-read"
-}, Or = ["title"], Ur = ["innerHTML"], Pr = ["innerHTML", "title"], Wr = ["innerHTML", "title"], $r = /* @__PURE__ */ ve({
+}, Mr = ["innerHTML", "title"], Dr = ["title"], Vr = { key: 0 }, Hr = ["title"], Fr = ["innerHTML"], Or = ["innerHTML", "title"], Ur = ["innerHTML", "title"], Pr = /* @__PURE__ */ ve({
   __name: "LktFieldValue",
   props: {
     type: { default: Z.Text },
@@ -16355,11 +16352,12 @@ const hr = {
           value: V(n),
           title: u.title,
           data: u.slotData
-        }, null, 8, ["value", "title", "data"])) : (H(), se(We, { key: 3 }, [
-          u.type === V(Z).File || u.type === V(Z).Image ? (H(), se("div", Ir, [
+        }, null, 8, ["value", "title", "data"])) : (H(), se($e, { key: 3 }, [
+          u.type === V(Z).File || u.type === V(Z).Image ? (H(), se("div", Rr, [
             J(E, {
               class: "lkt-field--toggle-button",
-              text: u.type === V(Z).File ? u.fileName : ""
+              text: u.type === V(Z).File ? u.fileName : "",
+              disabled: ""
             }, {
               default: ue(() => [
                 u.type === V(Z).Image ? (H(), G(w, {
@@ -16397,7 +16395,7 @@ const hr = {
               Mt(xt(V(n)), 1)
             ]),
             _: 1
-          }, 8, ["title", "to"])) : V(wt).includes(u.type) ? (H(), se("div", Mr, [
+          }, 8, ["title", "to"])) : V(wt).includes(u.type) ? (H(), se("div", Ir, [
             J(R, {
               icon: V(n) ? "lkt-icn-check" : "lkt-icn-cancel",
               "featured-text": u.label,
@@ -16408,14 +16406,17 @@ const hr = {
             class: "lkt-field--read-value",
             innerHTML: V(n),
             title: u.title
-          }, null, 8, Dr)) : u.type === V(Z).Select ? (H(), se("div", {
+          }, null, 8, Mr)) : u.type === V(Z).Select ? (H(), se("div", {
             key: 5,
             class: "lkt-field--read-value",
             title: u.title
           }, [
-            u.multiple ? (H(), se(We, { key: 0 }, [
-              u.multipleDisplay === V(li).Count ? (H(), se("div", Hr, xt(V(n).length), 1)) : V(n).length > 0 ? (H(), se("ul", Fr, [
-                (H(!0), se(We, null, at(V(n), (s, r) => {
+            u.multiple ? (H(), se($e, { key: 0 }, [
+              u.multipleDisplay === V(li).Count ? (H(), se("div", Vr, xt(V(n).length), 1)) : V(n).length > 0 ? (H(), se("ul", {
+                key: 1,
+                class: We(["lkt-field-select-read", `multiple-display-${u.multipleDisplay}`])
+              }, [
+                (H(!0), se($e, null, at(V(n), (s, r) => {
                   var c;
                   return H(), se("li", {
                     title: (c = V(n)[r]) == null ? void 0 : c.label
@@ -16431,9 +16432,9 @@ const hr = {
                       download: u.optionsDownload,
                       "label-formatter": u.optionsLabelFormatter
                     }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter"])
-                  ], 8, Or);
+                  ], 8, Hr);
                 }), 256))
-              ])) : oe("", !0)
+              ], 2)) : oe("", !0)
             ], 64)) : V(n).length > 0 ? (H(), G(St, {
               key: 1,
               option: V(n)[0],
@@ -16446,7 +16447,7 @@ const hr = {
               download: u.optionsDownload,
               "label-formatter": u.optionsLabelFormatter
             }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter"])) : oe("", !0)
-          ], 8, Vr)) : u.modal ? (H(), G(E, {
+          ], 8, Dr)) : u.modal ? (H(), G(E, {
             key: 6,
             class: "lkt-field--read-value",
             title: u.title,
@@ -16455,7 +16456,7 @@ const hr = {
             "modal-data": u.modalData
           }, {
             default: ue(() => [
-              le("div", { innerHTML: V(n) }, null, 8, Ur)
+              le("div", { innerHTML: V(n) }, null, 8, Fr)
             ]),
             _: 1
           }, 8, ["title", "modal", "modal-key", "modal-data"])) : u.download ? (H(), G(St, {
@@ -16470,17 +16471,17 @@ const hr = {
             class: "lkt-field--read-value",
             innerHTML: u.title,
             title: u.title
-          }, null, 8, Pr)) : (H(), se("div", {
+          }, null, 8, Or)) : (H(), se("div", {
             key: 9,
             class: "lkt-field--read-value",
             innerHTML: V(n),
             title: u.title
-          }, null, 8, Wr))
+          }, null, 8, Ur))
         ], 64))
       ]);
     };
   }
-}), Zr = ["name", "id", "disabled", "readonly", "placeholder", "accept"], qr = ["click-ref", "disabled"], jr = { class: "lkt-grid-1" }, Gr = /* @__PURE__ */ ve({
+}), Wr = ["name", "id", "disabled", "readonly", "placeholder", "accept"], $r = ["click-ref", "disabled"], Zr = { class: "lkt-grid-1" }, qr = /* @__PURE__ */ ve({
   __name: "FileInput",
   props: {
     modelValue: { default: "" },
@@ -16539,7 +16540,7 @@ const hr = {
     const b = Y(!1);
     return (w, E) => {
       const S = ae("lkt-image"), R = ae("lkt-button");
-      return H(), se(We, null, [
+      return H(), se($e, null, [
         le("input", {
           ref_key: "inputElement",
           ref: a,
@@ -16551,7 +16552,7 @@ const hr = {
           placeholder: w.placeholder,
           accept: w.accept,
           onChange: u
-        }, null, 40, Zr),
+        }, null, 40, Wr),
         b.value ? w.isImage ? w.isImage ? (H(), se("div", {
           key: 2,
           "click-ref": a.value,
@@ -16569,7 +16570,7 @@ const hr = {
           }, {
             overlay: ue(() => [
               le("div", null, [
-                le("div", jr, [
+                le("div", Zr, [
                   J(R, {
                     ref_key: "buttonRef",
                     ref: d,
@@ -16589,7 +16590,7 @@ const hr = {
             ]),
             _: 1
           }, 8, ["src"])) : oe("", !0)
-        ], 8, qr)) : oe("", !0) : (H(), G(R, {
+        ], 8, $r)) : oe("", !0) : (H(), G(R, {
           key: 1,
           ref_key: "buttonRef",
           ref: d,
@@ -16623,10 +16624,10 @@ const hr = {
       ], 64);
     };
   }
-}), Kr = { class: "lkt-calendar" }, Yr = { class: "calendar" }, Xr = { class: "lkt-calendar--header-grid" }, Jr = ["innerHTML"], Qr = {
+}), jr = { class: "lkt-calendar" }, Gr = { class: "calendar" }, Kr = { class: "lkt-calendar--header-grid" }, Yr = ["innerHTML"], Xr = {
   key: 0,
   class: "lkt-calendar--day-grid"
-}, eu = { class: "lkt-calendar--day lkt-calendar--filling-day" }, tu = /* @__PURE__ */ ve({
+}, Jr = { class: "lkt-calendar--day lkt-calendar--filling-day" }, Qr = /* @__PURE__ */ ve({
   __name: "LktCalendar",
   props: {
     modelValue: {}
@@ -16652,9 +16653,9 @@ const hr = {
     };
     return (p, m) => {
       const g = ae("lkt-button");
-      return H(), se("div", Kr, [
-        le("div", Yr, [
-          le("header", Xr, [
+      return H(), se("div", jr, [
+        le("div", Gr, [
+          le("header", Kr, [
             J(g, {
               class: "lkt-calendar--day",
               onClick: S
@@ -16667,7 +16668,7 @@ const hr = {
             le("div", {
               class: "lkt-calendar--header-text",
               innerHTML: u.value
-            }, null, 8, Jr),
+            }, null, 8, Yr),
             J(g, {
               class: "lkt-calendar--day",
               onClick: E
@@ -16678,11 +16679,11 @@ const hr = {
               _: 1
             })
           ]),
-          v.value ? oe("", !0) : (H(), se("div", Qr, [
+          v.value ? oe("", !0) : (H(), se("div", Xr, [
             m[2] || (m[2] = go('<div class="lkt-calendar--day lkt-calendar--week-day">Su</div><div class="lkt-calendar--day lkt-calendar--week-day">Mo</div><div class="lkt-calendar--day lkt-calendar--week-day">Tu</div><div class="lkt-calendar--day lkt-calendar--week-day">We</div><div class="lkt-calendar--day lkt-calendar--week-day">Th</div><div class="lkt-calendar--day lkt-calendar--week-day">Fr</div><div class="lkt-calendar--day lkt-calendar--week-day">Sa</div>', 7)),
-            (H(!0), se(We, null, at(w.value, (h) => (H(), se("div", eu))), 256)),
-            (H(!0), se(We, null, at(b.value, (h) => (H(), G(g, {
-              class: je(["lkt-calendar--day", r(h)]),
+            (H(!0), se($e, null, at(w.value, (h) => (H(), se("div", Jr))), 256)),
+            (H(!0), se($e, null, at(b.value, (h) => (H(), G(g, {
+              class: We(["lkt-calendar--day", r(h)]),
               text: h.toString(),
               onClick: () => c(h)
             }, null, 8, ["class", "text", "onClick"]))), 256))
@@ -16694,7 +16695,7 @@ const hr = {
       ]);
     };
   }
-}), iu = /* @__PURE__ */ ve({
+}), eu = /* @__PURE__ */ ve({
   __name: "DateInput",
   props: {
     modelValue: { default: "" },
@@ -16732,7 +16733,7 @@ const hr = {
         }
       }, {
         tooltip: ue(() => [
-          J(tu, {
+          J(Qr, {
             modelValue: l.value,
             "onUpdate:modelValue": b[0] || (b[0] = (E) => l.value = E)
           }, null, 8, ["modelValue"])
@@ -16747,7 +16748,7 @@ const hr = {
     i ? e += o : e = o + e;
   }
   return e;
-}, lu = { key: 1 }, Gn = /* @__PURE__ */ ve({
+}, tu = { key: 1 }, Gn = /* @__PURE__ */ ve({
   __name: "CardInput",
   props: {
     modelValue: { default: () => ({}) },
@@ -16781,13 +16782,13 @@ const hr = {
           o.value ? lt(a.$slots, "item", {
             key: 0,
             item: o.value
-          }) : (H(), se("p", lu, "No data"))
+          }) : (H(), se("p", tu, "No data"))
         ]),
         _: 3
       }, 8, ["modal", "modal-key", "modal-data"]);
     };
   }
-}), nu = /* @__PURE__ */ ve({
+}), iu = /* @__PURE__ */ ve({
   __name: "MultipleCardInput",
   props: {
     modelValue: { default: () => [] },
@@ -16872,10 +16873,10 @@ const hr = {
       innerHTML: a.modelValue
     }, null, 40, ["onInput", "onKeydown", "innerHTML"])).cacheIndex = 0, kl(1), d[0]);
   }
-}), ou = { class: "lkt-element-content" }, su = {
+}), lu = { class: "lkt-element-content" }, nu = {
   key: 0,
   class: "lkt-element-actions"
-}, au = { class: "lkt-element-tooltip-menu" }, ru = /* @__PURE__ */ ve({
+}, ou = { class: "lkt-element-tooltip-menu" }, su = /* @__PURE__ */ ve({
   __name: "ComponentManager",
   props: {
     modelValue: {
@@ -16990,9 +16991,9 @@ const hr = {
             var N;
             return [
               le("div", {
-                class: je(["lkt-element", `is-${z.type}`])
+                class: We(["lkt-element", `is-${z.type}`])
               }, [
-                le("div", ou, [
+                le("div", lu, [
                   z.type === "text" ? (H(), G(yt, {
                     key: 0,
                     modelValue: z.text,
@@ -17110,7 +17111,7 @@ const hr = {
                     "is-child": ""
                   }, null, 8, ["modelValue", "onUpdate:modelValue", "layout-selector"])) : (H(), G(zt(z.component), Te(he({ key: 9 }, z.props)), null, 16))
                 ]),
-                l.value ? oe("", !0) : (H(), se("div", su, [
+                l.value ? oe("", !0) : (H(), se("div", nu, [
                   J(C, Te(De({
                     type: V(Ii).Tooltip,
                     text: z.type,
@@ -17123,7 +17124,7 @@ const hr = {
                     }
                   })), {
                     tooltip: ue(({ doClose: B }) => [
-                      le("div", au, [
+                      le("div", ou, [
                         E(z) ? (H(), G(C, Te(he({ key: 0 }, {
                           text: "Config",
                           icon: "lkt-icn-settings-files-1",
@@ -17208,7 +17209,7 @@ const hr = {
       ]);
     };
   }
-}), uu = { class: "lkt-elements-toolbar-group" }, du = /* @__PURE__ */ ve({
+}), au = { class: "lkt-elements-toolbar-group" }, ru = /* @__PURE__ */ ve({
   __name: "ElementsInput",
   props: {
     modelValue: {
@@ -17276,7 +17277,7 @@ const hr = {
           class: "lkt-wysiwyg-toolbar lkt-tooltip",
           style: $i({ top: m.value + "px" })
         }, [
-          le("div", uu, [
+          le("div", au, [
             J(y, he({
               text: "b"
             }, {
@@ -17357,7 +17358,7 @@ const hr = {
             }
           })), null, 16)
         ], 4),
-        J(ru, {
+        J(su, {
           modelValue: o.value,
           "onUpdate:modelValue": h[13] || (h[13] = (C) => o.value = C),
           onDeleteElement: v,
@@ -17366,12 +17367,12 @@ const hr = {
       ], 512);
     };
   }
-}), cu = (e, t) => {
+}), uu = (e, t) => {
   const i = e.__vccOpts || e;
   for (const [o, l] of t)
     i[o] = l;
   return i;
-}, fu = /* @__PURE__ */ cu(du, [["__scopeId", "data-v-25933d69"]]), hu = /* @__PURE__ */ ve({
+}, du = /* @__PURE__ */ uu(ru, [["__scopeId", "data-v-25933d69"]]), cu = /* @__PURE__ */ ve({
   __name: "FileUploadButton",
   props: {
     config: {},
@@ -17396,16 +17397,16 @@ const hr = {
       }), null, 16, ["type", "resource", "resource-data", "text", "class"]);
     };
   }
-}), pu = ["data-show-ui", "data-labeled"], mu = ["for", "innerHTML"], gu = { class: "lkt-field-content" }, vu = {
+}), fu = ["data-show-ui", "data-labeled"], hu = ["for", "innerHTML"], pu = { class: "lkt-field-content" }, mu = {
   key: 0,
   class: "lkt-field--atn-btn-container"
-}, bu = {
+}, gu = {
   key: 1,
   class: "lkt-field--icon"
-}, yu = ["value", "type", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete", "min", "max", "step"], _u = ["value", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete"], Cu = {
+}, vu = ["value", "type", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete", "min", "max", "step"], bu = ["value", "name", "id", "disabled", "readonly", "placeholder", "tabindex", "autocomplete"], yu = {
   key: 4,
   class: "lkt-field--info-nav"
-}, wu = { key: 0 }, ku = ["data-index", "onClick"], qe = /* @__PURE__ */ ve({
+}, _u = { key: 0 }, Cu = ["data-index", "onClick"], je = /* @__PURE__ */ ve({
   __name: "LktField",
   props: /* @__PURE__ */ vo({
     modelValue: { type: [String, Number, Boolean, Object, Array] },
@@ -17533,7 +17534,7 @@ const hr = {
         te.thousandsSeparator,
         te.removeDecimalsIfZero
       ) : k.value.toString()) : a.type === Z.Html ? fn(k.value) : k.value;
-    }), Ze = ee(() => typeof a.min == "string" ? parseFloat(a.min) : typeof a.min == "number" ? a.min : !1), He = ee(() => typeof a.max == "string" ? parseFloat(a.max) : typeof a.max == "number" ? a.max : !1), ye = ee(() => {
+    }), qe = ee(() => typeof a.min == "string" ? parseFloat(a.min) : typeof a.min == "number" ? a.min : !1), He = ee(() => typeof a.max == "string" ? parseFloat(a.max) : typeof a.max == "number" ? a.max : !1), ye = ee(() => {
       var T, K, de, Se;
       if (wt.includes(a.type)) {
         if (k.value === !0 && typeof a.configOn == "object")
@@ -17777,7 +17778,7 @@ const hr = {
       }), o("upload-error");
     }, ro = (T) => {
       if (!a.enableAutoNumberFix) return !1;
-      let K = Number(T), de = Oo(K, Ze.value, He.value);
+      let K = Number(T), de = Oo(K, qe.value, He.value);
       return K !== de ? (k.value = de, !0) : !1;
     };
     t({
@@ -17820,7 +17821,7 @@ const hr = {
       var Le, Ye, Xe, Je, Qe, et, tt, rt, ut, dt, ct, Ft, Ot;
       const de = ae("lkt-button"), Se = ae("lkt-loader"), Re = ae("lkt-tooltip");
       return H(), se("div", {
-        class: je(["lkt-field", nt.value]),
+        class: We(["lkt-field", nt.value]),
         "data-show-ui": Pe.value,
         "data-labeled": !V(l).label,
         ref_key: "container",
@@ -17832,9 +17833,9 @@ const hr = {
           for: V(d),
           class: "lkt-field--label",
           innerHTML: ye.value
-        }, null, 8, mu)) : oe("", !0),
-        le("div", gu, [
-          Be.value ? (H(), se("div", vu, [
+        }, null, 8, hu)) : oe("", !0),
+        le("div", pu, [
+          Be.value ? (H(), se("div", mu, [
             T.featuredButton === "password" && Gt.value ? (H(), G(qi, {
               key: 0,
               modelValue: c.value,
@@ -17855,9 +17856,9 @@ const hr = {
               onClick: vl
             })) : oe("", !0)
           ])) : oe("", !0),
-          Ue.value ? (H(), se("div", bu, [
+          Ue.value ? (H(), se("div", gu, [
             le("i", {
-              class: je(Ue.value)
+              class: We(Ue.value)
             }, null, 2)
           ])) : oe("", !0),
           y.value ? (H(), G(zt(fo.value), he({ key: 2 }, ho.value, { class: "lkt-field-main" }), {
@@ -17905,7 +17906,7 @@ const hr = {
                   ref_key: "inputElement",
                   ref: w,
                   "edit-mode": y.value,
-                  min: Ze.value,
+                  min: qe.value,
                   max: He.value
                 }, null, 8, ["modelValue", "edit-mode", "min", "max"])) : T.type === V(Z).Color ? (H(), G(kn, {
                   key: 4,
@@ -17913,7 +17914,7 @@ const hr = {
                   "onUpdate:modelValue": K[4] || (K[4] = (me) => Ge(k) ? k.value = me : null),
                   ref_key: "inputElement",
                   ref: w
-                }, null, 8, ["modelValue"])) : Q.value || ne.value ? (H(), G(Gr, {
+                }, null, 8, ["modelValue"])) : Q.value || ne.value ? (H(), G(qr, {
                   key: 5,
                   modelValue: s.value,
                   "onUpdate:modelValue": K[5] || (K[5] = (me) => s.value = me),
@@ -17935,7 +17936,7 @@ const hr = {
                   onChange: Oi,
                   onUploadSuccess: so,
                   onUploadError: ao
-                }, null, 8, ["modelValue", "file-name", "id", "tabindex", "resource", "resource-data", "name", "placeholder", "accept", "focusing", "disabled", "readonly", "is-image"])) : X.value ? (H(), G(iu, {
+                }, null, 8, ["modelValue", "file-name", "id", "tabindex", "resource", "resource-data", "name", "placeholder", "accept", "focusing", "disabled", "readonly", "is-image"])) : X.value ? (H(), G(eu, {
                   key: 6,
                   modelValue: s.value,
                   "onUpdate:modelValue": K[7] || (K[7] = (me) => s.value = me),
@@ -17943,7 +17944,7 @@ const hr = {
                   tabindex: T.tabindex,
                   lang: A.value,
                   name: T.name
-                }, null, 8, ["modelValue", "id", "tabindex", "lang", "name"])) : T.type === V(Z).Select ? (H(), G(Cr, {
+                }, null, 8, ["modelValue", "id", "tabindex", "lang", "name"])) : T.type === V(Z).Select ? (H(), G(_r, {
                   key: 7,
                   ref_key: "inputElement",
                   ref: w,
@@ -17974,7 +17975,7 @@ const hr = {
                   onSearch: Qn,
                   onTag: eo,
                   onUntag: to
-                }, null, 8, ["modelValue", "show-options", "searchable", "search-mode", "multiple", "can-tag", "options-text", "options-icon", "options-class", "option-slot", "options-modal", "options-download", "options-label-formatter", "options-modal-data", "picked-options", "editable", "focusing", "search-placeholder", "multiple-display-edition"])) : T.type === V(Z).Calc ? (H(), G(Tr, {
+                }, null, 8, ["modelValue", "show-options", "searchable", "search-mode", "multiple", "can-tag", "options-text", "options-icon", "options-class", "option-slot", "options-modal", "options-download", "options-label-formatter", "options-modal-data", "picked-options", "editable", "focusing", "search-placeholder", "multiple-display-edition"])) : T.type === V(Z).Calc ? (H(), G(Lr, {
                   key: 8,
                   ref_key: "inputElement",
                   ref: w,
@@ -17990,7 +17991,7 @@ const hr = {
                   options: j.value,
                   onFocus: Jt,
                   onBlur: Qt
-                }, null, 8, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "disabled", "readonly", "options"])) : T.type === V(Z).Search ? (H(), G(Rr, {
+                }, null, 8, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "disabled", "readonly", "options"])) : T.type === V(Z).Search ? (H(), G(Ar, {
                   key: 9,
                   ref_key: "inputElement",
                   ref: w,
@@ -18008,7 +18009,7 @@ const hr = {
                   container: z.value,
                   onFocus: Jt,
                   onBlur: Qt
-                }, null, 8, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "had-first-focus", "disabled", "readonly", "options-resource", "container"])) : T.type === V(Z).Elements ? (H(), G(fu, {
+                }, null, 8, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "had-first-focus", "disabled", "readonly", "options-resource", "container"])) : T.type === V(Z).Elements ? (H(), G(du, {
                   key: 10,
                   ref_key: "inputElement",
                   ref: w,
@@ -18026,7 +18027,7 @@ const hr = {
                   container: z.value,
                   onFocus: Jt,
                   onBlur: Qt
-                }, null, 8, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "had-first-focus", "disabled", "readonly", "options-resource", "container"])) : T.type === V(Z).Card && a.multiple ? (H(), G(nu, {
+                }, null, 8, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "had-first-focus", "disabled", "readonly", "options-resource", "container"])) : T.type === V(Z).Card && a.multiple ? (H(), G(iu, {
                   key: 11,
                   modelValue: V(k),
                   "onUpdate:modelValue": K[13] || (K[13] = (me) => Ge(k) ? k.value = me : null),
@@ -18088,7 +18089,7 @@ const hr = {
                     ]),
                     key: "1"
                   } : void 0
-                ]), 1032, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "had-first-focus", "disabled", "readonly", "options-resource", "modal", "modal-key", "modal-data", "item-type"])) : pe.value === "input" ? $e((H(), se("input", {
+                ]), 1032, ["modelValue", "id", "tabindex", "name", "editable", "focusing", "had-first-focus", "disabled", "readonly", "options-resource", "modal", "modal-key", "modal-data", "item-type"])) : pe.value === "input" ? Ze((H(), se("input", {
                   key: 13,
                   "onUpdate:modelValue": K[15] || (K[15] = (me) => Ge(k) ? k.value = me : null),
                   ref: (me) => w.value = me,
@@ -18101,7 +18102,7 @@ const hr = {
                   placeholder: Bt.value,
                   tabindex: T.tabindex,
                   autocomplete: _e.value,
-                  min: Ze.value,
+                  min: qe.value,
                   max: He.value,
                   step: T.step,
                   onKeyup: fl,
@@ -18110,9 +18111,9 @@ const hr = {
                   onBlur: Xt,
                   onClick: Ht,
                   onChange: Oi
-                }, null, 40, yu)), [
+                }, null, 40, vu)), [
                   [bo, V(k)]
-                ]) : pe.value === "textarea" ? $e((H(), se("textarea", {
+                ]) : pe.value === "textarea" ? Ze((H(), se("textarea", {
                   key: 14,
                   "onUpdate:modelValue": K[16] || (K[16] = (me) => Ge(k) ? k.value = me : null),
                   ref: (me) => w.value = me,
@@ -18130,7 +18131,7 @@ const hr = {
                   onBlur: Xt,
                   onClick: Ht,
                   onChange: Oi
-                }, null, 40, _u)), [
+                }, null, 40, bu)), [
                   [Ri, V(k)]
                 ]) : T.type === V(Z).Html ? (H(), G(mr, {
                   key: 15,
@@ -18153,7 +18154,7 @@ const hr = {
             }),
             _: 3
           }, 16)) : oe("", !0),
-          y.value ? oe("", !0) : (H(), G($r, {
+          y.value ? oe("", !0) : (H(), G(Pr, {
             key: 3,
             value: po.value,
             type: T.type,
@@ -18194,14 +18195,14 @@ const hr = {
               key: "0"
             } : void 0
           ]), 1032, ["value", "type", "label", "title", "file-name", "value-slot", "empty-value-slot", "slot-data", "download", "multiple", "multipleDisplay", "modal", "modal-key", "modal-data", "option-slot", "options-download", "options-modal", "options-modal-data", "options-icon", "options-text", "options-class", "options-label-formatter", "options-resource", "options-resource-data", "read-mode-config"])),
-          Pe.value ? (H(), se("div", Cu, [
-            $e(J(yn, { onClick: Fi }, null, 512), [
+          Pe.value ? (H(), se("div", yu, [
+            Ze(J(yn, { onClick: Fi }, null, 512), [
               [_t, ll.value]
             ]),
-            $e(J(_n, { onClick: cl }, null, 512), [
+            Ze(J(_n, { onClick: cl }, null, 512), [
               [_t, nl.value]
             ]),
-            T.type === V(Z).Number ? $e((H(), G(de, {
+            T.type === V(Z).Number ? Ze((H(), G(de, {
               key: 0,
               class: "lkt-field--info-btn",
               icon: "lkt-icn-less",
@@ -18209,7 +18210,7 @@ const hr = {
             }, null, 512)), [
               [_t, Rt.value]
             ]) : oe("", !0),
-            T.type === V(Z).Number ? $e((H(), G(de, {
+            T.type === V(Z).Number ? Ze((H(), G(de, {
               key: 1,
               class: "lkt-field--info-btn",
               icon: "lkt-icn-more",
@@ -18239,19 +18240,19 @@ const hr = {
               ]),
               _: 1
             })) : oe("", !0),
-            y.value && ul.value ? (H(), G(hu, {
+            y.value && ul.value ? (H(), G(cu, {
               key: 4,
               config: T.fileUploadButton,
               "file-upload-http": T.fileUploadHttp
             }, null, 8, ["config", "file-upload-http"])) : oe("", !0),
-            T.type === V(Z).Password ? $e((H(), G(qi, {
+            T.type === V(Z).Password ? Ze((H(), G(qi, {
               key: 5,
               modelValue: c.value,
               "onUpdate:modelValue": K[18] || (K[18] = (we) => c.value = we)
             }, null, 8, ["modelValue"])), [
               [_t, ol.value]
             ]) : oe("", !0),
-            $e(J(zl, {
+            Ze(J(zl, {
               modelValue: s.value,
               "onUpdate:modelValue": K[19] || (K[19] = (we) => s.value = we),
               type: T.type
@@ -18270,7 +18271,7 @@ const hr = {
               class: "lkt-field--info-btn lkt-field--custom-btn",
               icon: T.customButtonClass
             }, null, 8, ["text", "icon"])) : oe("", !0),
-            y.value ? $e((H(), G(Wo, {
+            y.value ? Ze((H(), G(Wo, {
               key: 8,
               onClick: Xn
             }, null, 512)), [
@@ -18291,7 +18292,7 @@ const hr = {
             }, null, 8, ["show-undo", "show-clear", "show-password", "show-edition", "show-password-check", "show-edition-check"])) : oe("", !0)
           ])) : oe("", !0)
         ]),
-        y.value && ((Ft = T.validation) == null ? void 0 : Ft.type) === V(Sl).Auto && h.value.length > 0 ? (H(), G(Nr, {
+        y.value && ((Ft = T.validation) == null ? void 0 : Ft.type) === V(Sl).Auto && h.value.length > 0 ? (H(), G(Br, {
           key: 2,
           items: h.value,
           stack: (Ot = T.validation) == null ? void 0 : Ot.stack
@@ -18309,7 +18310,7 @@ const hr = {
           "location-y": "bottom"
         }, T.tooltipConfig), {
           default: ue(() => [
-            N.value ? (H(), se("div", wu, [
+            N.value ? (H(), se("div", _u, [
               B.value ? (H(), G(Se, { key: 0 })) : oe("", !0),
               B.value ? oe("", !0) : (H(), se("ul", {
                 key: 1,
@@ -18317,10 +18318,10 @@ const hr = {
                 ref_key: "optionList",
                 ref: L
               }, [
-                (H(!0), se(We, null, at(q.value, (we, ft) => {
+                (H(!0), se($e, null, at(q.value, (we, ft) => {
                   var ht, pt, mt, gt, vt, bt, st, it, Et;
                   return H(), se("li", {
-                    class: je({
+                    class: We({
                       "is-active": V(Po)(we, s.value, T.multiple),
                       "is-focused": ft === O.value,
                       "is-disabled": we.disabled
@@ -18348,17 +18349,17 @@ const hr = {
                       "label-formatter": (Et = T.optionsConfig) == null ? void 0 : Et.labelFormatter,
                       editable: y.value
                     }, null, 8, ["option", "option-slot", "icon", "text", "modal", "modal-data", "download", "label-formatter", "editable"]))
-                  ], 10, ku);
+                  ], 10, Cu);
                 }), 256))
               ], 512))
             ])) : oe("", !0)
           ]),
           _: 3
         }, 16, ["modelValue", "referrer"])) : oe("", !0)
-      ], 10, pu);
+      ], 10, fu);
     };
   }
-}), xu = { class: "lkt-grid-1" }, Su = /* @__PURE__ */ ve({
+}), wu = { class: "lkt-grid-1" }, ku = /* @__PURE__ */ ve({
   __name: "LktTextLanguageEditModal",
   props: {
     modalName: { default: "" },
@@ -18378,8 +18379,8 @@ const hr = {
         "z-index": i.zIndex
       }, {
         default: ue(() => [
-          le("div", xu, [
-            J(qe, {
+          le("div", wu, [
+            J(je, {
               type: i.type,
               label: "Idioma actual (ES)",
               modelValue: i.translations.es,
@@ -18387,7 +18388,7 @@ const hr = {
               "can-clear": "",
               "can-undo": ""
             }, null, 8, ["type", "modelValue"]),
-            (H(!0), se(We, null, at(t.value, (a) => (H(), G(qe, {
+            (H(!0), se($e, null, at(t.value, (a) => (H(), G(je, {
               type: i.type,
               modelValue: i.translations[a],
               "onUpdate:modelValue": (d) => i.translations[a] = d,
@@ -18401,7 +18402,7 @@ const hr = {
       }, 8, ["modal-name", "modal-key", "z-index"]);
     };
   }
-}), Eu = { class: "lkt-grid-1" }, Lu = /* @__PURE__ */ ve({
+}), xu = { class: "lkt-grid-1" }, Su = /* @__PURE__ */ ve({
   __name: "LktBoxElementModal",
   props: {
     modalName: { default: "" },
@@ -18432,7 +18433,7 @@ const hr = {
         updateButton: !1
       }), {
         item: ue(({ item: n }) => [
-          le("div", Eu, [
+          le("div", xu, [
             J(d, he({
               type: V(Z).Switch,
               label: "Has header"
@@ -18470,7 +18471,7 @@ const hr = {
       }, 16, ["modelValue"]);
     };
   }
-}), Tu = { class: "lkt-grid-1" }, zu = /* @__PURE__ */ ve({
+}), Eu = { class: "lkt-grid-1" }, Lu = /* @__PURE__ */ ve({
   __name: "LktAccordionElementModal",
   props: {
     modalName: { default: "" },
@@ -18531,8 +18532,8 @@ const hr = {
         updateButton: !1
       }), {
         item: ue(({ item: v }) => [
-          le("div", Tu, [
-            J(qe, he({
+          le("div", Eu, [
+            J(je, he({
               type: V(Z).Select,
               label: "Type",
               options: l
@@ -18540,7 +18541,7 @@ const hr = {
               modelValue: v.props.type,
               "onUpdate:modelValue": (u) => v.props.type = u
             }), null, 16, ["modelValue", "onUpdate:modelValue"]),
-            J(qe, he({
+            J(je, he({
               type: V(Z).Select,
               label: "Toggle Mode",
               options: a
@@ -18548,14 +18549,14 @@ const hr = {
               modelValue: v.props.toggleMode,
               "onUpdate:modelValue": (u) => v.props.toggleMode = u
             }), null, 16, ["modelValue", "onUpdate:modelValue"]),
-            J(qe, he({
+            J(je, he({
               type: V(Z).Switch,
               label: "Has icon"
             }, {
               modelValue: v.config.hasIcon,
               "onUpdate:modelValue": (u) => v.config.hasIcon = u
             }), null, 16, ["modelValue", "onUpdate:modelValue"]),
-            J(qe, he({
+            J(je, he({
               type: V(Z).Text,
               label: "Icon"
             }, {
@@ -18563,7 +18564,7 @@ const hr = {
               "onUpdate:modelValue": (u) => v.props.icon = u,
               disabled: !v.config.hasIcon
             }), null, 16, ["modelValue", "onUpdate:modelValue", "disabled"]),
-            V(o) ? (H(), G(qe, he({ key: 0 }, {
+            V(o) ? (H(), G(je, he({ key: 0 }, {
               type: V(Z).Select,
               ...V(o),
               canClear: !0
@@ -18577,7 +18578,7 @@ const hr = {
       }, 16, ["modelValue"]);
     };
   }
-}), Bu = { class: "lkt-grid-1" }, Nu = /* @__PURE__ */ ve({
+}), Tu = { class: "lkt-grid-1" }, zu = /* @__PURE__ */ ve({
   __name: "LktIconElementModal",
   props: {
     modalName: { default: "" },
@@ -18608,7 +18609,7 @@ const hr = {
         updateButton: !1
       }), {
         item: ue(({ item: n }) => [
-          le("div", Bu, [
+          le("div", Tu, [
             V(o) ? (H(), G(d, he({ key: 0 }, {
               type: V(Z).Select,
               ...V(o),
@@ -18638,7 +18639,7 @@ const hr = {
       }, 16, ["modelValue"]);
     };
   }
-}), Au = { class: "lkt-grid-1" }, Ru = /* @__PURE__ */ ve({
+}), Bu = { class: "lkt-grid-1" }, Nu = /* @__PURE__ */ ve({
   __name: "LktImageElementModal",
   props: {
     modalName: { default: "" },
@@ -18669,7 +18670,7 @@ const hr = {
         updateButton: !1
       }), {
         item: ue(({ item: n }) => [
-          le("div", Au, [
+          le("div", Bu, [
             J(d, he({
               type: V(Z).Image,
               label: "Image"
@@ -18691,7 +18692,7 @@ const hr = {
       }, 16, ["modelValue"]);
     };
   }
-}), Iu = { class: "lkt-grid-1" }, Mu = { class: "lkt-grid-3" }, Du = { class: "lkt-grid-3" }, Vu = { class: "lkt-grid-3" }, Hu = /* @__PURE__ */ ve({
+}), Au = { class: "lkt-grid-1" }, Ru = { class: "lkt-grid-3" }, Iu = { class: "lkt-grid-3" }, Mu = { class: "lkt-grid-3" }, Du = /* @__PURE__ */ ve({
   __name: "LktAddElementModal",
   props: {
     modalName: { default: "" },
@@ -18749,13 +18750,13 @@ const hr = {
         title: "LktBox Config"
       })), {
         default: ue(() => [
-          le("div", Iu, [
+          le("div", Au, [
             J(u, Te(De({
               type: V(kt).Always,
               title: "Content"
             })), {
               default: ue(() => [
-                le("div", Mu, [
+                le("div", Ru, [
                   J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "Text",
@@ -18801,7 +18802,7 @@ const hr = {
               title: "Containers"
             })), {
               default: ue(() => [
-                le("div", Du, [
+                le("div", Iu, [
                   J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktBox",
@@ -18838,7 +18839,7 @@ const hr = {
               title: "Actions"
             })), {
               default: ue(() => [
-                le("div", Vu, [
+                le("div", Mu, [
                   J(v, Te(De({
                     icon: "lkt-icn-angle-bottom",
                     text: "LktAnchor",
@@ -18867,7 +18868,7 @@ const hr = {
       }, 16);
     };
   }
-}), Fu = { class: "lkt-grid-1" }, Ou = { class: "lkt-grid-3" }, Uu = /* @__PURE__ */ ve({
+}), Vu = { class: "lkt-grid-1" }, Hu = { class: "lkt-grid-3" }, Fu = /* @__PURE__ */ ve({
   __name: "LktElementLayoutConfigModal",
   props: {
     modalName: { default: "" },
@@ -18948,8 +18949,8 @@ const hr = {
         updateButton: !1
       }), {
         item: ue(({ item: v }) => [
-          le("div", Fu, [
-            J(qe, he({
+          le("div", Vu, [
+            J(je, he({
               type: V(Z).Select,
               label: "Type",
               options: o
@@ -18963,8 +18964,8 @@ const hr = {
             title: "Responsive configuration"
           })), {
             default: ue(() => [
-              le("div", Ou, [
-                J(qe, he({
+              le("div", Hu, [
+                J(je, he({
                   type: V(Z).Select,
                   label: "Items per row (based on device width)",
                   options: l,
@@ -18982,42 +18983,42 @@ const hr = {
       }, 16, ["modelValue"]);
     };
   }
-}), Yu = (e, t) => (te.customValueSlots[e] = t, !0), Xu = (e, t) => (te.customEditSlots[e] = t, !0), Ju = {
+}), Gu = (e, t) => (te.customValueSlots[e] = t, !0), Ku = (e, t) => (te.customEditSlots[e] = t, !0), Yu = {
   install: (e) => {
-    e.component("lkt-field") === void 0 && (e.component("lkt-field", qe), Lt("lkt-field-language-edit", Su), Lt("lkt-field-add-element-config", Hu), Lt("lkt-field-box-element-config", Lu), Lt("lkt-field-accordion-element-config", zu), Lt("lkt-field-icon-element-config", Nu), Lt("lkt-field-image-element-config", Ru), Lt("lkt-field-element-layout-config", Uu));
+    e.component("lkt-field") === void 0 && (e.component("lkt-field", je), Lt("lkt-field-language-edit", ku), Lt("lkt-field-add-element-config", Du), Lt("lkt-field-box-element-config", Su), Lt("lkt-field-accordion-element-config", Lu), Lt("lkt-field-icon-element-config", zu), Lt("lkt-field-image-element-config", Nu), Lt("lkt-field-element-layout-config", Fu));
   }
-}, Qu = (e) => {
+}, Xu = (e) => {
   te.defaultEmptyValueSlot = e;
-}, ed = (e, t) => {
+}, Ju = (e, t) => {
   te.optionSlots[e] = t;
-}, td = (e) => te.undoText = e, id = (e) => te.clearText = e, ld = (e) => te.i18nText = e, nd = (e) => te.switchEditionOnText = e, od = (e) => te.switchEditionOffText = e, sd = (e) => te.showPasswordOnText = e, ad = (e) => te.showPasswordOffText = e, rd = (e) => te.dateReadFormat = e, ud = (e) => te.defaultDateReadFormat = e, dd = (e, t, i = "default") => {
+}, Qu = (e) => te.undoText = e, ed = (e) => te.clearText = e, td = (e) => te.i18nText = e, id = (e) => te.switchEditionOnText = e, ld = (e) => te.switchEditionOffText = e, nd = (e) => te.showPasswordOnText = e, od = (e) => te.showPasswordOffText = e, sd = (e) => te.dateReadFormat = e, ad = (e) => te.defaultDateReadFormat = e, rd = (e, t, i = "default") => {
   i || (i = "default"), te.validationMessages[i] || (te.validationMessages[i] = {}), te.validationMessages[i][e] = t;
-}, cd = (e) => (te.validationIconSlot = e, !0), fd = (e = 2, t = ".", i = ".", o = !0, l = "") => l !== "" ? (te.langNumberFormat[l].amountOfDecimals = e, te.langNumberFormat[l].decimalSeparator = t, te.langNumberFormat[l].thousandsSeparator = i, te.langNumberFormat[l].removeDecimalsIfZero = o, !0) : (te.amountOfDecimals = e, te.decimalSeparator = t, te.thousandsSeparator = i, te.removeDecimalsIfZero = o, !0), hd = (e) => {
+}, ud = (e) => (te.validationIconSlot = e, !0), dd = (e = 2, t = ".", i = ".", o = !0, l = "") => l !== "" ? (te.langNumberFormat[l].amountOfDecimals = e, te.langNumberFormat[l].decimalSeparator = t, te.langNumberFormat[l].thousandsSeparator = i, te.langNumberFormat[l].removeDecimalsIfZero = o, !0) : (te.amountOfDecimals = e, te.decimalSeparator = t, te.thousandsSeparator = i, te.removeDecimalsIfZero = o, !0), cd = (e) => {
   te.readTextMaxLength = e;
-}, pd = (e, t) => {
+}, fd = (e, t) => {
   te.modalPerItemType[e] = t;
 };
 export {
-  vd as Field,
-  qe as LktField,
-  bd as Option,
-  Ju as default,
-  id as setFieldClearText,
-  rd as setFieldDateReadFormat,
-  ud as setFieldDefaultDateReadFormat,
-  Qu as setFieldEmptySlot,
-  ld as setFieldI18nText,
-  fd as setFieldNumberFormat,
-  ed as setFieldOptionSlot,
-  ad as setFieldShowPasswordOffText,
-  sd as setFieldShowPasswordOnText,
-  od as setFieldSwitchEditionOffText,
-  nd as setFieldSwitchEditionOnText,
-  td as setFieldUndoText,
-  cd as setFieldValidationIconSlot,
-  dd as setFieldValidationMessage,
-  pd as setModalPerItemType,
-  hd as setReadTextMaxLength,
-  Xu as setTextEditSlot,
-  Yu as setTextValueSlot
+  md as Field,
+  je as LktField,
+  gd as Option,
+  Yu as default,
+  ed as setFieldClearText,
+  sd as setFieldDateReadFormat,
+  ad as setFieldDefaultDateReadFormat,
+  Xu as setFieldEmptySlot,
+  td as setFieldI18nText,
+  dd as setFieldNumberFormat,
+  Ju as setFieldOptionSlot,
+  od as setFieldShowPasswordOffText,
+  nd as setFieldShowPasswordOnText,
+  ld as setFieldSwitchEditionOffText,
+  id as setFieldSwitchEditionOnText,
+  Qu as setFieldUndoText,
+  ud as setFieldValidationIconSlot,
+  rd as setFieldValidationMessage,
+  fd as setModalPerItemType,
+  cd as setReadTextMaxLength,
+  Ku as setTextEditSlot,
+  Gu as setTextValueSlot
 };

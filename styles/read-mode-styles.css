@@ -83,3 +83,8 @@
     --lkt-tag--hover--background: var(--lkt-field--switch-on--background);
     --lkt-tag--content--background: var(--lkt-field--switch-on-dot--background);
 }
+
+.lkt-field-select-read.multiple-display-list {
+    display: flex;
+    flex-direction: column;
+}

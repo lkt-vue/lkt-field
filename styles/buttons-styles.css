@@ -31,23 +31,23 @@
 .lkt-field.is-select.is-multiple .lkt-field--select-button {
     --lkt-button--transition: none;
     --lkt-button--padding: var(--lkt-field--textarea--padding);
-    align-items: start;
-    line-height: 1.425;
+    --lkt-button--align-items: start;
+    --lkt-button--line-height: 1.425;
 }
 
 .lkt-field.is-select.is-multiple.is-searching .lkt-field--select-button {
     --lkt-button--min-height: calc(var(--lkt-field-height) - var(--lkt-field--input--height) - var(--lkt-field--border-width));
     --lkt-button--max-height: calc(var(--lkt-field-height) - var(--lkt-field--input--height) - var(--lkt-field--border-width));
     --lkt-button--height: calc(var(--lkt-field-height) - var(--lkt-field--input--height) - var(--lkt-field--border-width));
-    line-height: 1.425;
+    --lkt-button--line-height: 1.425;
 }
 
 .lkt-field.is-color .lkt-field--toggle-button {
-    justify-content: center;
+    --lkt-button--justify-content: center;
 }
 
 .lkt-field.is-image .lkt-field--toggle-button {
-    justify-content: center;
+    --lkt-button--justify-content: center;
     position: relative;
     overflow: hidden;
 }
