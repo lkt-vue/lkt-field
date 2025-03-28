@@ -404,6 +404,28 @@
                                         }"
                                     />
                                     <lkt-button
+                                        v-if="element.type === FieldElementType.Text"
+                                        v-bind="<ButtonConfig>{
+                                            text: 'Translate',
+                                            icon: 'lkt-icn-lang-picker',
+                                            modal: 'lkt-field-element-translations-config',
+                                            modalData: {
+                                                items: items,
+                                                element: element,
+                                                index,
+                                                onAppend: () => {
+                                                    appendingItems = true;
+                                                    nextTick(() => {
+                                                        appendingItems = false;
+                                                    })
+                                                },
+                                                onUpdate: (updatedConfig: LktObject) => {
+                                                    element = updatedConfig;
+                                                }
+                                            }
+                                        }"
+                                    />
+                                    <lkt-button
                                         v-bind="<ButtonConfig>{
                                             text: 'Remove',
                                             icon: 'lkt-icn-trash',

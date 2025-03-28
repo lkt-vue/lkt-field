@@ -6,9 +6,11 @@
     ]);
 
     const props = withDefaults(defineProps<{
-        modelValue: string
+        modelValue: string,
+        disabled?: boolean
     }>(), {
         modelValue: '',
+        disabled: false
     });
 
     const handleInputText = ($event: InputEvent) => {
@@ -20,7 +22,7 @@
 </script>
 
 <template>
-    <div contenteditable="true"
+    <div :contenteditable="disabled ? 'false' : 'true'"
          class="lkt-element-editable-text"
          @input="handleInputText($event)"
          @keydown="handleKeydown($event)"
