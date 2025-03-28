@@ -20,6 +20,7 @@ type __VLS_Props = {
     focusing: boolean;
     searchPlaceholder: string;
     multipleDisplayEdition: string;
+    searchString: string;
 };
 declare const _default: DefineComponent<__VLS_Props, {
     keepFocused: () => void;

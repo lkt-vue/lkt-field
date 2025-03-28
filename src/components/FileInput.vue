@@ -92,7 +92,6 @@
 
     defineExpose({
         click: () => {
-            console.log('file-input click', buttonRef.value, props.resource, props.resourceData);
             //@ts-ignore
             buttonRef.value?.click();
         }

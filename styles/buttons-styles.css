@@ -12,9 +12,9 @@
     --lkt-button--padding: var(--lkt-field--input--padding);
     --lkt-button--container--display: flex;
     --lkt-button--container--width: 100%;
+    --lkt-button--justify-content: flex-start;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    justify-content: flex-start;
 }
 
 .lkt-field .lkt-field--select-button,

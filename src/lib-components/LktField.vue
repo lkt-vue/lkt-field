@@ -379,7 +379,7 @@
                     return appendIconToLabel(
                         extractI18nValue(props.configOn?.label ?? props.label),
                         props.configOn?.labelIcon ?? props.labelIcon,
-                        props.labelIconAtEnd
+                        props.labelIconAtEnd,
                     );
                 }
 
@@ -387,14 +387,14 @@
                     return appendIconToLabel(
                         extractI18nValue(props.configOff?.label ?? props.label),
                         props.configOff?.labelIcon ?? props.labelIcon,
-                        props.labelIconAtEnd
+                        props.labelIconAtEnd,
                     );
                 }
             }
             return appendIconToLabel(
                 extractI18nValue(props.label),
                 props.labelIcon,
-                props.labelIconAtEnd
+                props.labelIconAtEnd,
             );
         }),
         computedPlaceholder = computed(() => {
@@ -478,8 +478,7 @@
     watch(() => props.modelValue, (v) => {
         if ([FieldType.Card, FieldType.Elements].includes(props.type)) {
             editableValue.value = v;
-        }
-        else if (props.type !== FieldType.Date) {
+        } else if (props.type !== FieldType.Date) {
             editableValue.value = extractEditableValue(v, computedLang.value);
         }
     });
@@ -638,9 +637,9 @@
 
             if (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') {
                 isLoading.value = true;
-                let resourceData: LktObject = {}
+                let resourceData: LktObject = {};
                 if (typeof props.optionsConfig?.http?.data === 'object') {
-                    resourceData = {...props.optionsConfig.http.data};
+                    resourceData = { ...props.optionsConfig.http.data };
                 }
                 if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query;
                 if (props.optionsConfig?.http?.events?.onStart && typeof props.optionsConfig?.http?.events?.onStart === 'function') {
@@ -780,11 +779,12 @@
             }
             return onFocus();
         },
-        onClickOption = (option: Option) => {
+        onClickOption = (option: Option, tagging: boolean = false) => {
+
             if (option.disabled) return;
 
             if (props.multiple) {
-                let k = undefined;
+                let k = -1;
 
                 if (props.optionValueType === 'option') {
                     //@ts-ignore
@@ -802,8 +802,9 @@
                         //@ts-ignore
                         editableValue.value.push(String(option.value));
                     }
-                    pickedOptions.value.push(option);
-                } else {
+                    if (!tagging) pickedOptions.value.push(option);
+
+                } else if (!tagging){
                     //@ts-ignore
                     editableValue.value.splice(k, 1);
                     pickedOptions.value.splice(k, 1);
@@ -876,12 +877,19 @@
                 label: query,
             });
 
-            let pickedIndex = pickedOptions.value.findIndex(opt => opt.value === option.value);
+            let pickedIndex = -1;
+            if (props.optionValueType === 'option') {
+                //@ts-ignore
+                pickedIndex = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
+            } else {
+                //@ts-ignore
+                pickedIndex = getInValueOptionIndex(option, editableValue.value);
+            }
             if (pickedIndex === -1) {
                 optionsHaystack.value.push(option);
                 visibleOptions.value.push(option);
-                // pickedOptions.value.push(option);
-                onClickOption(option);
+                pickedOptions.value.push(option);
+                onClickOption(option, true);
             }
             searchString.value = '';
         },
@@ -893,11 +901,11 @@
 
                 optionsHaystack.value.splice(
                     optionsHaystack.value.findIndex(opt => opt.value === option.value),
-                    1
+                    1,
                 );
                 visibleOptions.value.splice(
                     visibleOptions.value.findIndex(opt => opt.value === option.value),
-                    1
+                    1,
                 );
             }
             searchString.value = '';
@@ -997,7 +1005,7 @@
             }
             //@ts-ignore
             container.value.click();
-        }
+        },
     });
 
     const hasCustomEditSlot = computed(() => props.editSlot !== '' && typeof Settings.customEditSlots[props.editSlot] !== 'undefined'),
@@ -1054,15 +1062,15 @@
     <div
         class="lkt-field"
         :class="classes"
-         :data-show-ui="showInfoUi"
-         :data-labeled="!!!slots.label"
-         ref="container"
+        :data-show-ui="showInfoUi"
+        :data-labeled="!!!slots.label"
+        ref="container"
     >
-        <slot v-if="!!slots.label" name="label"/>
+        <slot v-if="!!slots.label" name="label" />
         <label v-if="!!!slots.label && computedLabel !== '' && !booleanFieldTypes.includes(type)"
                :for="Identifier"
                class="lkt-field--label"
-               v-html="computedLabel"/>
+               v-html="computedLabel" />
 
         <div class="lkt-field-content">
 
@@ -1173,8 +1181,9 @@
                     v-model:show-options="showOptions"
                     :searchable="searchable"
                     :search-mode="searchMode"
+                    :search-string="searchString"
                     :multiple="multiple"
-                    :can-tag="multiple"
+                    :can-tag="canTag"
                     :options-text="optionsConfig?.text"
                     :options-icon="optionsConfig?.icon"
                     :options-class="optionsConfig?.class"

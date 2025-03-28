@@ -34,6 +34,7 @@
         focusing: boolean
         searchPlaceholder: string
         multipleDisplayEdition: string
+        searchString: string
     }>(), {
         modelValue: false,
     });
@@ -43,7 +44,7 @@
     /**
      * Search query
      */
-    const query = ref(''),
+    const query = ref(props.searchString),
         queryField = ref(null);
 
     /**
