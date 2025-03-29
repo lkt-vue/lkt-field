@@ -22,12 +22,7 @@ import { Settings } from './settings/Settings';
 import { addModal } from 'lkt-modal';
 import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditModal.vue';
 import { FieldConfig } from 'lkt-vue-kernel';
-import LktBoxElementModal from '@/components/modals/LktBoxElementModal.vue';
-import LktAccordionElementModal from '@/components/modals/LktAccordionElementModal.vue';
-import LktIconElementModal from '@/components/modals/LktIconElementModal.vue';
-import LktImageElementModal from '@/components/modals/LktImageElementModal.vue';
 import LktAddElementModal from '@/components/modals/LktAddElementModal.vue';
-import LktElementLayoutConfigModal from '@/components/modals/LktElementLayoutConfigModal.vue';
 import LktElementTranslationsConfigModal from '@/components/modals/LktElementTranslationsConfigModal.vue';
 import LktElementConfigModal from '@/components/modals/LktElementConfigModal.vue';
 
@@ -43,11 +38,6 @@ const LktFieldPlugin: Plugin = {
             addModal('lkt-field-language-edit', LktTextLanguageEditModal);
             addModal('lkt-field-add-element-config', LktAddElementModal);
             addModal('lkt-field-element-config', LktElementConfigModal);
-            addModal('lkt-field-box-element-config', LktBoxElementModal);
-            addModal('lkt-field-accordion-element-config', LktAccordionElementModal);
-            addModal('lkt-field-icon-element-config', LktIconElementModal);
-            addModal('lkt-field-image-element-config', LktImageElementModal);
-            addModal('lkt-field-element-layout-config', LktElementLayoutConfigModal);
             addModal('lkt-field-element-translations-config', LktElementTranslationsConfigModal);
         }
     },

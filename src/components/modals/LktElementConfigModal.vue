@@ -1,18 +1,19 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
     import {
         AccordionConfig,
-        AccordionType,
+        AccordionType, ensureFieldConfig,
         FieldConfig,
         FieldElementConfig,
         FieldElementType,
         FieldType,
         ItemCrudConfig,
         ItemCrudMode,
-        ItemCrudView,
+        ItemCrudView, LktSettings,
         OptionConfig,
     } from 'lkt-vue-kernel';
     import LktField from '@/lib-components/LktField.vue';
+    import { kebabCaseToCamelCase, ucfirst } from 'lkt-string-tools';
 
     const props = withDefaults(defineProps<{
         modalName: string
@@ -31,6 +32,7 @@
     const calculatedHasHeader = [FieldElementType.LktBox, FieldElementType.LktAccordion].includes(editableConfig.value.type);
     const calculatedHasIcon = [FieldElementType.LktBox, FieldElementType.LktAccordion, FieldElementType.LktIcon].includes(editableConfig.value.type);
     const calculatedHasLayout = [FieldElementType.LktBox, FieldElementType.LktAccordion, FieldElementType.LktLayout].includes(editableConfig.value.type);
+    const calculatedHasImage = [FieldElementType.LktImage].includes(editableConfig.value.type);
 
     const accordionTypeOptions = <Array<OptionConfig>>[
         {
@@ -104,6 +106,35 @@
             label: 'From 768px: 5',
         },
     ];
+
+    const computedCustomClassField = computed((): FieldConfig|undefined => {
+        let config = {};
+        switch (editableConfig.value.type) {
+            case FieldElementType.LktBox:
+                config = LktSettings.defaultFieldLktBoxElementCustomClassField;
+                break;
+
+            case FieldElementType.LktAccordion:
+                config = LktSettings.defaultFieldLktAccordionElementCustomClassField;
+                break;
+
+            case FieldElementType.LktIcon:
+                config = LktSettings.defaultFieldLktIconElementCustomClassField;
+                break;
+
+            case FieldElementType.LktImage:
+                config = LktSettings.defaultFieldLktImageElementCustomClassField;
+                break;
+        }
+
+        return Object.keys(config).length > 0
+            ? ensureFieldConfig(config, LktSettings.defaultFieldElementCustomClassField)
+            : undefined;
+    });
+
+    const computedTitle = computed(() => {
+        return ucfirst(kebabCaseToCamelCase(editableConfig.value.type)) + ' Config';
+    })
 </script>
 
 <template>
@@ -115,12 +146,12 @@
             view: ItemCrudView.Modal,
             editing: true,
             perms: ['update'],
-            title: 'LktBox Config',
+            title: computedTitle,
             modalConfig: {
                 modalName,
                 modalKey,
                 zIndex,
-                title: 'LktBox Config'
+                title: computedTitle
             },
             updateButton: false
         }"
@@ -139,6 +170,17 @@
                     }"
                     >
                         <div class="lkt-grid-1">
+
+                            <lkt-field
+                                v-if="computedCustomClassField"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    ...computedCustomClassField,
+                                    canClear: true
+                                }"
+                                v-model="item.props.class"
+                            />
+
                             <lkt-field
                                 v-if="calculatedHasHeader"
                                 v-bind="<FieldConfig>{
@@ -163,6 +205,16 @@
                                 }"
                                 v-model="item.props.icon"
                                 :disabled="!item.config.hasIcon"
+                            />
+
+
+                            <lkt-field
+                                v-if="calculatedHasImage"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Image,
+                                    label: 'Image',
+                                }"
+                                v-model="item.props.src"
                             />
 
                             <lkt-box
@@ -229,8 +281,6 @@
                     </lkt-accordion>
                 </div>
             </div>
-
-
         </template>
     </lkt-item-crud>
 </template>
