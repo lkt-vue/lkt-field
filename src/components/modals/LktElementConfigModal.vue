@@ -2,7 +2,7 @@
     import { computed, ref } from 'vue';
     import {
         AccordionConfig,
-        AccordionType, ensureFieldConfig,
+        AccordionType, BoxConfig, ensureFieldConfig,
         FieldConfig,
         FieldElementConfig,
         FieldElementType,
@@ -14,6 +14,9 @@
     } from 'lkt-vue-kernel';
     import LktField from '@/lib-components/LktField.vue';
     import { kebabCaseToCamelCase, ucfirst } from 'lkt-string-tools';
+    import TextElementEditor from '@/components/elements/TextElementEditor.vue';
+    import ElementComponent from '@/components/elements/ElementComponent.vue';
+    import { getAvailableLanguages, getCurrentLanguage } from 'lkt-i18n';
 
     const props = withDefaults(defineProps<{
         modalName: string
@@ -28,6 +31,9 @@
     });
 
     const editableConfig = ref(props.element);
+
+    const languages = getAvailableLanguages(),
+        currentLang = getCurrentLanguage();
 
     const calculatedHasHeader = [FieldElementType.LktBox, FieldElementType.LktAccordion].includes(editableConfig.value.type);
     const calculatedHasIcon = [FieldElementType.LktBox, FieldElementType.LktAccordion, FieldElementType.LktIcon].includes(editableConfig.value.type);
@@ -159,10 +165,22 @@
         <template #item="{item}">
             <div class="lkt-grid-1 lkt-grid-3--from-960">
                 <div class="lkt-grid-1">
+                    <element-component :element="element"/>
 
+                    <template
+                        v-for="lang in languages">
+                        <lkt-accordion
+                            v-if="lang !== currentLang"
+                            v-bind="<AccordionConfig>{
+                                type: AccordionType.Auto,
+                                title: lang
+                            }"
+                        >
+                            <element-component :element="element" :lang="lang"/>
+                        </lkt-accordion>
+                    </template>
                 </div>
-                <div class="lkt-grid-1 lkt-grid-column-start-2--from-960">
-
+                <div class="lkt-grid-1 lkt-grid-column-start-4--from-960">
                     <lkt-accordion
                         v-bind="<AccordionConfig>{
                         type: AccordionType.Auto,

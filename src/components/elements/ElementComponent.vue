@@ -7,8 +7,9 @@
     import { ref } from 'vue';
 
     const props = withDefaults(defineProps<{
-        element: FieldElementConfig,
+        element: FieldElementConfig
         index?: number
+        lang?: string
     }>(), {
         index: -1,
     });
@@ -23,7 +24,7 @@
         }
     }
 
-    const getLayoutSelector = (element) => {
+    const getLayoutSelector = (element: FieldElementConfig) => {
         if (!element.layout) return '';
 
         let r = [
@@ -35,7 +36,7 @@
         return r;
     }
 
-    const currentLang = getCurrentLanguage();
+    const currentLang = props.lang ?? getCurrentLanguage();
 </script>
 
 <template>
@@ -155,7 +156,7 @@
             />
         </div>
 
-        <div class="lkt-element-actions" v-if="!appendingItems">
+        <div class="lkt-element-actions" v-if="!appendingItems && index >= 0">
             <lkt-button
                 v-bind="<ButtonConfig>{
                     type: ButtonType.Button,
@@ -171,7 +172,3 @@
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>
