@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { computed, ref } from 'vue';
+    import { computed, nextTick, ref } from 'vue';
     import {
         AccordionConfig,
-        AccordionType,
+        AccordionType, ButtonConfig,
         ensureFieldConfig,
         FieldConfig,
         FieldElementConfig,
@@ -182,6 +182,20 @@
                     </template>
                 </div>
                 <div class="lkt-grid-1 lkt-grid-column-start-4--from-960">
+
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            text: 'Add children',
+                            icon: 'lkt-icn-more',
+                            modal: 'lkt-field-add-element-config',
+                            modalData: {
+                                items: editableConfig.children,
+                                index: editableConfig.children?.length,
+                                element,
+                                addingChildren: true,
+                            }
+                        }"
+                    />
                     <lkt-accordion
                         v-bind="<AccordionConfig>{
                         type: AccordionType.Auto,

@@ -47,16 +47,16 @@
 
     const doReadAddElement = (element: FieldElementConfig) => {
         if (props.addingChildren) {
-            if (!Array.isArray(editableItems.value[childrenIndex.value].children)){
-                editableItems.value[childrenIndex.value].children = [];
+            if (!Array.isArray(editableConfig.value.children)){
+                editableConfig.value.children = [];
             }
-            editableItems.value[childrenIndex.value].children.push(element);
+            editableConfig.value.children.push(element);
 
         } else {
             editableItems.value.splice(appendIndex.value, 0, element);
         }
         ++appendIndex.value;
-        props.onAppend();
+        if (typeof props.onAppend === 'function') props.onAppend();
     }
 
     const doAddElement = (element: string) => {
