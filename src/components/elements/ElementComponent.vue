@@ -15,7 +15,7 @@
 
     const appendingItems = ref(false);
 
-    const handleInputText = (index: number, event: Event, prop: string = 'text') => {
+    const handleInputText = (event: Event, prop: string = 'text') => {
         const text = (event.target as HTMLElement).innerHTML.trim()
 
         if (text !== props.element.props[prop][currentLang]) {
@@ -44,7 +44,7 @@
             <text-element-editor
                 v-if="element.type === 'text'"
                 v-model="element.props.text[currentLang]"
-                @input="handleInputText(index, $event)"
+                @input="handleInputText($event)"
             />
 
             <lkt-box
@@ -54,7 +54,7 @@
                 <template #header v-if="element.config?.hasHeader">
                     <text-element-editor
                         v-model="element.props.header[currentLang]"
-                        @input="handleInputText(index, $event, 'header')"
+                        @input="handleInputText($event, 'header')"
                     />
                 </template>
                 <component-manager
@@ -71,7 +71,7 @@
                 <template #header>
                     <text-element-editor
                         v-model="element.props.header[currentLang]"
-                        @input="handleInputText(index, $event, 'header')"
+                        @input="handleInputText($event, 'header')"
                     />
                 </template>
                 <component-manager
@@ -87,7 +87,7 @@
                 <template #text>
                     <text-element-editor
                         v-model="element.props.text[currentLang]"
-                        @input="handleInputText(index, $event, 'text')"
+                        @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-image>
@@ -99,7 +99,7 @@
                 <template #text>
                     <text-element-editor
                         v-model="element.props.text[currentLang]"
-                        @input="handleInputText(index, $event, 'text')"
+                        @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-icon>
@@ -111,7 +111,7 @@
                 <template #text>
                     <text-element-editor
                         v-model="element.props.text[currentLang]"
-                        @input="handleInputText(index, $event, 'text')"
+                        @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-header>
@@ -123,7 +123,7 @@
                 <template #text>
                     <text-element-editor
                         v-model="element.props.text[currentLang]"
-                        @input="handleInputText(index, $event, 'text')"
+                        @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-button>
@@ -135,7 +135,7 @@
                 <template #text>
                     <text-element-editor
                         v-model="element.props.text[currentLang]"
-                        @input="handleInputText(index, $event, 'text')"
+                        @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-anchor>
