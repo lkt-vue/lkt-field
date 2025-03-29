@@ -2,19 +2,20 @@
     import { computed, ref } from 'vue';
     import {
         AccordionConfig,
-        AccordionType, BoxConfig, ensureFieldConfig,
+        AccordionType,
+        ensureFieldConfig,
         FieldConfig,
         FieldElementConfig,
         FieldElementType,
         FieldType,
         ItemCrudConfig,
         ItemCrudMode,
-        ItemCrudView, LktSettings,
+        ItemCrudView,
+        LktSettings,
         OptionConfig,
     } from 'lkt-vue-kernel';
     import LktField from '@/lib-components/LktField.vue';
     import { kebabCaseToCamelCase, ucfirst } from 'lkt-string-tools';
-    import TextElementEditor from '@/components/elements/TextElementEditor.vue';
     import ElementComponent from '@/components/elements/ElementComponent.vue';
     import { getAvailableLanguages, getCurrentLanguage } from 'lkt-i18n';
 
