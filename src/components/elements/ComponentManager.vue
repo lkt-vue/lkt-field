@@ -211,12 +211,11 @@
 
                         <lkt-accordion
                             v-else-if="element.type === 'lkt-accordion'"
-                            v-bind="element.props"
                             :icon="element.config.hasIcon ? element.props.icon : ''"
                         >
                             <template #header>
                                 <text-element-editor
-                                    v-model="element.props.header"
+                                    v-model="element.props.header[currentLang]"
                                     @input="handleInputText(index, $event, 'header')"
                                     @keydown="handleKeydown($event, index)"
                                 />
@@ -230,11 +229,10 @@
 
                         <lkt-image
                             v-else-if="element.type === 'lkt-image'"
-                            v-bind="element.props"
                         >
                             <template #text>
                                 <text-element-editor
-                                    v-model="element.props.text"
+                                    v-model="element.props.text[currentLang]"
                                     @input="handleInputText(index, $event, 'text')"
                                     @keydown="handleKeydown($event, index)"
                                 />
@@ -243,12 +241,11 @@
 
                         <lkt-icon
                             v-else-if="element.type === 'lkt-icon'"
-                            v-bind="element.props"
                             :icon="element.config.hasIcon ? element.props.icon : ''"
                         >
                             <template #text>
                                 <text-element-editor
-                                    v-model="element.props.text"
+                                    v-model="element.props.text[currentLang]"
                                     @input="handleInputText(index, $event, 'text')"
                                     @keydown="handleKeydown($event, index)"
                                 />
@@ -257,12 +254,11 @@
 
                         <lkt-header
                             v-else-if="element.type === FieldElementType.LktHeader"
-                            v-bind="element.props"
                             :icon="element.config.hasIcon ? element.props.icon : ''"
                         >
                             <template #text>
                                 <text-element-editor
-                                    v-model="element.props.text"
+                                    v-model="element.props.text[currentLang]"
                                     @input="handleInputText(index, $event, 'text')"
                                     @keydown="handleKeydown($event, index)"
                                 />
@@ -271,12 +267,11 @@
 
                         <lkt-button
                             v-else-if="element.type === 'lkt-button'"
-                            v-bind="element.props"
                             :icon="element.config.hasIcon ? element.props.icon : ''"
                         >
                             <template #text>
                                 <text-element-editor
-                                    v-model="element.props.text"
+                                    v-model="element.props.text[currentLang]"
                                     @input="handleInputText(index, $event, 'text')"
                                     @keydown="handleKeydown($event, index)"
                                 />
@@ -285,12 +280,11 @@
 
                         <lkt-anchor
                             v-else-if="element.type === 'lkt-anchor'"
-                            v-bind="element.props"
                             :icon="element.config.hasIcon ? element.props.icon : ''"
                         >
                             <template #text>
                                 <text-element-editor
-                                    v-model="element.props.text"
+                                    v-model="element.props.text[currentLang]"
                                     @input="handleInputText(index, $event, 'text')"
                                     @keydown="handleKeydown($event, index)"
                                 />
