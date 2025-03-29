@@ -51,6 +51,7 @@
             <lkt-box
                 v-else-if="element.type === 'lkt-box'"
                 :icon="element.config.hasHeader && element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
             >
                 <template #header v-if="element.config?.hasHeader">
                     <text-element-editor
@@ -62,12 +63,14 @@
                     v-model="element.children"
                     :layout-selector="getLayoutSelector(element)"
                     is-child
+                    :lang="currentLang"
                 />
             </lkt-box>
 
             <lkt-accordion
                 v-else-if="element.type === 'lkt-accordion'"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
             >
                 <template #header>
                     <text-element-editor
@@ -79,11 +82,13 @@
                     v-model="element.children"
                     :layout-selector="getLayoutSelector(element)"
                     is-child
+                    :lang="currentLang"
                 />
             </lkt-accordion>
 
             <lkt-image
                 v-else-if="element.type === 'lkt-image'"
+                :class="element.props.class"
             >
                 <template #text>
                     <text-element-editor
@@ -96,6 +101,7 @@
             <lkt-icon
                 v-else-if="element.type === 'lkt-icon'"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
             >
                 <template #text>
                     <text-element-editor
@@ -108,6 +114,7 @@
             <lkt-header
                 v-else-if="element.type === FieldElementType.LktHeader"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
             >
                 <template #text>
                     <text-element-editor
@@ -120,6 +127,7 @@
             <lkt-button
                 v-else-if="element.type === 'lkt-button'"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
             >
                 <template #text>
                     <text-element-editor
@@ -132,6 +140,7 @@
             <lkt-anchor
                 v-else-if="element.type === 'lkt-anchor'"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
             >
                 <template #text>
                     <text-element-editor
@@ -147,6 +156,7 @@
                 v-model="element.children"
                 :layout-selector="getLayoutSelector(element)"
                 is-child
+                :lang="currentLang"
             />
 
             <component

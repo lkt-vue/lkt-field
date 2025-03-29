@@ -11,6 +11,9 @@
         layoutSelector: {
             type: String,
         },
+        lang: {
+            type: String,
+        },
         isChild: {
             type: Boolean,
             default: false
@@ -71,7 +74,7 @@
             }"
         >
             <template #item="{element, index}">
-                <element-component :element="element" :index="index"/>
+                <element-component :element="element" :index="index" :lang="lang"/>
             </template>
         </lkt-table>
     </div>

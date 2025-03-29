@@ -8,6 +8,9 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     layoutSelector: {
         type: StringConstructor;
     };
+    lang: {
+        type: StringConstructor;
+    };
     isChild: {
         type: BooleanConstructor;
         default: boolean;
@@ -23,6 +26,9 @@ declare const _default: DefineComponent<ExtractPropTypes<{
         required: true;
     };
     layoutSelector: {
+        type: StringConstructor;
+    };
+    lang: {
         type: StringConstructor;
     };
     isChild: {
