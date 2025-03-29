@@ -166,7 +166,7 @@
         <template #item="{item}">
             <div class="lkt-grid-1 lkt-grid-3--from-960">
                 <div class="lkt-grid-1">
-                    <element-component :element="element"/>
+                    <element-component :element="element" is-preview/>
 
                     <template
                         v-for="lang in languages">
@@ -177,7 +177,7 @@
                                 title: lang
                             }"
                         >
-                            <element-component :element="element" :lang="lang"/>
+                            <element-component :element="element" :lang="lang" is-preview/>
                         </lkt-accordion>
                     </template>
                 </div>

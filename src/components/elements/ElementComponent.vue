@@ -10,8 +10,10 @@
         element: FieldElementConfig
         index?: number
         lang?: string
+        isPreview?: boolean
     }>(), {
         index: -1,
+        isPreview: false,
     });
 
     const appendingItems = ref(false);
@@ -25,7 +27,7 @@
     }
 
     const getLayoutSelector = (element: FieldElementConfig) => {
-        if (!element.layout) return '';
+        if (!element.layout || props.isPreview) return '';
 
         let r = [
             element.layout.amountOfItems.join(' '),
@@ -64,6 +66,7 @@
                     :layout-selector="getLayoutSelector(element)"
                     is-child
                     :lang="currentLang"
+                    :is-preview="isPreview"
                 />
             </lkt-box>
 
@@ -83,6 +86,7 @@
                     :layout-selector="getLayoutSelector(element)"
                     is-child
                     :lang="currentLang"
+                    :is-preview="isPreview"
                 />
             </lkt-accordion>
 
@@ -157,6 +161,7 @@
                 :layout-selector="getLayoutSelector(element)"
                 is-child
                 :lang="currentLang"
+                :is-preview="isPreview"
             />
 
             <component

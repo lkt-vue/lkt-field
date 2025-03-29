@@ -17,6 +17,10 @@
         isChild: {
             type: Boolean,
             default: false
+        },
+        isPreview: {
+            type: Boolean,
+            default: false
         }
     })
 
@@ -43,15 +47,15 @@
             class="lkt-elements-table"
             v-model="items"
             v-bind="<TableConfig>{
-                type: TableType.Table,
+                type: isPreview ? TableType.Table : TableType.Item,
                 slotItemVar: 'element',
                 editMode: true,
                 hideTableHeader: true,
                 perms: isChild ? [TablePermission.Update, TablePermission.Sort] : [TablePermission.Create, TablePermission.Update, TablePermission.Sort],
-                itemsContainerClass: layoutSelector,
+                itemsContainerClass: (!isChild) ? 'lkt-grid-1' : layoutSelector,
                 requiredItemsForBottomCreate: 10,
                 drag: {
-                    enabled: true,
+                    enabled: isPreview,
                     isDisabled: false,
                     canRender: true,
                     isValid: true,
@@ -74,7 +78,7 @@
             }"
         >
             <template #item="{element, index}">
-                <element-component :element="element" :index="index" :lang="lang"/>
+                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview"/>
             </template>
         </lkt-table>
     </div>
@@ -108,7 +112,6 @@
         display: flex;
         align-items: center;
         gap: 15px;
-        padding-left: 15px;
         position: relative;
     }
 
