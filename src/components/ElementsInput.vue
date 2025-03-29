@@ -14,90 +14,14 @@
     });
     const elements = ref(props.modelValue);
 
-    // const elements = ref<FieldElementConfig[]>([
-    //     { type: 'text', text: 'Escribe algo aquí o ' },
-    //     {
-    //         type: 'lkt-box',
-    //         props: {
-    //             header: 'cabecera de box',
-    //             text: 'un componente dinámico',
-    //             icon: 'lkt-icn-upload',
-    //         },
-    //         config: {
-    //             hasHeader: true,
-    //             hasIcon: true,
-    //         },
-    //         children: [],
-    //         layout: {
-    //             type: 'grid',
-    //             amountOfItems: [],
-    //         }
-    //     },
-    //     {
-    //         type: 'lkt-accordion',
-    //         props: {
-    //             text: 'contenido del acordeón',
-    //             header: 'título del acordeón',
-    //             type: 'auto',
-    //             toggleMode: 'display',
-    //             icon: 'lkt-icn-upload',
-    //         },
-    //         config: {
-    //             hasIcon: true,
-    //         },
-    //         children: [],
-    //         layout: {
-    //             type: 'grid',
-    //             amountOfItems: [],
-    //         }
-    //     },
-    //     {
-    //         type: 'lkt-image',
-    //         props: {
-    //             text: 'Dr. Evil',
-    //             src: 'https://i.pinimg.com/736x/d4/dc/7a/d4dc7a642bb490972c3443af25e0d179.jpg',
-    //         },
-    //         config: {
-    //             hasIcon: true,
-    //         },
-    //     },
-    //     {
-    //         type: 'lkt-icon',
-    //         props: {
-    //             text: 'Texto del icono',
-    //             icon: 'lkt-icn-download',
-    //         },
-    //         config: {
-    //             hasIcon: true,
-    //         },
-    //     },
-    //     {
-    //         type: 'lkt-button',
-    //         props: {
-    //             text: 'Texto del botón',
-    //             icon: 'lkt-icn-download',
-    //         },
-    //         config: {
-    //             hasIcon: true,
-    //         },
-    //     },
-    //     {
-    //         type: 'lkt-anchor',
-    //         props: {
-    //             text: 'Texto del anchor',
-    //             icon: 'lkt-icn-download',
-    //         },
-    //         config: {
-    //             hasIcon: true,
-    //         },
-    //     },
-    //     { type: 'customTag', component: 'CustomTag', props: { text: 'un componente dinámico' } },
-    //     { type: 'text', text: ' entre el texto.' },
-    // ]);
-
     const emit = defineEmits([
         'update:modelValue',
     ]);
+
+    watch(() => props.modelValue, (v) => {
+        console.log('detectado cambio en modelValue')
+        elements.value = v;
+    }, {deep: true})
 
     watch(elements, (v) => {
         emit('update:modelValue', v);

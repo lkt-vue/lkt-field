@@ -11,6 +11,7 @@
         TableType,
     } from 'lkt-vue-kernel';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
+    import { getCurrentLanguage } from 'lkt-i18n';
 
     const props = defineProps({
         modelValue: {
@@ -25,6 +26,10 @@
             default: false
         }
     })
+
+    const currentLang = getCurrentLanguage();
+
+    console.log('currentLang: ', currentLang);
 
     const items = ref(props.modelValue);
     const appendingItems = ref(false);
@@ -43,14 +48,9 @@
     // Manejo del texto y componentes personalizados
     const handleInputText = (index: number, event: Event, prop: string = 'text') => {
         const text = (event.target as HTMLElement).innerHTML.trim()
-        if (items.value[index].type === 'text') {
-            if (text !== items.value[index].text) {
-                items.value[index].text = text;
-            }
-        } else {
-            if (text !== items.value[index].props[prop]) {
-                items.value[index].props[prop] = text;
-            }
+
+        if (text !== items.value[index].props[prop][currentLang]) {
+            items.value[index].props[prop][currentLang] = text;
         }
 
         isTypingSlash.value = text.endsWith('/') // Detecta si el último carácter es '/'
@@ -182,23 +182,22 @@
             }"
         >
             <template #item="{element, index}">
-                <div class="lkt-element" :class="`is-${element.type}`">
+                <div class="lkt-element" :class="`is-${element.type} is-${element.id}`">
                     <div class="lkt-element-content">
                         <text-element-editor
                             v-if="element.type === 'text'"
-                            v-model="element.text"
+                            v-model="element.props.text[currentLang]"
                             @input="handleInputText(index, $event)"
                             @keydown="handleKeydown($event, index)"
                         />
 
                         <lkt-box
                             v-else-if="element.type === 'lkt-box'"
-                            v-bind="element.props"
                             :icon="element.config.hasHeader && element.config.hasIcon ? element.props.icon : ''"
                         >
                             <template #header v-if="element.config?.hasHeader">
                                 <text-element-editor
-                                    v-model="element.props.header"
+                                    v-model="element.props.header[currentLang]"
                                     @input="handleInputText(index, $event, 'header')"
                                     @keydown="handleKeydown($event, index)"
                                 />
