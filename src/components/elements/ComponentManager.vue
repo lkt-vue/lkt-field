@@ -12,6 +12,7 @@
     } from 'lkt-vue-kernel';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
     import { getCurrentLanguage } from 'lkt-i18n';
+    import ElementComponent from '@/components/elements/ElementComponent.vue';
 
     const props = defineProps({
         modelValue: {
@@ -182,7 +183,8 @@
             }"
         >
             <template #item="{element, index}">
-                <div class="lkt-element" :class="`is-${element.type} is-${element.id}`">
+                <element-component :element="element" :index="index"/>
+                <div v-if="false" class="lkt-element" :class="`is-${element.type} is-${element.id}`">
                     <div class="lkt-element-content">
                         <text-element-editor
                             v-if="element.type === 'text'"
