@@ -2,6 +2,7 @@ import { FieldElementConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     element: FieldElementConfig;
+    parentChildren: FieldElementConfig[];
     index?: number;
     lang?: string;
     isPreview?: boolean;

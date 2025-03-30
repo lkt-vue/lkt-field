@@ -1,8 +1,9 @@
 <script setup lang="ts">
-    import { computed, nextTick, ref } from 'vue';
+    import { computed, ref } from 'vue';
     import {
         AccordionConfig,
-        AccordionType, ButtonConfig,
+        AccordionType,
+        ButtonConfig,
         ensureFieldConfig,
         FieldConfig,
         FieldElementConfig,
@@ -18,18 +19,26 @@
     import { kebabCaseToCamelCase, ucfirst } from 'lkt-string-tools';
     import ElementComponent from '@/components/elements/ElementComponent.vue';
     import { getAvailableLanguages, getCurrentLanguage } from 'lkt-i18n';
+    import { closeModal } from 'lkt-modal';
 
     const props = withDefaults(defineProps<{
         modalName: string
         modalKey: string
         zIndex: number
         element: FieldElementConfig
+        parentChildren: FieldElementConfig[]
+        indexInParentChildren: number
         onUpdate: Function
     }>(), {
         modalName: '',
         modalKey: '_',
         zIndex: 500,
     });
+
+    const doRemoveElement = () => {
+        props.parentChildren.splice(props.indexInParentChildren, 1);
+        closeModal(props.modalName, props.modalKey);
+    }
 
     const editableConfig = ref(props.element);
 
@@ -166,7 +175,7 @@
         <template #item="{item}">
             <div class="lkt-grid-1 lkt-grid-3--from-960">
                 <div class="lkt-grid-1">
-                    <element-component :element="element" is-preview/>
+                    <element-component :element="element" is-preview :parent-children="parentChildren" :index="indexInParentChildren"/>
 
                     <template
                         v-for="lang in languages">
@@ -177,7 +186,7 @@
                                 title: lang
                             }"
                         >
-                            <element-component :element="element" :lang="lang" is-preview/>
+                            <element-component :element="element" :lang="lang" is-preview :parent-children="parentChildren" :index="indexInParentChildren"/>
                         </lkt-accordion>
                     </template>
                 </div>
@@ -312,6 +321,16 @@
 
                         </div>
                     </lkt-accordion>
+
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            text: 'Remove element',
+                            icon: 'lkt-icn-less',
+                            events: {
+                                click: doRemoveElement
+                            }
+                        }"
+                    />
                 </div>
             </div>
         </template>

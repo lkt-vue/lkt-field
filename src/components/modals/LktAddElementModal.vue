@@ -18,7 +18,6 @@
         LktObject,
         ModalConfig,
     } from 'lkt-vue-kernel';
-    import { closeModal } from 'lkt-modal';
 
     const props = withDefaults(defineProps<{
         modalName: string
@@ -39,11 +38,6 @@
     const editableConfig = ref(props.element);
     const editableItems = ref(props.items);
     const appendIndex = ref(props.index + 1);
-    const childrenIndex = ref(props.index);
-    const onClickUpdate = () => {
-        props.onUpdate(editableConfig.value);
-        closeModal(props.modalName, props.modalKey);
-    };
 
     const doReadAddElement = (element: FieldElementConfig) => {
         if (props.addingChildren) {

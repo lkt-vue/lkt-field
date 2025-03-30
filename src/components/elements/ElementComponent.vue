@@ -8,6 +8,7 @@
 
     const props = withDefaults(defineProps<{
         element: FieldElementConfig
+        parentChildren: FieldElementConfig[]
         index?: number
         lang?: string
         isPreview?: boolean
@@ -181,6 +182,8 @@
                     modalKey: `${index}--${element.type}--${element.id}`,
                     modalData: {
                         element,
+                        parentChildren,
+                        indexInParentChildren: index,
                     }
                 }"
             />

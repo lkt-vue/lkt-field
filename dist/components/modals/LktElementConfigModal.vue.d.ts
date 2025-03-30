@@ -5,6 +5,8 @@ type __VLS_Props = {
     modalKey: string;
     zIndex: number;
     element: FieldElementConfig;
+    parentChildren: FieldElementConfig[];
+    indexInParentChildren: number;
     onUpdate: Function;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{}>, {

@@ -78,7 +78,7 @@
             }"
         >
             <template #item="{element, index}">
-                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview"/>
+                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview" :parent-children="items"/>
             </template>
         </lkt-table>
     </div>
