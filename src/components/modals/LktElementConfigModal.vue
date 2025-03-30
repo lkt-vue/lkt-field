@@ -4,6 +4,7 @@
         AccordionConfig,
         AccordionType,
         ButtonConfig,
+        ButtonType,
         ensureFieldConfig,
         FieldConfig,
         FieldElementConfig,
@@ -38,6 +39,27 @@
     const doRemoveElement = () => {
         props.parentChildren.splice(props.indexInParentChildren, 1);
         closeModal(props.modalName, props.modalKey);
+    }
+
+    const resetCloneId = (clone: FieldElementConfig) => {
+        clone.id = 0;
+        clone.children?.forEach(child => resetCloneId(child));
+        return clone;
+    }
+
+    const getClone = () => {
+        let r = JSON.parse(JSON.stringify(props.element));
+        console.log('resetCloneId(r): ', resetCloneId(r));
+        return resetCloneId(r);
+    }
+
+    const doDuplicateBefore = () => {
+        props.parentChildren.splice(props.indexInParentChildren - 1, 0, getClone());
+        props.indexInParentChildren += 1;
+    }
+
+    const doDuplicateAfter = () => {
+        props.parentChildren.splice(props.indexInParentChildren + 1, 0, getClone());
     }
 
     const editableConfig = ref(props.element);
@@ -321,6 +343,35 @@
 
                         </div>
                     </lkt-accordion>
+
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            text: 'Duplicate',
+                            icon: 'lkt-icn-more',
+                            type: ButtonType.Split,
+                        }"
+                    >
+                        <template #split="{doClose}">
+                            <div class="lkt-grid-1">
+                                <lkt-button
+                                    v-bind="<ButtonConfig>{
+                                        text: 'Before',
+                                        events: {
+                                            click: doDuplicateBefore
+                                        }
+                                    }"
+                                />
+                                <lkt-button
+                                    v-bind="<ButtonConfig>{
+                                        text: 'After',
+                                        events: {
+                                            click: doDuplicateAfter
+                                        }
+                                    }"
+                                />
+                            </div>
+                        </template>
+                    </lkt-button>
 
                     <lkt-button
                         v-bind="<ButtonConfig>{
