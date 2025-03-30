@@ -1,8 +1,8 @@
-import { FieldElementConfig } from 'lkt-vue-kernel';
+import { WebElementConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
-    element: FieldElementConfig;
-    parentChildren: FieldElementConfig[];
+    element: WebElementConfig;
+    parentChildren: WebElementConfig[];
     index?: number;
     lang?: string;
     isPreview?: boolean;

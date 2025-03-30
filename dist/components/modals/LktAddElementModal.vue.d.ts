@@ -1,11 +1,11 @@
-import { FieldElementConfig, LktObject } from 'lkt-vue-kernel';
+import { WebElementConfig, LktObject } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modalName: string;
     modalKey: string;
     zIndex: number;
     items: LktObject[];
-    element: FieldElementConfig;
+    element: WebElementConfig;
     onUpdate: Function;
     onAppend: Function;
     index: number;

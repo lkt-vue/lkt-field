@@ -4,19 +4,19 @@
         AccordionConfig,
         AccordionType,
         ButtonConfig,
-        FieldElementConfig,
-        FieldElementType,
-        getDefaultLktAccordionElement,
-        getDefaultLktAnchorElement,
-        getDefaultLktBoxElement,
-        getDefaultLktButtonElement,
-        getDefaultLktHeaderElement,
-        getDefaultLktIconElement,
-        getDefaultLktImageElement,
-        getDefaultLktLayoutElement,
-        getDefaultTextElement,
+        WebElementConfig,
+        WebElementType,
+        getDefaultLktLayoutAccordionWebElement,
+        getDefaultLktAnchorWebElement,
+        getDefaultLktLayoutBoxWebElement,
+        getDefaultLktButtonWebElement,
+        getDefaultLktHeaderWebElement,
+        getDefaultLktIconWebElement,
+        getDefaultLktImageWebElement,
+        getDefaultLktLayoutWebElement,
+        getDefaultLktTextWebElement,
         LktObject,
-        ModalConfig,
+        ModalConfig, getDefaultLktTextAccordionWebElement, getDefaultLktTextBoxWebElement,
     } from 'lkt-vue-kernel';
 
     const props = withDefaults(defineProps<{
@@ -24,7 +24,7 @@
         modalKey: string
         zIndex: number
         items: LktObject[]
-        element: FieldElementConfig
+        element: WebElementConfig
         onUpdate: Function
         onAppend: Function
         index: number
@@ -39,7 +39,7 @@
     const editableItems = ref(props.items);
     const appendIndex = ref(props.index + 1);
 
-    const doReadAddElement = (element: FieldElementConfig) => {
+    const doReadAddElement = (element: WebElementConfig) => {
         if (props.addingChildren) {
             if (!Array.isArray(editableConfig.value.children)){
                 editableConfig.value.children = [];
@@ -55,40 +55,48 @@
 
     const doAddElement = (element: string) => {
         switch (element) {
-            case FieldElementType.LktBox:
-                doReadAddElement(getDefaultLktBoxElement());
+            case WebElementType.LktLayoutBox:
+                doReadAddElement(getDefaultLktLayoutBoxWebElement());
                 break;
 
-            case FieldElementType.LktAccordion:
-                doReadAddElement(getDefaultLktAccordionElement());
+            case WebElementType.LktTextBox:
+                doReadAddElement(getDefaultLktTextBoxWebElement());
                 break;
 
-            case FieldElementType.LktIcon:
-                doReadAddElement(getDefaultLktIconElement());
+            case WebElementType.LktLayoutAccordion:
+                doReadAddElement(getDefaultLktLayoutAccordionWebElement());
                 break;
 
-            case FieldElementType.LktImage:
-                doReadAddElement(getDefaultLktImageElement());
+            case WebElementType.LktTextAccordion:
+                doReadAddElement(getDefaultLktTextAccordionWebElement());
                 break;
 
-            case FieldElementType.LktAnchor:
-                doReadAddElement(getDefaultLktAnchorElement());
+            case WebElementType.LktIcon:
+                doReadAddElement(getDefaultLktIconWebElement());
                 break;
 
-            case FieldElementType.LktButton:
-                doReadAddElement(getDefaultLktButtonElement());
+            case WebElementType.LktImage:
+                doReadAddElement(getDefaultLktImageWebElement());
                 break;
 
-            case FieldElementType.LktLayout:
-                doReadAddElement(getDefaultLktLayoutElement());
+            case WebElementType.LktAnchor:
+                doReadAddElement(getDefaultLktAnchorWebElement());
                 break;
 
-            case FieldElementType.LktHeader:
-                doReadAddElement(getDefaultLktHeaderElement());
+            case WebElementType.LktButton:
+                doReadAddElement(getDefaultLktButtonWebElement());
                 break;
 
-            case FieldElementType.Text:
-                doReadAddElement(getDefaultTextElement());
+            case WebElementType.LktLayout:
+                doReadAddElement(getDefaultLktLayoutWebElement());
+                break;
+
+            case WebElementType.LktHeader:
+                doReadAddElement(getDefaultLktHeaderWebElement());
+                break;
+
+            case WebElementType.LktText:
+                doReadAddElement(getDefaultLktTextWebElement());
                 break;
         }
     };
@@ -117,7 +125,7 @@
                             text: 'Text',
                             events: {
                                 click: () => {
-                                    doAddElement('text');
+                                    doAddElement('lkt-text');
                                 }
                             }
                         }"
@@ -155,6 +163,28 @@
                             }
                         }"
                     />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktTextBox',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-text-box');
+                                }
+                            }
+                        }"
+                    />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-angle-bottom',
+                            text: 'LktTextAccordion',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-text-accordion');
+                                }
+                            }
+                        }"
+                    />
                 </div>
             </lkt-accordion>
 
@@ -168,10 +198,10 @@
                     <lkt-button
                         v-bind="<ButtonConfig>{
                             icon: 'lkt-icn-angle-bottom',
-                            text: 'LktBox',
+                            text: 'LktLayoutBox',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-box');
+                                    doAddElement('lkt-layout-box');
                                 }
                             }
                         }"
@@ -179,10 +209,10 @@
                     <lkt-button
                         v-bind="<ButtonConfig>{
                             icon: 'lkt-icn-angle-bottom',
-                            text: 'LktAccordion',
+                            text: 'LktLayoutAccordion',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-accordion');
+                                    doAddElement('lkt-layout-accordion');
                                 }
                             }
                         }"

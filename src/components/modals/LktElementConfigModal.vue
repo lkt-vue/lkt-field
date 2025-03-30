@@ -7,8 +7,8 @@
         ButtonType,
         ensureFieldConfig,
         FieldConfig,
-        FieldElementConfig,
-        FieldElementType,
+        WebElementConfig,
+        WebElementType,
         FieldType,
         ItemCrudConfig,
         ItemCrudMode,
@@ -26,8 +26,8 @@
         modalName: string
         modalKey: string
         zIndex: number
-        element: FieldElementConfig
-        parentChildren: FieldElementConfig[]
+        element: WebElementConfig
+        parentChildren: WebElementConfig[]
         indexInParentChildren: number
         onUpdate: Function
     }>(), {
@@ -41,7 +41,7 @@
         closeModal(props.modalName, props.modalKey);
     }
 
-    const resetCloneId = (clone: FieldElementConfig) => {
+    const resetCloneId = (clone: WebElementConfig) => {
         clone.id = 0;
         clone.children?.forEach(child => resetCloneId(child));
         return clone;
@@ -67,10 +67,12 @@
     const languages = getAvailableLanguages(),
         currentLang = getCurrentLanguage();
 
-    const calculatedHasHeader = [FieldElementType.LktBox, FieldElementType.LktAccordion].includes(editableConfig.value.type);
-    const calculatedHasIcon = [FieldElementType.LktBox, FieldElementType.LktAccordion, FieldElementType.LktIcon].includes(editableConfig.value.type);
-    const calculatedHasLayout = [FieldElementType.LktBox, FieldElementType.LktAccordion, FieldElementType.LktLayout].includes(editableConfig.value.type);
-    const calculatedHasImage = [FieldElementType.LktImage].includes(editableConfig.value.type);
+    const calculatedHasHeader = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion].includes(editableConfig.value.type);
+    const calculatedHasIcon = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktIcon].includes(editableConfig.value.type);
+    const calculatedHasLayout = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktLayout].includes(editableConfig.value.type);
+    const calculatedHasImage = [WebElementType.LktImage].includes(editableConfig.value.type);
+    const calculatedHasAccordionConfig = [WebElementType.LktLayoutAccordion, WebElementType.LktTextAccordion].includes(editableConfig.value.type);
+    const calculatedHasChildren = [WebElementType.LktLayoutAccordion, WebElementType.LktLayoutBox, WebElementType.LktLayout].includes(editableConfig.value.type);
 
     const accordionTypeOptions = <Array<OptionConfig>>[
         {
@@ -148,19 +150,19 @@
     const computedCustomClassField = computed((): FieldConfig|undefined => {
         let config = {};
         switch (editableConfig.value.type) {
-            case FieldElementType.LktBox:
+            case WebElementType.LktLayoutBox:
                 config = LktSettings.defaultFieldLktBoxElementCustomClassField;
                 break;
 
-            case FieldElementType.LktAccordion:
+            case WebElementType.LktLayoutAccordion:
                 config = LktSettings.defaultFieldLktAccordionElementCustomClassField;
                 break;
 
-            case FieldElementType.LktIcon:
+            case WebElementType.LktIcon:
                 config = LktSettings.defaultFieldLktIconElementCustomClassField;
                 break;
 
-            case FieldElementType.LktImage:
+            case WebElementType.LktImage:
                 config = LktSettings.defaultFieldLktImageElementCustomClassField;
                 break;
         }
@@ -215,6 +217,7 @@
                 <div class="lkt-grid-1 lkt-grid-column-start-4--from-960">
 
                     <lkt-button
+                        v-if="calculatedHasChildren"
                         v-bind="<ButtonConfig>{
                             text: 'Add children',
                             icon: 'lkt-icn-more',
@@ -282,7 +285,7 @@
                             />
 
                             <lkt-box
-                                v-if="element.type === FieldElementType.LktAccordion"
+                                v-if="calculatedHasAccordionConfig"
                                 v-bind="<AccordionConfig>{
                                     type: AccordionType.Auto,
                                     title: 'Accordion Config'

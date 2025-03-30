@@ -1,11 +1,11 @@
-import { FieldElementConfig } from 'lkt-vue-kernel';
+import { WebElementConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modalName: string;
     modalKey: string;
     zIndex: number;
-    element: FieldElementConfig;
-    parentChildren: FieldElementConfig[];
+    element: WebElementConfig;
+    parentChildren: WebElementConfig[];
     indexInParentChildren: number;
     onUpdate: Function;
 };

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
     import { defineEmits, defineProps, nextTick, ref, watch } from 'vue';
-    import { FieldElementConfig, TableConfig, TablePermission, TableType } from 'lkt-vue-kernel';
+    import { WebElementConfig, TableConfig, TablePermission, TableType } from 'lkt-vue-kernel';
     import ElementComponent from '@/components/elements/ElementComponent.vue';
 
     const props = defineProps({
         modelValue: {
-            type: Array as () => FieldElementConfig[],
+            type: Array as () => WebElementConfig[],
             required: true
         },
         layoutSelector: {

@@ -1,8 +1,8 @@
-import { FieldElementConfig } from 'lkt-vue-kernel';
+import { WebElementConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ExtractPropTypes, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 declare const _default: DefineComponent<ExtractPropTypes<{
     modelValue: {
-        type: () => FieldElementConfig[];
+        type: () => WebElementConfig[];
         required: true;
     };
     layoutSelector: {
@@ -12,7 +12,7 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     "update:modelValue": (...args: any[]) => void;
 }, string, PublicProps, Readonly< ExtractPropTypes<{
     modelValue: {
-        type: () => FieldElementConfig[];
+        type: () => WebElementConfig[];
         required: true;
     };
     layoutSelector: {

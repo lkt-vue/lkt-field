@@ -1,14 +1,14 @@
 <script setup lang="ts">
 
-    import { ButtonConfig, ButtonType, FieldElementConfig, FieldElementType } from 'lkt-vue-kernel';
+    import { ButtonConfig, ButtonType, WebElementConfig, WebElementType } from 'lkt-vue-kernel';
     import ComponentManager from '@/components/elements/ComponentManager.vue';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
     import { getCurrentLanguage } from 'lkt-i18n';
     import { ref } from 'vue';
 
     const props = withDefaults(defineProps<{
-        element: FieldElementConfig
-        parentChildren: FieldElementConfig[]
+        element: WebElementConfig
+        parentChildren: WebElementConfig[]
         index?: number
         lang?: string
         isPreview?: boolean
@@ -29,7 +29,7 @@
         }
     }
 
-    const getLayoutSelector = (element: FieldElementConfig) => {
+    const getLayoutSelector = (element: WebElementConfig) => {
         if (!element.layout || props.isPreview) return '';
 
         let r = [
@@ -48,13 +48,13 @@
     <div class="lkt-element" :class="`is-${element.type} is-${element.id}`">
         <div class="lkt-element-content">
             <text-element-editor
-                v-if="element.type === 'text'"
+                v-if="element.type === WebElementType.LktText"
                 v-model="element.props.text[currentLang]"
                 @input="handleInputText($event)"
             />
 
             <lkt-box
-                v-else-if="element.type === 'lkt-box'"
+                v-else-if="element.type === WebElementType.LktLayoutBox"
                 :icon="element.config.hasHeader && element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
@@ -73,8 +73,25 @@
                 />
             </lkt-box>
 
+            <lkt-box
+                v-else-if="element.type === WebElementType.LktTextBox"
+                :icon="element.config.hasHeader && element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
+            >
+                <template #header v-if="element.config?.hasHeader">
+                    <text-element-editor
+                        v-model="element.props.header[currentLang]"
+                        @input="handleInputText($event, 'header')"
+                    />
+                </template>
+                <text-element-editor
+                    v-model="element.props.text[currentLang]"
+                    @input="handleInputText($event, 'text')"
+                />
+            </lkt-box>
+
             <lkt-accordion
-                v-else-if="element.type === 'lkt-accordion'"
+                v-else-if="element.type === WebElementType.LktLayoutAccordion"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
@@ -93,8 +110,25 @@
                 />
             </lkt-accordion>
 
+            <lkt-accordion
+                v-else-if="element.type === WebElementType.LktTextAccordion"
+                :icon="element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
+            >
+                <template #header>
+                    <text-element-editor
+                        v-model="element.props.header[currentLang]"
+                        @input="handleInputText($event, 'header')"
+                    />
+                </template>
+                <text-element-editor
+                    v-model="element.props.text[currentLang]"
+                    @input="handleInputText($event, 'text')"
+                />
+            </lkt-accordion>
+
             <lkt-image
-                v-else-if="element.type === 'lkt-image'"
+                v-else-if="element.type === WebElementType.LktImage"
                 :class="element.props.class"
             >
                 <template #text>
@@ -106,7 +140,7 @@
             </lkt-image>
 
             <lkt-icon
-                v-else-if="element.type === 'lkt-icon'"
+                v-else-if="element.type === WebElementType.LktIcon"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
@@ -119,7 +153,7 @@
             </lkt-icon>
 
             <lkt-header
-                v-else-if="element.type === FieldElementType.LktHeader"
+                v-else-if="element.type === WebElementType.LktHeader"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
@@ -132,7 +166,7 @@
             </lkt-header>
 
             <lkt-button
-                v-else-if="element.type === 'lkt-button'"
+                v-else-if="element.type === WebElementType.LktButton"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
@@ -145,7 +179,7 @@
             </lkt-button>
 
             <lkt-anchor
-                v-else-if="element.type === 'lkt-anchor'"
+                v-else-if="element.type === WebElementType.LktAnchor"
                 :icon="element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
@@ -159,7 +193,7 @@
 
 
             <component-manager
-                v-else-if="element.type === FieldElementType.LktLayout"
+                v-else-if="element.type === WebElementType.LktLayout"
                 v-model="element.children"
                 :layout-selector="getLayoutSelector(element)"
                 is-child

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
     import { defineEmits, defineProps, nextTick, ref, watch } from 'vue';
     import ComponentManager from './elements/ComponentManager.vue';
-    import { ButtonConfig, FieldElementConfig, LktObject } from 'lkt-vue-kernel';
+    import { ButtonConfig, WebElementConfig, LktObject } from 'lkt-vue-kernel';
 
     const props = defineProps({
         modelValue: {
-            type: Array as () => FieldElementConfig[],
+            type: Array as () => WebElementConfig[],
             required: true
         },
         layoutSelector: {
@@ -28,7 +28,7 @@
     })
 
     // Historial de cambios
-    const history = ref<FieldElementConfig[][]>([]); // Almacenamos un arreglo de estados anteriores
+    const history = ref<WebElementConfig[][]>([]); // Almacenamos un arreglo de estados anteriores
     let historyIndex = ref(-1); // Apunta al estado actual en el historial
 
     // Guardar el estado en el historial
