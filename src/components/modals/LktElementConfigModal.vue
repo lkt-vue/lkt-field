@@ -151,10 +151,12 @@
         let config = {};
         switch (editableConfig.value.type) {
             case WebElementType.LktLayoutBox:
+            case WebElementType.LktTextBox:
                 config = LktSettings.defaultFieldLktBoxElementCustomClassField;
                 break;
 
             case WebElementType.LktLayoutAccordion:
+            case WebElementType.LktTextAccordion:
                 config = LktSettings.defaultFieldLktAccordionElementCustomClassField;
                 break;
 

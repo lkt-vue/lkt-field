@@ -1,8 +1,8 @@
-import { defineComponent as ye, computed as ee, resolveComponent as fe, createBlock as G, openBlock as H, normalizeClass as Te, ref as J, watch as ce, withCtx as re, createCommentVNode as se, resolveDynamicComponent as Et, mergeProps as xe, createElementBlock as oe, createElementVNode as le, toDisplayString as xt, Fragment as Oe, renderList as st, createVNode as K, unref as M, normalizeStyle as Pi, withDirectives as $e, vModelCheckbox as po, onMounted as Ki, vModelText as Ri, vShow as Ct, nextTick as Wt, createTextVNode as It, useSlots as Yi, renderSlot as ot, createStaticVNode as mo, createSlots as Rt, setBlockTracking as kl, normalizeProps as ke, guardReactiveProps as Ne, mergeDefaults as go, isRef as Ge, vModelDynamic as vo } from "vue";
+import { defineComponent as ye, computed as ee, resolveComponent as he, createBlock as G, openBlock as H, normalizeClass as Te, ref as J, watch as fe, withCtx as re, createCommentVNode as se, resolveDynamicComponent as Et, mergeProps as xe, createElementBlock as oe, createElementVNode as le, toDisplayString as xt, Fragment as Oe, renderList as st, createVNode as K, unref as M, normalizeStyle as Pi, withDirectives as $e, vModelCheckbox as po, onMounted as Ki, vModelText as Ri, vShow as Ct, nextTick as Wt, createTextVNode as It, useSlots as Yi, renderSlot as ot, createStaticVNode as mo, createSlots as Rt, setBlockTracking as kl, normalizeProps as ke, guardReactiveProps as Ne, mergeDefaults as go, isRef as Ge, vModelDynamic as vo } from "vue";
 import { stripTags as cn, fill as bo, generateRandomString as yo, formatNumber as xl, isEmail as _o, ucfirst as Co, kebabCaseToCamelCase as wo } from "lkt-string-tools";
 import { httpCall as Wi } from "lkt-http-client";
 import { __ as fn, getCurrentLanguage as hn, currentLanguage as pn, availableLanguages as ko, getAvailableLanguages as xo } from "lkt-i18n";
-import { extractPropValue as wt, LktSettings as je, Option as Ni, FieldType as Z, LktColor as mn, TooltipLocationX as gn, TooltipLocationY as vn, ButtonType as $t, FieldValidation as Me, ValidationStatus as De, MultipleOptionsDisplay as ii, TableType as $i, booleanFieldTypes as kt, WebElementType as he, TablePermission as Ot, fieldsWithMultipleMode as So, FieldValidationType as Sl, extractI18nValue as Ut, fieldTypesWithoutUndo as Lo, fieldTypesWithoutClear as Eo, FieldAutoValidationTrigger as To, textFieldTypes as zo, fieldTypesWithOptions as Ll, getDefaultValues as Bo, Field as No, ToastPositionX as El, AccordionType as Ye, getDefaultLktTextWebElement as Ao, getDefaultLktHeaderWebElement as Ro, getDefaultLktLayoutWebElement as Io, getDefaultLktButtonWebElement as Mo, getDefaultLktAnchorWebElement as Do, getDefaultLktImageWebElement as Vo, getDefaultLktIconWebElement as Ho, getDefaultLktTextAccordionWebElement as Fo, getDefaultLktLayoutAccordionWebElement as Oo, getDefaultLktTextBoxWebElement as Uo, getDefaultLktLayoutBoxWebElement as Po, ensureFieldConfig as Wo, ItemCrudView as $o, ItemCrudMode as Zo } from "lkt-vue-kernel";
+import { extractPropValue as wt, LktSettings as je, Option as Ni, FieldType as Z, LktColor as mn, TooltipLocationX as gn, TooltipLocationY as vn, ButtonType as $t, FieldValidation as Me, ValidationStatus as De, MultipleOptionsDisplay as ii, TableType as $i, booleanFieldTypes as kt, WebElementType as ce, TablePermission as Ot, fieldsWithMultipleMode as So, FieldValidationType as Sl, extractI18nValue as Ut, fieldTypesWithoutUndo as Lo, fieldTypesWithoutClear as Eo, FieldAutoValidationTrigger as To, textFieldTypes as zo, fieldTypesWithOptions as Ll, getDefaultValues as Bo, Field as No, ToastPositionX as El, AccordionType as Ye, getDefaultLktTextWebElement as Ao, getDefaultLktHeaderWebElement as Ro, getDefaultLktLayoutWebElement as Io, getDefaultLktButtonWebElement as Mo, getDefaultLktAnchorWebElement as Do, getDefaultLktImageWebElement as Vo, getDefaultLktIconWebElement as Ho, getDefaultLktTextAccordionWebElement as Fo, getDefaultLktLayoutAccordionWebElement as Oo, getDefaultLktTextBoxWebElement as Uo, getDefaultLktLayoutBoxWebElement as Po, ensureFieldConfig as Wo, ItemCrudView as $o, ItemCrudMode as Zo } from "lkt-vue-kernel";
 import { Field as yd, Option as _d } from "lkt-vue-kernel";
 import { date as Pt } from "lkt-date-tools";
 import { openToast as Tl } from "lkt-toast";
@@ -61,7 +61,7 @@ const bn = /* @__PURE__ */ ye({
   setup(e, { emit: t }) {
     const i = t, n = e, l = ee(() => te.undoText), a = ee(() => n.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), d = () => i("click");
     return (c, o) => {
-      const b = fe("lkt-button");
+      const b = he("lkt-button");
       return H(), G(b, {
         text: c.insideEllipsis ? l.value : "",
         title: l.value,
@@ -82,7 +82,7 @@ const bn = /* @__PURE__ */ ye({
   setup(e, { emit: t }) {
     const i = t, n = e, l = ee(() => te.clearText), a = ee(() => n.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), d = () => i("click");
     return (c, o) => {
-      const b = fe("lkt-button");
+      const b = he("lkt-button");
       return H(), G(b, {
         text: c.insideEllipsis ? l.value : "",
         title: l.value,
@@ -105,10 +105,10 @@ const bn = /* @__PURE__ */ ye({
   ],
   setup(e, { emit: t }) {
     const i = t, n = e, l = J(n.modelValue);
-    ce(() => n.modelValue, (b) => l.value = b), ce(l, (b) => i("update:modelValue", b));
+    fe(() => n.modelValue, (b) => l.value = b), fe(l, (b) => i("update:modelValue", b));
     const a = ee(() => l.value ? te.showPasswordOnText : te.showPasswordOffText), d = ee(() => l.value === !0 ? "lkt-icn-see" : "lkt-icn-not-see"), c = ee(() => n.isFeatured ? "lkt-field--atn-btn" : n.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), o = () => i("click");
     return (b, u) => {
-      const v = fe("lkt-button");
+      const v = he("lkt-button");
       return H(), G(v, {
         text: b.insideEllipsis ? a.value : "",
         title: a.value,
@@ -133,10 +133,10 @@ const bn = /* @__PURE__ */ ye({
   ],
   setup(e, { emit: t }) {
     const i = t, n = e, l = J(n.modelValue);
-    ce(() => n.modelValue, (b) => l.value = b), ce(l, (b) => i("update:modelValue", b));
+    fe(() => n.modelValue, (b) => l.value = b), fe(l, (b) => i("update:modelValue", b));
     const a = ee(() => l.value ? te.switchEditionOnText : te.switchEditionOffText), d = ee(() => l.value === !0 ? "lkt-icon-see" : "lkt-icn-edit"), c = ee(() => n.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), o = () => i("click");
     return (b, u) => {
-      const v = fe("lkt-button");
+      const v = he("lkt-button");
       return H(), G(v, {
         text: b.insideEllipsis ? a.value : "",
         title: a.value,
@@ -167,10 +167,10 @@ const bn = /* @__PURE__ */ ye({
   ],
   setup(e, { emit: t }) {
     const i = t, n = e, l = J(n.showPasswordCheck);
-    ce(() => n.showPasswordCheck, (d) => l.value = d), ce(l, (d) => i("update:showPasswordCheck", d));
+    fe(() => n.showPasswordCheck, (d) => l.value = d), fe(l, (d) => i("update:showPasswordCheck", d));
     const a = J(n.showEditionCheck);
-    return ce(() => n.showEditionCheck, (d) => a.value = d), ce(a, (d) => i("update:showEditionCheck", d)), (d, c) => {
-      const o = fe("lkt-button");
+    return fe(() => n.showEditionCheck, (d) => a.value = d), fe(a, (d) => i("update:showEditionCheck", d)), (d, c) => {
+      const o = he("lkt-button");
       return H(), G(o, {
         split: "",
         "split-icon": "lkt-icn-ellipsis-menu-vertical",
@@ -218,10 +218,10 @@ const bn = /* @__PURE__ */ ye({
   ],
   setup(e, { emit: t }) {
     const i = t, n = e, l = J(n.modelValue);
-    ce(() => n.modelValue, (c) => l.value = c, { deep: !0 }), ce(l, (c) => i("update:modelValue", c), { deep: !0 });
+    fe(() => n.modelValue, (c) => l.value = c, { deep: !0 }), fe(l, (c) => i("update:modelValue", c), { deep: !0 });
     const a = ee(() => te.i18nText), d = ee(() => n.isFeatured ? "lkt-field--atn-btn" : n.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn");
     return (c, o) => {
-      const b = fe("lkt-button");
+      const b = he("lkt-button");
       return H(), G(b, {
         text: c.insideEllipsis ? a.value : "",
         title: a.value,
@@ -283,7 +283,7 @@ const bn = /* @__PURE__ */ ye({
   setup(e, { emit: t }) {
     const i = t, n = ee(() => te.undoText), l = ee(() => "lkt-field--info-btn"), a = () => i("click");
     return (d, c) => {
-      const o = fe("lkt-button");
+      const o = he("lkt-button");
       return H(), G(o, {
         text: n.value,
         title: n.value,
@@ -359,7 +359,7 @@ const bn = /* @__PURE__ */ ye({
       i("click-icon", n.option);
     };
     return (L, S) => {
-      const A = fe("lkt-tag");
+      const A = he("lkt-tag");
       return H(), G(Et(b.value), xe(u.value, {
         class: ["lkt-field--dropdown-option", c.value],
         title: a.value,
@@ -391,7 +391,7 @@ const bn = /* @__PURE__ */ ye({
   ],
   setup(e, { emit: t }) {
     const i = t, n = e, l = J(n.modelValue);
-    return ce(() => n.modelValue, (a) => l.value = a), ce(l, (a) => i("update:modelValue", a)), (a, d) => (H(), oe("div", es, [
+    return fe(() => n.modelValue, (a) => l.value = a), fe(l, (a) => i("update:modelValue", a)), (a, d) => (H(), oe("div", es, [
       le("div", ts, [
         le("label", is, xt(a.label), 1),
         K(Ze, xe({
@@ -441,7 +441,7 @@ const bn = /* @__PURE__ */ ye({
     }, d = () => {
       l(v.value);
     }, c = J(255), o = J(255), b = J(255), u = J(255), v = J(n.modelValue);
-    l(v.value), ce([c, o, b, u], a), ce(() => n.modelValue, (A) => v.value = A), ce(v, (A) => i("update:modelValue", A));
+    l(v.value), fe([c, o, b, u], a), fe(() => n.modelValue, (A) => v.value = A), fe(v, (A) => i("update:modelValue", A));
     const w = ee(() => ns(Bl(v.value))), L = ee(() => v.value === "" || v.value === "#" ? {} : {
       background: v.value,
       "--lkt-btn-bg": v.value,
@@ -452,7 +452,7 @@ const bn = /* @__PURE__ */ ye({
       "--lkt-field-color": w.value
     });
     return (A, s) => {
-      const r = fe("lkt-button");
+      const r = he("lkt-button");
       return H(), G(r, {
         class: "lkt-field--toggle-button",
         style: Pi(L.value),
@@ -518,7 +518,7 @@ const bn = /* @__PURE__ */ ye({
   setup(e) {
     const t = e, i = J(t.modelValue), n = ee(() => typeof t.max == "boolean" || i.value.length < t.max ? ["inline-create"] : []);
     return (l, a) => {
-      const d = fe("lkt-table");
+      const d = he("lkt-table");
       return H(), G(d, {
         type: "item",
         modelValue: i.value,
@@ -614,7 +614,7 @@ const bn = /* @__PURE__ */ ye({
     }, b = (u) => {
       c.value = !1, i("blur", u);
     };
-    return ce(() => n.modelValue, (u) => a.value = u), ce(a, (u) => i("update:modelValue", u)), (u, v) => (H(), oe("div", ps, [
+    return fe(() => n.modelValue, (u) => a.value = u), fe(a, (u) => i("update:modelValue", u)), (u, v) => (H(), oe("div", ps, [
       le("div", ms, [
         le("div", gs, [
           u.type === M(Z).Check && a.value ? (H(), oe("i", vs)) : se("", !0)
@@ -15748,7 +15748,7 @@ const Cr = {
         u();
       };
     };
-    return ce(() => l.modelValue, (S) => d.value = S), ce(d, (S) => n("update:modelValue", S)), Ki(() => {
+    return fe(() => l.modelValue, (S) => d.value = S), fe(d, (S) => n("update:modelValue", S)), Ki(() => {
       L();
     }), t({
       doSetValue: (S) => {
@@ -15801,7 +15801,7 @@ const Cr = {
   ],
   setup(e, { expose: t, emit: i }) {
     const n = i, l = e, a = l.multiple && l.canTag, d = J(l.searchString), c = J(null), o = J(l.showOptions);
-    ce(o, (h) => {
+    fe(o, (h) => {
       a || n("update:showOptions", h);
     });
     const b = J(l.focusing), u = J(!1), v = J(!1), w = () => {
@@ -15809,11 +15809,11 @@ const Cr = {
         b.value = u.value || v.value, o.value = b.value;
       });
     };
-    ce(u, (h) => {
+    fe(u, (h) => {
       h && (v.value = !1), w();
-    }), ce(v, (h) => {
+    }), fe(v, (h) => {
       h && (u.value = !1), w();
-    }), ce(b, (h) => {
+    }), fe(b, (h) => {
       n(h ? "focus" : "blur");
     });
     let L, S;
@@ -15841,7 +15841,7 @@ const Cr = {
         clearTimeout(L), clearTimeout(S), c.value && c.value.focus();
       }
     }), (h, y) => {
-      const C = fe("lkt-tag"), _ = fe("lkt-button");
+      const C = he("lkt-tag"), _ = he("lkt-button");
       return H(), oe(Oe, null, [
         h.searchable && (h.multiple || h.searchMode) || M(a) ? (H(), oe("div", xr, [
           h.multiple ? (H(), G(C, {
@@ -15951,7 +15951,7 @@ const Cr = {
   emits: ["update:modelValue", "focus", "blur"],
   setup(e, { emit: t }) {
     const i = t, n = e, l = J(n.modelValue), a = J(null);
-    ce(l, (g) => i("update:modelValue", g));
+    fe(l, (g) => i("update:modelValue", g));
     const d = J(n.focusing), c = J(null);
     let o;
     const b = () => {
@@ -15979,10 +15979,10 @@ const Cr = {
         d.value = !1;
       }, 100);
     };
-    return ce(d, (g) => {
+    return fe(d, (g) => {
       i(g ? "focus" : "blur");
     }), (g, m) => {
-      const h = fe("lkt-button"), y = fe("lkt-tooltip");
+      const h = he("lkt-button"), y = he("lkt-tooltip");
       return H(), oe("div", {
         ref_key: "container",
         ref: c
@@ -16181,7 +16181,7 @@ const Cr = {
   },
   setup(e) {
     const t = e, i = J(t.items), n = J(!1);
-    return ce(() => t.items, (l) => {
+    return fe(() => t.items, (l) => {
       n.value = !0, Wt(() => n.value = !1);
     }, { deep: !0 }), (l, a) => n.value ? se("", !0) : (H(), oe("div", Vr, [
       (H(!0), oe(Oe, null, st(i.value, (d) => (H(), G(Dr, {
@@ -16223,7 +16223,7 @@ const Cr = {
         a.value = !1;
       }, 100);
     };
-    ce(a, (L) => {
+    fe(a, (L) => {
       i(L ? "focus" : "blur");
     });
     const w = () => {
@@ -16232,7 +16232,7 @@ const Cr = {
       }, 100);
     };
     return (L, S) => {
-      const A = fe("lkt-table"), s = fe("lkt-tooltip");
+      const A = he("lkt-table"), s = he("lkt-tooltip");
       return H(), oe(Oe, null, [
         $e(le("input", {
           id: L.id,
@@ -16335,7 +16335,7 @@ const Cr = {
     }), c = ee(() => te.customValueSlots[l.valueSlot] ?? "");
     let o = l.value;
     return l.type === Z.Select && l.multiple && !Array.isArray(o) && (o = []), (l.type === Z.Textarea || l.type === Z.Text) && (typeof ((b = l.readModeConfig) == null ? void 0 : b.textMaxLength) < "u" && o.length > l.readModeConfig.textMaxLength ? o = o.substring(0, l.readModeConfig.textMaxLength) + "..." : typeof te.readTextMaxLength < "u" && o.length > te.readTextMaxLength && (o = o.substring(0, te.readTextMaxLength) + "...")), (u, v) => {
-      const w = fe("lkt-image"), L = fe("lkt-button"), S = fe("lkt-anchor"), A = fe("lkt-tag");
+      const w = he("lkt-image"), L = he("lkt-button"), S = he("lkt-anchor"), A = he("lkt-tag");
       return H(), oe("div", {
         class: "lkt-field--read",
         onClick: a
@@ -16532,7 +16532,7 @@ const Cr = {
       }
       n("change", w);
     };
-    ce(c, (w) => n("update:modelValue", w)), ce(o, (w) => n("update:fileName", w)), t({
+    fe(c, (w) => n("update:modelValue", w)), fe(o, (w) => n("update:fileName", w)), t({
       click: () => {
         var w;
         (w = d.value) == null || w.click();
@@ -16540,7 +16540,7 @@ const Cr = {
     });
     const v = J(!1);
     return (w, L) => {
-      const S = fe("lkt-image"), A = fe("lkt-button");
+      const S = he("lkt-image"), A = he("lkt-button");
       return H(), oe(Oe, null, [
         le("input", {
           ref_key: "inputElement",
@@ -16638,7 +16638,7 @@ const Cr = {
   ],
   setup(e, { emit: t }) {
     const i = t, n = e, l = J(n.modelValue);
-    ce(() => n.modelValue, (p) => l.value = p, { deep: !0 }), ce(l, (p) => i("update:modelValue", p));
+    fe(() => n.modelValue, (p) => l.value = p, { deep: !0 }), fe(l, (p) => i("update:modelValue", p));
     const a = J(/* @__PURE__ */ new Date()), d = J(/* @__PURE__ */ new Date());
     Xi(l.value) && typeof l.value < "u" && (d.value = new Date(l.value.getFullYear(), l.value.getMonth(), l.value.getDate()));
     const c = J(d.value.getFullYear()), o = J(d.value.getMonth()), b = J(!1), u = J(Pt("Y-m", d.value)), v = ee(() => new Date(c.value, o.value + 1, 0).getDate()), w = ee(() => new Date(c.value, o.value, 1).getDay()), L = () => {
@@ -16653,7 +16653,7 @@ const Cr = {
       (g = l.value) == null || g.setFullYear(c.value, o.value, p), l.value = new Date(l.value);
     };
     return (p, g) => {
-      const m = fe("lkt-button");
+      const m = he("lkt-button");
       return H(), oe("div", tu, [
         le("div", iu, [
           le("header", lu, [
@@ -16715,14 +16715,14 @@ const Cr = {
     }, b = () => {
       a.value = Cn(l.value, c.value);
     };
-    return ce(() => n.modelValue, (u) => {
+    return fe(() => n.modelValue, (u) => {
       d.value = u, o(u);
-    }), ce(d, (u) => i("update:modelValue", u)), ce(l, (u) => {
+    }), fe(d, (u) => i("update:modelValue", u)), fe(l, (u) => {
       typeof u > "u" ? d.value = "" : d.value = Pt("Y-m-d", u), b();
     }, { deep: !0 }), Ki(() => {
       o(n.modelValue), b();
     }), (u, v) => {
-      const w = fe("lkt-button");
+      const w = he("lkt-button");
       return H(), G(w, {
         type: M($t).Tooltip,
         class: "lkt-field--toggle-button",
@@ -16772,7 +16772,7 @@ const Cr = {
     const n = J(e.modelValue), l = (a, d) => {
     };
     return (a, d) => {
-      const c = fe("lkt-button");
+      const c = he("lkt-button");
       return H(), G(c, {
         modal: a.modal,
         "modal-key": a.modalKey,
@@ -16809,7 +16809,7 @@ const Cr = {
   setup(e) {
     const t = Yi(), i = e, n = J(i.modelValue), l = ee(() => typeof i.max == "boolean" || n.value.length < i.max ? ["modal-create"] : []);
     return (a, d) => {
-      const c = fe("lkt-table");
+      const c = he("lkt-table");
       return H(), G(c, {
         type: "item",
         modelValue: n.value,
@@ -16901,17 +16901,17 @@ const Cr = {
     }, a = t.lang ?? hn();
     return (d, c) => {
       var A, s;
-      const o = fe("lkt-box"), b = fe("lkt-accordion"), u = fe("lkt-image"), v = fe("lkt-icon"), w = fe("lkt-header"), L = fe("lkt-button"), S = fe("lkt-anchor");
+      const o = he("lkt-box"), b = he("lkt-accordion"), u = he("lkt-image"), v = he("lkt-icon"), w = he("lkt-header"), L = he("lkt-button"), S = he("lkt-anchor");
       return H(), oe("div", {
         class: Te(["lkt-element", `is-${d.element.type} is-${d.element.id}`])
       }, [
         le("div", cu, [
-          d.element.type === M(he).LktText ? (H(), G(Ke, {
+          d.element.type === M(ce).LktText ? (H(), G(Ke, {
             key: 0,
             modelValue: d.element.props.text[M(a)],
             "onUpdate:modelValue": c[0] || (c[0] = (r) => d.element.props.text[M(a)] = r),
             onInput: c[1] || (c[1] = (r) => n(r))
-          }, null, 8, ["modelValue"])) : d.element.type === M(he).LktLayoutBox ? (H(), G(o, {
+          }, null, 8, ["modelValue"])) : d.element.type === M(ce).LktLayoutBox ? (H(), G(o, {
             key: 1,
             icon: d.element.config.hasHeader && d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -16939,7 +16939,7 @@ const Cr = {
               ]),
               key: "0"
             } : void 0
-          ]), 1032, ["icon", "class"])) : d.element.type === M(he).LktTextBox ? (H(), G(o, {
+          ]), 1032, ["icon", "class"])) : d.element.type === M(ce).LktTextBox ? (H(), G(o, {
             key: 2,
             icon: d.element.config.hasHeader && d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -16964,7 +16964,7 @@ const Cr = {
               ]),
               key: "0"
             } : void 0
-          ]), 1032, ["icon", "class"])) : d.element.type === M(he).LktLayoutAccordion ? (H(), G(b, {
+          ]), 1032, ["icon", "class"])) : d.element.type === M(ce).LktLayoutAccordion ? (H(), G(b, {
             key: 3,
             icon: d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -16987,7 +16987,7 @@ const Cr = {
               }, null, 8, ["modelValue", "layout-selector", "lang", "is-preview"])
             ]),
             _: 1
-          }, 8, ["icon", "class"])) : d.element.type === M(he).LktTextAccordion ? (H(), G(b, {
+          }, 8, ["icon", "class"])) : d.element.type === M(ce).LktTextAccordion ? (H(), G(b, {
             key: 4,
             icon: d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -17007,7 +17007,7 @@ const Cr = {
               }, null, 8, ["modelValue"])
             ]),
             _: 1
-          }, 8, ["icon", "class"])) : d.element.type === M(he).LktImage ? (H(), G(u, {
+          }, 8, ["icon", "class"])) : d.element.type === M(ce).LktImage ? (H(), G(u, {
             key: 5,
             class: Te(d.element.props.class),
             src: d.element.props.src
@@ -17020,7 +17020,7 @@ const Cr = {
               }, null, 8, ["modelValue"])
             ]),
             _: 1
-          }, 8, ["class", "src"])) : d.element.type === M(he).LktIcon ? (H(), G(v, {
+          }, 8, ["class", "src"])) : d.element.type === M(ce).LktIcon ? (H(), G(v, {
             key: 6,
             icon: d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -17033,7 +17033,7 @@ const Cr = {
               }, null, 8, ["modelValue"])
             ]),
             _: 1
-          }, 8, ["icon", "class"])) : d.element.type === M(he).LktHeader ? (H(), G(w, {
+          }, 8, ["icon", "class"])) : d.element.type === M(ce).LktHeader ? (H(), G(w, {
             key: 7,
             icon: d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -17046,7 +17046,7 @@ const Cr = {
               }, null, 8, ["modelValue"])
             ]),
             _: 1
-          }, 8, ["icon", "class"])) : d.element.type === M(he).LktButton ? (H(), G(L, {
+          }, 8, ["icon", "class"])) : d.element.type === M(ce).LktButton ? (H(), G(L, {
             key: 8,
             icon: d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -17059,7 +17059,7 @@ const Cr = {
               }, null, 8, ["modelValue"])
             ]),
             _: 1
-          }, 8, ["icon", "class"])) : d.element.type === M(he).LktAnchor ? (H(), G(S, {
+          }, 8, ["icon", "class"])) : d.element.type === M(ce).LktAnchor ? (H(), G(S, {
             key: 9,
             icon: d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)
@@ -17072,7 +17072,7 @@ const Cr = {
               }, null, 8, ["modelValue"])
             ]),
             _: 1
-          }, 8, ["icon", "class"])) : d.element.type === M(he).LktLayout ? (H(), G(Bi, {
+          }, 8, ["icon", "class"])) : d.element.type === M(ce).LktLayout ? (H(), G(Bi, {
             key: 10,
             modelValue: d.element.children,
             "onUpdate:modelValue": c[26] || (c[26] = (r) => d.element.children = r),
@@ -17129,10 +17129,10 @@ const Cr = {
   ],
   setup(e, { emit: t }) {
     const n = J(e.modelValue), l = J(!1), a = J(null), d = t;
-    return ce(n, (c) => {
+    return fe(n, (c) => {
       d("update:modelValue", c);
     }), (c, o) => {
-      const b = fe("lkt-table");
+      const b = he("lkt-table");
       return H(), oe("div", null, [
         K(b, xe({
           ref_key: "tableRef",
@@ -17199,9 +17199,9 @@ const Cr = {
   ],
   setup(e, { emit: t }) {
     const i = e, n = J(i.modelValue), l = t;
-    ce(() => i.modelValue, (m) => {
+    fe(() => i.modelValue, (m) => {
       console.log("detectado cambio en modelValue"), n.value = m;
-    }, { deep: !0 }), ce(n, (m) => {
+    }, { deep: !0 }), fe(n, (m) => {
       l("update:modelValue", m);
     });
     const a = J([]);
@@ -17236,14 +17236,14 @@ const Cr = {
       const m = prompt("Ingrese la URL del enlace:");
       m && (document.execCommand("createLink", !1, m), c());
     };
-    ce(n, (m) => {
+    fe(n, (m) => {
       l("update:modelValue", m);
     }, { deep: !0 });
     const p = J(null), g = J(0);
-    return ce(p, (m) => {
+    return fe(p, (m) => {
       m ? g.value = p.value.getBoundingClientRect().top : g.value = 0;
     }), (m, h) => {
-      const y = fe("lkt-button");
+      const y = he("lkt-button");
       return H(), oe("div", {
         ref_key: "containerRef",
         ref: p,
@@ -17361,7 +17361,7 @@ const Cr = {
   setup(e, { emit: t }) {
     const i = t, n = e, l = ee(() => n.insideEllipsis ? "lkt-field--info-split-btn" : "lkt-field--info-btn"), a = () => i("click");
     return (d, c) => {
-      const o = fe("lkt-button");
+      const o = he("lkt-button");
       return H(), G(o, xe(d.config, {
         type: d.config.type ? d.config.type : M($t).FileUpload,
         resource: d.config.resource ?? d.fileUploadHttp.resource,
@@ -17549,20 +17549,20 @@ const Cr = {
         n("validation", Y);
       }
     };
-    ce(() => {
+    fe(() => {
       var E;
       return (E = a.validation) == null ? void 0 : E.checkEqualTo;
-    }, () => At()), ce(() => a.readMode, (E) => y.value = !E), ce(() => a.valid, (E) => r.value = E), ce(() => a.modelValue, (E) => {
+    }, () => At()), fe(() => a.readMode, (E) => y.value = !E), fe(() => a.valid, (E) => r.value = E), fe(() => a.modelValue, (E) => {
       [Z.Card, Z.Elements].includes(a.type) ? k.value = E : a.type !== Z.Date && (k.value = dn(E, B.value));
-    }), ce(k, (E) => {
+    }), fe(k, (E) => {
       typeof s.value == "object" && [Z.Card, Z.Elements].includes(a.type) ? s.value[B.value] = E : s.value = E, a.type === Z.Number && ao(E);
-    }), ce(s, (E) => {
+    }), fe(s, (E) => {
       $.value && y.value && (n("update:modelValue", E), Gn(), At());
-    }, { deep: !0 }), ce(r, (E) => {
+    }, { deep: !0 }), fe(r, (E) => {
       n("update:valid", E);
-    }), ce(j, (E) => {
+    }), fe(j, (E) => {
       n("update:options", E);
-    }), ce(() => a.options, (E) => {
+    }), fe(() => a.options, (E) => {
       j.value = Ai(E, a.prop), a.type === Z.Select ? Mt(W.value, !1) : Mt(k.value, !1);
     });
     const At = () => {
@@ -17795,7 +17795,7 @@ const Cr = {
     });
     return (E, Y) => {
       var Be, Je, Qe, et, tt, it, lt, dt, ct, ft, ht, Ht, Ft;
-      const ae = fe("lkt-button"), Ee = fe("lkt-loader"), Ie = fe("lkt-tooltip");
+      const ae = he("lkt-button"), Ee = he("lkt-loader"), Ie = he("lkt-tooltip");
       return H(), oe("div", {
         class: Te(["lkt-field", at.value]),
         "data-show-ui": We.value,
@@ -18348,7 +18348,7 @@ const Cr = {
   setup(e) {
     const t = ee(() => ko.value.filter((i) => i !== pn.value));
     return (i, n) => {
-      const l = fe("lkt-modal");
+      const l = he("lkt-modal");
       return H(), G(l, {
         "modal-name": i.modalName,
         title: "__:lmm.confirmFormLeave",
@@ -18397,43 +18397,43 @@ const Cr = {
       t.addingChildren ? (Array.isArray(i.value.children) || (i.value.children = []), i.value.children.push(c)) : n.value.splice(l.value, 0, c), ++l.value, typeof t.onAppend == "function" && t.onAppend();
     }, d = (c) => {
       switch (c) {
-        case he.LktLayoutBox:
+        case ce.LktLayoutBox:
           a(Po());
           break;
-        case he.LktTextBox:
+        case ce.LktTextBox:
           a(Uo());
           break;
-        case he.LktLayoutAccordion:
+        case ce.LktLayoutAccordion:
           a(Oo());
           break;
-        case he.LktTextAccordion:
+        case ce.LktTextAccordion:
           a(Fo());
           break;
-        case he.LktIcon:
+        case ce.LktIcon:
           a(Ho());
           break;
-        case he.LktImage:
+        case ce.LktImage:
           a(Vo());
           break;
-        case he.LktAnchor:
+        case ce.LktAnchor:
           a(Do());
           break;
-        case he.LktButton:
+        case ce.LktButton:
           a(Mo());
           break;
-        case he.LktLayout:
+        case ce.LktLayout:
           a(Io());
           break;
-        case he.LktHeader:
+        case ce.LktHeader:
           a(Ro());
           break;
-        case he.LktText:
+        case ce.LktText:
           a(Ao());
           break;
       }
     };
     return (c, o) => {
-      const b = fe("lkt-button"), u = fe("lkt-accordion"), v = fe("lkt-modal");
+      const b = he("lkt-button"), u = he("lkt-accordion"), v = he("lkt-modal");
       return H(), G(v, ke(Ne({
         modalName: c.modalName,
         modalKey: c.modalKey,
@@ -18601,7 +18601,7 @@ const Cr = {
       t.parentChildren.splice(t.indexInParentChildren - 1, 0, l()), t.indexInParentChildren += 1;
     }, d = () => {
       t.parentChildren.splice(t.indexInParentChildren + 1, 0, l());
-    }, c = J(t.element), o = xo(), b = hn(), u = [he.LktLayoutBox, he.LktLayoutAccordion, he.LktTextBox, he.LktTextAccordion].includes(c.value.type), v = [he.LktLayoutBox, he.LktLayoutAccordion, he.LktTextBox, he.LktTextAccordion, he.LktIcon].includes(c.value.type), w = [he.LktLayoutBox, he.LktLayoutAccordion, he.LktTextBox, he.LktTextAccordion, he.LktLayout].includes(c.value.type), L = [he.LktImage].includes(c.value.type), S = [he.LktLayoutAccordion, he.LktTextAccordion].includes(c.value.type), A = [he.LktLayoutAccordion, he.LktLayoutBox, he.LktLayout].includes(c.value.type), s = [
+    }, c = J(t.element), o = xo(), b = hn(), u = [ce.LktLayoutBox, ce.LktLayoutAccordion, ce.LktTextBox, ce.LktTextAccordion].includes(c.value.type), v = [ce.LktLayoutBox, ce.LktLayoutAccordion, ce.LktTextBox, ce.LktTextAccordion, ce.LktIcon].includes(c.value.type), w = [ce.LktLayoutBox, ce.LktLayoutAccordion, ce.LktTextBox, ce.LktTextAccordion, ce.LktLayout].includes(c.value.type), L = [ce.LktImage].includes(c.value.type), S = [ce.LktLayoutAccordion, ce.LktTextAccordion].includes(c.value.type), A = [ce.LktLayoutAccordion, ce.LktLayoutBox, ce.LktLayout].includes(c.value.type), s = [
       {
         value: Ye.Auto,
         label: "Auto"
@@ -18671,23 +18671,25 @@ const Cr = {
     ], p = ee(() => {
       let m = {};
       switch (c.value.type) {
-        case he.LktLayoutBox:
+        case ce.LktLayoutBox:
+        case ce.LktTextBox:
           m = je.defaultFieldLktBoxElementCustomClassField;
           break;
-        case he.LktLayoutAccordion:
+        case ce.LktLayoutAccordion:
+        case ce.LktTextAccordion:
           m = je.defaultFieldLktAccordionElementCustomClassField;
           break;
-        case he.LktIcon:
+        case ce.LktIcon:
           m = je.defaultFieldLktIconElementCustomClassField;
           break;
-        case he.LktImage:
+        case ce.LktImage:
           m = je.defaultFieldLktImageElementCustomClassField;
           break;
       }
       return Object.keys(m).length > 0 ? Wo(m, je.defaultFieldElementCustomClassField) : void 0;
     }), g = ee(() => Co(wo(c.value.type)) + " Config");
     return (m, h) => {
-      const y = fe("lkt-accordion"), C = fe("lkt-button"), _ = fe("lkt-box"), x = fe("lkt-item-crud");
+      const y = he("lkt-accordion"), C = he("lkt-button"), _ = he("lkt-box"), x = he("lkt-item-crud");
       return H(), G(x, xe({
         class: "lkt-field-element-config-modal",
         modelValue: c.value,
