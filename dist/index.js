@@ -17009,7 +17009,8 @@ const Cr = {
             _: 1
           }, 8, ["icon", "class"])) : d.element.type === M(he).LktImage ? (H(), G(u, {
             key: 5,
-            class: Te(d.element.props.class)
+            class: Te(d.element.props.class),
+            src: d.element.props.src
           }, {
             text: re(() => [
               K(Ke, {
@@ -17019,7 +17020,7 @@ const Cr = {
               }, null, 8, ["modelValue"])
             ]),
             _: 1
-          }, 8, ["class"])) : d.element.type === M(he).LktIcon ? (H(), G(v, {
+          }, 8, ["class", "src"])) : d.element.type === M(he).LktIcon ? (H(), G(v, {
             key: 6,
             icon: d.element.config.hasIcon ? d.element.props.icon : "",
             class: Te(d.element.props.class)

@@ -130,6 +130,7 @@
             <lkt-image
                 v-else-if="element.type === WebElementType.LktImage"
                 :class="element.props.class"
+                :src="element.props.src"
             >
                 <template #text>
                     <text-element-editor
