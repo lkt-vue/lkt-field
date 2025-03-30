@@ -16885,7 +16885,8 @@ const yr = {
     parentChildren: {},
     index: { default: -1 },
     lang: {},
-    isPreview: { type: Boolean, default: !1 }
+    isPreview: { type: Boolean, default: !1 },
+    canRenderActions: { type: Boolean, default: !0 }
   },
   setup(e) {
     const t = e, i = X(!1), n = (d, c = "text") => {
@@ -17035,7 +17036,7 @@ const yr = {
             "is-preview": d.isPreview
           }, null, 8, ["modelValue", "layout-selector", "lang", "is-preview"])) : (H(), K(Lt(d.element.component), ze(Se({ key: 9 }, d.element.props)), null, 16))
         ]),
-        !i.value && d.index >= 0 ? (H(), oe("div", du, [
+        !i.value && d.canRenderActions ? (H(), oe("div", du, [
           Q(E, ze(Ie({
             type: V(Ri).Button,
             text: d.element.type,
@@ -18634,7 +18635,8 @@ const yr = {
                   element: B.element,
                   "is-preview": "",
                   "parent-children": B.parentChildren,
-                  index: B.indexInParentChildren
+                  index: B.indexInParentChildren,
+                  "can-render-actions": !1
                 }, null, 8, ["element", "parent-children", "index"]),
                 (H(!0), oe(Oe, null, ot(V(l), (y) => (H(), oe(Oe, null, [
                   y !== V(a) ? (H(), K(r, Se({
@@ -18650,7 +18652,8 @@ const yr = {
                         lang: y,
                         "is-preview": "",
                         "parent-children": B.parentChildren,
-                        index: B.indexInParentChildren
+                        index: B.indexInParentChildren,
+                        "can-render-actions": !1
                       }, null, 8, ["element", "lang", "parent-children", "index"])
                     ]),
                     _: 2

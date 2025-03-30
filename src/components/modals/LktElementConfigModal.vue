@@ -175,7 +175,7 @@
         <template #item="{item}">
             <div class="lkt-grid-1 lkt-grid-3--from-960">
                 <div class="lkt-grid-1">
-                    <element-component :element="element" is-preview :parent-children="parentChildren" :index="indexInParentChildren"/>
+                    <element-component :element="element" is-preview :parent-children="parentChildren" :index="indexInParentChildren" :can-render-actions="false"/>
 
                     <template
                         v-for="lang in languages">
@@ -186,7 +186,7 @@
                                 title: lang
                             }"
                         >
-                            <element-component :element="element" :lang="lang" is-preview :parent-children="parentChildren" :index="indexInParentChildren"/>
+                            <element-component :element="element" :lang="lang" is-preview :parent-children="parentChildren" :index="indexInParentChildren" :can-render-actions="false"/>
                         </lkt-accordion>
                     </template>
                 </div>

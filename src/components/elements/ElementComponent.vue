@@ -12,9 +12,11 @@
         index?: number
         lang?: string
         isPreview?: boolean
+        canRenderActions?: boolean
     }>(), {
         index: -1,
         isPreview: false,
+        canRenderActions: true,
     });
 
     const appendingItems = ref(false);
@@ -172,7 +174,7 @@
             />
         </div>
 
-        <div class="lkt-element-actions" v-if="!appendingItems && index >= 0">
+        <div class="lkt-element-actions" v-if="!appendingItems && canRenderActions">
             <lkt-button
                 v-bind="<ButtonConfig>{
                     type: ButtonType.Button,
