@@ -5,6 +5,9 @@ declare const _default: DefineComponent<ExtractPropTypes<{
         type: () => WebElementConfig[];
         required: true;
     };
+    parent: {
+        type: () => WebElementConfig;
+    };
     layoutSelector: {
         type: StringConstructor;
     };
@@ -28,6 +31,9 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     modelValue: {
         type: () => WebElementConfig[];
         required: true;
+    };
+    parent: {
+        type: () => WebElementConfig;
     };
     layoutSelector: {
         type: StringConstructor;

@@ -24,6 +24,7 @@ import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditMod
 import { FieldConfig } from 'lkt-vue-kernel';
 import LktAddElementModal from '@/components/modals/LktAddElementModal.vue';
 import LktElementConfigModal from '@/components/modals/LktElementConfigModal.vue';
+import LktFileBrowserModal from '@/components/modals/LktFileBrowserModal.vue';
 
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 
@@ -37,6 +38,7 @@ const LktFieldPlugin: Plugin = {
             addModal('lkt-field-language-edit', LktTextLanguageEditModal);
             addModal('lkt-field-add-element-config', LktAddElementModal);
             addModal('lkt-field-element-config', LktElementConfigModal);
+            addModal('lkt-file-browser', LktFileBrowserModal);
         }
     },
 };

@@ -3,10 +3,26 @@
     import { WebElementConfig, TableConfig, TablePermission, TableType } from 'lkt-vue-kernel';
     import ElementComponent from '@/components/elements/ElementComponent.vue';
 
+    // const props = withDefaults(defineProps<{
+    //     modelValue: WebElementConfig[]
+    //     parent: WebElementConfig
+    //     layoutSelector?: string
+    //     lang: string
+    //     isChild?: boolean
+    //     isPreview?: boolean
+    // }>(), {
+    //     layoutSelector: '',
+    //     isPreview: false,
+    //     isChild: true,
+    // });
+
     const props = defineProps({
         modelValue: {
             type: Array as () => WebElementConfig[],
             required: true
+        },
+        parent: {
+            type: Object as () => WebElementConfig,
         },
         layoutSelector: {
             type: String,
@@ -53,6 +69,14 @@
                 hideTableHeader: true,
                 perms: isChild ? [TablePermission.Update, TablePermission.Sort] : [TablePermission.Create, TablePermission.Update, TablePermission.Sort],
                 itemsContainerClass: (!isChild) ? 'lkt-grid-1' : layoutSelector,
+                itemContainerClass: (el: WebElementConfig): string => {
+                    if (!el.layout || props.isPreview) return '';
+                    let r = [];
+
+                    if (el.layout.columns && el.layout.columns.length > 0) r.push(el.layout.columns.join(' '));
+
+                    return r.join(' ');
+                },
                 requiredItemsForBottomCreate: 10,
                 drag: {
                     enabled: isPreview,
@@ -78,7 +102,7 @@
             }"
         >
             <template #item="{element, index}">
-                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview" :parent-children="items"/>
+                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview" :parent-children="items" :parent="parent"/>
             </template>
         </lkt-table>
     </div>

@@ -14,7 +14,7 @@
         ItemCrudMode,
         ItemCrudView,
         LktSettings,
-        OptionConfig,
+        OptionConfig, LktObject, WebElementLayoutType,
     } from 'lkt-vue-kernel';
     import LktField from '@/lib-components/LktField.vue';
     import { kebabCaseToCamelCase, ucfirst } from 'lkt-string-tools';
@@ -27,6 +27,7 @@
         modalKey: string
         zIndex: number
         element: WebElementConfig
+        parent?: WebElementConfig
         parentChildren: WebElementConfig[]
         indexInParentChildren: number
         onUpdate: Function
@@ -69,10 +70,18 @@
 
     const calculatedHasHeader = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion].includes(editableConfig.value.type);
     const calculatedHasIcon = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktIcon].includes(editableConfig.value.type);
-    const calculatedHasLayout = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktLayout].includes(editableConfig.value.type);
+    const calculatedHasLayout = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktLayout].includes(editableConfig.value.type);
     const calculatedHasImage = [WebElementType.LktImage].includes(editableConfig.value.type);
     const calculatedHasAccordionConfig = [WebElementType.LktLayoutAccordion, WebElementType.LktTextAccordion].includes(editableConfig.value.type);
     const calculatedHasChildren = [WebElementType.LktLayoutAccordion, WebElementType.LktLayoutBox, WebElementType.LktLayout].includes(editableConfig.value.type);
+    const calculatedHasParentLayout = [WebElementLayoutType.FlexRow, WebElementLayoutType.FlexRow].includes(props.parent?.layout?.type);
+
+    if (calculatedHasParentLayout) {
+        if (!props.element.layout) props.element.layout = {};
+        if (!props.element.layout.columns) props.element.layout.columns = [];
+    }
+
+    console.log('props.element.layout: ', props.element.layout);
 
     const accordionTypeOptions = <Array<OptionConfig>>[
         {
@@ -95,12 +104,20 @@
 
     const layoutTypeOptions:OptionConfig[] = [
         {
-            value: 'grid',
+            value: WebElementLayoutType.Grid,
             label: 'Grid',
         },
         {
-            value: 'flex',
-            label: 'Flex',
+            value: WebElementLayoutType.FlexRow,
+            label: 'Flex Row',
+        },
+        {
+            value: WebElementLayoutType.FlexRows,
+            label: 'Flex Rows',
+        },
+        {
+            value: WebElementLayoutType.FlexColumn,
+            label: 'Flex Column',
         }
     ];
 
@@ -146,6 +163,180 @@
             label: 'From 768px: 5',
         },
     ];
+
+    const flexColumnsOptions:OptionConfig[] = [
+        {
+            value: 'lkt-flex-col-1',
+            label: 'Default: 1',
+        },
+        {
+            value: 'lkt-flex-col-2',
+            label: 'Default: 2',
+        },
+        {
+            value: 'lkt-flex-col-3',
+            label: 'Default: 3',
+        },
+        {
+            value: 'lkt-flex-col-4',
+            label: 'Default: 4',
+        },
+        {
+            value: 'lkt-flex-col-5',
+            label: 'Default: 5',
+        },
+        {
+            value: 'lkt-flex-col-6',
+            label: 'Default: 6',
+        },
+        {
+            value: 'lkt-flex-col-7',
+            label: 'Default: 7',
+        },
+        {
+            value: 'lkt-flex-col-8',
+            label: 'Default: 8',
+        },
+        {
+            value: 'lkt-flex-col-9',
+            label: 'Default: 9',
+        },
+        {
+            value: 'lkt-flex-col-10',
+            label: 'Default: 10',
+        },
+        {
+            value: 'lkt-flex-col-11',
+            label: 'Default: 11',
+        },
+        {
+            value: 'lkt-flex-col-12',
+            label: 'Default: 12',
+        },
+        {
+            value: 'lkt-flex-col-1--from-768',
+            label: 'From 768px: 1',
+        },
+        {
+            value: 'lkt-flex-col-2--from-768',
+            label: 'From 768px: 2',
+        },
+        {
+            value: 'lkt-flex-col-3--from-768',
+            label: 'From 768px: 3',
+        },
+        {
+            value: 'lkt-flex-col-4--from-768',
+            label: 'From 768px: 4',
+        },
+        {
+            value: 'lkt-flex-col-5--from-768',
+            label: 'From 768px: 5',
+        },
+    ];
+
+    const alignItemsOptions:OptionConfig[] = [
+        {
+            value: 'lkt-align-items-start',
+            label: 'Default: Start',
+        },
+        {
+            value: 'lkt-align-items-center',
+            label: 'Default: Center',
+        },
+        {
+            value: 'lkt-align-items-end',
+            label: 'Default: End',
+        },
+    ];
+
+    const justifyContentOptions:OptionConfig[] = [
+        {
+            value: 'lkt-justify-content-stretch',
+            label: 'Default: Stretch',
+        },
+        {
+            value: 'lkt-justify-content-center',
+            label: 'Default: Center',
+        },
+        {
+            value: 'lkt-justify-content-space-between',
+            label: 'Default: Space Between',
+        },
+        {
+            value: 'lkt-justify-content-space-around',
+            label: 'Default: Space Around',
+        },
+        {
+            value: 'lkt-justify-content-space-evenly',
+            label: 'Default: Space Evenly',
+        },
+        {
+            value: 'lkt-justify-content-start',
+            label: 'Default: Start',
+        },
+        {
+            value: 'lkt-justify-content-end',
+            label: 'Default: End',
+        },
+    ];
+
+    const _filterLayoutMediaQueryOption = (haystack: OptionConfig[], needle: OptionConfig) => {
+        if (haystack.length > 0) {
+
+            let needleValue = String(needle.value);
+
+            let optionSearch = '';
+            if (needleValue.includes('--from')) optionSearch = '--' + needleValue.split('--')[1];
+            if (needleValue.includes('--to')) optionSearch = '--' + needleValue.split('--')[1];
+
+            // Filter to show only picked media selector
+            if (optionSearch !== '') {
+                let comparedValue = haystack.find(z => String(z).includes(optionSearch));
+                if (comparedValue) {
+                    //@ts-ignore
+                    return comparedValue === needle.value;
+                }
+            }
+
+            let comparedValue = haystack.find(z => !String(z).includes('--'));
+            if (comparedValue) {
+                //@ts-ignore
+                return comparedValue === needleValue || needleValue.includes('--');
+            }
+        }
+
+        return true;
+    }
+
+
+    const filterLayoutMediaOptions = (option: LktObject) => {
+        return _filterLayoutMediaQueryOption(
+            props.element.layout?.amountOfItems ?? [],
+            option,
+        );
+    }
+
+    const filterLayoutAlignItemsOptions = (option: LktObject) => {
+        return _filterLayoutMediaQueryOption(
+            props.element.layout?.alignItems ?? [],
+            option,
+        );
+    }
+
+    const filterLayoutJustifyContentOptions = (option: LktObject) => {
+        return _filterLayoutMediaQueryOption(
+            props.element.layout?.justifyContent ?? [],
+            option,
+        );
+    }
+
+    const filterLayoutColumnsOptions = (option: LktObject) => {
+        return _filterLayoutMediaQueryOption(
+            props.element.layout?.columns ?? [],
+            option,
+        );
+    }
 
     const computedCustomClassField = computed((): FieldConfig|undefined => {
         let config = {};
@@ -285,39 +476,39 @@
                                 }"
                                 v-model="item.props.src"
                             />
+                        </div>
+                    </lkt-accordion>
 
-                            <lkt-box
-                                v-if="calculatedHasAccordionConfig"
-                                v-bind="<AccordionConfig>{
-                                    type: AccordionType.Auto,
-                                    title: 'Accordion Config'
+                    <lkt-accordion
+                        v-if="calculatedHasAccordionConfig"
+                        v-bind="<AccordionConfig>{
+                            type: AccordionType.Auto,
+                            title: 'Accordion Config'
+                        }"
+                    >
+                        <div class="lkt-grid-1">
+                            <lkt-field
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Type',
+                                    options: accordionTypeOptions,
                                 }"
-                            >
-                                <div class="lkt-grid-1">
-                                    <lkt-field
-                                        v-bind="<FieldConfig>{
-                                            type: FieldType.Select,
-                                            label: 'Type',
-                                            options: accordionTypeOptions,
-                                        }"
-                                        v-model="item.props.type"
-                                    />
-                                </div>
-                            </lkt-box>
-
+                                v-model="item.props.type"
+                            />
                         </div>
                     </lkt-accordion>
 
 
                     <lkt-accordion
-                        v-if="calculatedHasLayout"
+                        v-if="calculatedHasLayout || calculatedHasParentLayout"
                         v-bind="<AccordionConfig>{
-                        type: AccordionType.Auto,
-                        title: 'Grid Config'
-                    }"
+                            type: AccordionType.Auto,
+                            title: 'Layout Config'
+                        }"
                     >
                         <div class="lkt-grid-1">
                             <lkt-field
+                                v-if="calculatedHasLayout"
                                 v-bind="<FieldConfig>{
                                     type: FieldType.Select,
                                     label: 'Type',
@@ -325,26 +516,62 @@
                                 }"
                                 v-model="item.layout.type"
                             />
-
-                            <lkt-box
-                                v-bind="<AccordionConfig>{
-                                    type: AccordionType.Auto,
-                                    title: 'Responsive configuration'
+                            <lkt-field
+                                v-if="calculatedHasLayout && item.layout.type === WebElementLayoutType.Grid"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Items per row (based on device width)',
+                                    options: amountOfItemsOptions,
+                                    multiple: true,
+                                    searchable: true,
+                                    optionsConfig: {
+                                        filter: filterLayoutMediaOptions
+                                    }
                                 }"
-                            >
-                                <div class="lkt-grid-1">
-                                    <lkt-field
-                                        v-bind="<FieldConfig>{
-                                            type: FieldType.Select,
-                                            label: 'Items per row (based on device width)',
-                                            options: amountOfItemsOptions,
-                                            multiple: true,
-                                            searchable: true,
-                                        }"
-                                        v-model="item.layout.amountOfItems"
-                                    />
-                                </div>
-                            </lkt-box>
+                                v-model="item.layout.amountOfItems"
+                            />
+                            <lkt-field
+                                v-if="calculatedHasLayout"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Align items',
+                                    options: alignItemsOptions,
+                                    multiple: true,
+                                    searchable: true,
+                                    optionsConfig: {
+                                        filter: filterLayoutAlignItemsOptions
+                                    }
+                                }"
+                                v-model="item.layout.alignItems"
+                            />
+                            <lkt-field
+                                v-if="calculatedHasLayout"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Justify content',
+                                    options: justifyContentOptions,
+                                    multiple: true,
+                                    searchable: true,
+                                    optionsConfig: {
+                                        filter: filterLayoutJustifyContentOptions
+                                    }
+                                }"
+                                v-model="item.layout.justifyContent"
+                            />
+                            <lkt-field
+                                v-if="calculatedHasParentLayout"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Columns Reserved',
+                                    options: flexColumnsOptions,
+                                    multiple: true,
+                                    searchable: true,
+                                    optionsConfig: {
+                                        filter: filterLayoutColumnsOptions
+                                    }
+                                }"
+                                v-model="item.layout.columns"
+                            />
 
                         </div>
                     </lkt-accordion>

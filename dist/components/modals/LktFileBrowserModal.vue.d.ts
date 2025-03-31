@@ -1,14 +1,10 @@
-import { WebElementConfig } from 'lkt-vue-kernel';
+import { FieldType } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modalName: string;
     modalKey: string;
     zIndex: number;
-    element: WebElementConfig;
-    parent?: WebElementConfig;
-    parentChildren: WebElementConfig[];
-    indexInParentChildren: number;
-    onUpdate: Function;
+    type: FieldType;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{}>, {
     modalKey: string;

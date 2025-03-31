@@ -495,6 +495,9 @@
     watch(value, (v) => {
         if (ready.value && editable.value) {
             emits('update:modelValue', v);
+            if (props.type === FieldType.Select && typeof props.optionsConfig?.filter === 'function') {
+                buildVisibleOptions(searchString.value, false);
+            }
             doRemoteValidation();
             doLocalValidation();
         }
@@ -894,19 +897,30 @@
             searchString.value = '';
         },
         onUntagSelectInput = (option: Option) => {
-            let pickedIndex = pickedOptions.value.findIndex(opt => opt.value === option.value);
+            let pickedIndex = -1;
+            if (props.optionValueType === 'option') {
+                //@ts-ignore
+                pickedIndex = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
+            } else {
+                //@ts-ignore
+                pickedIndex = getInValueOptionIndex(option, editableValue.value);
+            }
 
             if (pickedIndex >= 0) {
+                editableValue.value.splice(pickedIndex, 1);
                 pickedOptions.value.splice(pickedIndex, 1);
 
-                optionsHaystack.value.splice(
-                    optionsHaystack.value.findIndex(opt => opt.value === option.value),
-                    1,
-                );
-                visibleOptions.value.splice(
-                    visibleOptions.value.findIndex(opt => opt.value === option.value),
-                    1,
-                );
+                if (props.canTag) {
+                    optionsHaystack.value.splice(
+                        optionsHaystack.value.findIndex(opt => opt.value === option.value),
+                        1,
+                    );
+
+                    visibleOptions.value.splice(
+                        visibleOptions.value.findIndex(opt => opt.value === option.value),
+                        1,
+                    );
+                }
             }
             searchString.value = '';
         },

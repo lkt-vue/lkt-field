@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-    import { defineEmits, defineProps, nextTick, ref, watch } from 'vue';
+    import { defineEmits, defineProps, ref, watch } from 'vue';
     import ComponentManager from './elements/ComponentManager.vue';
-    import { ButtonConfig, WebElementConfig, LktObject } from 'lkt-vue-kernel';
+    import { ButtonConfig, WebElementConfig } from 'lkt-vue-kernel';
 
     const props = defineProps({
         modelValue: {
@@ -19,7 +19,6 @@
     ]);
 
     watch(() => props.modelValue, (v) => {
-        console.log('detectado cambio en modelValue')
         elements.value = v;
     }, {deep: true})
 
@@ -39,31 +38,6 @@
     };
 
     const onAddElement = () => {
-        saveHistory(); // Guardamos el estado después de la modificación
-    };
-
-    // Funciones para agregar componentes
-    const addCustomTag = () => {
-        const placeholder = 'Etiqueta personalizada';
-        elements.value.push({ type: 'customTag', component: 'CustomTag', props: { text: placeholder } });
-        saveHistory(); // Guardamos el estado después de la modificación
-    };
-
-    const addImage = () => {
-        const src = prompt('Ingrese la URL de la imagen:');
-        if (src) {
-            elements.value.push({ type: 'customTag', component: 'ImageComponent', props: { src } });
-            saveHistory(); // Guardamos el estado después de la modificación
-        }
-    };
-
-    const addTable = () => {
-        elements.value.push({ type: 'customTag', component: 'TableComponent', props: {} });
-        saveHistory(); // Guardamos el estado después de la modificación
-    };
-
-    const addForm = () => {
-        elements.value.push({ type: 'customTag', component: 'FormComponent', props: {} });
         saveHistory(); // Guardamos el estado después de la modificación
     };
 
@@ -112,6 +86,54 @@
         document.execCommand('justify' + alignment, false);
         saveHistory(); // Guardamos el estado después de la modificación
     };
+
+    function toggleWrapSelectionWithTag(tagName) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+        let commonAncestor = range.commonAncestorContainer;
+
+        // Si el nodo común es un texto, tomamos su padre
+        if (commonAncestor.nodeType === Node.TEXT_NODE) {
+            commonAncestor = commonAncestor.parentNode;
+        }
+
+        // Si el nodo ya está envuelto en la etiqueta, la eliminamos
+        if (commonAncestor.tagName && commonAncestor.tagName.toLowerCase() === tagName.toLowerCase()) {
+            unwrapElement(commonAncestor);
+            return;
+        }
+
+        // Si la selección incluye varios elementos, evitamos el anidamiento innecesario
+        const fragment = range.extractContents();
+        const wrapper = document.createElement(tagName);
+
+        let hasBlockElement = false;
+        fragment.childNodes.forEach(node => {
+            if (node.nodeType === 1 && getComputedStyle(node).display === "block") {
+                hasBlockElement = true;
+            }
+        });
+
+        if (hasBlockElement) {
+            range.insertNode(fragment);
+        } else {
+            wrapper.appendChild(fragment);
+            range.insertNode(wrapper);
+        }
+
+        saveHistory();
+    }
+
+    // Función para eliminar un elemento sin borrar su contenido
+    function unwrapElement(element) {
+        const parent = element.parentNode;
+        while (element.firstChild) {
+            parent.insertBefore(element.firstChild, element);
+        }
+        parent.removeChild(element);
+    }
 
     // Funciones de deshacer/rehacer
     const undo = () => {
@@ -187,6 +209,7 @@
             <!-- Nuevas opciones de formato -->
             <button @click="applyFormat('subscript')">Subíndice</button>
             <button @click="applyFormat('superscript')">Superíndice</button>
+            <button @click="toggleWrapSelectionWithTag('p')">Párrafo</button>
 
             <!-- Nuevas opciones de color -->
             <input type="color" @input="changeTextColor" title="Color del texto" />
@@ -244,13 +267,6 @@
 </template>
 
 <style scoped>
-    /* Estilos del editor */
-    /*.wysiwyg-container {
-        max-width: 600px;
-        margin: 20px auto;
-        font-family: Arial, sans-serif;
-    }*/
-
     .lkt-wysiwyg-container {
         position: relative;
     }
