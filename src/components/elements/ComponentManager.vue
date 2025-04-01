@@ -199,18 +199,24 @@
         width: 100%;
     }
 
-    .lkt-field-element-config-modal {
+    .lkt-field-element-config-modal, .lkt-file-browser {
         --lkt-modal-max-width-default: 100%;
         --lkt-modal-width-default: 100%;
     }
-    .lkt-field-element-config-modal .lkt-modal-inner {
+    .lkt-field-element-config-modal .lkt-modal-inner,
+    .lkt-file-browser .lkt-modal-inner {
         height: 100%;
         margin: 0;
         align-items: flex-start;
         display: flex;
         flex-direction: column;
     }
-    .lkt-field-element-config-modal .lkt-modal-header {
+    .lkt-field-element-config-modal .lkt-modal-header,
+    .lkt-file-browser .lkt-modal-header {
         max-height: 50px;
+    }
+
+    .lkt-file-browser .lkt-menu .lkt-anchor {
+        --lkt-anchor--justify-content: flex-start;
     }
 </style>

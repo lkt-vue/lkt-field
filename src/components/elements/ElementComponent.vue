@@ -41,25 +41,28 @@
         if (!element.layout || props.isPreview) return '';
         let r = [];
 
-        if (element.layout.type === WebElementLayoutType.Grid) {
-            if (element.layout.amountOfItems && element.layout.amountOfItems.length > 0) r.push(element.layout.amountOfItems.join(' '));
-
-        } else if (element.layout.type === WebElementLayoutType.FlexRow) {
-            r.push('lkt-flex-row--nowrap');
-
-        } else if (element.layout.type === WebElementLayoutType.FlexRows) {
+        if (element.layout.type === WebElementLayoutType.FlexRow && (!element.layout.amountOfItems || element.layout.amountOfItems.length === 0)) {
             r.push('lkt-flex-row');
+
+        } else if (element.layout.type === WebElementLayoutType.FlexRows && (!element.layout.amountOfItems || element.layout.amountOfItems.length === 0)) {
+            r.push('lkt-flex-rows');
 
         } else if (element.layout.type === WebElementLayoutType.FlexColumn) {
             r.push('lkt-flex-column');
         }
 
+        if (element.layout.amountOfItems && element.layout.amountOfItems.length > 0) r.push(element.layout.amountOfItems.join(' '));
         if (element.layout.alignItems && element.layout.alignItems.length > 0) r.push(element.layout.alignItems.join(' '));
         if (element.layout.justifyContent && element.layout.justifyContent.length > 0) r.push(element.layout.justifyContent.join(' '));
 
         if (r.length > 0) r.push('layout-mode');
 
-        return r.join(' ');
+        let response = r.join(' ');
+
+        if (element.layout.type === WebElementLayoutType.FlexRows) {
+            response = response.replace('flex-row-', 'flex-rows-');
+        }
+        return response;
     }
 
     const currentLang = props.lang ?? getCurrentLanguage();

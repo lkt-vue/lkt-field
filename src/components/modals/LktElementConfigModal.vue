@@ -74,7 +74,7 @@
     const calculatedHasImage = [WebElementType.LktImage].includes(editableConfig.value.type);
     const calculatedHasAccordionConfig = [WebElementType.LktLayoutAccordion, WebElementType.LktTextAccordion].includes(editableConfig.value.type);
     const calculatedHasChildren = [WebElementType.LktLayoutAccordion, WebElementType.LktLayoutBox, WebElementType.LktLayout].includes(editableConfig.value.type);
-    const calculatedHasParentLayout = [WebElementLayoutType.FlexRow, WebElementLayoutType.FlexRow].includes(props.parent?.layout?.type);
+    const calculatedHasParentLayout = [WebElementLayoutType.FlexRow, WebElementLayoutType.FlexRows].includes(props.parent?.layout?.type);
 
     if (calculatedHasParentLayout) {
         if (!props.element.layout) props.element.layout = {};
@@ -160,6 +160,49 @@
         },
         {
             value: 'lkt-grid-5--from-768',
+            label: 'From 768px: 5',
+        },
+    ];
+
+    const amountOfFlexRowItemsOptions:OptionConfig[] = [
+        {
+            value: 'lkt-flex-row-1',
+            label: 'Default: 1',
+        },
+        {
+            value: 'lkt-flex-row-2',
+            label: 'Default: 2',
+        },
+        {
+            value: 'lkt-flex-row-3',
+            label: 'Default: 3',
+        },
+        {
+            value: 'lkt-flex-row-4',
+            label: 'Default: 4',
+        },
+        {
+            value: 'lkt-flex-row-5',
+            label: 'Default: 5',
+        },
+        {
+            value: 'lkt-flex-row-1--from-768',
+            label: 'From 768px: 1',
+        },
+        {
+            value: 'lkt-flex-row-2--from-768',
+            label: 'From 768px: 2',
+        },
+        {
+            value: 'lkt-flex-row-3--from-768',
+            label: 'From 768px: 3',
+        },
+        {
+            value: 'lkt-flex-row-4--from-768',
+            label: 'From 768px: 4',
+        },
+        {
+            value: 'lkt-flex-row-5--from-768',
             label: 'From 768px: 5',
         },
     ];
@@ -390,8 +433,8 @@
         }"
     >
         <template #item="{item}">
-            <div class="lkt-grid-1 lkt-grid-3--from-960">
-                <div class="lkt-grid-1">
+            <div class="lkt-flex-row">
+                <div class="lkt-flex-col-9 lkt-grid-1">
                     <element-component :element="element" is-preview :parent-children="parentChildren" :index="indexInParentChildren" :can-render-actions="false"/>
 
                     <template
@@ -407,7 +450,7 @@
                         </lkt-accordion>
                     </template>
                 </div>
-                <div class="lkt-grid-1 lkt-grid-column-start-4--from-960">
+                <div class="lkt-flex-col-3 lkt-grid-1">
 
                     <lkt-button
                         v-if="calculatedHasChildren"
@@ -522,6 +565,20 @@
                                     type: FieldType.Select,
                                     label: 'Items per row (based on device width)',
                                     options: amountOfItemsOptions,
+                                    multiple: true,
+                                    searchable: true,
+                                    optionsConfig: {
+                                        filter: filterLayoutMediaOptions
+                                    }
+                                }"
+                                v-model="item.layout.amountOfItems"
+                            />
+                            <lkt-field
+                                v-if="calculatedHasLayout && (item.layout.type === WebElementLayoutType.FlexRow || item.layout.type === WebElementLayoutType.FlexRows)"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Column size (based on device width)',
+                                    options: amountOfFlexRowItemsOptions,
                                     multiple: true,
                                     searchable: true,
                                     optionsConfig: {

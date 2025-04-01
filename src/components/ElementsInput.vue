@@ -2,6 +2,7 @@
     import { defineEmits, defineProps, ref, watch } from 'vue';
     import ComponentManager from './elements/ComponentManager.vue';
     import { ButtonConfig, WebElementConfig } from 'lkt-vue-kernel';
+    import EditorToolbar from '@/components/EditorToolbar.vue';
 
     const props = defineProps({
         modelValue: {
@@ -177,8 +178,11 @@
 
 <template>
     <div ref="containerRef" class="lkt-wysiwyg-container">
+
+        <editor-toolbar :elements="elements" :toolbar-top="toolbarTop"/>
+
         <!-- Barra de herramientas y demás elementos del editor -->
-        <div class="lkt-wysiwyg-toolbar lkt-tooltip" :style="{top: toolbarTop + 'px'}">
+        <div v-if="false" class="lkt-wysiwyg-toolbar lkt-tooltip" :style="{top: toolbarTop + 'px'}">
             <div class="lkt-elements-toolbar-group">
                 <lkt-button
                     v-bind="<ButtonConfig>{
