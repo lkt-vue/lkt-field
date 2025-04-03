@@ -7,8 +7,9 @@
         MenuEntryConfig,
         MenuEntryType,
     } from 'lkt-vue-kernel';
-    import { ref, watch } from 'vue';
+    import { onMounted, ref, watch } from 'vue';
     import FileEntityBox from '@/components/file-browser/FileEntityBox.vue';
+    import { httpCall, HTTPResponse } from 'lkt-http-client';
 
     const props = withDefaults(defineProps<{
         modalName: string
@@ -22,36 +23,32 @@
         zIndex: 500,
     });
 
+    const emit = defineEmits([]);
+
+    const isLoading = ref(false);
+    const items = ref(<FileEntityConfig[]>[]);
+
     console.log('fileBrowserConfig: ', props.fileBrowserConfig);
+
+    const loadResource = () => {
+        if (props.fileBrowserConfig?.http?.resource) {
+            isLoading.value = true;
+
+            httpCall(props.fileBrowserConfig.http.resource, props.fileBrowserConfig.http.data).then((r: HTTPResponse) => {
+                isLoading.value = false;
+                items.value = <FileEntityConfig[]>r.data;
+
+            }).catch((r: any) => {
+                isLoading.value = false;
+            });
+        }
+    }
 
     const activeElement = ref(<FileEntityConfig | undefined>undefined);
 
     watch(activeElement, (v) => {
         console.log('updatedActiveElement: ', v);
     }, { deep: true });
-
-    const items = ref(<Array<FileEntityConfig>>[
-        {
-            id: 1,
-            type: FileEntityType.StorageUnit,
-            name: 'Your Space',
-            children: [
-                {
-                    id: 2,
-                    type: FileEntityType.Directory,
-                    name: 'cosis',
-                    children: [
-                        {
-                            id: 3,
-                            type: FileEntityType.Image,
-                            name: 'Dr. Evil',
-                            src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/03/dr-evil-wide-eyed-pinky-on-the-side-of-his-mouth-in-a-scene-from-austin-powers.jpg?q=49&fit=crop&w=825&dpr=2',
-                        },
-                    ],
-                },
-            ],
-        },
-    ]);
 
     watch(items, (v) => {
         console.log('updatedItems: ', v);
@@ -75,6 +72,10 @@
             children: child.children ? child.children.map(childrenToMenuEntry) : [],
         };
     };
+
+    onMounted(() => {
+        loadResource();
+    })
 
 </script>
 
