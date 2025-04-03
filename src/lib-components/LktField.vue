@@ -1272,6 +1272,7 @@
                     :readonly="readonly"
                     :options-resource="optionsConfig?.http?.resource"
                     :container="container"
+                    :file-browser-config="fileBrowserConfig"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
                 />

@@ -1,12 +1,12 @@
-import { WebElementConfig } from 'lkt-vue-kernel';
+import { WebElement } from 'lkt-vue-kernel';
 import { DefineComponent, ExtractPropTypes, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 declare const _default: DefineComponent<ExtractPropTypes<{
     modelValue: {
-        type: () => WebElementConfig[];
+        type: () => WebElement[];
         required: true;
     };
     parent: {
-        type: () => WebElementConfig;
+        type: () => WebElement;
     };
     layoutSelector: {
         type: StringConstructor;
@@ -29,11 +29,11 @@ declare const _default: DefineComponent<ExtractPropTypes<{
     "elements-reordered": (...args: any[]) => void;
 }, string, PublicProps, Readonly< ExtractPropTypes<{
     modelValue: {
-        type: () => WebElementConfig[];
+        type: () => WebElement[];
         required: true;
     };
     parent: {
-        type: () => WebElementConfig;
+        type: () => WebElement;
     };
     layoutSelector: {
         type: StringConstructor;

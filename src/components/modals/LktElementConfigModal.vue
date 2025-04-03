@@ -158,49 +158,6 @@
         },
     ];
 
-    const amountOfFlexRowItemsOptions:OptionConfig[] = [
-        {
-            value: 'lkt-flex-row-1',
-            label: 'Default: 1',
-        },
-        {
-            value: 'lkt-flex-row-2',
-            label: 'Default: 2',
-        },
-        {
-            value: 'lkt-flex-row-3',
-            label: 'Default: 3',
-        },
-        {
-            value: 'lkt-flex-row-4',
-            label: 'Default: 4',
-        },
-        {
-            value: 'lkt-flex-row-5',
-            label: 'Default: 5',
-        },
-        {
-            value: 'lkt-flex-row-1--from-768',
-            label: 'From 768px: 1',
-        },
-        {
-            value: 'lkt-flex-row-2--from-768',
-            label: 'From 768px: 2',
-        },
-        {
-            value: 'lkt-flex-row-3--from-768',
-            label: 'From 768px: 3',
-        },
-        {
-            value: 'lkt-flex-row-4--from-768',
-            label: 'From 768px: 4',
-        },
-        {
-            value: 'lkt-flex-row-5--from-768',
-            label: 'From 768px: 5',
-        },
-    ];
-
     const flexColumnsOptions:OptionConfig[] = [
         {
             value: 'lkt-flex-col-1',

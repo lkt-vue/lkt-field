@@ -2,7 +2,7 @@
     import {
         AccordionConfig,
         AccordionToggleMode,
-        FieldType, FileEntityConfig, FileEntityType,
+        FieldType, FileBrowserConfig, FileEntityConfig, FileEntityType,
         MenuConfig,
         MenuEntryConfig,
         MenuEntryType,
@@ -15,11 +15,14 @@
         modalKey: string
         zIndex: number
         type: FieldType
+        fileBrowserConfig?: FileBrowserConfig
     }>(), {
         modalName: '',
         modalKey: '_',
         zIndex: 500,
     });
+
+    console.log('fileBrowserConfig: ', props.fileBrowserConfig);
 
     const activeElement = ref(<FileEntityConfig | undefined>undefined);
 

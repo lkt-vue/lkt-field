@@ -18,11 +18,11 @@
 
     const props = defineProps({
         modelValue: {
-            type: Array as () => WebElementConfig[],
+            type: Array as () => WebElement[],
             required: true
         },
         parent: {
-            type: Object as () => WebElementConfig,
+            type: Object as () => WebElement,
         },
         layoutSelector: {
             type: String,
@@ -40,11 +40,7 @@
         }
     })
 
-    const items = ref(<WebElement[]>[]);
-
-    if (props.modelValue.length > 0) {
-        items.value = props.modelValue?.map(z => new WebElement(z));
-    }
+    const items = ref(<WebElement[]>props.modelValue);
 
     // const items = ref(props.modelValue);
     const appendingItems = ref(false);
