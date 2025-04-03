@@ -694,6 +694,7 @@
                 if (key === 'ArrowDown') {
                     ++focusedOptionIndex.value;
                     if (focusedOptionIndex.value > amountOfOptions) focusedOptionIndex.value = 0;
+                    //@ts-ignore
                     let el = optionList.value?.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
                     if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 
@@ -701,6 +702,7 @@
                     --focusedOptionIndex.value;
                     if (focusedOptionIndex.value < 0) focusedOptionIndex.value = amountOfOptions;
 
+                    //@ts-ignore
                     let el = optionList.value?.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
                     if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
 
@@ -716,6 +718,7 @@
         doUndo = () => {
             if (props.type === FieldType.Html) {
                 if (inputElement.value) {
+                    //@ts-ignore
                     inputElement.value.setValue(originalEditableValue.value);
                 }
                 return;
@@ -732,6 +735,7 @@
         doClear = () => {
             if (props.type === FieldType.Html) {
                 if (inputElement.value) {
+                    //@ts-ignore
                     inputElement.value.setValue('');
                 }
                 return;
@@ -1014,6 +1018,7 @@
         click: () => {
             switch (props.type) {
                 case FieldType.File:
+                    //@ts-ignore
                     return inputElement.value?.click();
                     break;
             }
@@ -1060,6 +1065,7 @@
                 return pickedOptions.value;
 
             case FieldType.Date:
+                //@ts-ignore
                 return getVisibleDateValue(value.value, computedDateReadFormat.value);
 
             case FieldType.File:
@@ -1359,7 +1365,6 @@
                     v-else-if="computedInputElement === 'textarea'"
                     v-model="editableValue"
                     :ref="(el:any) => inputElement = el"
-                    :value="editableValue"
                     :name="name"
                     :id="Identifier"
                     :disabled="computedIsDisabled"
@@ -1379,7 +1384,7 @@
                     v-else-if="type === FieldType.Html"
                     v-model="editableValue"
                     :id="Identifier"
-                    :tabindex="tabindex"
+                    :tabindex="<number>tabindex"
                     :name="name"
                     :lang="computedLang"
                     :editable="editable"

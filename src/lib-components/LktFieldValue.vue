@@ -5,7 +5,7 @@
         FieldReadModeConfig,
         FieldType,
         LktObject,
-        MultipleOptionsDisplay,
+        MultipleOptionsDisplay, Option,
     } from 'lkt-vue-kernel';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
@@ -181,7 +181,7 @@
                     </div>
 
                     <ul v-else-if="calculatedValue.length > 0" class="lkt-field-select-read" :class="`multiple-display-${multipleDisplay}`">
-                        <template v-for="(option, i) in calculatedValue">
+                        <template v-for="(_, i) in calculatedValue">
                             <li :title="calculatedValue[i]?.label">
                                 <dropdown-option
                                     :option="calculatedValue[i]"
@@ -225,7 +225,7 @@
             <dropdown-option
                 class="lkt-field--read-value"
                 v-else-if="download"
-                :option="{value: '', label: calculatedValue}"
+                :option="<Option>{value: '', label: calculatedValue}"
                 :download="download"
                 :text="optionsText"
                 :custom-class="optionsClass"

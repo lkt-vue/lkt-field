@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { LktObject } from 'lkt-vue-kernel';
+    import { LktObject, ValidScanPropTarget } from 'lkt-vue-kernel';
     import { ref } from 'vue';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
@@ -18,7 +18,7 @@
         modal?: string | Function
         modalKey?: string | number | Function
         modalData?: LktObject
-        itemType?: string
+        itemType?: ValidScanPropTarget
     }>(), {
         modelValue: () => ({}),
         modal: '',

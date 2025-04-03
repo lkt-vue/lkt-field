@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, ref, useSlots } from 'vue';
-    import { LktObject } from 'lkt-vue-kernel';
+    import { LktObject, ValidScanPropTarget } from 'lkt-vue-kernel';
     import CardInput from '../components/CardInput.vue';
 
     const slots = useSlots();
@@ -8,20 +8,21 @@
     const props = withDefaults(defineProps<{
         modelValue: LktObject[]
         editable?: boolean
-        min: number|false
-        max: number|false
-        focusing: boolean
-        hadFirstFocus: boolean
-        disabled: boolean
-        readonly: boolean
-        tabindex: number
+        min?: number|false
+        max?: number|false
+        focusing?: boolean
+        hadFirstFocus?: boolean
+        disabled?: boolean
+        readonly?: boolean
+        tabindex?: number|string
         modal?: string | Function
         modalKey?: string | number | Function
         modalData?: LktObject
-        itemType?: string
+        itemType?: ValidScanPropTarget
     }>(), {
         modelValue: () => [],
         editable: false,
+        max: false,
         itemType: '',
     });
 

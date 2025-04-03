@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-vue-kernel';
+import { LktObject, ValidScanPropTarget, ScanPropTarget } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: LktObject;
@@ -14,7 +14,7 @@ type __VLS_Props = {
     modal?: string | Function;
     modalKey?: string | number | Function;
     modalData?: LktObject;
-    itemType?: string;
+    itemType?: ValidScanPropTarget;
 };
 declare function __VLS_template(): {
     attrs: Partial<{}>;
@@ -40,7 +40,7 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     modal: string | Function;
     modalData: LktObject;
     modalKey: string | number | Function;
-    itemType: string;
+    itemType: string | number | Function | ((...args: any[]) => ScanPropTarget);
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;

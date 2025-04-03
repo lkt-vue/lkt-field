@@ -2,7 +2,7 @@
     import {
         AccordionConfig,
         AccordionToggleMode,
-        FieldType,
+        FieldType, FileEntityConfig, FileEntityType,
         MenuConfig,
         MenuEntryConfig,
         MenuEntryType,
@@ -21,26 +21,11 @@
         zIndex: 500,
     });
 
-    enum FileEntityType {
-        StorageUnit = 'unit',
-        Directory = 'dir',
-        Image = 'img',
-        Video = 'vid',
-        File = 'file',
-    }
-    
-    interface FileEntityConfig {
-        id?: number
-        type: FileEntityType
-        name: string
-        children: FileEntityConfig[]
-    }
-
-    const activeElement = ref(<FileEntityConfig|undefined>undefined);
+    const activeElement = ref(<FileEntityConfig | undefined>undefined);
 
     watch(activeElement, (v) => {
         console.log('updatedActiveElement: ', v);
-    }, {deep: true})
+    }, { deep: true });
 
     const items = ref(<Array<FileEntityConfig>>[
         {
@@ -53,16 +38,21 @@
                     type: FileEntityType.Directory,
                     name: 'cosis',
                     children: [
-                        {id: 3, type: FileEntityType.Image, name: 'Dr. Evil', src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/03/dr-evil-wide-eyed-pinky-on-the-side-of-his-mouth-in-a-scene-from-austin-powers.jpg?q=49&fit=crop&w=825&dpr=2'}
-                    ]
-                }
-            ]
-        }
+                        {
+                            id: 3,
+                            type: FileEntityType.Image,
+                            name: 'Dr. Evil',
+                            src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/03/dr-evil-wide-eyed-pinky-on-the-side-of-his-mouth-in-a-scene-from-austin-powers.jpg?q=49&fit=crop&w=825&dpr=2',
+                        },
+                    ],
+                },
+            ],
+        },
     ]);
 
     watch(items, (v) => {
         console.log('updatedItems: ', v);
-    }, {deep: true})
+    }, { deep: true });
 
     const childrenToMenuEntry = (child: FileEntityConfig): MenuEntryConfig => {
         return {
@@ -74,14 +64,14 @@
                     click: () => {
                         console.log('orem ipsum');
                         activeElement.value = child;
-                    }
-                }
+                    },
+                },
             },
             // class?: string;
             // icon?: string;
             children: child.children ? child.children.map(childrenToMenuEntry) : [],
-        }
-    }
+        };
+    };
 
 </script>
 
@@ -115,11 +105,12 @@
             </div>
             <div class="lkt-flex-col-9">
                 <div v-if="activeElement">
-                    holiiss: {{activeElement.name}}
-                    <template v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)">
+                    holiiss: {{ activeElement.name }}
+                    <template
+                        v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)">
                         <div class="lkt-flex-row-3">
                             <template v-for="(child, childIndex) in activeElement.children">
-                                <file-entity-box v-model="activeElement.children[childIndex]"/>
+                                <file-entity-box v-model="activeElement.children[childIndex]" />
                             </template>
                         </div>
                     </template>
