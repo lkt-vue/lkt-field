@@ -96,7 +96,7 @@
                         <div class="lkt-flex-column">
                             <lkt-menu
                                 v-bind="<MenuConfig>{
-                                    modelValue: item.children.map(childrenToMenuEntry)
+                                    modelValue: item.children?.map(childrenToMenuEntry) ?? []
                                 }"
                             />
                         </div>

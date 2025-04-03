@@ -1,14 +1,20 @@
 <script setup lang="ts">
-    import { ButtonConfig, ButtonType, WebElementConfig, WebElementLayoutType, WebElementType } from 'lkt-vue-kernel';
+    import {
+        ButtonConfig,
+        ButtonType,
+        WebElement,
+        WebElementLayoutType,
+        WebElementType,
+    } from 'lkt-vue-kernel';
     import ComponentManager from '@/components/elements/ComponentManager.vue';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
     import { getCurrentLanguage } from 'lkt-i18n';
     import { ref } from 'vue';
 
     const props = withDefaults(defineProps<{
-        element: WebElementConfig
-        parent?: WebElementConfig
-        parentChildren: WebElementConfig[]
+        element: WebElement
+        parent?: WebElement
+        parentChildren: WebElement[]
         index?: number
         lang?: string
         isPreview?: boolean
@@ -18,14 +24,6 @@
         isPreview: false,
         canRenderActions: true,
     });
-
-    if (!props.element.props) props.element.props = {text: {}};
-    if (!props.element.layout) props.element.layout = {};
-    if (!props.element.layout.columns) props.element.layout.columns = [];
-    if (!props.element.layout.alignSelf) props.element.layout.alignSelf = [];
-    if (!props.element.layout.alignItems) props.element.layout.alignItems = [];
-    if (!props.element.layout.justifySelf) props.element.layout.justifySelf = [];
-    if (!props.element.layout.justifyContent) props.element.layout.justifyContent = [];
 
     const appendingItems = ref(false);
 
@@ -37,7 +35,7 @@
         }
     }
 
-    const getLayoutSelector = (element: WebElementConfig) => {
+    const getLayoutSelector = (element: WebElement) => {
         if (!element.layout || props.isPreview) return '';
         let r = [];
 
@@ -51,7 +49,18 @@
             r.push('lkt-flex-column');
         }
 
-        if (element.layout.amountOfItems && element.layout.amountOfItems.length > 0) r.push(element.layout.amountOfItems.join(' '));
+        if (element.layout.amountOfItems && element.layout.amountOfItems.length > 0) {
+            if (element.layout.type === WebElementLayoutType.FlexRow) {
+                r.push(element.layout.amountOfItems.map(z => `lkt-flex-row-${z}`).join(' '));
+
+            } else if (element.layout.type === WebElementLayoutType.FlexRows) {
+                r.push(element.layout.amountOfItems.map(z => `lkt-flex-rows-${z}`).join(' '));
+
+            } else {
+                r.push(element.layout.amountOfItems.map(z => `lkt-grid-${z}`).join(' '));
+            }
+            // r.push(element.layout.amountOfItems.join(' '));
+        }
         if (element.layout.alignItems && element.layout.alignItems.length > 0) r.push(element.layout.alignItems.join(' '));
         if (element.layout.justifyContent && element.layout.justifyContent.length > 0) r.push(element.layout.justifyContent.join(' '));
 

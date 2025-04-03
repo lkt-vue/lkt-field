@@ -7,14 +7,15 @@
         ButtonType,
         ensureFieldConfig,
         FieldConfig,
-        WebElementConfig,
-        WebElementType,
         FieldType,
         ItemCrudConfig,
         ItemCrudMode,
         ItemCrudView,
+        LktObject,
         LktSettings,
-        OptionConfig, LktObject, WebElementLayoutType,
+        OptionConfig, WebElement,
+        WebElementLayoutType,
+        WebElementType,
     } from 'lkt-vue-kernel';
     import LktField from '@/lib-components/LktField.vue';
     import { kebabCaseToCamelCase, ucfirst } from 'lkt-string-tools';
@@ -26,9 +27,9 @@
         modalName: string
         modalKey: string
         zIndex: number
-        element: WebElementConfig
-        parent?: WebElementConfig
-        parentChildren: WebElementConfig[]
+        element: WebElement
+        parent?: WebElement
+        parentChildren: WebElement[]
         indexInParentChildren: number
         onUpdate: Function
     }>(), {
@@ -42,7 +43,7 @@
         closeModal(props.modalName, props.modalKey);
     }
 
-    const resetCloneId = (clone: WebElementConfig) => {
+    const resetCloneId = (clone: WebElement) => {
         clone.id = 0;
         clone.children?.forEach(child => resetCloneId(child));
         return clone;
@@ -63,25 +64,18 @@
         props.parentChildren.splice(props.indexInParentChildren + 1, 0, getClone());
     }
 
-    const editableConfig = ref(props.element);
+    const editableConfig = ref(<WebElement>props.element);
 
     const languages = getAvailableLanguages(),
         currentLang = getCurrentLanguage();
 
-    const calculatedHasHeader = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion].includes(editableConfig.value.type);
-    const calculatedHasIcon = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktIcon].includes(editableConfig.value.type);
-    const calculatedHasLayout = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktLayout].includes(editableConfig.value.type);
-    const calculatedHasImage = [WebElementType.LktImage].includes(editableConfig.value.type);
-    const calculatedHasAccordionConfig = [WebElementType.LktLayoutAccordion, WebElementType.LktTextAccordion].includes(editableConfig.value.type);
-    const calculatedHasChildren = [WebElementType.LktLayoutAccordion, WebElementType.LktLayoutBox, WebElementType.LktLayout].includes(editableConfig.value.type);
-    const calculatedHasParentLayout = [WebElementLayoutType.FlexRow, WebElementLayoutType.FlexRows].includes(props.parent?.layout?.type);
-
-    if (calculatedHasParentLayout) {
-        if (!props.element.layout) props.element.layout = {};
-        if (!props.element.layout.columns) props.element.layout.columns = [];
-    }
-
-    console.log('props.element.layout: ', props.element.layout);
+    const calculatedHasHeader = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion].includes(editableConfig.value.type),
+        calculatedHasIcon = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktIcon].includes(editableConfig.value.type),
+        calculatedHasLayout = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktLayout].includes(editableConfig.value.type),
+        calculatedHasImage = [WebElementType.LktImage].includes(editableConfig.value.type),
+        calculatedHasAccordionConfig = [WebElementType.LktLayoutAccordion, WebElementType.LktTextAccordion].includes(editableConfig.value.type),
+        calculatedHasChildren = [WebElementType.LktLayoutAccordion, WebElementType.LktLayoutBox, WebElementType.LktLayout].includes(editableConfig.value.type),
+        calculatedHasParentLayout = [WebElementLayoutType.FlexRow, WebElementLayoutType.FlexRows].includes(props.parent?.layout?.type);
 
     const accordionTypeOptions = <Array<OptionConfig>>[
         {
@@ -123,43 +117,43 @@
 
     const amountOfItemsOptions:OptionConfig[] = [
         {
-            value: 'lkt-grid-1',
+            value: '1',
             label: 'Default: 1',
         },
         {
-            value: 'lkt-grid-2',
+            value: '2',
             label: 'Default: 2',
         },
         {
-            value: 'lkt-grid-3',
+            value: '3',
             label: 'Default: 3',
         },
         {
-            value: 'lkt-grid-4',
+            value: '4',
             label: 'Default: 4',
         },
         {
-            value: 'lkt-grid-5',
+            value: '5',
             label: 'Default: 5',
         },
         {
-            value: 'lkt-grid-1--from-768',
+            value: '1--from-768',
             label: 'From 768px: 1',
         },
         {
-            value: 'lkt-grid-2--from-768',
+            value: '2--from-768',
             label: 'From 768px: 2',
         },
         {
-            value: 'lkt-grid-3--from-768',
+            value: '3--from-768',
             label: 'From 768px: 3',
         },
         {
-            value: 'lkt-grid-4--from-768',
+            value: '4--from-768',
             label: 'From 768px: 4',
         },
         {
-            value: 'lkt-grid-5--from-768',
+            value: '5--from-768',
             label: 'From 768px: 5',
         },
     ];
@@ -411,6 +405,12 @@
     const computedTitle = computed(() => {
         return ucfirst(kebabCaseToCamelCase(editableConfig.value.type)) + ' Config';
     })
+
+    // watch(() => props.element.layout.type, (newVal: WebElementLayoutType, oldVal: WebElementLayoutType) => {
+    //     if (oldVal === WebElementLayoutType.Grid || newVal === WebElementLayoutType.Grid) {
+    //         props.element.layout.amountOfItems?.splice(0, props.element.layout.amountOfItems?.length);
+    //     }
+    // })
 </script>
 
 <template>
@@ -560,27 +560,14 @@
                                 v-model="item.layout.type"
                             />
                             <lkt-field
-                                v-if="calculatedHasLayout && item.layout.type === WebElementLayoutType.Grid"
+                                v-if="calculatedHasLayout && item.layout.type !== WebElementLayoutType.FlexColumn"
                                 v-bind="<FieldConfig>{
                                     type: FieldType.Select,
-                                    label: 'Items per row (based on device width)',
+                                    label: element.layout.type === WebElementLayoutType.Grid ? 'Items per row (based on device width)' : 'Column size (based on device width)',
                                     options: amountOfItemsOptions,
                                     multiple: true,
                                     searchable: true,
-                                    optionsConfig: {
-                                        filter: filterLayoutMediaOptions
-                                    }
-                                }"
-                                v-model="item.layout.amountOfItems"
-                            />
-                            <lkt-field
-                                v-if="calculatedHasLayout && (item.layout.type === WebElementLayoutType.FlexRow || item.layout.type === WebElementLayoutType.FlexRows)"
-                                v-bind="<FieldConfig>{
-                                    type: FieldType.Select,
-                                    label: 'Column size (based on device width)',
-                                    options: amountOfFlexRowItemsOptions,
-                                    multiple: true,
-                                    searchable: true,
+                                    canClear: true,
                                     optionsConfig: {
                                         filter: filterLayoutMediaOptions
                                     }

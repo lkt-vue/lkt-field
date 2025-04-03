@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { defineEmits, defineProps, nextTick, ref, watch } from 'vue';
-    import { WebElementConfig, TableConfig, TablePermission, TableType } from 'lkt-vue-kernel';
+    import { WebElementConfig, TableConfig, TablePermission, TableType, WebElement } from 'lkt-vue-kernel';
     import ElementComponent from '@/components/elements/ElementComponent.vue';
 
     // const props = withDefaults(defineProps<{
@@ -40,7 +40,13 @@
         }
     })
 
-    const items = ref(props.modelValue);
+    const items = ref(<WebElement[]>[]);
+
+    if (props.modelValue.length > 0) {
+        items.value = props.modelValue?.map(z => new WebElement(z));
+    }
+
+    // const items = ref(props.modelValue);
     const appendingItems = ref(false);
     const tableRef = ref(null);
 
