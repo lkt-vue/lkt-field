@@ -2,14 +2,20 @@
     import {
         AccordionConfig,
         AccordionToggleMode,
-        FieldType, FileBrowserConfig, FileEntityConfig, FileEntityType,
+        AccordionType,
+        AnchorType,
+        FieldType,
+        FileBrowserConfig,
+        FileEntityConfig,
+        FileEntityType, LktObject,
         MenuConfig,
         MenuEntryConfig,
         MenuEntryType,
     } from 'lkt-vue-kernel';
-    import { onMounted, ref, watch } from 'vue';
+    import { nextTick, onMounted, ref, watch } from 'vue';
     import FileEntityBox from '@/components/file-browser/FileEntityBox.vue';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
+    import FileEntityDetails from '@/components/file-browser/FileEntityDetails.vue';
 
     const props = withDefaults(defineProps<{
         modalName: string
@@ -27,8 +33,31 @@
 
     const isLoading = ref(false);
     const items = ref(<FileEntityConfig[]>[]);
+    const menus = ref(<LktObject>{});
+    const activeElement = ref(<FileEntityConfig | undefined>undefined);
 
-    console.log('fileBrowserConfig: ', props.fileBrowserConfig);
+    const childToMenuEntry = (child: FileEntityConfig): MenuEntryConfig => {
+        return {
+            key: String(child.id),
+            type: MenuEntryType.Anchor,
+            anchor: {
+                text: child.name,
+                type: AnchorType.Action,
+                events: {
+                    click: () => {
+                        activeElement.value = undefined;
+                        nextTick(() => {
+                            activeElement.value = child;
+                        })
+                    },
+                },
+            },
+            keepOpenOnChildClick: true,
+            // class?: string;
+            // icon?: string;
+            children: child.children ? child.children.map(childToMenuEntry) : [],
+        };
+    };
 
     const loadResource = () => {
         if (props.fileBrowserConfig?.http?.resource) {
@@ -38,13 +67,20 @@
                 isLoading.value = false;
                 items.value = <FileEntityConfig[]>r.data;
 
+                if (items.value.length > 0) {
+                    activeElement.value = items.value[0];
+                }
+
+                items.value.forEach((unit, i) => {
+                    let k = `unit-${i}`;
+                    menus.value[k] = unit.children?.map(childToMenuEntry) ?? []
+                })
+
             }).catch((r: any) => {
                 isLoading.value = false;
             });
         }
     }
-
-    const activeElement = ref(<FileEntityConfig | undefined>undefined);
 
     watch(activeElement, (v) => {
         console.log('updatedActiveElement: ', v);
@@ -53,25 +89,6 @@
     watch(items, (v) => {
         console.log('updatedItems: ', v);
     }, { deep: true });
-
-    const childrenToMenuEntry = (child: FileEntityConfig): MenuEntryConfig => {
-        return {
-            key: String(child.id),
-            type: MenuEntryType.Anchor,
-            anchor: {
-                text: child.name,
-                events: {
-                    click: () => {
-                        console.log('orem ipsum');
-                        activeElement.value = child;
-                    },
-                },
-            },
-            // class?: string;
-            // icon?: string;
-            children: child.children ? child.children.map(childrenToMenuEntry) : [],
-        };
-    };
 
     onMounted(() => {
         loadResource();
@@ -95,12 +112,13 @@
                             modelValue: i === 0,
                             title: item.name,
                             toggleMode: AccordionToggleMode.Display,
+                            type: items.length === 1 ? AccordionType.Always : AccordionType.Auto
                         }"
                     >
                         <div class="lkt-flex-column">
                             <lkt-menu
                                 v-bind="<MenuConfig>{
-                                    modelValue: item.children?.map(childrenToMenuEntry) ?? []
+                                    modelValue: menus[`unit-${i}`]
                                 }"
                             />
                         </div>
@@ -109,18 +127,27 @@
             </div>
             <div class="lkt-flex-col-9">
                 <div v-if="activeElement">
-                    holiiss: {{ activeElement.name }}
-                    <template
-                        v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)">
-                        <div class="lkt-flex-row-3">
-                            <template v-for="(child, childIndex) in activeElement.children">
-                                <file-entity-box v-model="activeElement.children[childIndex]" />
-                            </template>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div>holii else</div>
-                    </template>
+                    <lkt-accordion
+                        v-bind="<AccordionConfig>{
+                            type: AccordionType.Always,
+                            title: activeElement.name,
+                        }"
+                    >
+                        <template
+                            v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)">
+                            <div class="lkt-grid-1 lkt-grid-8--from-768">
+                                <template v-for="(child, childIndex) in activeElement.children">
+                                    <file-entity-box v-model="activeElement.children[childIndex]" />
+                                </template>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <file-entity-details
+                                v-model="activeElement"
+                                :file-browser-config="fileBrowserConfig"
+                            />
+                        </template>
+                    </lkt-accordion>
                 </div>
             </div>
         </div>

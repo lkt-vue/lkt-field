@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-    import { IconConfig, LktObject } from 'lkt-vue-kernel';
+    import { FileEntityType, IconConfig, LktObject } from 'lkt-vue-kernel';
     import { ref } from 'vue';
 
     const props = withDefaults(defineProps<{
@@ -15,7 +15,7 @@
 <template>
     <div class="lkt-file-entity-box">
         <div class="lkt-file-entity-main">
-            <template v-if="entity.type === 'dir'">
+            <template v-if="entity.type === FileEntityType.Directory">
                 <lkt-icon
                     v-bind="<IconConfig>{
                         icon: 'lkt-icn-upload',
@@ -23,7 +23,7 @@
                     }"
                 />
             </template>
-            <template v-else-if="entity.type === 'img'">
+            <template v-else-if="entity.type === FileEntityType.Image">
                 <lkt-image
                     v-bind="<IconConfig>{
                         src: entity.src,

@@ -221,4 +221,16 @@
     .lkt-file-browser .lkt-menu .lkt-anchor {
         --lkt-anchor--justify-content: flex-start;
     }
+
+    .lkt-file-entity-main {
+        height: 102px;
+    }
+
+    .lkt-file-entity-main .lkt-image {
+        --lkt-image--height: 100%;
+        --lkt-image--max-height: 100%;
+        --lkt-image--img--max-height: 40px;
+        --lkt-image--justify-content: center;
+        --lkt-image--width: 100%;
+    }
 </style>
