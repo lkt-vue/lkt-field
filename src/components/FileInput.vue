@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
-    import { LktObject } from 'lkt-vue-kernel';
+    import { ButtonConfig, FileBrowserConfig, LktObject } from 'lkt-vue-kernel';
 
     const emit = defineEmits([
         'update:modelValue',
@@ -27,6 +27,7 @@
         readonly?: boolean
         tabindex: number
         isImage?: boolean
+        fileBrowserConfig?: FileBrowserConfig
     }>(), {
         modelValue: '',
         resourceData: () => [],
@@ -38,6 +39,7 @@
         disabled: false,
         readonly: false,
         isImage: false,
+        fileBrowserConfig: undefined
     });
 
     const inputElement = ref(null);
@@ -97,7 +99,7 @@
         }
     })
 
-    const hasFileBrowserConfig = ref(false);
+    const hasFileBrowserConfig = ref(typeof props.fileBrowserConfig === 'object' && Object.keys(props.fileBrowserConfig).length > 0);
 </script>
 
 <template>
@@ -140,10 +142,10 @@
         :text="visibleFileName"
         :disabled="disabled"
     />
+
     <div
+        class="lkt-button lkt-field--toggle-button"
         v-else-if="isImage"
-        :click-ref="inputElement"
-        :disabled="disabled"
     >
         <lkt-image
             v-if="isImage"
@@ -167,9 +169,15 @@
                         />
                         <lkt-button
                             ref="fileBrowserButtonRef"
-                            text="Explore files"
-                            icon="lkt-icn-search"
-                            :disabled="disabled"
+                            v-bind="<ButtonConfig>{
+                                text: 'Explore files',
+                                icon: 'lkt-icn-search',
+                                disabled: disabled,
+                                modal: 'lkt-file-browser',
+                                modalData: {
+                                    fileBrowserConfig,
+                                }
+                            }"
                         />
                     </div>
                 </div>

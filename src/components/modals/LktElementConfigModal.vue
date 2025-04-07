@@ -7,7 +7,7 @@
         ButtonType,
         ensureFieldConfig,
         FieldConfig,
-        FieldType,
+        FieldType, FileBrowserConfig,
         ItemCrudConfig,
         ItemCrudMode,
         ItemCrudView,
@@ -32,6 +32,7 @@
         parentChildren: WebElement[]
         indexInParentChildren: number
         onUpdate: Function
+        fileBrowserConfig: FileBrowserConfig
     }>(), {
         modalName: '',
         modalKey: '_',
@@ -473,6 +474,7 @@
                                 v-bind="<FieldConfig>{
                                     type: FieldType.Image,
                                     label: 'Image',
+                                    fileBrowserConfig: fileBrowserConfig,
                                 }"
                                 v-model="item.props.src"
                             />

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
     import {
         FieldConfig,
         FieldType,
@@ -34,11 +33,27 @@
                 perms: ['switch-edit-mode', 'update'],
                 createButton: {
                     ...fileBrowserConfig?.entityCreateButton,
-                    resourceData: entity
+                    resourceData: entity,
+                    events: {
+                        click: () => {
+                            for(let k in entity) {
+                                //@ts-ignore
+                                modelValue[k] = entity[k];
+                            }
+                        }
+                    }
                 },
                 updateButton: {
                     ...fileBrowserConfig?.entityUpdateButton,
-                    resourceData: entity
+                    resourceData: entity,
+                    events: {
+                        click: () => {
+                            for(let k in entity) {
+                                //@ts-ignore
+                                modelValue[k] = entity[k];
+                            }
+                        }
+                    }
                 },
             }"
         >
@@ -51,8 +66,8 @@
                         v-model="item.src"
                         v-bind="<FieldConfig>{
                             type: FieldType.Image,
-                            label: 'File',
-                            readMode: !editMode
+                            label: 'File1',
+                            readMode: !editMode,
                         }"
                     />
                     <lkt-field

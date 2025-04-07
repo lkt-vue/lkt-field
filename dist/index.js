@@ -16483,7 +16483,10 @@ const Tr = {
       ]);
     };
   }
-}), nu = ["name", "id", "disabled", "readonly", "placeholder", "accept"], ou = ["click-ref", "disabled"], su = { class: "lkt-grid-1" }, au = /* @__PURE__ */ be({
+}), nu = ["name", "id", "disabled", "readonly", "placeholder", "accept"], ou = {
+  key: 2,
+  class: "lkt-button lkt-field--toggle-button"
+}, su = { class: "lkt-grid-1" }, au = /* @__PURE__ */ be({
   __name: "FileInput",
   props: {
     modelValue: { default: "" },
@@ -16499,7 +16502,8 @@ const Tr = {
     disabled: { type: Boolean, default: !1 },
     readonly: { type: Boolean, default: !1 },
     tabindex: {},
-    isImage: { type: Boolean, default: !1 }
+    isImage: { type: Boolean, default: !1 },
+    fileBrowserConfig: { default: void 0 }
   },
   emits: [
     "update:modelValue",
@@ -16539,7 +16543,7 @@ const Tr = {
         (w = u.value) == null || w.click();
       }
     });
-    const g = X(!1);
+    const g = X(typeof l.fileBrowserConfig == "object" && Object.keys(l.fileBrowserConfig).length > 0);
     return (w, S) => {
       const x = ue("lkt-image"), N = ue("lkt-button");
       return F(), ne(Ve, null, [
@@ -16555,11 +16559,7 @@ const Tr = {
           accept: w.accept,
           onChange: d
         }, null, 40, nu),
-        g.value ? w.isImage ? w.isImage ? (F(), ne("div", {
-          key: 2,
-          "click-ref": a.value,
-          disabled: w.disabled
-        }, [
+        g.value ? w.isImage ? w.isImage ? (F(), ne("div", ou, [
           w.isImage ? (F(), j(x, {
             key: 0,
             src: c.value,
@@ -16581,18 +16581,21 @@ const Tr = {
                     icon: "lkt-icn-upload",
                     disabled: w.disabled
                   }, null, 8, ["click-ref", "disabled"]),
-                  Y(N, {
-                    ref: "fileBrowserButtonRef",
+                  Y(N, ve({ ref: "fileBrowserButtonRef" }, {
                     text: "Explore files",
                     icon: "lkt-icn-search",
-                    disabled: w.disabled
-                  }, null, 8, ["disabled"])
+                    disabled: w.disabled,
+                    modal: "lkt-file-browser",
+                    modalData: {
+                      fileBrowserConfig: w.fileBrowserConfig
+                    }
+                  }), null, 16)
                 ])
               ])
             ]),
             _: 1
           }, 8, ["src"])) : se("", !0)
-        ], 8, ou)) : se("", !0) : (F(), j(N, {
+        ])) : se("", !0) : (F(), j(N, {
           key: 1,
           ref_key: "buttonRef",
           ref: u,
@@ -16888,7 +16891,8 @@ const Tr = {
     index: { default: -1 },
     lang: {},
     isPreview: { type: Boolean, default: !1 },
-    canRenderActions: { type: Boolean, default: !0 }
+    canRenderActions: { type: Boolean, default: !0 },
+    fileBrowserConfig: {}
   },
   setup(e) {
     const t = e, i = X(!1), n = (u, c = "text") => {
@@ -17098,7 +17102,8 @@ const Tr = {
               element: u.element,
               parent: u.parent,
               parentChildren: u.parentChildren,
-              indexInParentChildren: u.index
+              indexInParentChildren: u.index,
+              fileBrowserConfig: u.fileBrowserConfig
             }
           })), null, 16)
         ])) : se("", !0)
@@ -17108,27 +17113,13 @@ const Tr = {
 }), Ri = /* @__PURE__ */ be({
   __name: "ComponentManager",
   props: {
-    modelValue: {
-      type: Array,
-      required: !0
-    },
-    parent: {
-      type: Object
-    },
-    layoutSelector: {
-      type: String
-    },
-    lang: {
-      type: String
-    },
-    isChild: {
-      type: Boolean,
-      default: !1
-    },
-    isPreview: {
-      type: Boolean,
-      default: !1
-    }
+    modelValue: {},
+    parent: {},
+    layoutSelector: { default: "" },
+    lang: {},
+    isChild: { type: Boolean, default: !0 },
+    isPreview: { type: Boolean, default: !1 },
+    fileBrowserConfig: {}
   },
   emits: [
     "add-text",
@@ -17150,12 +17141,12 @@ const Tr = {
           modelValue: n.value,
           "onUpdate:modelValue": o[0] || (o[0] = (d) => n.value = d)
         }, {
-          type: e.isPreview ? I(ji).Table : I(ji).Item,
+          type: c.isPreview ? I(ji).Table : I(ji).Item,
           slotItemVar: "element",
           editMode: !0,
           hideTableHeader: !0,
-          perms: e.isChild ? [I(Wt).Update, I(Wt).Sort] : [I(Wt).Create, I(Wt).Update, I(Wt).Sort],
-          itemsContainerClass: e.isChild ? e.layoutSelector : "lkt-grid-1",
+          perms: c.isChild ? [I(Wt).Update, I(Wt).Sort] : [I(Wt).Create, I(Wt).Update, I(Wt).Sort],
+          itemsContainerClass: c.isChild ? c.layoutSelector : "lkt-grid-1",
           itemContainerClass: (d) => {
             if (!d.layout || i.isPreview) return "";
             let g = [];
@@ -17163,12 +17154,12 @@ const Tr = {
           },
           requiredItemsForBottomCreate: 10,
           drag: {
-            enabled: e.isPreview,
+            enabled: c.isPreview,
             isDisabled: !1,
             canRender: !0,
             isValid: !0
           },
-          createButton: e.isChild ? !1 : {
+          createButton: c.isChild ? !1 : {
             text: "Add element",
             icon: "lkt-icn-more",
             modal: "lkt-field-add-element-config",
@@ -17187,11 +17178,12 @@ const Tr = {
             Y(Ji, {
               element: d,
               index: g,
-              lang: e.lang,
-              "is-preview": e.isPreview,
+              lang: c.lang,
+              "is-preview": c.isPreview,
               "parent-children": n.value,
-              parent: e.parent
-            }, null, 8, ["element", "index", "lang", "is-preview", "parent-children", "parent"])
+              parent: c.parent,
+              "file-browser-config": c.fileBrowserConfig
+            }, null, 8, ["element", "index", "lang", "is-preview", "parent-children", "parent", "file-browser-config"])
           ]),
           _: 1
         }, 16, ["modelValue"])
@@ -17404,9 +17396,10 @@ const Tr = {
       Y(Ri, {
         modelValue: n.value,
         "onUpdate:modelValue": x[0] || (x[0] = (N) => n.value = N),
+        "file-browser-config": S.fileBrowserConfig,
         onDeleteElement: v,
         onAddElement: o
-      }, null, 8, ["modelValue"])
+      }, null, 8, ["modelValue", "file-browser-config"])
     ], 512));
   }
 }), ku = (e, t) => {
@@ -17414,7 +17407,7 @@ const Tr = {
   for (const [n, l] of t)
     i[n] = l;
   return i;
-}, xu = /* @__PURE__ */ ku(wu, [["__scopeId", "data-v-5cf03291"]]), Su = /* @__PURE__ */ be({
+}, xu = /* @__PURE__ */ ku(wu, [["__scopeId", "data-v-adbfa190"]]), Su = /* @__PURE__ */ be({
   __name: "FileUploadButton",
   props: {
     config: {},
@@ -17977,10 +17970,11 @@ const Tr = {
                   disabled: de.value,
                   readonly: E.readonly,
                   "is-image": E.type === I(Z).Image,
+                  "file-browser-config": E.fileBrowserConfig,
                   onChange: Wi,
                   onUploadSuccess: uo,
                   onUploadError: co
-                }, null, 8, ["modelValue", "file-name", "id", "tabindex", "resource", "resource-data", "name", "placeholder", "accept", "focusing", "disabled", "readonly", "is-image"])) : J.value ? (F(), j(mu, {
+                }, null, 8, ["modelValue", "file-name", "id", "tabindex", "resource", "resource-data", "name", "placeholder", "accept", "focusing", "disabled", "readonly", "is-image", "file-browser-config"])) : J.value ? (F(), j(mu, {
                   key: 6,
                   modelValue: s.value,
                   "onUpdate:modelValue": K[7] || (K[7] = (me) => s.value = me),
@@ -18655,7 +18649,8 @@ const Tr = {
     parent: {},
     parentChildren: {},
     indexInParentChildren: {},
-    onUpdate: {}
+    onUpdate: {},
+    fileBrowserConfig: {}
   },
   setup(e) {
     var A, $;
@@ -19018,7 +19013,8 @@ const Tr = {
                       }), null, 16, ["modelValue", "onUpdate:modelValue", "disabled"])) : se("", !0),
                       I(S) ? (F(), j(Ue, ve({ key: 4 }, {
                         type: I(Z).Image,
-                        label: "Image"
+                        label: "Image",
+                        fileBrowserConfig: O.fileBrowserConfig
                       }, {
                         modelValue: M.props.src,
                         "onUpdate:modelValue": (U) => M.props.src = U
@@ -19198,11 +19194,23 @@ const Tr = {
           perms: ["switch-edit-mode", "update"],
           createButton: {
             ...(c = n.fileBrowserConfig) == null ? void 0 : c.entityCreateButton,
-            resourceData: i.value
+            resourceData: i.value,
+            events: {
+              click: () => {
+                for (let v in i.value)
+                  n.modelValue[v] = i.value[v];
+              }
+            }
           },
           updateButton: {
             ...(o = n.fileBrowserConfig) == null ? void 0 : o.entityUpdateButton,
-            resourceData: i.value
+            resourceData: i.value,
+            events: {
+              click: () => {
+                for (let v in i.value)
+                  n.modelValue[v] = i.value[v];
+              }
+            }
           }
         }), Tt({ _: 2 }, [
           i.value.type === I(qt).Image ? {
@@ -19214,7 +19222,7 @@ const Tr = {
                   "onUpdate:modelValue": (g) => v.src = g
                 }, {
                   type: I(Z).Image,
-                  label: "File",
+                  label: "File1",
                   readMode: !d
                 }), null, 16, ["modelValue", "onUpdate:modelValue"]),
                 Y(a, ve({

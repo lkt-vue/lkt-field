@@ -1,7 +1,7 @@
 /** Common boolean props */
-.lkt-field.is-boolean {
-    align-self: flex-end;
-}
+/*.lkt-field.is-boolean {*/
+/*    align-self: flex-end;*/
+/*}*/
 
 .lkt-field.is-boolean input {
     opacity: 0;

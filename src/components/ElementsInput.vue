@@ -75,6 +75,7 @@
         <!-- Renderizamos el componente intermedio para gestionar los elementos -->
         <ComponentManager
             v-model="elements"
+            :file-browser-config="fileBrowserConfig"
             @delete-element="deleteElement"
             @add-element="onAddElement"
         />

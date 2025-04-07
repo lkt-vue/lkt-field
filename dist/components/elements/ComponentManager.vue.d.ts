@@ -1,63 +1,29 @@
-import { WebElement } from 'lkt-vue-kernel';
-import { DefineComponent, ExtractPropTypes, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
-declare const _default: DefineComponent<ExtractPropTypes<{
-    modelValue: {
-        type: () => WebElement[];
-        required: true;
-    };
-    parent: {
-        type: () => WebElement;
-    };
-    layoutSelector: {
-        type: StringConstructor;
-    };
-    lang: {
-        type: StringConstructor;
-    };
-    isChild: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    isPreview: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+import { WebElementConfig, FileBrowserConfig } from 'lkt-vue-kernel';
+import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
+type __VLS_Props = {
+    modelValue: WebElementConfig[];
+    parent: WebElementConfig;
+    layoutSelector?: string;
+    lang: string;
+    isChild?: boolean;
+    isPreview?: boolean;
+    fileBrowserConfig?: FileBrowserConfig;
+};
+declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     "update:modelValue": (...args: any[]) => void;
     "add-text": (...args: any[]) => void;
     "add-element": (...args: any[]) => void;
     "elements-reordered": (...args: any[]) => void;
-}, string, PublicProps, Readonly< ExtractPropTypes<{
-    modelValue: {
-        type: () => WebElement[];
-        required: true;
-    };
-    parent: {
-        type: () => WebElement;
-    };
-    layoutSelector: {
-        type: StringConstructor;
-    };
-    lang: {
-        type: StringConstructor;
-    };
-    isChild: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    isPreview: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-}>> & Readonly<{
+}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     "onAdd-text"?: ((...args: any[]) => any) | undefined;
     "onAdd-element"?: ((...args: any[]) => any) | undefined;
     "onElements-reordered"?: ((...args: any[]) => any) | undefined;
 }>, {
+    layoutSelector: string;
     isPreview: boolean;
     isChild: boolean;
-}, {}, {}, {}, string, ComponentProvideOptions, true, {
+}, {}, {}, {}, string, ComponentProvideOptions, false, {
     tableRef: unknown;
 }, HTMLDivElement>;
 export default _default;

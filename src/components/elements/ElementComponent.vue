@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import {
         ButtonConfig,
-        ButtonType,
+        ButtonType, FileBrowserConfig,
         WebElement,
         WebElementLayoutType,
         WebElementType,
@@ -19,6 +19,7 @@
         lang?: string
         isPreview?: boolean
         canRenderActions?: boolean
+        fileBrowserConfig?: FileBrowserConfig
     }>(), {
         index: -1,
         isPreview: false,
@@ -258,6 +259,7 @@
                         parent,
                         parentChildren,
                         indexInParentChildren: index,
+                        fileBrowserConfig,
                     }
                 }"
             />

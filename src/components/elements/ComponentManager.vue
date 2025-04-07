@@ -1,44 +1,52 @@
 <script lang="ts" setup>
     import { defineEmits, defineProps, nextTick, ref, watch } from 'vue';
-    import { WebElementConfig, TableConfig, TablePermission, TableType, WebElement } from 'lkt-vue-kernel';
+    import {
+        WebElementConfig,
+        TableConfig,
+        TablePermission,
+        TableType,
+        WebElement,
+        FileBrowserConfig,
+    } from 'lkt-vue-kernel';
     import ElementComponent from '@/components/elements/ElementComponent.vue';
 
-    // const props = withDefaults(defineProps<{
-    //     modelValue: WebElementConfig[]
-    //     parent: WebElementConfig
-    //     layoutSelector?: string
-    //     lang: string
-    //     isChild?: boolean
-    //     isPreview?: boolean
-    // }>(), {
-    //     layoutSelector: '',
-    //     isPreview: false,
-    //     isChild: true,
-    // });
+    const props = withDefaults(defineProps<{
+        modelValue: WebElementConfig[]
+        parent: WebElementConfig
+        layoutSelector?: string
+        lang: string
+        isChild?: boolean
+        isPreview?: boolean
+        fileBrowserConfig?: FileBrowserConfig
+    }>(), {
+        layoutSelector: '',
+        isPreview: false,
+        isChild: true,
+    });
 
-    const props = defineProps({
-        modelValue: {
-            type: Array as () => WebElement[],
-            required: true
-        },
-        parent: {
-            type: Object as () => WebElement,
-        },
-        layoutSelector: {
-            type: String,
-        },
-        lang: {
-            type: String,
-        },
-        isChild: {
-            type: Boolean,
-            default: false
-        },
-        isPreview: {
-            type: Boolean,
-            default: false
-        }
-    })
+    // const props = defineProps({
+    //     modelValue: {
+    //         type: Array as () => WebElement[],
+    //         required: true
+    //     },
+    //     parent: {
+    //         type: Object as () => WebElement,
+    //     },
+    //     layoutSelector: {
+    //         type: String,
+    //     },
+    //     lang: {
+    //         type: String,
+    //     },
+    //     isChild: {
+    //         type: Boolean,
+    //         default: false
+    //     },
+    //     isPreview: {
+    //         type: Boolean,
+    //         default: false
+    //     },
+    // })
 
     const items = ref(<WebElement[]>props.modelValue);
 
@@ -104,7 +112,7 @@
             }"
         >
             <template #item="{element, index}">
-                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview" :parent-children="items" :parent="parent"/>
+                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview" :parent-children="items" :parent="parent" :file-browser-config="fileBrowserConfig"/>
             </template>
         </lkt-table>
     </div>

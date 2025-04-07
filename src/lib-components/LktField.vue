@@ -1180,6 +1180,7 @@
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
                     :is-image="type === FieldType.Image"
+                    :file-browser-config="fileBrowserConfig"
                     @change="onChange"
                     @upload-success="onUploadSuccess"
                     @upload-error="onUploadError"

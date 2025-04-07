@@ -231,3 +231,8 @@
     font-weight: var(--lkt-field--validation--font-weight);
     color: var(--lkt-field--validation--color);
 }
+
+.lkt-field--image-main {
+    --lkt-image--min-height: var(--lkt-field-large-field-min-height);
+    --lkt-image--min-width: 100%;
+}
