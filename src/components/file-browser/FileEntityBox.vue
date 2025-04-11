@@ -1,20 +1,29 @@
 <script setup lang="ts">
-
-    import { FileEntityType, IconConfig, LktObject } from 'lkt-vue-kernel';
-    import { ref } from 'vue';
+    import { FileEntity, FileEntityType, IconConfig } from 'lkt-vue-kernel';
+    import { computed, ref } from 'vue';
 
     const props = withDefaults(defineProps<{
-        modelValue: LktObject
+        modelValue: FileEntity
     }>(), {
 
     })
 
     const entity = ref(props.modelValue);
+
+    const onClick = () => {
+        entity.value.isPicked = !entity.value.isPicked;
+    }
+
+    const computedPickedIcon = computed(() => {
+        if (entity.value.isPicked) return 'lkt-icn-checkbox';
+        return 'lkt-icn-checkbox-empty';
+    })
 </script>
 
 <template>
-    <div class="lkt-file-entity-box">
+    <div class="lkt-file-entity-box" @click="onClick">
         <div class="lkt-file-entity-main">
+            <i class="lkt-file-entity-picked-indicator" :class="computedPickedIcon"/>
             <template v-if="entity.type === FileEntityType.Directory">
                 <lkt-icon
                     v-bind="<IconConfig>{

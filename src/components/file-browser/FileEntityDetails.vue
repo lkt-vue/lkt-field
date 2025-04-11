@@ -2,7 +2,7 @@
     import {
         FieldConfig,
         FieldType,
-        FileBrowserConfig,
+        FileBrowserConfig, FileEntity,
         FileEntityConfig,
         FileEntityType,
         ItemCrudConfig,
@@ -13,7 +13,7 @@
     import { cloneObject } from 'lkt-object-tools';
 
     const props = withDefaults(defineProps<{
-        modelValue: FileEntityConfig
+        modelValue: FileEntity
         fileBrowserConfig?: FileBrowserConfig
     }>(), {
 

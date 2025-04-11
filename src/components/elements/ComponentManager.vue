@@ -232,6 +232,7 @@
 
     .lkt-file-entity-main {
         height: 102px;
+        position: relative;
     }
 
     .lkt-file-entity-main .lkt-image {
@@ -240,5 +241,11 @@
         --lkt-image--img--max-height: 40px;
         --lkt-image--justify-content: center;
         --lkt-image--width: 100%;
+    }
+
+    .lkt-file-entity-picked-indicator {
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 </style>

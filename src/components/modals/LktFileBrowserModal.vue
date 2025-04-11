@@ -5,7 +5,7 @@
         AccordionType,
         AnchorType,
         FieldType,
-        FileBrowserConfig,
+        FileBrowserConfig, FileEntity,
         FileEntityConfig,
         FileEntityType, LktObject,
         MenuConfig,
@@ -65,7 +65,7 @@
 
             httpCall(props.fileBrowserConfig.http.resource, props.fileBrowserConfig.http.data).then((r: HTTPResponse) => {
                 isLoading.value = false;
-                items.value = <FileEntityConfig[]>r.data;
+                items.value = r.data.map((z: FileEntityConfig) => new FileEntity(z));
 
                 if (items.value.length > 0) {
                     activeElement.value = items.value[0];
