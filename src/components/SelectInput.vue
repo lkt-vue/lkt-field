@@ -10,6 +10,7 @@
         'blur',
         'navigate',
         'search',
+        'change',
         'tag',
         'untag',
     ]);
@@ -135,6 +136,10 @@
             if (queryField.value) queryField.value.focus();
         },
     });
+
+    watch(() => props.pickedOptions, () => {
+        emit('change')
+    }, {deep: true})
 
 </script>
 

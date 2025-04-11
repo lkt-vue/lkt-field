@@ -30,6 +30,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     tag: (...args: any[]) => void;
     focus: (...args: any[]) => void;
     blur: (...args: any[]) => void;
+    change: (...args: any[]) => void;
     "update:showOptions": (...args: any[]) => void;
     navigate: (...args: any[]) => void;
     untag: (...args: any[]) => void;
@@ -39,6 +40,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     onTag?: ((...args: any[]) => any) | undefined;
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
+    onChange?: ((...args: any[]) => any) | undefined;
     "onUpdate:showOptions"?: ((...args: any[]) => any) | undefined;
     onNavigate?: ((...args: any[]) => any) | undefined;
     onUntag?: ((...args: any[]) => any) | undefined;

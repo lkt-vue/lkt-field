@@ -6,7 +6,10 @@
     import { calculateColorValue, decodeHexColor, getContrastFontColor } from '../functions/color-functions';
     import { TooltipLocationY, TooltipLocationX, ButtonType } from 'lkt-vue-kernel';
 
-    const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits([
+        'update:modelValue',
+        'change'
+    ]);
 
     const props = withDefaults(defineProps<{
         modelValue: string
@@ -40,6 +43,7 @@
         },
         onColorChange = () => {
             decodeColor(value.value);
+            emit('change');
         };
 
     const pickedColorRed = ref(255),

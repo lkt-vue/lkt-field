@@ -104,6 +104,7 @@
 
 <template>
     <lkt-modal
+        id="lkt-add-element-modal"
         v-bind="<ModalConfig>{
             modalName,
             modalKey,
@@ -121,7 +122,7 @@
                 <div class="lkt-grid-3">
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-font',
                             text: 'Text',
                             events: {
                                 click: () => {
@@ -132,8 +133,8 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
-                            text: 'LktHeder',
+                            icon: 'lkt-icn-header',
+                            text: 'LktHeader',
                             events: {
                                 click: () => {
                                     doAddElement('lkt-header');
@@ -143,7 +144,7 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-picture',
                             text: 'LktImage',
                             events: {
                                 click: () => {
@@ -154,7 +155,7 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-info',
                             text: 'LktIcon',
                             events: {
                                 click: () => {
@@ -165,7 +166,7 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-font',
                             text: 'LktTextBox',
                             events: {
                                 click: () => {
@@ -176,7 +177,7 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-font',
                             text: 'LktTextAccordion',
                             events: {
                                 click: () => {
@@ -197,7 +198,7 @@
                 <div class="lkt-grid-3">
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-columns',
                             text: 'LktLayoutBox',
                             events: {
                                 click: () => {
@@ -208,7 +209,7 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-columns',
                             text: 'LktLayoutAccordion',
                             events: {
                                 click: () => {
@@ -219,7 +220,7 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-columns',
                             text: 'LktLayout',
                             events: {
                                 click: () => {
@@ -240,7 +241,7 @@
                 <div class="lkt-grid-3">
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-link',
                             text: 'LktAnchor',
                             events: {
                                 click: () => {
@@ -251,7 +252,7 @@
                     />
                     <lkt-button
                         v-bind="<ButtonConfig>{
-                            icon: 'lkt-icn-angle-bottom',
+                            icon: 'lkt-icn-link',
                             text: 'LktButton',
                             events: {
                                 click: () => {
@@ -265,3 +266,15 @@
         </div>
     </lkt-modal>
 </template>
+
+<style lang="css">
+    #lkt-add-element-modal .lkt-button-main {
+        flex-direction: column;
+        min-width: 100%;
+        width: 100%;
+        max-width: 100%;
+    }
+    #lkt-add-element-modal .lkt-button-main i{
+        font-size: 2em;
+    }
+</style>

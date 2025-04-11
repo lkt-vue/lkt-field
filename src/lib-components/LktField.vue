@@ -952,7 +952,7 @@
             emits('blur');
         },
         onChange = ($event: any) => {
-            emits('change', $event);
+            emits('change', $event, editableValue.value);
         },
         onClick = ($event: Event) => {
             emits('click', $event);
@@ -1162,6 +1162,7 @@
                 <color-input
                     v-else-if="type === FieldType.Color"
                     v-model="editableValue"
+                    @change="onChange"
                     ref="inputElement" />
 
                 <file-input
@@ -1222,6 +1223,7 @@
                     @blur="onBlurSelectInput"
                     @navigate="onNavigateSelectInput"
                     @search="onSearchSelectInput"
+                    @change="onChange"
                     @tag="onTagSelectInput"
                     @untag="onUntagSelectInput"
                 />
