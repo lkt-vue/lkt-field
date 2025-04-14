@@ -10,6 +10,8 @@
         FileEntity,
         FileEntityConfig,
         FileEntityType,
+        IconConfig,
+        IconPosition,
         LktObject,
         MenuConfig,
         MenuEntryConfig,
@@ -18,7 +20,7 @@
         TablePermission,
         TableType,
     } from 'lkt-vue-kernel';
-    import { nextTick, onMounted, ref, watch } from 'vue';
+    import { computed, nextTick, onMounted, ref, watch } from 'vue';
     import FileEntityBox from '@/components/file-browser/FileEntityBox.vue';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
     import FileEntityDetails from '@/components/file-browser/FileEntityDetails.vue';
@@ -58,11 +60,46 @@
         updateActiveElement(entity);
     }
 
+    const computedDetailsIcon = computed(() => {
+        switch (activeElement.value?.type) {
+            case FileEntityType.Image:
+                return 'lkt-icn-picture';
+
+            case FileEntityType.Directory:
+                return 'lkt-icn-folder-open';
+
+            default:
+                return '';
+        }
+    })
+
+    const getMenuEntryIcon = (entity: FileEntity) => {
+        switch (entity.type) {
+            case FileEntityType.Image:
+                return 'lkt-icn-picture';
+
+            case FileEntityType.Directory:
+                return 'lkt-icn-folder';
+
+            default:
+                return '';
+        }
+    }
+
+
     const childToMenuEntry = (child: FileEntity): MenuEntryConfig => {
+        let iconStr = getMenuEntryIcon(child),
+            icon: IconConfig = {};
+        if (iconStr !== '') icon = <IconConfig>{
+            icon: iconStr,
+            position: IconPosition.Start,
+        }
+
         return {
             key: String(child.id),
             type: MenuEntryType.Anchor,
             anchor: {
+                icon,
                 text: child.name,
                 type: AnchorType.Action,
                 events: {
@@ -159,6 +196,7 @@
                     <lkt-accordion
                         v-bind="<AccordionConfig>{
                             type: AccordionType.Always,
+                            icon: computedDetailsIcon,
                             title: activeElement.name,
                         }"
                     >

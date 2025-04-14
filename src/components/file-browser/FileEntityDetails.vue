@@ -66,7 +66,7 @@
                         v-model="item.src"
                         v-bind="<FieldConfig>{
                             type: FieldType.Image,
-                            label: 'File1',
+                            label: 'File',
                             readMode: !editMode,
                         }"
                     />

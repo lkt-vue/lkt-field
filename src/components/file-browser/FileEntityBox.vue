@@ -44,7 +44,7 @@
             <template v-if="entity.type === FileEntityType.Directory">
                 <lkt-icon
                     v-bind="<IconConfig>{
-                        icon: 'lkt-icn-upload',
+                        icon: 'lkt-icn-folder',
                         text: entity.name,
                     }"
                 />
