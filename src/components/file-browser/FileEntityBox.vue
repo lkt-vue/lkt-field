@@ -60,9 +60,3 @@
         </div>
     </div>
 </template>
-
-<style lang="css">
-.lkt-file-entity-box {
-
-}
-</style>

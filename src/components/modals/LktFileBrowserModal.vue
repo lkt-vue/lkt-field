@@ -4,6 +4,7 @@
         AccordionToggleMode,
         AccordionType,
         AnchorType,
+        ButtonType,
         FieldType,
         FileBrowserConfig,
         FileEntity,
@@ -14,6 +15,7 @@
         MenuEntryConfig,
         MenuEntryType,
         TableConfig,
+        TablePermission,
         TableType,
     } from 'lkt-vue-kernel';
     import { nextTick, onMounted, ref, watch } from 'vue';
@@ -48,6 +50,12 @@
         nextTick(() => {
             activeElement.value = element;
         })
+    }
+
+    const createElement = () => {
+        let entity = new FileEntity();
+        activeElement.value?.children?.push(entity);
+        updateActiveElement(entity);
     }
 
     const childToMenuEntry = (child: FileEntity): MenuEntryConfig => {
@@ -159,11 +167,23 @@
                             v-model="activeElement.children"
                             v-bind="<TableConfig>{
                                 type: TableType.Item,
+                                perms: [
+                                    TablePermission.SwitchEditMode,
+                                    TablePermission.Update,
+                                    TablePermission.Edit,
+                                    TablePermission.Create
+                                ],
                                 itemsContainerClass: 'lkt-grid-1 lkt-grid-8--from-768',
                                 saveButton: {
                                     text: 'Save',
+                                    type: ButtonType.Button
+                                },
+                                createButton: {
+                                    text: 'Create',
+                                    type: ButtonType.Button
                                 }
                             }"
+                            @click-create="createElement"
                         >
                             <template #item="{item, index}">
                                 <file-entity-box
