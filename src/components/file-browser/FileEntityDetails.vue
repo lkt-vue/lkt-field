@@ -13,10 +13,11 @@
     import { cloneObject } from 'lkt-object-tools';
 
     const props = withDefaults(defineProps<{
+        editMode: boolean
         modelValue: FileEntity
         fileBrowserConfig?: FileBrowserConfig
     }>(), {
-
+        editMode: false
     })
 
     const entity = ref(cloneObject(props.modelValue));
@@ -24,62 +25,27 @@
 
 <template>
     <div class="lkt-file-entity-details">
-        <lkt-item-crud
-            v-model="entity"
-            v-bind="<ItemCrudConfig>{
-                view: ItemCrudView.Inline,
-                mode: entity.id ? ItemCrudMode.Update : ItemCrudMode.Create,
-                editing: false,
-                perms: ['switch-edit-mode', 'update'],
-                createButton: {
-                    ...fileBrowserConfig?.entityCreateButton,
-                    resourceData: entity,
-                    events: {
-                        click: () => {
-                            for(let k in entity) {
-                                //@ts-ignore
-                                modelValue[k] = entity[k];
-                            }
-                        }
-                    }
-                },
-                updateButton: {
-                    ...fileBrowserConfig?.entityUpdateButton,
-                    resourceData: entity,
-                    events: {
-                        click: () => {
-                            for(let k in entity) {
-                                //@ts-ignore
-                                modelValue[k] = entity[k];
-                            }
-                        }
-                    }
-                },
-            }"
+        <template
+            v-if="entity.type === FileEntityType.Image"
         >
-            <template
-                v-if="entity.type === FileEntityType.Image"
-                #item="{item, editMode}"
-            >
-                <div class="lkt-grid-1">
-                    <lkt-field
-                        v-model="item.src"
-                        v-bind="<FieldConfig>{
-                            type: FieldType.Image,
-                            label: 'File',
-                            readMode: !editMode,
-                        }"
-                    />
-                    <lkt-field
-                        v-model="item.name"
-                        v-bind="<FieldConfig>{
-                            type: FieldType.Text,
-                            label: 'Name',
-                            readMode: !editMode
-                        }"
-                    />
-                </div>
-            </template>
-        </lkt-item-crud>
+            <div class="lkt-grid-1">
+                <lkt-field
+                    v-model="entity.src"
+                    v-bind="<FieldConfig>{
+                        type: FieldType.Image,
+                        label: 'File',
+                        readMode: !editMode,
+                    }"
+                />
+                <lkt-field
+                    v-model="entity.name"
+                    v-bind="<FieldConfig>{
+                        type: FieldType.Text,
+                        label: 'Name',
+                        readMode: !editMode
+                    }"
+                />
+            </div>
+        </template>
     </div>
 </template>

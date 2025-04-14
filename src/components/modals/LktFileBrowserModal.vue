@@ -3,15 +3,15 @@
         AccordionConfig,
         AccordionToggleMode,
         AccordionType,
-        AnchorType,
-        ButtonType,
+        AnchorType, ButtonConfig,
+        ButtonType, ClickEventArgs,
         FieldType,
         FileBrowserConfig,
         FileEntity,
         FileEntityConfig,
         FileEntityType,
         IconConfig,
-        IconPosition,
+        IconPosition, ItemCrudConfig, ItemCrudMode, ItemCrudView,
         LktObject,
         MenuConfig,
         MenuEntryConfig,
@@ -58,6 +58,42 @@
         let entity = new FileEntity();
         activeElement.value?.children?.push(entity);
         updateActiveElement(entity);
+    }
+
+    const findFileEntityById = (id: string|number|undefined, haystack: FileEntity[]): FileEntity|undefined => {
+
+        for (let k in haystack) {
+            if (haystack[k].id === id) return haystack[k];
+
+            if (haystack[k].children.length > 0) {
+                let foundEntity = findFileEntityById(id, haystack[k].children);
+                if (foundEntity) return foundEntity;
+            }
+        }
+
+        return undefined;
+
+
+        // const path = haystack.find(z => {
+        //     if (z.id === id) {
+        //         return true;
+        //     }
+        //
+        //     if (z.children.length > 0) {
+        //         return findFileEntityById(id, z.children);
+        //     }
+        //
+        //     return false;
+        // });
+        //
+        // if (path.id === id) return path;
+    }
+
+    const goBack = () => {
+        if (activeElement.value?.parent) {
+            let entity = findFileEntityById(activeElement.value?.parent, items.value);
+            if (entity) updateActiveElement(entity);
+        }
     }
 
     const computedDetailsIcon = computed(() => {
@@ -128,10 +164,13 @@
 
             httpCall(props.fileBrowserConfig.http.resource, props.fileBrowserConfig.http.data).then((r: HTTPResponse) => {
                 isLoading.value = false;
+                // items.value = FileEntity.mapItems(<FileEntityConfig[]>r.data);
                 items.value = r.data.map((z: FileEntityConfig) => new FileEntity(z));
+                console.log('new mapped items: ', items.value);
 
                 if (items.value.length > 0) {
-                    activeElement.value = items.value[0];
+                    // activeElement.value = items.value[0];
+                    updateActiveElement(items.value[0]);
                 }
 
                 items.value.forEach((unit, i) => {
@@ -192,52 +231,108 @@
                 </template>
             </div>
             <div class="lkt-flex-col-9">
-                <div v-if="activeElement">
-                    <lkt-accordion
-                        v-bind="<AccordionConfig>{
-                            type: AccordionType.Always,
-                            icon: computedDetailsIcon,
-                            title: activeElement.name,
+                <lkt-accordion
+                    v-if="activeElement"
+                    v-bind="<AccordionConfig>{
+                        type: AccordionType.Always,
+                        icon: computedDetailsIcon,
+                        title: activeElement.name,
+                    }"
+                >
+                    <lkt-table
+                        v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)"
+                        v-model="activeElement.children"
+                        v-bind="<TableConfig>{
+                            type: TableType.Item,
+                            perms: [
+                                TablePermission.SwitchEditMode,
+                                TablePermission.Update,
+                                TablePermission.Edit,
+                                TablePermission.Create
+                            ],
+                            itemsContainerClass: 'lkt-grid-1 lkt-grid-8--from-768',
+                            saveButton: {
+                                text: 'Save',
+                                type: ButtonType.Button
+                            },
+                            createButton: {
+                                text: 'Create',
+                                type: ButtonType.Button
+                            }
                         }"
+                        @click-create="createElement"
                     >
-                        <lkt-table
-                            v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)"
-                            v-model="activeElement.children"
-                            v-bind="<TableConfig>{
-                                type: TableType.Item,
-                                perms: [
-                                    TablePermission.SwitchEditMode,
-                                    TablePermission.Update,
-                                    TablePermission.Edit,
-                                    TablePermission.Create
-                                ],
-                                itemsContainerClass: 'lkt-grid-1 lkt-grid-8--from-768',
-                                saveButton: {
-                                    text: 'Save',
-                                    type: ButtonType.Button
-                                },
-                                createButton: {
-                                    text: 'Create',
-                                    type: ButtonType.Button
-                                }
-                            }"
-                            @click-create="createElement"
-                        >
-                            <template #item="{item, index}">
-                                <file-entity-box
-                                    v-model="activeElement.children[index]"
-                                    @double-click="updateActiveElement"
-                                />
-                            </template>
-                        </lkt-table>
-                        <template v-else>
-                            <file-entity-details
-                                v-model="activeElement"
-                                :file-browser-config="fileBrowserConfig"
+                        <template #prev-buttons-ever v-if="activeElement.type !== FileEntityType.StorageUnit">
+                            <lkt-button
+                                v-bind="<ButtonConfig>{
+                                    icon: 'lkt-icn-arrow-left',
+                                    events: {
+                                        click: goBack
+                                    }
+                                }"
                             />
                         </template>
-                    </lkt-accordion>
-                </div>
+                        <template #item="{item, index}">
+                            <file-entity-box
+                                v-model="activeElement.children[index]"
+                                @double-click="updateActiveElement"
+                            />
+                        </template>
+                    </lkt-table>
+                    <template v-else>
+                        <lkt-item-crud
+                            v-model="activeElement"
+                            v-bind="<ItemCrudConfig>{
+                                view: ItemCrudView.Inline,
+                                mode: activeElement.id ? ItemCrudMode.Update : ItemCrudMode.Create,
+                                editing: false,
+                                perms: ['switch-edit-mode', 'update'],
+                                createButton: {
+                                    ...fileBrowserConfig?.entityCreateButton,
+                                    resourceData: activeElement,
+                                    events: {
+                                        click: () => {
+                                            for(let k in activeElement) {
+                                                //@ts-ignore
+                                                modelValue[k] = entity[k];
+                                            }
+                                        }
+                                    }
+                                },
+                                updateButton: {
+                                    ...fileBrowserConfig?.entityUpdateButton,
+                                    resourceData: activeElement,
+                                    events: {
+                                        click: () => {
+                                            for(let k in activeElement) {
+                                                //@ts-ignore
+                                                modelValue[k] = entity[k];
+                                            }
+                                        }
+                                    }
+                                },
+                            }"
+                        >
+                            <template #prev-buttons-ever v-if="activeElement.type !== FileEntityType.StorageUnit">
+                                <lkt-button
+                                    v-bind="<ButtonConfig>{
+                                    icon: 'lkt-icn-arrow-left',
+                                    events: {
+                                        click: goBack
+                                    }
+                                }"
+                                />
+                            </template>
+                            <template #item="{item, editMode}">
+                                <file-entity-details
+                                    v-model="activeElement"
+                                    :file-browser-config="fileBrowserConfig"
+                                    :edit-mode="editMode"
+                                />
+                            </template>
+                        </lkt-item-crud>
+                    </template>
+                </lkt-accordion>
             </div>
         </div>
     </lkt-modal>
