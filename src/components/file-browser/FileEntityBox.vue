@@ -40,7 +40,7 @@
 <template>
     <div class="lkt-file-entity-box" @click="onClick">
         <div class="lkt-file-entity-main">
-            <i class="lkt-file-entity-picked-indicator" :class="computedPickedIcon"/>
+            <i class="lkt-file-entity-picked-indicator" v-if="entity.type !== FileEntityType.Directory" :class="computedPickedIcon"/>
             <template v-if="entity.type === FileEntityType.Directory">
                 <lkt-icon
                     v-bind="<IconConfig>{

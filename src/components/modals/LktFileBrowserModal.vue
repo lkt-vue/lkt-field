@@ -24,6 +24,7 @@
     import FileEntityBox from '@/components/file-browser/FileEntityBox.vue';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
     import FileEntityDetails from '@/components/file-browser/FileEntityDetails.vue';
+    import { closeModal } from 'lkt-modal';
 
     const props = withDefaults(defineProps<{
         modalName: string
@@ -32,11 +33,13 @@
         type: FieldType
         fileBrowserConfig?: FileBrowserConfig
         modelValue: Array<string|number|undefined>
+        onConfirmSelection?: Function
     }>(), {
         modalName: '',
         modalKey: '_',
         zIndex: 500,
-        modelValue: () => []
+        modelValue: () => [],
+        onConfirmSelection: undefined
     });
 
     const emit = defineEmits([]);
@@ -94,6 +97,19 @@
             let entity = findFileEntityById(activeElement.value?.parent, items.value);
             if (entity) updateActiveElement(entity);
         }
+    }
+
+    const confirmPickedValues = () => {
+        let picked:Array<FileEntity> = [];
+        value.value.forEach(v => {
+            let entity = findFileEntityById(v, items.value);
+            if (entity) picked.push(entity);
+        })
+
+        if (typeof props.onConfirmSelection === 'function') {
+            props.onConfirmSelection(picked);
+        }
+        closeModal(props.modalName, props.modalKey);
     }
 
     const computedDetailsIcon = computed(() => {
@@ -271,6 +287,15 @@
                                     }
                                 }"
                             />
+                            <lkt-button
+                                v-bind="<ButtonConfig>{
+                                    icon: 'lkt-icn-check',
+                                    disabled: value.length === 0,
+                                    events: {
+                                        click: confirmPickedValues
+                                    }
+                                }"
+                            />
                         </template>
                         <template #item="{item, index}">
                             <file-entity-box
@@ -316,11 +341,11 @@
                             <template #prev-buttons-ever v-if="activeElement.type !== FileEntityType.StorageUnit">
                                 <lkt-button
                                     v-bind="<ButtonConfig>{
-                                    icon: 'lkt-icn-arrow-left',
-                                    events: {
-                                        click: goBack
-                                    }
-                                }"
+                                        icon: 'lkt-icn-arrow-left',
+                                        events: {
+                                            click: goBack
+                                        }
+                                    }"
                                 />
                             </template>
                             <template #item="{item, editMode}">

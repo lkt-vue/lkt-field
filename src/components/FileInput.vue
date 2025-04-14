@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
-    import { ButtonConfig, FileBrowserConfig, LktObject } from 'lkt-vue-kernel';
+    import { ButtonConfig, FileBrowserConfig, FileEntity, LktObject } from 'lkt-vue-kernel';
 
     const emit = defineEmits([
         'update:modelValue',
@@ -100,6 +100,11 @@
     })
 
     const hasFileBrowserConfig = ref(typeof props.fileBrowserConfig === 'object' && Object.keys(props.fileBrowserConfig).length > 0);
+
+    const onConfirmSelection = (fileEntities: Array<FileEntity>) => {
+        console.log('confirmed selection!: ', fileEntities)
+        value.value = fileEntities[0].src;
+    }
 </script>
 
 <template>
@@ -176,6 +181,7 @@
                                 modal: 'lkt-file-browser',
                                 modalData: {
                                     fileBrowserConfig,
+                                    onConfirmSelection
                                 }
                             }"
                         />
