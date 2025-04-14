@@ -23,7 +23,7 @@
             clickTimer = setTimeout( () => {
                 entity.value.isPicked = !entity.value.isPicked;
                 clicks.value = 0
-            }, 200);
+            }, 225);
         } else {
             clearTimeout(clickTimer);
             emit('double-click', entity.value);

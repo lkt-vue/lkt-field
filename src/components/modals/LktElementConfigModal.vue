@@ -426,9 +426,10 @@
                     />
                     <lkt-accordion
                         v-bind="<AccordionConfig>{
-                        type: AccordionType.Auto,
-                        title: 'Config'
-                    }"
+                            type: AccordionType.Auto,
+                            title: 'Config',
+                            modelValue: true
+                        }"
                     >
                         <div class="lkt-grid-1">
 

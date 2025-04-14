@@ -18996,7 +18996,8 @@ const zr = {
                 })), null, 16)) : le("", !0),
                 j(V, we(Be({
                   type: N(je).Auto,
-                  title: "Config"
+                  title: "Config",
+                  modelValue: !0
                 })), {
                   default: se(() => [
                     fe("div", Gu, [
@@ -19183,7 +19184,7 @@ const zr = {
     const c = () => {
       ++a.value, a.value === 1 ? u = setTimeout(() => {
         l.value.isPicked = !l.value.isPicked, a.value = 0;
-      }, 200) : (clearTimeout(u), n("double-click", l.value), a.value = 0);
+      }, 225) : (clearTimeout(u), n("double-click", l.value), a.value = 0);
     }, o = ee(() => l.value.isPicked ? "lkt-icn-checkbox" : "lkt-icn-checkbox-empty");
     return (b, d) => {
       const v = re("lkt-icon"), w = re("lkt-image");
@@ -19398,7 +19399,7 @@ const zr = {
                         N(ft).Edit,
                         N(ft).Create
                       ],
-                      itemsContainerClass: "lkt-grid-1 lkt-grid-8--from-768",
+                      itemsContainerClass: "lkt-flex-rows-12 lkt-flex-rows-2--from-768",
                       saveButton: {
                         text: "Save",
                         type: N(At).Button

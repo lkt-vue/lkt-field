@@ -266,7 +266,7 @@
                                 TablePermission.Edit,
                                 TablePermission.Create
                             ],
-                            itemsContainerClass: 'lkt-grid-1 lkt-grid-8--from-768',
+                            itemsContainerClass: 'lkt-flex-rows-12 lkt-flex-rows-2--from-768',
                             saveButton: {
                                 text: 'Save',
                                 type: ButtonType.Button
