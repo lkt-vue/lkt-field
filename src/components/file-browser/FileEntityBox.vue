@@ -8,10 +8,27 @@
 
     })
 
+    const emit = defineEmits([
+        'double-click'
+    ]);
+
     const entity = ref(props.modelValue);
+    const clicks = ref(0);
+    let clickTimer = undefined;
 
     const onClick = () => {
-        entity.value.isPicked = !entity.value.isPicked;
+
+        ++clicks.value;
+        if (clicks.value === 1) {
+            clickTimer = setTimeout( () => {
+                entity.value.isPicked = !entity.value.isPicked;
+                clicks.value = 0
+            }, 200);
+        } else {
+            clearTimeout(clickTimer);
+            emit('double-click', entity.value);
+            clicks.value = 0
+        }
     }
 
     const computedPickedIcon = computed(() => {

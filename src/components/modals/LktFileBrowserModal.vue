@@ -5,12 +5,16 @@
         AccordionType,
         AnchorType,
         FieldType,
-        FileBrowserConfig, FileEntity,
+        FileBrowserConfig,
+        FileEntity,
         FileEntityConfig,
-        FileEntityType, LktObject,
+        FileEntityType,
+        LktObject,
         MenuConfig,
         MenuEntryConfig,
         MenuEntryType,
+        TableConfig,
+        TableType,
     } from 'lkt-vue-kernel';
     import { nextTick, onMounted, ref, watch } from 'vue';
     import FileEntityBox from '@/components/file-browser/FileEntityBox.vue';
@@ -23,20 +27,30 @@
         zIndex: number
         type: FieldType
         fileBrowserConfig?: FileBrowserConfig
+        modelValue: Array<string|number|undefined>
     }>(), {
         modalName: '',
         modalKey: '_',
         zIndex: 500,
+        modelValue: () => []
     });
 
     const emit = defineEmits([]);
 
     const isLoading = ref(false);
-    const items = ref(<FileEntityConfig[]>[]);
+    const items = ref(<FileEntity[]>[]);
     const menus = ref(<LktObject>{});
-    const activeElement = ref(<FileEntityConfig | undefined>undefined);
+    const activeElement = ref(<FileEntity | undefined>undefined);
+    const value = ref(props.modelValue);
 
-    const childToMenuEntry = (child: FileEntityConfig): MenuEntryConfig => {
+    const updateActiveElement = (element: FileEntity) => {
+        activeElement.value = undefined;
+        nextTick(() => {
+            activeElement.value = element;
+        })
+    }
+
+    const childToMenuEntry = (child: FileEntity): MenuEntryConfig => {
         return {
             key: String(child.id),
             type: MenuEntryType.Anchor,
@@ -45,10 +59,7 @@
                 type: AnchorType.Action,
                 events: {
                     click: () => {
-                        activeElement.value = undefined;
-                        nextTick(() => {
-                            activeElement.value = child;
-                        })
+                        updateActiveElement(child);
                     },
                 },
             },
@@ -58,6 +69,13 @@
             children: child.children ? child.children.map(childToMenuEntry) : [],
         };
     };
+
+    const updatePickedItems = (items: FileEntity[]) => {
+        items.forEach(item => {
+            if (item.isPicked) value.value.push(item.id);
+            if (item.children?.length > 0) updatePickedItems(item.children);
+        })
+    }
 
     const loadResource = () => {
         if (props.fileBrowserConfig?.http?.resource) {
@@ -88,6 +106,9 @@
 
     watch(items, (v) => {
         console.log('updatedItems: ', v);
+        value.value = [];
+        updatePickedItems(items.value);
+        console.log('pickedItems: ', value.value);
     }, { deep: true });
 
     onMounted(() => {
@@ -133,14 +154,24 @@
                             title: activeElement.name,
                         }"
                     >
-                        <template
-                            v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)">
-                            <div class="lkt-grid-1 lkt-grid-8--from-768">
-                                <template v-for="(child, childIndex) in activeElement.children">
-                                    <file-entity-box v-model="activeElement.children[childIndex]" />
-                                </template>
-                            </div>
-                        </template>
+                        <lkt-table
+                            v-if="[FileEntityType.Directory, FileEntityType.StorageUnit].includes(activeElement.type)"
+                            v-model="activeElement.children"
+                            v-bind="<TableConfig>{
+                                type: TableType.Item,
+                                itemsContainerClass: 'lkt-grid-1 lkt-grid-8--from-768',
+                                saveButton: {
+                                    text: 'Save',
+                                }
+                            }"
+                        >
+                            <template #item="{item, index}">
+                                <file-entity-box
+                                    v-model="activeElement.children[index]"
+                                    @double-click="updateActiveElement"
+                                />
+                            </template>
+                        </lkt-table>
                         <template v-else>
                             <file-entity-details
                                 v-model="activeElement"

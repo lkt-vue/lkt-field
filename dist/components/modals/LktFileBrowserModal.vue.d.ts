@@ -6,8 +6,10 @@ type __VLS_Props = {
     zIndex: number;
     type: FieldType;
     fileBrowserConfig?: FileBrowserConfig;
+    modelValue: Array<string | number | undefined>;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{}>, {
+    modelValue: Array<string | number | undefined>;
     modalKey: string;
     modalName: string;
     zIndex: number;
