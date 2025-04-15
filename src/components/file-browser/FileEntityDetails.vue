@@ -20,7 +20,7 @@
         editMode: false
     })
 
-    const entity = ref(cloneObject(props.modelValue));
+    const entity = ref(props.modelValue);
 </script>
 
 <template>
