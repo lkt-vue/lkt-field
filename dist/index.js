@@ -19261,9 +19261,9 @@ const Br = {
         u.value = f;
       });
     }, b = () => {
-      var h, m;
+      var h, m, g;
       let f = new Nl();
-      (m = (h = u.value) == null ? void 0 : h.children) == null || m.push(f), o(f);
+      f.parent = (h = u.value) == null ? void 0 : h.id, (g = (m = u.value) == null ? void 0 : m.children) == null || g.push(f), o(f);
     }, d = (f, h) => {
       for (let m in h) {
         if (h[m].id === f) return h[m];

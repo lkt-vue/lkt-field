@@ -59,6 +59,7 @@
 
     const createElement = () => {
         let entity = new FileEntity();
+        entity.parent = activeElement.value?.id;
         activeElement.value?.children?.push(entity);
         updateActiveElement(entity);
     }
