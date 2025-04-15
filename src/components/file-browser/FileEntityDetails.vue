@@ -1,16 +1,6 @@
 <script setup lang="ts">
-    import {
-        FieldConfig,
-        FieldType,
-        FileBrowserConfig, FileEntity,
-        FileEntityConfig,
-        FileEntityType,
-        ItemCrudConfig,
-        ItemCrudMode,
-        ItemCrudView,
-    } from 'lkt-vue-kernel';
+    import { FieldConfig, FieldType, FileBrowserConfig, FileEntity, FileEntityType } from 'lkt-vue-kernel';
     import { ref } from 'vue';
-    import { cloneObject } from 'lkt-object-tools';
 
     const props = withDefaults(defineProps<{
         editMode: boolean
