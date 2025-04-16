@@ -1,15 +1,15 @@
 <script setup lang="ts">
-    import { computed, ref } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import {
         AccordionConfig,
         AccordionToggleMode,
-        AccordionType,
+        AccordionType, BannerType,
         ButtonConfig,
         ButtonType,
         ensureFieldConfig,
         FieldConfig,
         FieldType,
-        FileBrowserConfig, FileEntity,
+        FileBrowserConfig, FileEntity, getDefaultLktButtonWebElement,
         ItemCrudConfig,
         ItemCrudMode,
         ItemCrudView,
@@ -73,8 +73,12 @@
     const languages = getAvailableLanguages(),
         currentLang = getCurrentLanguage();
 
-    const calculatedHasHeader = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion].includes(editableConfig.value.type),
-        calculatedHasIcon = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktIcon].includes(editableConfig.value.type),
+    const calculatedHasHeader = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktTextBanner].includes(editableConfig.value.type),
+        calculatedHasSubHeader = [WebElementType.LktTextBanner].includes(editableConfig.value.type),
+        calculatedHasBackgroundMultimedia = [WebElementType.LktTextBanner].includes(editableConfig.value.type),
+        calculatedIsBanner = [WebElementType.LktTextBanner].includes(editableConfig.value.type),
+        calculatedHasOpacityLayer = [WebElementType.LktTextBanner].includes(editableConfig.value.type),
+        calculatedHasIcon = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktTextBox, WebElementType.LktTextAccordion, WebElementType.LktIcon, WebElementType.LktButton, WebElementType.LktAnchor].includes(editableConfig.value.type),
         calculatedHasLayout = [WebElementType.LktLayoutBox, WebElementType.LktLayoutAccordion, WebElementType.LktLayout].includes(editableConfig.value.type),
         calculatedHasImage = [WebElementType.LktImage].includes(editableConfig.value.type),
         calculatedHasAccordionConfig = [WebElementType.LktLayoutAccordion, WebElementType.LktTextAccordion].includes(editableConfig.value.type),
@@ -97,6 +101,17 @@
         {
             value: AccordionType.Ever,
             label: 'Ever',
+        },
+    ];
+
+    const bannerTypeOptions = <Array<OptionConfig>>[
+        {
+            value: BannerType.Static,
+            label: 'Static',
+        },
+        {
+            value: BannerType.Parallax,
+            label: 'Parallax',
         },
     ];
 
@@ -372,6 +387,16 @@
         props.element.props.title = fileEntities[0].nameData;
     }
 
+    watch(() => props.element.config.amountOfCallToActions, (v) => {
+        console.log('updated amount of cta: ', v);
+        let l = props.element.config.callToActions.length;
+        if (v > l) {
+            props.element.config.callToActions.push(getDefaultLktButtonWebElement());
+        } else {
+            props.element.config.callToActions.splice(v, 1);
+        }
+    })
+
     // watch(() => props.element.layout.type, (newVal: WebElementLayoutType, oldVal: WebElementLayoutType) => {
     //     if (oldVal === WebElementLayoutType.Grid || newVal === WebElementLayoutType.Grid) {
     //         props.element.layout.amountOfItems?.splice(0, props.element.layout.amountOfItems?.length);
@@ -460,6 +485,15 @@
                                 }"
                                 v-model="item.config.hasHeader"
                             />
+
+                            <lkt-field
+                                v-if="calculatedHasSubHeader"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Switch,
+                                    label: 'Has sub-header',
+                                }"
+                                v-model="item.config.hasSubHeader"
+                            />
                             <lkt-field
                                 v-if="calculatedHasIcon"
                                 v-bind="<FieldConfig>{
@@ -480,17 +514,106 @@
 
 
                             <lkt-field
-                                v-if="calculatedHasImage"
+                                v-if="calculatedIsBanner"
                                 v-bind="<FieldConfig>{
                                     type: FieldType.Image,
-                                    label: 'Image',
+                                    label: 'Media content',
                                     fileBrowserConfig: fileBrowserConfig,
                                 }"
-                                v-model="item.props.src"
+                                v-model="item.props.media.src"
                                 @picked-files="onPickedFiles"
+                            />
+
+                            <lkt-field
+                                v-if="calculatedIsBanner"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Type',
+                                    options: bannerTypeOptions,
+                                }"
+                                v-model="item.props.type"
+                            />
+
+                            <lkt-field
+                                v-if="calculatedHasBackgroundMultimedia"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Image,
+                                    label: 'Background Image',
+                                    fileBrowserConfig: fileBrowserConfig,
+                                }"
+                                v-model="item.props.art.src"
+                                @picked-files="onPickedFiles"
+                            />
+
+                            <div>
+                                <lkt-field
+                                    v-if="calculatedHasOpacityLayer"
+                                    v-bind="<FieldConfig>{
+                                        type: FieldType.Number,
+                                        label: 'Background opacity',
+                                        min: 0,
+                                        max: 1,
+                                        step: .1,
+                                        canStep: true,
+                                    }"
+                                    v-model="item.props.opacity"
+                                />
+
+                                <lkt-field
+                                    v-if="calculatedHasOpacityLayer"
+                                    v-bind="<FieldConfig>{
+                                        type: FieldType.Range,
+                                        min: 0,
+                                        max: 1,
+                                        step: .1,
+                                    }"
+                                    v-model="item.props.opacity"
+                                />
+                            </div>
+
+                            <lkt-field
+                                v-if="calculatedIsBanner"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Number,
+                                    label: 'Amount of CTA\'s',
+                                    min: 0,
+                                    max: 2,
+                                    step: 1,
+                                    canStep: true,
+                                }"
+                                v-model="item.config.amountOfCallToActions"
                             />
                         </div>
                     </lkt-accordion>
+
+                    <template
+                        v-if="item.config.amountOfCallToActions > 0">
+                        <lkt-accordion
+                            v-for="cta in item.config.callToActions"
+                            v-bind="<AccordionConfig>{
+                                type: AccordionType.Auto,
+                                title: 'CTA #1'
+                            }"
+                        >
+                            <div class="lkt-grid-1">
+                                <lkt-field
+                                    v-bind="<FieldConfig>{
+                                        type: FieldType.Switch,
+                                        label: 'Has icon',
+                                    }"
+                                    v-model="cta.config.hasIcon"
+                                />
+                                <lkt-field
+                                    v-bind="<FieldConfig>{
+                                        type: FieldType.Text,
+                                        label: 'Icon',
+                                    }"
+                                    v-model="cta.props.icon"
+                                    :disabled="!cta.config.hasIcon"
+                                />
+                            </div>
+                        </lkt-accordion>
+                    </template>
 
                     <lkt-accordion
                         v-if="calculatedHasAccordionConfig"

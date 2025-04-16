@@ -963,15 +963,17 @@
         onClickSubtract = () => {
             let step = props.step ?? 1;
             if (typeof step === 'string') step = parseFloat(step);
+            let amountOfDecimals = String(step).split('.')[0].length;
             if (!props.min || editableValue.value > props.min) {
-                editableValue.value -= step;
+                editableValue.value = parseFloat((parseFloat(editableValue.value) - step).toFixed(amountOfDecimals));
             }
         },
         onClickIncrease = () => {
             let step = props.step ?? 1;
             if (typeof step === 'string') step = parseFloat(step);
+            let amountOfDecimals = String(step).split('.')[0].length;
             if (!props.max || editableValue.value < props.max) {
-                editableValue.value += step;
+                editableValue.value = parseFloat((parseFloat(editableValue.value) + step).toFixed(amountOfDecimals));
             }
         },
         onClickSwitchEdition = () => {

@@ -175,6 +175,7 @@
         --lkt-btn-padding: 0 5px;
         --lkt-btn-text-align: left;
         justify-content: flex-start;
+        z-index: 5;
     }
 
     .lkt-element-editable-text {

@@ -130,7 +130,7 @@
                 :icon="element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
-                <template #header>
+                <template #header v-if="element.config?.hasHeader">
                     <text-element-editor
                         v-model="element.props.header[currentLang]"
                         @input="handleInputText($event, 'header')"
@@ -151,7 +151,7 @@
                 :icon="element.config.hasIcon ? element.props.icon : ''"
                 :class="element.props.class"
             >
-                <template #header>
+                <template #header v-if="element.config?.hasHeader">
                     <text-element-editor
                         v-model="element.props.header[currentLang]"
                         @input="handleInputText($event, 'header')"
@@ -229,6 +229,33 @@
                     />
                 </template>
             </lkt-anchor>
+
+            <lkt-banner
+                v-else-if="element.type === WebElementType.LktTextBanner"
+                :icon="element.config.hasIcon ? element.props.icon : ''"
+                :class="element.props.class"
+                :opacity="element.props.opacity"
+                :art="element.props.art"
+                :media="element.props.media"
+                :type="element.props.type"
+            >
+                <template #header v-if="element.config?.hasHeader">
+                    <text-element-editor
+                        v-model="element.props.header[currentLang]"
+                        @input="handleInputText($event, 'header')"
+                    />
+                </template>
+                <template #subHeader v-if="element.config?.hasSubHeader">
+                    <text-element-editor
+                        v-model="element.props.subHeader[currentLang]"
+                        @input="handleInputText($event, 'subHeader')"
+                    />
+                </template>
+                <text-element-editor
+                    v-model="element.props.text[currentLang]"
+                    @input="handleInputText($event, 'text')"
+                />
+            </lkt-banner>
 
 
             <component-manager

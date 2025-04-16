@@ -16,7 +16,10 @@
         getDefaultLktLayoutWebElement,
         getDefaultLktTextWebElement,
         LktObject,
-        ModalConfig, getDefaultLktTextAccordionWebElement, getDefaultLktTextBoxWebElement,
+        ModalConfig,
+        getDefaultLktTextAccordionWebElement,
+        getDefaultLktTextBoxWebElement,
+        getDefaultLktTextBannerWebElement,
     } from 'lkt-vue-kernel';
 
     const props = withDefaults(defineProps<{
@@ -97,6 +100,10 @@
 
             case WebElementType.LktText:
                 doReadAddElement(getDefaultLktTextWebElement());
+                break;
+
+            case WebElementType.LktTextBanner:
+                doReadAddElement(getDefaultLktTextBannerWebElement());
                 break;
         }
     };
@@ -182,6 +189,17 @@
                             events: {
                                 click: () => {
                                     doAddElement('lkt-text-accordion');
+                                }
+                            }
+                        }"
+                    />
+                    <lkt-button
+                        v-bind="<ButtonConfig>{
+                            icon: 'lkt-icn-font',
+                            text: 'LktTextBanner',
+                            events: {
+                                click: () => {
+                                    doAddElement('lkt-text-banner');
                                 }
                             }
                         }"
