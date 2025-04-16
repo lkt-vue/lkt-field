@@ -17,7 +17,7 @@
         fieldTypesWithoutClear,
         fieldTypesWithoutUndo,
         FieldValidation,
-        FieldValidationType,
+        FieldValidationType, FileEntity,
         getDefaultValues,
         LktObject,
         LktSettings,
@@ -89,6 +89,7 @@
         'selected-option',
         'upload-error',
         'upload-success',
+        'picked-files',
     ]);
 
     // Slots
@@ -994,6 +995,10 @@
             });
             emits('upload-error');
         },
+        onPickedFiles = (fileEntities: Array<FileEntity>) => {
+            console.log('emit picked files 2: ', fileEntities);
+            emits('picked-files', fileEntities);
+        },
         reAssignNumericValue = (n: string | number) => {
 
             if (!props.enableAutoNumberFix) return false;
@@ -1185,6 +1190,7 @@
                     @change="onChange"
                     @upload-success="onUploadSuccess"
                     @upload-error="onUploadError"
+                    @picked-files="onPickedFiles"
                 />
 
                 <date-input

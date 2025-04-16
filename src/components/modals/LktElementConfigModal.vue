@@ -2,18 +2,21 @@
     import { computed, ref } from 'vue';
     import {
         AccordionConfig,
+        AccordionToggleMode,
         AccordionType,
         ButtonConfig,
         ButtonType,
         ensureFieldConfig,
         FieldConfig,
-        FieldType, FileBrowserConfig,
+        FieldType,
+        FileBrowserConfig, FileEntity,
         ItemCrudConfig,
         ItemCrudMode,
         ItemCrudView,
         LktObject,
         LktSettings,
-        OptionConfig, WebElement,
+        OptionConfig,
+        WebElement,
         WebElementLayoutType,
         WebElementType,
     } from 'lkt-vue-kernel';
@@ -364,6 +367,11 @@
         return ucfirst(kebabCaseToCamelCase(editableConfig.value.type)) + ' Config';
     })
 
+    const onPickedFiles = (fileEntities: Array<FileEntity>) => {
+        props.element.props.alt = fileEntities[0].nameData;
+        props.element.props.title = fileEntities[0].nameData;
+    }
+
     // watch(() => props.element.layout.type, (newVal: WebElementLayoutType, oldVal: WebElementLayoutType) => {
     //     if (oldVal === WebElementLayoutType.Grid || newVal === WebElementLayoutType.Grid) {
     //         props.element.layout.amountOfItems?.splice(0, props.element.layout.amountOfItems?.length);
@@ -428,7 +436,8 @@
                         v-bind="<AccordionConfig>{
                             type: AccordionType.Auto,
                             title: 'Config',
-                            modelValue: true
+                            modelValue: true,
+                            toggleMode: AccordionToggleMode.Display
                         }"
                     >
                         <div class="lkt-grid-1">
@@ -478,6 +487,7 @@
                                     fileBrowserConfig: fileBrowserConfig,
                                 }"
                                 v-model="item.props.src"
+                                @picked-files="onPickedFiles"
                             />
                         </div>
                     </lkt-accordion>

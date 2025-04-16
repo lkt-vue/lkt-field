@@ -10,6 +10,7 @@
         'uploading',
         'upload-success',
         'upload-error',
+        'picked-files',
     ]);
 
     const props = withDefaults(defineProps<{
@@ -102,8 +103,9 @@
     const hasFileBrowserConfig = ref(typeof props.fileBrowserConfig === 'object' && Object.keys(props.fileBrowserConfig).length > 0);
 
     const onConfirmSelection = (fileEntities: Array<FileEntity>) => {
-        console.log('confirmed selection!: ', fileEntities)
         value.value = fileEntities[0].src;
+        console.log('emit picked files 1: ', fileEntities);
+        emit('picked-files', fileEntities);
     }
 </script>
 

@@ -24,6 +24,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     change: (...args: any[]) => void;
     "upload-error": (...args: any[]) => void;
     "upload-success": (...args: any[]) => void;
+    "picked-files": (...args: any[]) => void;
     "update:fileName": (...args: any[]) => void;
     uploading: (...args: any[]) => void;
 }, string, PublicProps, Readonly<__VLS_Props> & Readonly<{
@@ -31,6 +32,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     onChange?: ((...args: any[]) => any) | undefined;
     "onUpload-error"?: ((...args: any[]) => any) | undefined;
     "onUpload-success"?: ((...args: any[]) => any) | undefined;
+    "onPicked-files"?: ((...args: any[]) => any) | undefined;
     "onUpdate:fileName"?: ((...args: any[]) => any) | undefined;
     onUploading?: ((...args: any[]) => any) | undefined;
 }>, {

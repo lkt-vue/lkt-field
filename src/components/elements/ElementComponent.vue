@@ -167,6 +167,8 @@
                 v-else-if="element.type === WebElementType.LktImage"
                 :class="element.props.class"
                 :src="element.props.src"
+                :alt="element.props.alt[currentLang]"
+                :title="element.props.title[currentLang]"
             >
                 <template #text>
                     <text-element-editor
