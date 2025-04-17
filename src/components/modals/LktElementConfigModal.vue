@@ -386,9 +386,9 @@
         editableConfig.value.props.title = fileEntities[0].nameData;
     }
 
-    // watch(() => props.element, (newValue, oldValue) => {
+    // watch(editableConfig, (newValue, oldValue) => {
     //     console.log('updated element: ', props.element);
-    //     newValue.updateKeyMoment();
+    //     editableConfig.value.updateKeyMoment();
     // }, {deep: true})
 
     watch(() => editableConfig.value.config.amountOfCallToActions, (v) => {

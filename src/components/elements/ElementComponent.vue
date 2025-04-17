@@ -83,7 +83,7 @@
 </script>
 
 <template>
-    <div class="lkt-element" :class="`is-${element.type} is-${element.id}`">
+    <div class="lkt-element" :class="`is-${element.type} is-${element.id}`" :key="element.keyMoment">
         <div class="lkt-element-content">
             <text-element-editor
                 v-if="element.type === WebElementType.LktText"

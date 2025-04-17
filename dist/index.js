@@ -16919,7 +16919,8 @@ const Ir = {
       var s, r, f, h, m, g;
       const o = ue("lkt-box"), b = ue("lkt-accordion"), d = ue("lkt-image"), v = ue("lkt-icon"), k = ue("lkt-header"), w = ue("lkt-button"), L = ue("lkt-anchor"), R = ue("lkt-banner");
       return M(), ne("div", {
-        class: Te(["lkt-element", `is-${u.element.type} is-${u.element.id}`])
+        class: Te(["lkt-element", `is-${u.element.type} is-${u.element.id}`]),
+        key: u.element.keyMoment
       }, [
         fe("div", xu, [
           u.element.type === B(se).LktText ? (M(), Y(Ze, {
