@@ -25,6 +25,7 @@
     import ElementComponent from '@/components/elements/ElementComponent.vue';
     import { getAvailableLanguages, getCurrentLanguage } from 'lkt-i18n';
     import { closeModal } from 'lkt-modal';
+    import { cloneObject } from 'lkt-object-tools';
 
     const props = withDefaults(defineProps<{
         modalName: string
@@ -42,6 +43,8 @@
         zIndex: 500,
     });
 
+    const editableConfig = ref(<WebElement>props.element);
+
     const doRemoveElement = () => {
         props.parentChildren.splice(props.indexInParentChildren, 1);
         closeModal(props.modalName, props.modalKey);
@@ -54,9 +57,7 @@
     }
 
     const getClone = () => {
-        let r = JSON.parse(JSON.stringify(props.element));
-        console.log('resetCloneId(r): ', resetCloneId(r));
-        return resetCloneId(r);
+        return resetCloneId(<WebElement>cloneObject(props.element));
     }
 
     const doDuplicateBefore = () => {
@@ -67,8 +68,6 @@
     const doDuplicateAfter = () => {
         props.parentChildren.splice(props.indexInParentChildren + 1, 0, getClone());
     }
-
-    const editableConfig = ref(<WebElement>props.element);
 
     const languages = getAvailableLanguages(),
         currentLang = getCurrentLanguage();
@@ -325,28 +324,28 @@
 
     const filterLayoutMediaOptions = (option: LktObject) => {
         return _filterLayoutMediaQueryOption(
-            props.element.layout?.amountOfItems ?? [],
+            editableConfig.value.layout?.amountOfItems ?? [],
             option,
         );
     }
 
     const filterLayoutAlignItemsOptions = (option: LktObject) => {
         return _filterLayoutMediaQueryOption(
-            props.element.layout?.alignItems ?? [],
+            editableConfig.value.layout?.alignItems ?? [],
             option,
         );
     }
 
     const filterLayoutJustifyContentOptions = (option: LktObject) => {
         return _filterLayoutMediaQueryOption(
-            props.element.layout?.justifyContent ?? [],
+            editableConfig.value.layout?.justifyContent ?? [],
             option,
         );
     }
 
     const filterLayoutColumnsOptions = (option: LktObject) => {
         return _filterLayoutMediaQueryOption(
-            props.element.layout?.columns ?? [],
+            editableConfig.value.layout?.columns ?? [],
             option,
         );
     }
@@ -383,11 +382,16 @@
     })
 
     const onPickedFiles = (fileEntities: Array<FileEntity>) => {
-        props.element.props.alt = fileEntities[0].nameData;
-        props.element.props.title = fileEntities[0].nameData;
+        editableConfig.value.props.alt = fileEntities[0].nameData;
+        editableConfig.value.props.title = fileEntities[0].nameData;
     }
 
-    watch(() => props.element.config.amountOfCallToActions, (v) => {
+    // watch(() => props.element, (newValue, oldValue) => {
+    //     console.log('updated element: ', props.element);
+    //     newValue.updateKeyMoment();
+    // }, {deep: true})
+
+    watch(() => editableConfig.value.config.amountOfCallToActions, (v) => {
         console.log('updated amount of cta: ', v);
         let l = props.element.config.callToActions.length;
         if (v > l) {
@@ -422,6 +426,7 @@
             },
             updateButton: false
         }"
+        :key="editableConfig.keyMoment"
     >
         <template #item="{item}">
             <div class="lkt-flex-row">
@@ -454,6 +459,7 @@
                                 index: editableConfig.children?.length,
                                 element,
                                 addingChildren: true,
+                                fileBrowserConfig,
                             }
                         }"
                     />

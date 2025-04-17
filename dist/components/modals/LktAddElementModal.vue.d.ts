@@ -1,15 +1,16 @@
-import { WebElementConfig, LktObject } from 'lkt-vue-kernel';
+import { FileBrowserConfig, WebElement } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modalName: string;
     modalKey: string;
     zIndex: number;
-    items: LktObject[];
-    element: WebElementConfig;
+    items: WebElement[];
+    element: WebElement;
     onUpdate: Function;
     onAppend: Function;
     index: number;
     addingChildren?: boolean;
+    fileBrowserConfig: FileBrowserConfig;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{}>, {
     modalKey: string;

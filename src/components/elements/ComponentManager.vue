@@ -6,13 +6,17 @@
         TablePermission,
         TableType,
         WebElement,
-        FileBrowserConfig,
+        FileBrowserConfig, Column,
     } from 'lkt-vue-kernel';
     import ElementComponent from '@/components/elements/ElementComponent.vue';
 
+    const emit = defineEmits([
+        'update:modelValue',
+    ])
+
     const props = withDefaults(defineProps<{
-        modelValue: WebElementConfig[]
-        parent: WebElementConfig
+        modelValue: WebElement[]
+        parent: WebElement
         layoutSelector?: string
         lang: string
         isChild?: boolean
@@ -24,46 +28,16 @@
         isChild: true,
     });
 
-    // const props = defineProps({
-    //     modelValue: {
-    //         type: Array as () => WebElement[],
-    //         required: true
-    //     },
-    //     parent: {
-    //         type: Object as () => WebElement,
-    //     },
-    //     layoutSelector: {
-    //         type: String,
-    //     },
-    //     lang: {
-    //         type: String,
-    //     },
-    //     isChild: {
-    //         type: Boolean,
-    //         default: false
-    //     },
-    //     isPreview: {
-    //         type: Boolean,
-    //         default: false
-    //     },
-    // })
+    console.log('lo que llega al componentmanager: ', props.modelValue);
 
-    const items = ref(<WebElement[]>props.modelValue);
-
-    // const items = ref(props.modelValue);
+    const items = ref(props.modelValue);
     const appendingItems = ref(false);
     const tableRef = ref(null);
 
-    const emit = defineEmits([
-        'add-text',
-        'add-element',
-        'elements-reordered',
-        'update:modelValue',
-    ])
-
     watch(items, (v) => {
+        console.log('updated items: ', items);
         emit('update:modelValue', v);
-    })
+    }, {deep: true})
 </script>
 
 <template>
@@ -101,6 +75,7 @@
                     modalData: {
                         items: items,
                         index: items.length,
+                        fileBrowserConfig,
                         onAppend: () => {
                             appendingItems = true;
                             nextTick(() => {
@@ -109,10 +84,25 @@
                         }
                     }
                 },
+                columns: [
+                    <Column>{
+                        key: 'keyMoment',
+                        label: '',
+                        isForRowKey: true,
+                    }
+                ]
             }"
         >
             <template #item="{element, index}">
-                <element-component :element="element" :index="index" :lang="lang" :is-preview="isPreview" :parent-children="items" :parent="parent" :file-browser-config="fileBrowserConfig"/>
+                <element-component
+                    :element="element"
+                    :index="index"
+                    :lang="lang"
+                    :is-preview="isPreview"
+                    :parent-children="items"
+                    :parent="parent"
+                    :file-browser-config="fileBrowserConfig"
+                />
             </template>
         </lkt-table>
     </div>

@@ -4,34 +4,36 @@
         AccordionConfig,
         AccordionType,
         ButtonConfig,
-        WebElementConfig,
-        WebElementType,
-        getDefaultLktLayoutAccordionWebElement,
+        FileBrowserConfig,
         getDefaultLktAnchorWebElement,
-        getDefaultLktLayoutBoxWebElement,
         getDefaultLktButtonWebElement,
         getDefaultLktHeaderWebElement,
         getDefaultLktIconWebElement,
         getDefaultLktImageWebElement,
+        getDefaultLktLayoutAccordionWebElement,
+        getDefaultLktLayoutBoxWebElement,
         getDefaultLktLayoutWebElement,
-        getDefaultLktTextWebElement,
-        LktObject,
-        ModalConfig,
         getDefaultLktTextAccordionWebElement,
-        getDefaultLktTextBoxWebElement,
         getDefaultLktTextBannerWebElement,
+        getDefaultLktTextBoxWebElement,
+        getDefaultLktTextWebElement,
+        ModalConfig,
+        WebElement,
+        WebElementType,
     } from 'lkt-vue-kernel';
+    import { closeModal, openModal } from 'lkt-modal';
 
     const props = withDefaults(defineProps<{
         modalName: string
         modalKey: string
         zIndex: number
-        items: LktObject[]
-        element: WebElementConfig
+        items: WebElement[]
+        element: WebElement
         onUpdate: Function
         onAppend: Function
         index: number
         addingChildren?: boolean
+        fileBrowserConfig: FileBrowserConfig
     }>(), {
         modalName: '',
         modalKey: '_',
@@ -42,69 +44,67 @@
     const editableItems = ref(props.items);
     const appendIndex = ref(props.index + 1);
 
-    const doReadAddElement = (element: WebElementConfig) => {
+    const doRealAddElement = (element: WebElement) => {
+        console.log('doRealAddElement');
         if (props.addingChildren) {
-            if (!Array.isArray(editableConfig.value.children)){
-                editableConfig.value.children = [];
-            }
-            editableConfig.value.children.push(element);
+            console.log('esto va por aquí');
+            props.element.addChild(element).updateKeyMoment();
 
         } else {
-            editableItems.value.splice(appendIndex.value, 0, element);
+            console.log('esto va por acá: ', element, props.items, appendIndex.value);
+            // editableItems.value.splice(appendIndex.value, 0, element);
+            props.items.push(element);
         }
         ++appendIndex.value;
         if (typeof props.onAppend === 'function') props.onAppend();
+        let index = editableItems.value.length;
+        openModal('lkt-field-element-config', `${index}--${element.type}--${element.id}`, {
+            element,
+            parent: editableConfig.value,
+            parentChildren: editableItems.value,
+            indexInParentChildren: index,
+            fileBrowserConfig: props.fileBrowserConfig,
+        })
+        closeModal(props.modalName, props.modalKey);
     }
 
-    const doAddElement = (element: string) => {
-        switch (element) {
+    const doAddElement = (type: WebElementType) => {
+        switch (type) {
             case WebElementType.LktLayoutBox:
-                doReadAddElement(getDefaultLktLayoutBoxWebElement());
-                break;
+                return doRealAddElement(getDefaultLktLayoutBoxWebElement());
 
             case WebElementType.LktTextBox:
-                doReadAddElement(getDefaultLktTextBoxWebElement());
-                break;
+                return doRealAddElement(getDefaultLktTextBoxWebElement());
 
             case WebElementType.LktLayoutAccordion:
-                doReadAddElement(getDefaultLktLayoutAccordionWebElement());
-                break;
+                return doRealAddElement(getDefaultLktLayoutAccordionWebElement());
 
             case WebElementType.LktTextAccordion:
-                doReadAddElement(getDefaultLktTextAccordionWebElement());
-                break;
+                return doRealAddElement(getDefaultLktTextAccordionWebElement());
 
             case WebElementType.LktIcon:
-                doReadAddElement(getDefaultLktIconWebElement());
-                break;
+                return doRealAddElement(getDefaultLktIconWebElement());
 
             case WebElementType.LktImage:
-                doReadAddElement(getDefaultLktImageWebElement());
-                break;
+                return doRealAddElement(getDefaultLktImageWebElement());
 
             case WebElementType.LktAnchor:
-                doReadAddElement(getDefaultLktAnchorWebElement());
-                break;
+                return doRealAddElement(getDefaultLktAnchorWebElement());
 
             case WebElementType.LktButton:
-                doReadAddElement(getDefaultLktButtonWebElement());
-                break;
+                return doRealAddElement(getDefaultLktButtonWebElement());
 
             case WebElementType.LktLayout:
-                doReadAddElement(getDefaultLktLayoutWebElement());
-                break;
+                return doRealAddElement(getDefaultLktLayoutWebElement());
 
             case WebElementType.LktHeader:
-                doReadAddElement(getDefaultLktHeaderWebElement());
-                break;
+                return doRealAddElement(getDefaultLktHeaderWebElement());
 
             case WebElementType.LktText:
-                doReadAddElement(getDefaultLktTextWebElement());
-                break;
+                return doRealAddElement(getDefaultLktTextWebElement());
 
             case WebElementType.LktTextBanner:
-                doReadAddElement(getDefaultLktTextBannerWebElement());
-                break;
+                return doRealAddElement(getDefaultLktTextBannerWebElement());
         }
     };
 </script>
@@ -133,7 +133,7 @@
                             text: 'Text',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-text');
+                                    doAddElement(WebElementType.LktText);
                                 }
                             }
                         }"
@@ -144,7 +144,7 @@
                             text: 'LktHeader',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-header');
+                                    doAddElement(WebElementType.LktHeader);
                                 }
                             }
                         }"
@@ -155,7 +155,7 @@
                             text: 'LktImage',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-image');
+                                    doAddElement(WebElementType.LktImage);
                                 }
                             }
                         }"
@@ -166,7 +166,7 @@
                             text: 'LktIcon',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-icon');
+                                    doAddElement(WebElementType.LktIcon);
                                 }
                             }
                         }"
@@ -177,7 +177,7 @@
                             text: 'LktTextBox',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-text-box');
+                                    doAddElement(WebElementType.LktTextBox);
                                 }
                             }
                         }"
@@ -188,7 +188,7 @@
                             text: 'LktTextAccordion',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-text-accordion');
+                                    doAddElement(WebElementType.LktTextAccordion);
                                 }
                             }
                         }"
@@ -199,7 +199,7 @@
                             text: 'LktTextBanner',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-text-banner');
+                                    doAddElement(WebElementType.LktTextBanner);
                                 }
                             }
                         }"
@@ -220,7 +220,7 @@
                             text: 'LktLayoutBox',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-layout-box');
+                                    doAddElement(WebElementType.LktLayoutBox);
                                 }
                             }
                         }"
@@ -231,7 +231,7 @@
                             text: 'LktLayoutAccordion',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-layout-accordion');
+                                    doAddElement(WebElementType.LktLayoutAccordion);
                                 }
                             }
                         }"
@@ -242,7 +242,7 @@
                             text: 'LktLayout',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-layout');
+                                    doAddElement(WebElementType.LktLayout);
                                 }
                             }
                         }"
@@ -263,7 +263,7 @@
                             text: 'LktAnchor',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-anchor');
+                                    doAddElement(WebElementType.LktAnchor);
                                 }
                             }
                         }"
@@ -274,7 +274,7 @@
                             text: 'LktButton',
                             events: {
                                 click: () => {
-                                    doAddElement('lkt-button');
+                                    doAddElement(WebElementType.LktButton);
                                 }
                             }
                         }"

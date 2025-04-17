@@ -316,7 +316,8 @@
                 modal: 'lkt-field-add-element-config',
                 modalData: {
                     items: elements,
-                    index: elements.length
+                    index: elements.length,
+                    fileBrowserConfig,
                 }
             }"
         />

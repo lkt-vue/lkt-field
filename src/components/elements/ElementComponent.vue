@@ -9,7 +9,7 @@
     import ComponentManager from '@/components/elements/ComponentManager.vue';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
     import { getCurrentLanguage } from 'lkt-i18n';
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue';
 
     const props = withDefaults(defineProps<{
         element: WebElement
@@ -76,6 +76,10 @@
     }
 
     const currentLang = props.lang ?? getCurrentLanguage();
+
+    // watch(() => props.element, (newValue, oldValue) => {
+    //     newValue.updateKeyMoment();
+    // }, {deep: true})
 </script>
 
 <template>
