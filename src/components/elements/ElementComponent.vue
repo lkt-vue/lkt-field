@@ -9,10 +9,12 @@
     import ComponentManager from '@/components/elements/ComponentManager.vue';
     import TextElementEditor from '@/components/elements/TextElementEditor.vue';
     import { getCurrentLanguage } from 'lkt-i18n';
-    import { ref, watch } from 'vue';
+    import { Component, ref, watch } from 'vue';
+
+    const emit = defineEmits(['update:modelValue']);
 
     const props = withDefaults(defineProps<{
-        element: WebElement
+        modelValue: WebElement
         parent?: WebElement
         parentChildren: WebElement[]
         index?: number
@@ -20,19 +22,30 @@
         isPreview?: boolean
         canRenderActions?: boolean
         fileBrowserConfig?: FileBrowserConfig
+        parentLayoutComponent?: Component
     }>(), {
         index: -1,
         isPreview: false,
         canRenderActions: true,
     });
 
+    const webElement = ref(props.modelValue);
+
+    watch(() => props.modelValue, (newValue, oldValue) => {
+        webElement.value = newValue;
+    })
+
+    watch(webElement, (newValue, oldValue) => {
+        emit('update:modelValue', newValue);
+    })
+
     const appendingItems = ref(false);
 
     const handleInputText = (event: Event, prop: string = 'text') => {
         const text = (event.target as HTMLElement).innerHTML.trim()
 
-        if (text !== props.element.props[prop][currentLang]) {
-            props.element.props[prop][currentLang] = text;
+        if (text !== webElement.value.props[prop][currentLang]) {
+            webElement.value.props[prop][currentLang] = text;
         }
     }
 
@@ -83,199 +96,199 @@
 </script>
 
 <template>
-    <div class="lkt-element" :class="`is-${element.type} is-${element.id}`" :key="element.keyMoment">
+    <div class="lkt-element" :class="`is-${webElement.type} is-${webElement.id}`" :key="webElement.keyMoment">
         <div class="lkt-element-content">
             <text-element-editor
-                v-if="element.type === WebElementType.LktText"
-                v-model="element.props.text[currentLang]"
+                v-if="webElement.type === WebElementType.LktText"
+                v-model="webElement.props.text[currentLang]"
                 @input="handleInputText($event)"
             />
 
             <lkt-box
-                v-else-if="element.type === WebElementType.LktLayoutBox"
-                :icon="element.config.hasHeader && element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktLayoutBox"
+                :icon="webElement.config.hasHeader && webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
-                <template #header v-if="element.config?.hasHeader">
+                <template #header v-if="webElement.config?.hasHeader">
                     <text-element-editor
-                        v-model="element.props.header[currentLang]"
+                        v-model="webElement.props.header[currentLang]"
                         @input="handleInputText($event, 'header')"
                     />
                 </template>
                 <component-manager
-                    v-model="element.children"
-                    :layout-selector="getLayoutSelector(element)"
+                    v-model="webElement.children"
+                    :layout-selector="getLayoutSelector(webElement)"
                     is-child
                     :lang="currentLang"
                     :is-preview="isPreview"
-                    :parent="element"
+                    :parent="webElement"
                 />
             </lkt-box>
 
             <lkt-box
-                v-else-if="element.type === WebElementType.LktTextBox"
-                :icon="element.config.hasHeader && element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktTextBox"
+                :icon="webElement.config.hasHeader && webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
-                <template #header v-if="element.config?.hasHeader">
+                <template #header v-if="webElement.config?.hasHeader">
                     <text-element-editor
-                        v-model="element.props.header[currentLang]"
+                        v-model="webElement.props.header[currentLang]"
                         @input="handleInputText($event, 'header')"
                     />
                 </template>
                 <text-element-editor
-                    v-model="element.props.text[currentLang]"
+                    v-model="webElement.props.text[currentLang]"
                     @input="handleInputText($event, 'text')"
                 />
             </lkt-box>
 
             <lkt-accordion
-                v-else-if="element.type === WebElementType.LktLayoutAccordion"
-                :icon="element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktLayoutAccordion"
+                :icon="webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
-                <template #header v-if="element.config?.hasHeader">
+                <template #header v-if="webElement.config?.hasHeader">
                     <text-element-editor
-                        v-model="element.props.header[currentLang]"
+                        v-model="webElement.props.header[currentLang]"
                         @input="handleInputText($event, 'header')"
                     />
                 </template>
                 <component-manager
-                    v-model="element.children"
-                    :layout-selector="getLayoutSelector(element)"
+                    v-model="webElement.children"
+                    :layout-selector="getLayoutSelector(webElement)"
                     is-child
                     :lang="currentLang"
                     :is-preview="isPreview"
-                    :parent="element"
+                    :parent="webElement"
                 />
             </lkt-accordion>
 
             <lkt-accordion
-                v-else-if="element.type === WebElementType.LktTextAccordion"
-                :icon="element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktTextAccordion"
+                :icon="webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
-                <template #header v-if="element.config?.hasHeader">
+                <template #header v-if="webElement.config?.hasHeader">
                     <text-element-editor
-                        v-model="element.props.header[currentLang]"
+                        v-model="webElement.props.header[currentLang]"
                         @input="handleInputText($event, 'header')"
                     />
                 </template>
                 <text-element-editor
-                    v-model="element.props.text[currentLang]"
+                    v-model="webElement.props.text[currentLang]"
                     @input="handleInputText($event, 'text')"
                 />
             </lkt-accordion>
 
             <lkt-image
-                v-else-if="element.type === WebElementType.LktImage"
-                :class="element.props.class"
-                :src="element.props.src"
-                :alt="element.props.alt[currentLang]"
-                :title="element.props.title[currentLang]"
+                v-else-if="webElement.type === WebElementType.LktImage"
+                :class="webElement.props.class"
+                :src="webElement.props.src"
+                :alt="webElement.props.alt[currentLang]"
+                :title="webElement.props.title[currentLang]"
             >
                 <template #text>
                     <text-element-editor
-                        v-model="element.props.text[currentLang]"
+                        v-model="webElement.props.text[currentLang]"
                         @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-image>
 
             <lkt-icon
-                v-else-if="element.type === WebElementType.LktIcon"
-                :icon="element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktIcon"
+                :icon="webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
                 <template #text>
                     <text-element-editor
-                        v-model="element.props.text[currentLang]"
+                        v-model="webElement.props.text[currentLang]"
                         @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-icon>
 
             <lkt-header
-                v-else-if="element.type === WebElementType.LktHeader"
-                :icon="element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktHeader"
+                :icon="webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
                 <template #text>
                     <text-element-editor
-                        v-model="element.props.text[currentLang]"
+                        v-model="webElement.props.text[currentLang]"
                         @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-header>
 
             <lkt-button
-                v-else-if="element.type === WebElementType.LktButton"
-                :icon="element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktButton"
+                :icon="webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
                 <template #text>
                     <text-element-editor
-                        v-model="element.props.text[currentLang]"
+                        v-model="webElement.props.text[currentLang]"
                         @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-button>
 
             <lkt-anchor
-                v-else-if="element.type === WebElementType.LktAnchor"
-                :icon="element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
+                v-else-if="webElement.type === WebElementType.LktAnchor"
+                :icon="webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
             >
                 <template #text>
                     <text-element-editor
-                        v-model="element.props.text[currentLang]"
+                        v-model="webElement.props.text[currentLang]"
                         @input="handleInputText($event, 'text')"
                     />
                 </template>
             </lkt-anchor>
 
             <lkt-banner
-                v-else-if="element.type === WebElementType.LktTextBanner"
-                :icon="element.config.hasIcon ? element.props.icon : ''"
-                :class="element.props.class"
-                :opacity="element.props.opacity"
-                :art="element.props.art"
-                :media="element.props.media"
-                :type="element.props.type"
+                v-else-if="webElement.type === WebElementType.LktTextBanner"
+                :icon="webElement.config.hasIcon ? webElement.props.icon : ''"
+                :class="webElement.props.class"
+                :opacity="webElement.props.opacity"
+                :art="webElement.props.art"
+                :media="webElement.props.media"
+                :type="webElement.props.type"
             >
-                <template #header v-if="element.config?.hasHeader">
+                <template #header v-if="webElement.config?.hasHeader">
                     <text-element-editor
-                        v-model="element.props.header[currentLang]"
+                        v-model="webElement.props.header[currentLang]"
                         @input="handleInputText($event, 'header')"
                     />
                 </template>
-                <template #subHeader v-if="element.config?.hasSubHeader">
+                <template #subHeader v-if="webElement.config?.hasSubHeader">
                     <text-element-editor
-                        v-model="element.props.subHeader[currentLang]"
+                        v-model="webElement.props.subHeader[currentLang]"
                         @input="handleInputText($event, 'subHeader')"
                     />
                 </template>
                 <text-element-editor
-                    v-model="element.props.text[currentLang]"
+                    v-model="webElement.props.text[currentLang]"
                     @input="handleInputText($event, 'text')"
                 />
             </lkt-banner>
 
 
             <component-manager
-                v-else-if="element.type === WebElementType.LktLayout"
-                v-model="element.children"
-                :layout-selector="getLayoutSelector(element)"
+                v-else-if="webElement.type === WebElementType.LktLayout"
+                v-model="webElement.children"
+                :layout-selector="getLayoutSelector(webElement)"
                 is-child
                 :lang="currentLang"
                 :is-preview="isPreview"
-                :parent="element"
+                :parent="webElement"
             />
 
             <component
                 v-else
-                :is="element.component"
-                v-bind="element.props"
+                :is="webElement.component"
+                v-bind="webElement.props"
             />
         </div>
 
@@ -283,16 +296,17 @@
             <lkt-button
                 v-bind="<ButtonConfig>{
                     type: ButtonType.Button,
-                    text: element.type,
+                    text: webElement.type,
                     icon: 'lkt-icn-settings-cogs',
-                    modal: 'lkt-field-element-config',
-                    modalKey: `${index}--${element.type}--${element.id}`,
+                    modal: 'lkt-web-element-config',
+                    modalKey: `${index}--${webElement.type}--${webElement.id}`,
                     modalData: {
-                        element,
+                        element: webElement,
                         parent,
                         parentChildren,
                         indexInParentChildren: index,
                         fileBrowserConfig,
+                        parentLayoutComponent,
                     }
                 }"
             />

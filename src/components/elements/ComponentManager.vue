@@ -84,24 +84,25 @@
                         }
                     }
                 },
-                columns: [
-                    <Column>{
-                        key: 'keyMoment',
-                        label: '',
-                        isForRowKey: true,
-                    }
-                ]
+                // columns: [
+                //     <Column>{
+                //         key: 'keyMoment',
+                //         label: '',
+                //         isForRowKey: true,
+                //     }
+                // ]
             }"
         >
-            <template #item="{element, index}">
+            <template #item="{_, index}">
                 <element-component
-                    :element="element"
+                    v-model="items[index]"
                     :index="index"
                     :lang="lang"
                     :is-preview="isPreview"
                     :parent-children="items"
                     :parent="parent"
                     :file-browser-config="fileBrowserConfig"
+                    :parent-layout-component="tableRef"
                 />
             </template>
         </lkt-table>

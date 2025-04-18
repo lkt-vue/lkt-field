@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { Component, nextTick, ref } from 'vue';
     import {
         AccordionConfig,
         AccordionType,
@@ -34,6 +34,7 @@
         index: number
         addingChildren?: boolean
         fileBrowserConfig: FileBrowserConfig
+        parentLayoutComponent?: Component
     }>(), {
         modalName: '',
         modalKey: '_',
@@ -58,14 +59,17 @@
         ++appendIndex.value;
         if (typeof props.onAppend === 'function') props.onAppend();
         let index = editableItems.value.length;
-        openModal('lkt-field-element-config', `${index}--${element.type}--${element.id}`, {
-            element,
-            parent: editableConfig.value,
-            parentChildren: editableItems.value,
-            indexInParentChildren: index,
-            fileBrowserConfig: props.fileBrowserConfig,
+        nextTick(() => {
+            openModal('lkt-web-element-config', `${index}--${element.type}--${element.id}`, {
+                element: element,
+                parent: editableConfig.value,
+                parentChildren: editableItems.value,
+                indexInParentChildren: index,
+                fileBrowserConfig: props.fileBrowserConfig,
+                parentLayoutComponent: props.parentLayoutComponent,
+            })
+            closeModal(props.modalName, props.modalKey);
         })
-        closeModal(props.modalName, props.modalKey);
     }
 
     const doAddElement = (type: WebElementType) => {

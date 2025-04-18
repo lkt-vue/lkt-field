@@ -37,7 +37,7 @@ const LktFieldPlugin: Plugin = {
             // Register modals
             addModal('lkt-field-language-edit', LktTextLanguageEditModal);
             addModal('lkt-field-add-element-config', LktAddElementModal);
-            addModal('lkt-field-element-config', LktElementConfigModal);
+            addModal('lkt-web-element-config', LktElementConfigModal);
             addModal('lkt-file-browser', LktFileBrowserModal);
         }
     },

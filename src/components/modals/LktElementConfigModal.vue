@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, ref, watch } from 'vue';
+    import { Component, computed, nextTick, ref, watch } from 'vue';
     import {
         AccordionConfig,
         AccordionToggleMode,
@@ -37,13 +37,16 @@
         indexInParentChildren: number
         onUpdate: Function
         fileBrowserConfig: FileBrowserConfig
+        parentLayoutComponent?: Component
     }>(), {
         modalName: '',
         modalKey: '_',
         zIndex: 500,
     });
 
-    const editableConfig = ref(<WebElement>props.element);
+    console.log('tableRef: ', props.parentLayoutComponent);
+
+    const editableConfig = ref(props.element);
 
     const doRemoveElement = () => {
         props.parentChildren.splice(props.indexInParentChildren, 1);
@@ -386,18 +389,51 @@
         editableConfig.value.props.title = fileEntities[0].nameData;
     }
 
-    // watch(editableConfig, (newValue, oldValue) => {
-    //     console.log('updated element: ', props.element);
-    //     editableConfig.value.updateKeyMoment();
-    // }, {deep: true})
+    const updatingModelValue = ref(false);
+
+    watch(() => props.element, (v) => {
+        console.log('updating model value');
+        updatingModelValue.value = true;
+        editableConfig.value = v;
+        nextTick(() => {
+            updatingModelValue.value = false;
+        })
+    })
+    let updateTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
+
+    // @todo esto no va
+    watch([
+        () => editableConfig.value.props,
+        () => editableConfig.value.config,
+        () => editableConfig.value.layout,
+    ], (newValue, oldValue) => {
+        if (updatingModelValue.value) return;
+
+        console.log('clear timeout porque ya hay uno');
+        clearTimeout(updateTimeout);
+        console.log('crear nuevo timeout');
+        updateTimeout = setTimeout(() => {
+            console.log('ejecutar el timeout');
+            props.element.feed({
+                props: newValue[0],
+                config: newValue[1],
+                layout: newValue[2],
+            });
+            props.element.updateKeyMoment();
+            if (props.parent) {
+                props.parent.updateKeyMoment();
+            }
+            clearTimeout(updateTimeout);
+        }, 1000);
+    }, {deep: true})
 
     watch(() => editableConfig.value.config.amountOfCallToActions, (v) => {
         console.log('updated amount of cta: ', v);
-        let l = props.element.config.callToActions.length;
+        let l = editableConfig.value.config.callToActions.length;
         if (v > l) {
-            props.element.config.callToActions.push(getDefaultLktButtonWebElement());
+            editableConfig.value.config.callToActions.push(getDefaultLktButtonWebElement());
         } else {
-            props.element.config.callToActions.splice(v, 1);
+            editableConfig.value.config.callToActions.splice(v, 1);
         }
     })
 
@@ -410,7 +446,7 @@
 
 <template>
     <lkt-item-crud
-        class="lkt-field-element-config-modal"
+        class="lkt-web-element-config-modal"
         v-model="editableConfig"
         v-bind="<ItemCrudConfig>{
             mode: ItemCrudMode.Update,
@@ -426,12 +462,11 @@
             },
             updateButton: false
         }"
-        :key="editableConfig.keyMoment"
     >
         <template #item="{item}">
             <div class="lkt-flex-row">
                 <div class="lkt-flex-col-9 lkt-grid-1">
-                    <element-component :element="element" is-preview :parent-children="parentChildren" :index="indexInParentChildren" :can-render-actions="false"/>
+                    <element-component v-model="editableConfig" is-preview :parent-children="parentChildren" :index="indexInParentChildren" :can-render-actions="false"/>
 
                     <template
                         v-for="lang in languages">
@@ -442,7 +477,7 @@
                                 title: lang
                             }"
                         >
-                            <element-component :element="element" :lang="lang" is-preview :parent-children="parentChildren" :index="indexInParentChildren" :can-render-actions="false"/>
+                            <element-component v-model="editableConfig" :lang="lang" is-preview :parent-children="parentChildren" :index="indexInParentChildren" :can-render-actions="false"/>
                         </lkt-accordion>
                     </template>
                 </div>
@@ -455,11 +490,12 @@
                             icon: 'lkt-icn-more',
                             modal: 'lkt-field-add-element-config',
                             modalData: {
-                                items: editableConfig.children,
-                                index: editableConfig.children?.length,
-                                element,
+                                items: item.children,
+                                index: item.children?.length,
+                                element: item,
                                 addingChildren: true,
                                 fileBrowserConfig,
+                                parentLayoutComponent,
                             }
                         }"
                     />
@@ -662,7 +698,7 @@
                                 v-if="calculatedHasLayout && item.layout.type !== WebElementLayoutType.FlexColumn"
                                 v-bind="<FieldConfig>{
                                     type: FieldType.Select,
-                                    label: element.layout.type === WebElementLayoutType.Grid ? 'Items per row (based on device width)' : 'Column size (based on device width)',
+                                    label: item.layout.type === WebElementLayoutType.Grid ? 'Items per row (based on device width)' : 'Column size (based on device width)',
                                     options: amountOfItemsOptions,
                                     multiple: true,
                                     searchable: true,
