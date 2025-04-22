@@ -104,7 +104,6 @@
 
     const onConfirmSelection = (fileEntities: Array<FileEntity>) => {
         value.value = fileEntities[0].src;
-        console.log('emit picked files 1: ', fileEntities);
         emit('picked-files', fileEntities);
     }
 </script>
@@ -168,6 +167,7 @@
                 <div>
                     <div class="lkt-grid-1">
                         <lkt-button
+                            v-if="false"
                             ref="buttonRef"
                             :click-ref="inputElement"
                             text="Upload"

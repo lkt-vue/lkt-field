@@ -66,7 +66,6 @@
     import { appendIconToLabel, extractEditableValue } from '../functions/calcultad-data-functions';
     import CardInput from '../components/CardInput.vue';
     import MultipleCardInput from '../components/MultipleCardInput.vue';
-    import ElementsInput from '../components/ElementsInput.vue';
     import FileUploadButton from '@/components/buttons/FileUploadButton.vue';
     import { openToast } from 'lkt-toast';
 
@@ -1265,25 +1264,6 @@
                     :readonly="readonly"
                     :options-resource="optionsConfig?.http?.resource"
                     :container="container"
-                    @focus="onFocusBooleanInput"
-                    @blur="onBlurBooleanInput"
-                />
-
-                <elements-input
-                    ref="inputElement"
-                    v-else-if="type === FieldType.Elements"
-                    v-model="editableValue"
-                    :id="Identifier"
-                    :tabindex="tabindex"
-                    :name="name"
-                    :editable="editable"
-                    :focusing="focusing"
-                    :had-first-focus="hadFirstFocus"
-                    :disabled="computedIsDisabled"
-                    :readonly="readonly"
-                    :options-resource="optionsConfig?.http?.resource"
-                    :container="container"
-                    :file-browser-config="fileBrowserConfig"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
                 />
