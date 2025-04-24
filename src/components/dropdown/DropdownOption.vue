@@ -20,6 +20,7 @@
         download?: string | Function
         labelFormatter?: Function
         isTag?: boolean
+        prop?: LktObject
     }>(), {
         option: () => (new Option()),
         optionSlot: '',
@@ -30,20 +31,21 @@
         modalData: () => ({}),
         download: '',
         isTag: false,
+        prop: () => ({})
     });
 
     const computedIcon = computed(() => {
             if (props.option.icon !== '') return props.option.icon;
 
             if (typeof props.icon === 'function') {
-                return props.icon(props.option);
+                return props.icon(props.option, props.prop);
             }
             return props.icon;
         }),
         computedText = computed(() => {
             if (typeof props.text !== 'undefined') {
                 if (typeof props.text === 'function') {
-                    return props.text(props.option);
+                    return props.text(props.option, props.prop);
                 }
 
                 if (props.text !== '') return props.text;

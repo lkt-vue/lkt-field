@@ -310,17 +310,18 @@ const hn = /* @__PURE__ */ ye({
     modalData: { type: [Object, Function], default: () => ({}) },
     download: { type: [String, Function], default: "" },
     labelFormatter: {},
-    isTag: { type: Boolean, default: !1 }
+    isTag: { type: Boolean, default: !1 },
+    prop: { default: () => ({}) }
   },
   emits: [
     "click",
     "click-icon"
   ],
   setup(e, { emit: t }) {
-    const i = t, o = e, l = J(() => o.option.icon !== "" ? o.option.icon : typeof o.icon == "function" ? o.icon(o.option) : o.icon), a = J(() => {
+    const i = t, o = e, l = J(() => o.option.icon !== "" ? o.option.icon : typeof o.icon == "function" ? o.icon(o.option, o.prop) : o.icon), a = J(() => {
       if (typeof o.text < "u") {
         if (typeof o.text == "function")
-          return o.text(o.option);
+          return o.text(o.option, o.prop);
         if (o.text !== "") return o.text;
       }
       return c.value;
@@ -15790,7 +15791,8 @@ const or = {
     focusing: { type: Boolean },
     searchPlaceholder: {},
     multipleDisplayEdition: {},
-    searchString: {}
+    searchString: {},
+    prop: { default: () => ({}) }
   },
   emits: [
     "update:modelValue",
@@ -15918,8 +15920,9 @@ const or = {
                     "label-formatter": h.optionsLabelFormatter,
                     editable: h.editable,
                     "is-tag": U(a),
+                    prop: h.prop,
                     onClickIcon: g
-                  }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter", "editable", "is-tag"])
+                  }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter", "editable", "is-tag", "prop"])
                 ], 8, dr))), 256))
               ], 2))
             ], 64)) : !h.multiple && h.pickedOptions.length > 0 ? (O(), Q(_t, {
@@ -15933,8 +15936,9 @@ const or = {
               "modal-data": h.optionsModalData,
               download: h.optionsDownload,
               "label-formatter": h.optionsLabelFormatter,
-              editable: h.editable
-            }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter", "editable"])) : se("", !0)
+              editable: h.editable,
+              prop: h.prop
+            }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter", "editable", "prop"])) : se("", !0)
           ]),
           _: 1
         }, 8, ["type", "open-tooltip"]), [
@@ -16321,6 +16325,7 @@ const or = {
     optionsLabelFormatter: {},
     optionsResource: { default: "" },
     optionsResourceData: { default: () => ({}) },
+    prop: { default: () => ({}) },
     readModeConfig: {}
   },
   emits: ["click"],
@@ -16437,8 +16442,9 @@ const or = {
                       modal: u.optionsModal,
                       "modal-data": u.optionsModalData,
                       download: u.optionsDownload,
-                      "label-formatter": u.optionsLabelFormatter
-                    }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter"])
+                      "label-formatter": u.optionsLabelFormatter,
+                      prop: u.prop
+                    }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter", "prop"])
                   ], 8, Br);
                 }), 256))
               ], 2)) : se("", !0)
@@ -16452,8 +16458,9 @@ const or = {
               modal: u.optionsModal,
               "modal-data": u.optionsModalData,
               download: u.optionsDownload,
-              "label-formatter": u.optionsLabelFormatter
-            }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter"])) : se("", !0)
+              "label-formatter": u.optionsLabelFormatter,
+              prop: u.prop
+            }, null, 8, ["option", "option-slot", "icon", "text", "custom-class", "modal", "modal-data", "download", "label-formatter", "prop"])) : se("", !0)
           ], 8, Lr)) : u.modal ? (O(), Q(S, {
             key: 6,
             class: "lkt-field--read-value",
@@ -16472,8 +16479,9 @@ const or = {
             option: { value: "", label: U(n) },
             download: u.download,
             text: u.optionsText,
-            "custom-class": u.optionsClass
-          }, null, 8, ["option", "download", "text", "custom-class"])) : u.type === U(q).Number ? (O(), le("div", {
+            "custom-class": u.optionsClass,
+            prop: u.prop
+          }, null, 8, ["option", "download", "text", "custom-class", "prop"])) : u.type === U(q).Number ? (O(), le("div", {
             key: 8,
             class: "lkt-field--read-value",
             innerHTML: u.title,
@@ -17467,6 +17475,7 @@ const or = {
                   focusing: p.value,
                   "search-placeholder": it.value,
                   "multiple-display-edition": T.multipleDisplayEdition,
+                  prop: T.prop,
                   onFocus: ul,
                   onBlur: cl,
                   onNavigate: qn,
@@ -17474,7 +17483,7 @@ const or = {
                   onChange: Mt,
                   onTag: Gn,
                   onUntag: Kn
-                }, null, 8, ["modelValue", "show-options", "searchable", "search-mode", "search-string", "multiple", "can-tag", "options-text", "options-icon", "options-class", "option-slot", "options-modal", "options-download", "options-label-formatter", "options-modal-data", "picked-options", "editable", "focusing", "search-placeholder", "multiple-display-edition"])) : T.type === U(q).Calc ? (O(), Q(yr, {
+                }, null, 8, ["modelValue", "show-options", "searchable", "search-mode", "search-string", "multiple", "can-tag", "options-text", "options-icon", "options-class", "option-slot", "options-modal", "options-download", "options-label-formatter", "options-modal-data", "picked-options", "editable", "focusing", "search-placeholder", "multiple-display-edition", "prop"])) : T.type === U(q).Calc ? (O(), Q(yr, {
                   key: 8,
                   ref_key: "inputElement",
                   ref: w,
@@ -17661,6 +17670,7 @@ const or = {
             "options-resource": (ot = (nt = T.optionsConfig) == null ? void 0 : nt.http) == null ? void 0 : ot.resource,
             "options-resource-data": (at = (st = T.optionsConfig) == null ? void 0 : st.http) == null ? void 0 : at.data,
             "read-mode-config": T.readModeConfig,
+            prop: T.prop,
             onClick: Dt
           }, Bt({ _: 2 }, [
             U(l).value ? {
@@ -17674,7 +17684,7 @@ const or = {
               ]),
               key: "0"
             } : void 0
-          ]), 1032, ["value", "type", "label", "title", "file-name", "value-slot", "empty-value-slot", "slot-data", "download", "multiple", "multipleDisplay", "modal", "modal-key", "modal-data", "option-slot", "options-download", "options-modal", "options-modal-data", "options-icon", "options-text", "options-class", "options-label-formatter", "options-resource", "options-resource-data", "read-mode-config"])),
+          ]), 1032, ["value", "type", "label", "title", "file-name", "value-slot", "empty-value-slot", "slot-data", "download", "multiple", "multipleDisplay", "modal", "modal-key", "modal-data", "option-slot", "options-download", "options-modal", "options-modal-data", "options-icon", "options-text", "options-class", "options-label-formatter", "options-resource", "options-resource-data", "read-mode-config", "prop"])),
           Fe.value ? (O(), le("div", lu, [
             Pe(ne(hn, { onClick: Ii }, null, 512), [
               [mt, Xi.value]

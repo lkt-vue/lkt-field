@@ -12,6 +12,7 @@ type __VLS_Props = {
     download?: string | Function;
     labelFormatter?: Function;
     isTag?: boolean;
+    prop?: LktObject;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     click: (...args: any[]) => void;
@@ -29,5 +30,6 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     editable: boolean;
     download: string | Function;
     isTag: boolean;
+    prop: LktObject;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 export default _default;

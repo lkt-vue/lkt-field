@@ -36,8 +36,10 @@
         searchPlaceholder: string
         multipleDisplayEdition: string
         searchString: string
+        prop?: LktObject
     }>(), {
         modelValue: false,
+        prop: () => ({})
     });
 
     const tagsEnabled = props.multiple && props.canTag;
@@ -212,6 +214,7 @@
                         :label-formatter="optionsLabelFormatter"
                         :editable="editable"
                         :is-tag="tagsEnabled"
+                        :prop="prop"
                         @click-icon="onClickOptionIcon"
                     />
                 </li>
@@ -229,6 +232,7 @@
             :download="optionsDownload"
             :label-formatter="optionsLabelFormatter"
             :editable="editable"
+            :prop="prop"
         />
     </lkt-button>
 </template>

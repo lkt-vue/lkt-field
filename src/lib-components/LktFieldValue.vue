@@ -39,6 +39,7 @@
         optionsLabelFormatter?: Function
         optionsResource?: string
         optionsResourceData?: LktObject
+        prop?: LktObject
         readModeConfig?: FieldReadModeConfig
     }>(), {
         type: FieldType.Text,
@@ -59,6 +60,7 @@
         optionsIcon: '',
         optionsResource: '',
         optionsResourceData: () => ({}),
+        prop: () => ({}),
     });
 
     const onClick = () => emit('click');
@@ -193,6 +195,7 @@
                                     :modal-data="optionsModalData"
                                     :download="optionsDownload"
                                     :label-formatter="optionsLabelFormatter"
+                                    :prop="prop"
                                 />
                             </li>
                         </template>
@@ -210,6 +213,7 @@
                     :modal-data="optionsModalData"
                     :download="optionsDownload"
                     :label-formatter="optionsLabelFormatter"
+                    :prop="prop"
                 />
             </div>
             <lkt-button
@@ -229,6 +233,7 @@
                 :download="download"
                 :text="optionsText"
                 :custom-class="optionsClass"
+                :prop="prop"
             />
             <div
                 v-else-if="type === FieldType.Number"

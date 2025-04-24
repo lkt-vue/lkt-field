@@ -25,6 +25,7 @@ type __VLS_Props = {
     optionsLabelFormatter?: Function;
     optionsResource?: string;
     optionsResourceData?: LktObject;
+    prop?: LktObject;
     readModeConfig?: FieldReadModeConfig;
 };
 declare function __VLS_template(): {
@@ -51,6 +52,7 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     modalData: LktObject;
     optionSlot: string;
     download: string | Function;
+    prop: LktObject;
     emptyValueSlot: string;
     valueSlot: string;
     slotData: LktObject;

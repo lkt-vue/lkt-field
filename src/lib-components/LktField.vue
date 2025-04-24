@@ -1226,6 +1226,7 @@
                     :focusing="focusing"
                     :search-placeholder="computedSearchPlaceholder"
                     :multiple-display-edition="multipleDisplayEdition"
+                    :prop="prop"
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"
                     @navigate="onNavigateSelectInput"
@@ -1415,6 +1416,7 @@
                 :options-resource="optionsConfig?.http?.resource"
                 :options-resource-data="optionsConfig?.http?.data"
                 :read-mode-config="readModeConfig"
+                :prop="prop"
                 @click="onClick"
             >
                 <template v-if="slots['value']" #value>

@@ -21,6 +21,7 @@ type __VLS_Props = {
     searchPlaceholder: string;
     multipleDisplayEdition: string;
     searchString: string;
+    prop?: LktObject;
 };
 declare const _default: DefineComponent<__VLS_Props, {
     keepFocused: () => void;
@@ -46,6 +47,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     onUntag?: ((...args: any[]) => any) | undefined;
 }>, {
     modelValue: ValidFieldValue;
+    prop: LktObject;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     queryField: HTMLInputElement;
     selectButton: unknown;
