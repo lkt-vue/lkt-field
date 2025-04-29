@@ -5,7 +5,7 @@
     import { httpCall, HTTPResponse } from 'lkt-http-client';
     import { currentLanguage } from 'lkt-i18n';
     import {
-        booleanFieldTypes,
+        booleanFieldTypes, ButtonConfig,
         extractI18nValue,
         extractPropValue,
         Field,
@@ -84,6 +84,7 @@
         'click-error',
         'validation',
         'validating',
+        'uploading',
         'options-loaded',
         'selected-option',
         'upload-error',
@@ -978,26 +979,28 @@
         onClickSwitchEdition = () => {
             if (editable.value) focus();
         },
-        onUploadSuccess = () => {
+        onUploadSuccess = (r: HTTPResponse) => {
             openToast(<ToastConfig>{
                 text: LktSettings.defaultUploadSuccessText,
                 details: LktSettings.defaultUploadSuccessDetails,
                 icon: LktSettings.defaultUploadSuccessIcon,
                 positionX: ToastPositionX.Right,
             });
-            emits('upload-success');
+            emits('upload-success', r);
         },
-        onUploadError = () => {
+        onUploadError = (r: HTTPResponse) => {
             openToast(<ToastConfig>{
                 text: LktSettings.defaultUploadErrorText,
                 details: LktSettings.defaultUploadErrorDetails,
                 icon: LktSettings.defaultUploadErrorIcon,
                 positionX: ToastPositionX.Right,
             });
-            emits('upload-error');
+            emits('upload-error', r);
+        },
+        onUploading = () => {
+            emits('uploading');
         },
         onPickedFiles = (fileEntities: Array<FileEntity>) => {
-            console.log('emit picked files 2: ', fileEntities);
             emits('picked-files', fileEntities);
         },
         reAssignNumericValue = (n: string | number) => {
@@ -1115,8 +1118,11 @@
 
                 <lkt-button
                     v-if="computedShowSubtractStep && fieldFeaturedButton === 'subtract'"
-                    class="lkt-field--atn-btn"
-                    icon="lkt-icn-less"
+                    v-bind="<ButtonConfig>{
+                        class: 'lkt-field--info-btn',
+                        icon: 'lkt-icn-less',
+                        disabled: editableValue === MinimumValue,
+                    }"
                     @click="onClickSubtract"
                 />
             </div>
@@ -1189,6 +1195,7 @@
                     :is-image="type === FieldType.Image"
                     :file-browser-config="fileBrowserConfig"
                     @change="onChange"
+                    @uploading="onUploading"
                     @upload-success="onUploadSuccess"
                     @upload-error="onUploadError"
                     @picked-files="onPickedFiles"
@@ -1435,15 +1442,21 @@
                 <lkt-button
                     v-if="type === FieldType.Number"
                     v-show="computedShowSubtractStepInNav"
-                    class="lkt-field--info-btn"
-                    icon="lkt-icn-less"
+                    v-bind="<ButtonConfig>{
+                        class: 'lkt-field--info-btn',
+                        icon: 'lkt-icn-less',
+                        disabled: editableValue === MinimumValue,
+                    }"
                     @click="onClickSubtract"
                 />
                 <lkt-button
                     v-if="type === FieldType.Number"
                     v-show="computedShowIncreaseStep"
-                    class="lkt-field--info-btn"
-                    icon="lkt-icn-more"
+                    v-bind="<ButtonConfig>{
+                        class: 'lkt-field--info-btn',
+                        icon: 'lkt-icn-more',
+                        disabled: editableValue === MaximumValue,
+                    }"
                     @click="onClickIncrease"
                 />
 

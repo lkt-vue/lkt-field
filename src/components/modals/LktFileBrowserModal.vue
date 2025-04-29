@@ -183,7 +183,6 @@
                 isLoading.value = false;
                 // items.value = FileEntity.mapItems(<FileEntityConfig[]>r.data);
                 items.value = r.data.map((z: FileEntityConfig) => new FileEntity(z));
-                console.log('new mapped items: ', items.value);
 
                 if (items.value.length > 0) {
                     // activeElement.value = items.value[0];
@@ -202,14 +201,11 @@
     }
 
     watch(activeElement, (v) => {
-        console.log('updatedActiveElement: ', v);
     }, { deep: true });
 
     watch(items, (v) => {
-        console.log('updatedItems: ', v);
         value.value = [];
         updatePickedItems(items.value);
-        console.log('pickedItems: ', value.value);
     }, { deep: true });
 
     onMounted(() => {
