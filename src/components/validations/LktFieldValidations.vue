@@ -22,7 +22,10 @@
 
 <template>
     <div class="lkt-field-validation-info" v-if="!refreshing">
-        <validation-item v-for="validation in parsedItems" :validation="validation" :stack="stack"
-                         :key="validation.code" />
+        <validation-item
+            v-for="validation in parsedItems"
+            :validation="validation"
+            :stack="stack"
+            :key="validation.code" />
     </div>
 </template>

@@ -5,7 +5,8 @@
     import { httpCall, HTTPResponse } from 'lkt-http-client';
     import { currentLanguage } from 'lkt-i18n';
     import {
-        booleanFieldTypes, ButtonConfig,
+        booleanFieldTypes,
+        ButtonConfig,
         extractI18nValue,
         extractPropValue,
         Field,
@@ -17,7 +18,8 @@
         fieldTypesWithoutClear,
         fieldTypesWithoutUndo,
         FieldValidation,
-        FieldValidationType, FileEntity,
+        FieldValidationType,
+        FileEntity,
         getDefaultValues,
         LktObject,
         LktSettings,
@@ -90,6 +92,7 @@
         'upload-error',
         'upload-success',
         'picked-files',
+        'validation-status',
     ]);
 
     // Slots
@@ -134,7 +137,8 @@
     // Reactive data
     const originalValue = ref(_val),
         value = ref(_val),
-        isValid = ref(props.valid),
+        isValid = ref(props.valid === true),
+        isFormValid = ref(true),
         showPasswordIcon = ref(false),
         focusing = ref(false),
         hadFirstBlur = ref(false),
@@ -461,19 +465,27 @@
     };
 
     const doRemoteValidation = async () => {
+        let r = [];
         if (props.validation?.resource) {
             emits('validating');
             const response: HTTPResponse = await httpCall(props.validation.resource, {
                 ...props.validation.resourceData,
                 value: editableValue.value,
             });
+            if (response) {
+                let isValid = response.data === true;
+                if (!isValid && editableValue.value === originalValue.value) isValid = true;
+
+                r.push(FieldValidation.createRemoteResponse(response, isValid ? ValidationStatus.Ok : ValidationStatus.Ko));
+            }
             emits('validation', response);
         }
+        return r;
     };
 
 
     // Watch data
-    watch(() => props.validation?.checkEqualTo, () => doLocalValidation());
+    watch(() => props.validation?.checkEqualTo, () => doValidation());
     watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
@@ -493,14 +505,22 @@
 
         if (props.type === FieldType.Number) reAssignNumericValue(v);
     });
+
+
+
+    let validationTimeout: number | undefined;
     watch(value, (v) => {
         if (ready.value && editable.value) {
             emits('update:modelValue', v);
             if (props.type === FieldType.Select && typeof props.optionsConfig?.filter === 'function') {
                 buildVisibleOptions(searchString.value, false);
             }
-            doRemoteValidation();
-            doLocalValidation();
+
+            if (validationTimeout) clearTimeout(validationTimeout);
+
+            validationTimeout = setTimeout(() => {
+                doValidation();
+            }, 150);
         }
     }, { deep: true });
 
@@ -521,76 +541,94 @@
         }
     });
 
-    const doLocalValidation = () => {
-        if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
-            return;
-        }
-
-        if (props.type === FieldType.Range) return;
+    const doValidation = async () => {
 
         localValidationStatus.value = [];
 
-        nextTick(() => {
+        const remoteValidation = await doRemoteValidation();
+        const localValidation = doLocalValidation();
+
+        const validationStatus = [...remoteValidation, ...localValidation];
+
+        let validStatus = validationStatus.filter(v => v.status === ValidationStatus.Ko).length === 0;
+
+        isFormValid.value = validStatus;
+
+        // if (!initialValidation && props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
+        //     return;
+        // }
+
+        if (props.type === FieldType.Range) return;
+
+        localValidationStatus.value = validationStatus;
+
+        isValid.value = validStatus;
+        emits('validation-status', validationStatus);
+    };
+
+    const doLocalValidation = () => {
+
+        let r = [];
+
+        //@ts-ignore
+        let min = typeof props.min === 'undefined' ? 0 : parseFloat(props.min),
             //@ts-ignore
-            let min = typeof props.min === 'undefined' ? 0 : parseFloat(props.min),
-                //@ts-ignore
-                max = typeof props.max === 'undefined' ? 0 : parseFloat(props.max);
+            max = typeof props.max === 'undefined' ? 0 : parseFloat(props.max);
 
-            if (props.type === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
-                if (editableValue.value < min || editableValue.value > max) {
-                    localValidationStatus.value.push(FieldValidation.createNumBetween(min, max, ValidationStatus.Ko));
-                    isValid.value = false;
-                    return;
+        if (props.type === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
+            if (editableValue.value < min || editableValue.value > max) {
+                r.push(FieldValidation.createNumBetween(min, max, ValidationStatus.Ko));
+                isValid.value = false;
+                return r;
+            }
+        }
+
+        if (![FieldType.Number, FieldType.Email].includes(props.type) && props.mandatory && editableValue.value === '') {
+            r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+
+        } else if (props.type !== FieldType.Email) {
+
+            if (min > 0) {
+                if (props.type !== FieldType.Number && editableValue.value.length < min) {
+                    r.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
+
+                } else if (editableValue.value < min) {
+                    r.push(FieldValidation.createMinNum(min, ValidationStatus.Ko));
                 }
             }
+        }
 
-            if (![FieldType.Number, FieldType.Email].includes(props.type) && props.mandatory && editableValue.value === '') {
-                localValidationStatus.value.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+        if (max > 0) {
+            if (props.type !== FieldType.Number && editableValue.value.length > max) {
+                r.push(FieldValidation.createMaxStr(max, ValidationStatus.Ko));
 
-            } else if (props.type !== FieldType.Email) {
-
-                if (min > 0) {
-                    if (props.type !== FieldType.Number && editableValue.value.length < min) {
-                        localValidationStatus.value.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
-
-                    } else if (editableValue.value < min) {
-                        localValidationStatus.value.push(FieldValidation.createMinNum(min, ValidationStatus.Ko));
-                    }
-                }
+            } else if (editableValue.value > max) {
+                r.push(FieldValidation.createMaxNum(max, ValidationStatus.Ko));
             }
+        }
 
-            if (max > 0) {
-                if (props.type !== FieldType.Number && editableValue.value.length > max) {
-                    localValidationStatus.value.push(FieldValidation.createMaxStr(max, ValidationStatus.Ko));
+        if (props.type === FieldType.Email) {
+            if (props.mandatory && editableValue.value === '') {
+                r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
 
-                } else if (editableValue.value > max) {
-                    localValidationStatus.value.push(FieldValidation.createMaxNum(max, ValidationStatus.Ko));
-                }
+            } else if (!isEmail(editableValue.value)) {
+                r.push(FieldValidation.createEmail(ValidationStatus.Ko));
             }
+        }
 
-            if (props.type === FieldType.Email) {
-                if (props.mandatory && editableValue.value === '') {
-                    localValidationStatus.value.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+        if (textFieldTypes.includes(props.type)) {
+            validateAmountOfNumbers(r, editableValue.value, props.validation?.minNumbers, props.validation?.maxNumbers);
+            validateAmountOfUpperChars(r, editableValue.value, props.validation?.minUpperChars, props.validation?.maxUpperChars);
+            validateAmountOfLowerChars(r, editableValue.value, props.validation?.minLowerChars, props.validation?.maxLowerChars);
+            validateAmountOfChars(r, editableValue.value, props.validation?.minChars, props.validation?.maxChars);
+            validateAmountOfSpecialChars(r, editableValue.value, props.validation?.minSpecialChars, props.validation?.maxSpecialChars);
+        }
 
-                } else if (!isEmail(editableValue.value)) {
-                    localValidationStatus.value.push(FieldValidation.createEmail(ValidationStatus.Ko));
-                }
-            }
+        if (props.validation?.checkEqualTo && editableValue.value !== props.validation?.checkEqualTo) {
+            r.push(FieldValidation.createEqualTo(props.validation?.checkEqualTo, ValidationStatus.Ko));
+        }
 
-            if (textFieldTypes.includes(props.type)) {
-                validateAmountOfNumbers(localValidationStatus.value, editableValue.value, props.validation?.minNumbers, props.validation?.maxNumbers);
-                validateAmountOfUpperChars(localValidationStatus.value, editableValue.value, props.validation?.minUpperChars, props.validation?.maxUpperChars);
-                validateAmountOfLowerChars(localValidationStatus.value, editableValue.value, props.validation?.minLowerChars, props.validation?.maxLowerChars);
-                validateAmountOfChars(localValidationStatus.value, editableValue.value, props.validation?.minChars, props.validation?.maxChars);
-                validateAmountOfSpecialChars(localValidationStatus.value, editableValue.value, props.validation?.minSpecialChars, props.validation?.maxSpecialChars);
-            }
-
-            if (props.validation?.checkEqualTo && editableValue.value !== props.validation?.checkEqualTo) {
-                localValidationStatus.value.push(FieldValidation.createEqualTo(props.validation?.checkEqualTo, ValidationStatus.Ko));
-            }
-
-            isValid.value = localValidationStatus.value.length === 0;
-        });
+        return r;
     };
 
     const buildVisibleOptions = (query: string, ableToShowOptions: boolean = true) => {
@@ -715,6 +753,16 @@
             }
         };
 
+    const computedCanRenderValidations = computed(() => {
+        if (localValidationStatus.value.length === 0) return false;
+
+        if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
+            return false;
+        }
+
+        return true;
+    })
+
     const
         doUndo = () => {
             if (props.type === FieldType.Html) {
@@ -756,7 +804,7 @@
         },
         getValue = () => editableValue.value,
         onKeyUp = ($event: KeyboardEvent) => {
-            doLocalValidation();
+
             if (fieldTypesWithOptions.includes(props.type)) {
                 fetchOptions(editableValue.value);
                 navigateOptions($event);
@@ -812,7 +860,7 @@
                     }
                     if (!tagging) pickedOptions.value.push(option);
 
-                } else if (!tagging){
+                } else if (!tagging) {
                     //@ts-ignore
                     editableValue.value.splice(k, 1);
                     pickedOptions.value.splice(k, 1);
@@ -839,7 +887,7 @@
         onFocus = ($event?: FocusEvent) => {
             hadFirstFocus.value = true;
             focusing.value = true;
-            doLocalValidation();
+            doValidation();
             emits('focus', $event);
         },
         onBlur = ($event?: Event) => {
@@ -858,7 +906,7 @@
                 focusedOptionIndex.value = -1;
                 showOptions.value = false;
                 focusing.value = false;
-                doLocalValidation();
+                doValidation();
                 emits('blur', $event);
             }, 100);
         },
@@ -940,7 +988,7 @@
 
             showOptions.value = true;
 
-            doLocalValidation();
+            doValidation();
             fetchOptions(searchString.value, false);
 
             if (props.searchable) turnOnSelectSearchMode();
@@ -1023,7 +1071,12 @@
         focus,
         value: getValue,
         isMandatory: () => props.mandatory,
-        isValid: () => isValid.value,
+        isFormValid: () => {
+            return isFormValid.value;
+        },
+        isValid: () => {
+            return isValid.value;
+        },
         click: () => {
             switch (props.type) {
                 case FieldType.File:
@@ -1054,6 +1107,7 @@
             }
         }
 
+        doValidation();
         ready.value = true;
     });
 
@@ -1534,7 +1588,7 @@
         </div>
 
         <lkt-field-validations
-            v-if="editable && validation?.type === FieldValidationType.Auto && localValidationStatus.length > 0"
+            v-if="editable && computedCanRenderValidations"
             :items="localValidationStatus"
             :stack="validation?.stack" />
 

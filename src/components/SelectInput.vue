@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { LktObject, MultipleOptionsDisplay, Option, ValidFieldValue } from 'lkt-vue-kernel';
+    import { ButtonType, LktObject, MultipleOptionsDisplay, Option, ValidFieldValue } from 'lkt-vue-kernel';
     import { nextTick, ref, watch } from 'vue';
 
     const emit = defineEmits([
@@ -187,7 +187,7 @@
 
     <lkt-button
         ref="selectButton"
-        :type="tagsEnabled ? 'content' : ''"
+        :type="tagsEnabled ? ButtonType.Content : ButtonType.Button"
         v-show="multiple || (!searchable || !searchMode)"
         class="lkt-field--toggle-button lkt-field--select-button"
         v-model:open-tooltip="visibleOptions"

@@ -38,6 +38,8 @@ export class Settings {
 
     static validationMessages: LktObject = {
         default: {
+            'ok-http-response': '',
+            'ko-http-response': '',
             'ko-num-between': '',
             'ko-min-str': '',
             'ko-min-num': '',
