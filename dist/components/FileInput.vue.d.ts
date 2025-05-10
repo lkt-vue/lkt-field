@@ -36,16 +36,16 @@ declare const _default: DefineComponent<__VLS_Props, {
     "onPicked-files"?: ((...args: any[]) => any) | undefined;
     "onUpdate:fileName"?: ((...args: any[]) => any) | undefined;
 }>, {
-    modelValue: string;
     disabled: boolean;
+    resource: string;
+    resourceData: LktObject;
+    modelValue: string;
     uploading: boolean;
     placeholder: string;
     readonly: boolean;
     fileName: string;
     fileBrowserConfig: FileBrowserConfig;
     focusing: boolean;
-    resource: string;
-    resourceData: LktObject;
     isImage: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     inputElement: HTMLInputElement;

@@ -23,13 +23,13 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
 }>, {
     text: string | Function;
     icon: string | Function;
-    option: Option;
     modal: string | Function;
     modalData: LktObject | Function;
+    prop: LktObject;
+    option: Option;
     optionSlot: string;
     editable: boolean;
     download: string | Function;
     isTag: boolean;
-    prop: LktObject;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 export default _default;

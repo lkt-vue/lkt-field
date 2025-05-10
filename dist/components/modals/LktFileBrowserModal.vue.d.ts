@@ -10,10 +10,10 @@ type __VLS_Props = {
     onConfirmSelection?: Function;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{}>, {
-    modelValue: Array<string | number | undefined>;
     modalKey: string;
-    onConfirmSelection: Function;
     modalName: string;
     zIndex: number;
+    modelValue: Array<string | number | undefined>;
+    onConfirmSelection: Function;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 export default _default;

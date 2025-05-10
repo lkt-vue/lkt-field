@@ -70,6 +70,7 @@
     import MultipleCardInput from '../components/MultipleCardInput.vue';
     import FileUploadButton from '@/components/buttons/FileUploadButton.vue';
     import { openToast } from 'lkt-toast';
+    import { DataState } from 'lkt-data-state';
 
     // Emits
     const emits = defineEmits([
@@ -144,7 +145,6 @@
         hadFirstBlur = ref(false),
         hadFirstFocus = ref(false),
         localValidationStatus = ref(<FieldValidation[]>[]),
-        editable = ref(!props.readMode),
         originalFileName = ref(props.fileName),
         visibleFileName = ref(props.fileName);
 
@@ -173,7 +173,7 @@
     });
 
     const editableValue = [FieldType.Card, FieldType.Elements].includes(props.type) ? value : ref(extractEditableValue(value.value, computedLang.value));
-    const originalEditableValue = ref(editableValue);
+    const originalEditableValue = ref(JSON.parse(JSON.stringify(editableValue.value)));
 
     const optionsHaystack = ref(<Option[]>[]),
         visibleOptions = ref(<Option[]>[]);
@@ -241,6 +241,15 @@
             if (props.type === FieldType.Date) {
                 return value.value !== originalValue.value;
             }
+            if (props.type === FieldType.Select) {
+                if (props.multiple) {
+                    if (props.optionValueType !== 'option') {
+                        let dataState = new DataState({v: originalEditableValue.value});
+                        dataState.increment({v: editableValue.value});
+                        return dataState.changed();
+                    }
+                }
+            }
             return editableValue.value !== originalEditableValue.value;
         }),
         computedIsDisabled = computed(() => {
@@ -306,8 +315,8 @@
             if (props.multiple) r.push('is-multiple');
             if (computedHasFeaturedButton.value) r.push('with-atn-btn');
             if (showInfoUi.value) r.push('with-info-btn');
-            if (props.mandatory && editable.value) r.push('is-mandatory-field');
-            if (editable.value && focusing.value) r.push('has-focus');
+            if (props.mandatory && computedEditable.value) r.push('is-mandatory-field');
+            if (computedEditable.value && focusing.value) r.push('has-focus');
             if (showOptions.value) r.push('show-options');
             if (props.searchable && searchMode.value) r.push('is-searching');
             if (props.hidden) r.push('lkt-hidden-field');
@@ -322,7 +331,7 @@
             if (props.multiple && props.type === FieldType.Select) r.push('is-lg');
 
             if (props.multiple) {
-                if (editable.value) {
+                if (computedEditable.value) {
                     r.push(`has-multiple-display-${props.multipleDisplayEdition}`);
                 } else {
                     r.push(`has-multiple-display-${props.multipleDisplay}`);
@@ -330,7 +339,7 @@
             }
 
             if (amountOfIcons.value > 0) r.push(`has-icons`, `has-icons-${amountOfIcons.value}`);
-            r.push(editable.value ? 'is-editable' : 'is-read');
+            r.push(computedEditable.value ? 'is-editable' : 'is-read');
 
             if (props.type !== FieldType.Range) {
                 r.push(isValid.value ? 'is-valid' : 'is-error');
@@ -414,6 +423,11 @@
             return extractPropValue(calculatedModal, props.prop);
         }),
 
+        computedEditable = computed(() => {
+            if (typeof props.readMode === 'function') return !props.readMode(props.prop);
+            return !extractPropValue(props.readMode, props.prop);
+        }),
+
 
         computedModalData = computed(() => {
             if (typeof props.modalData === 'function') return props.modalData(props.prop);
@@ -433,13 +447,13 @@
         computedShowError = computed(() => props.errorMessage),
         computedShowInfo = computed(() => props.infoMessage),
 
-        computedShowSubtractStep = computed(() => props.canStep && editable.value && props.type === FieldType.Number),
-        computedShowSubtractStepInNav = computed(() => props.canStep && editable.value && props.type === FieldType.Number && fieldFeaturedButton !== 'subtract'),
-        computedShowIncreaseStep = computed(() => props.canStep && editable.value && props.type === FieldType.Number),
-        computedShowUndo = computed(() => props.canUndo && changed.value && editable.value && !fieldTypesWithoutUndo.includes(props.type)),
-        computedShowClear = computed(() => props.canClear && isFilled.value && editable.value && !fieldTypesWithoutClear.includes(props.type)),
-        computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object' && editable.value),
-        computedShowPasswordReveal = computed(() => props.type === FieldType.Password && props.showPassword && isFilled.value && editable.value),
+        computedShowSubtractStep = computed(() => props.canStep && computedEditable.value && props.type === FieldType.Number),
+        computedShowSubtractStepInNav = computed(() => props.canStep && computedEditable.value && props.type === FieldType.Number && fieldFeaturedButton !== 'subtract'),
+        computedShowIncreaseStep = computed(() => props.canStep && computedEditable.value && props.type === FieldType.Number),
+        computedShowUndo = computed(() => props.canUndo && changed.value && computedEditable.value && !fieldTypesWithoutUndo.includes(props.type)),
+        computedShowClear = computed(() => props.canClear && isFilled.value && computedEditable.value && !fieldTypesWithoutClear.includes(props.type)),
+        computedShowI18n = computed(() => props.canI18n && typeof value.value === 'object' && computedEditable.value),
+        computedShowPasswordReveal = computed(() => props.type === FieldType.Password && props.showPassword && isFilled.value && computedEditable.value),
 
         computedShowUndoInNav = computed(() => computedShowUndo.value && !props.infoButtonEllipsis),
         computedShowClearInNav = computed(() => computedShowClear.value && !props.infoButtonEllipsis),
@@ -486,7 +500,6 @@
 
     // Watch data
     watch(() => props.validation?.checkEqualTo, () => doValidation());
-    watch(() => props.readMode, (v) => editable.value = !v);
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
         if ([FieldType.Card, FieldType.Elements].includes(props.type)) {
@@ -510,7 +523,7 @@
 
     let validationTimeout: number | undefined;
     watch(value, (v) => {
-        if (ready.value && editable.value) {
+        if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
             if (props.type === FieldType.Select && typeof props.optionsConfig?.filter === 'function') {
                 buildVisibleOptions(searchString.value, false);
@@ -659,7 +672,7 @@
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
-            if (!editable.value && (!props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value)) return;
+            if (!computedEditable.value && (!props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value)) return;
             if ([
                 FieldType.Tel,
                 FieldType.Date,
@@ -778,7 +791,16 @@
                 value.value = originalValue.value;
                 visibleFileName.value = originalFileName.value;
                 return;
+
+            } else if (props.type === FieldType.Select) {
+                editableValue.value = props.multiple
+                    ? JSON.parse(JSON.stringify(originalEditableValue.value))
+                    : originalEditableValue.value;
+                pickedOptions.value = [];
+                updatePickedOption();
+                return;
             }
+
             editableValue.value = originalEditableValue.value;
         },
         doClear = () => {
@@ -798,6 +820,7 @@
             } else if (props.type === FieldType.Select) {
                 editableValue.value = props.multiple ? [] : '';
                 pickedOptions.value = [];
+                updatePickedOption();
                 return;
             }
             editableValue.value = '';
@@ -1025,7 +1048,7 @@
             }
         },
         onClickSwitchEdition = () => {
-            if (editable.value) focus();
+            if (computedEditable.value) focus();
         },
         onUploadSuccess = (r: HTTPResponse) => {
             openToast(<ToastConfig>{
@@ -1186,7 +1209,7 @@
             </div>
 
             <component
-                v-if="editable"
+                v-if="computedEditable"
                 :is="computedMainComponent"
                 v-bind="computedMainAttrs"
                 class="lkt-field-main">
@@ -1208,7 +1231,7 @@
                     :name="name"
                     :type="type"
                     :label="computedLabel"
-                    :editable="editable"
+                    :editable="computedEditable"
                     :focusing="focusing"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
@@ -1220,7 +1243,7 @@
                     v-else-if="type === FieldType.Color && multiple"
                     v-model="editableValue"
                     ref="inputElement"
-                    :edit-mode="editable"
+                    :edit-mode="computedEditable"
                     :min="MinimumValue"
                     :max="MaximumValue"
                 />
@@ -1283,7 +1306,7 @@
                     :options-label-formatter="optionsConfig?.labelFormatter"
                     :options-modal-data="optionsConfig?.modalData"
                     :picked-options="pickedOptions"
-                    :editable="editable"
+                    :editable="computedEditable"
                     :focusing="focusing"
                     :search-placeholder="computedSearchPlaceholder"
                     :multiple-display-edition="multipleDisplayEdition"
@@ -1303,7 +1326,7 @@
                     :id="Identifier"
                     :tabindex="tabindex"
                     :name="name"
-                    :editable="editable"
+                    :editable="computedEditable"
                     :focusing="focusing"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
@@ -1319,7 +1342,7 @@
                     :id="Identifier"
                     :tabindex="tabindex"
                     :name="name"
-                    :editable="editable"
+                    :editable="computedEditable"
                     :focusing="focusing"
                     :had-first-focus="hadFirstFocus"
                     :disabled="computedIsDisabled"
@@ -1336,7 +1359,7 @@
                     :id="Identifier"
                     :tabindex="tabindex"
                     :name="name"
-                    :editable="editable"
+                    :editable="computedEditable"
                     :focusing="focusing"
                     :had-first-focus="hadFirstFocus"
                     :disabled="computedIsDisabled"
@@ -1367,7 +1390,7 @@
                     :id="Identifier"
                     :tabindex="tabindex"
                     :name="name"
-                    :editable="editable"
+                    :editable="computedEditable"
                     :focusing="focusing"
                     :had-first-focus="hadFirstFocus"
                     :disabled="computedIsDisabled"
@@ -1441,7 +1464,7 @@
                     :tabindex="<number>tabindex"
                     :name="name"
                     :lang="computedLang"
-                    :editable="editable"
+                    :editable="computedEditable"
                     :focusing="focusing"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
@@ -1451,7 +1474,7 @@
             </component>
 
             <lkt-field-value
-                v-if="!editable"
+                v-if="!computedEditable"
                 :value="computedReadValue"
                 :type="type"
                 :label="computedLabel"
@@ -1537,7 +1560,7 @@
                 </lkt-button>
 
                 <file-upload-button
-                    v-if="editable && computedShowFileUploadInNav"
+                    v-if="computedEditable && computedShowFileUploadInNav"
                     :config="fileUploadButton"
                     :file-upload-http="fileUploadHttp"
                 />
@@ -1555,8 +1578,8 @@
                 />
 
                 <edition-button
-                    v-if="editable && computedShowSwitchEditionInNav"
-                    v-model="editable"
+                    v-if="computedEditable && computedShowSwitchEditionInNav"
+                    v-model="computedEditable"
                     @click="onClickSwitchEdition"
                 />
 
@@ -1568,7 +1591,7 @@
                 />
 
                 <dropdown-button
-                    v-if="editable"
+                    v-if="computedEditable"
                     v-show="computedShowDropdownButton"
                     @click="onClickDropdownButton"
                 />
@@ -1580,7 +1603,7 @@
                     :show-password="computedShowPasswordReveal"
                     :show-edition="allowReadModeSwitch"
                     v-model:show-password-check="showPasswordIcon"
-                    v-model:show-edition-check="editable"
+                    v-model:show-edition-check="computedEditable"
                     @undo="doUndo"
                     @clear="doClear"
                 />
@@ -1588,12 +1611,12 @@
         </div>
 
         <lkt-field-validations
-            v-if="editable && computedCanRenderValidations"
+            v-if="computedEditable && computedCanRenderValidations"
             :items="localValidationStatus"
             :stack="validation?.stack" />
 
         <lkt-tooltip
-            v-if="editable && fieldTypesWithOptions.includes(type)"
+            v-if="computedEditable && fieldTypesWithOptions.includes(type)"
             ref="dropdownEl"
             class="lkt-field--dropdown"
             v-model="showOptions"
@@ -1621,7 +1644,7 @@
                                   :modal="optionsConfig?.modal"
                                   :modal-data="optionsConfig?.modalData"
                                   :download="optionsConfig?.download"
-                                  :editable="editable"
+                                  :editable="computedEditable"
                             />
                         </template>
                         <template v-else>
@@ -1634,7 +1657,7 @@
                                 :modal-data="optionsConfig?.modalData"
                                 :download="optionsConfig?.download"
                                 :label-formatter="optionsConfig?.labelFormatter"
-                                :editable="editable"
+                                :editable="computedEditable"
                             />
                         </template>
                     </li>

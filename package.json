@@ -1,6 +1,6 @@
 {
   "name": "lkt-field",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "description": "",
   "keywords": [
     "lkt",
@@ -60,6 +60,7 @@
   "peerDependencies": {
     "lkt-anchor": "^2.0.2",
     "lkt-button": "^2.0.18",
+    "lkt-data-state": "^1.0.12",
     "lkt-date-tools": "^1.0.4",
     "lkt-http-client": "^1.0.34",
     "lkt-i18n": "^1.1.0",

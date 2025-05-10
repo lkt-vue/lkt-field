@@ -49,16 +49,16 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     type: FieldType;
     title: string;
     modal: string;
+    modalKey: string;
     modalData: LktObject;
+    prop: LktObject;
     optionSlot: string;
     download: string | Function;
-    prop: LktObject;
     emptyValueSlot: string;
     valueSlot: string;
     slotData: LktObject;
     multiple: boolean;
     multipleDisplay: MultipleOptionsDisplay;
-    modalKey: string;
     optionsIcon: string | Function;
     optionsModal: string | Function;
     optionsDownload: string | Function;

@@ -215,6 +215,7 @@
                         :editable="editable"
                         :is-tag="tagsEnabled"
                         :prop="prop"
+                        :key="i"
                         @click-icon="onClickOptionIcon"
                     />
                 </li>

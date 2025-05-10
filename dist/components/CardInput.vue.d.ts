@@ -36,10 +36,10 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
 }>, {
-    modelValue: LktObject;
     modal: string | Function;
-    modalData: LktObject;
     modalKey: string | number | Function;
+    modalData: LktObject;
+    modelValue: LktObject;
     itemType: string | number | Function | ((...args: any[]) => ScanPropTarget);
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;

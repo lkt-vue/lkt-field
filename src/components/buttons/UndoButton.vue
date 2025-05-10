@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {Settings} from "../../settings/Settings";
+import { ButtonConfig } from 'lkt-vue-kernel';
 
 const emit = defineEmits([
     'click'
@@ -17,8 +18,8 @@ const computedText = computed(() => {
     }),
 
     computedClass = computed(() => {
-        if (props.insideEllipsis) return 'lkt-field--info-split-btn';
-        return 'lkt-field--info-btn';
+        if (props.insideEllipsis) return 'lkt-field--btn-undo lkt-field--info-split-btn';
+        return 'lkt-field--btn-undo lkt-field--info-btn';
     });
 
 const onClick = () => emit('click');
@@ -26,11 +27,12 @@ const onClick = () => emit('click');
 
 <template>
     <lkt-button
-        :text="insideEllipsis ? computedText : ''"
+        v-bind="<ButtonConfig>{
+            text: insideEllipsis ? computedText : '',
+            icon: 'lkt-icn-undo',
+            class: computedClass,
+        }"
         :title="computedText"
-        :class="computedClass"
-        class="lkt-field--btn-undo"
-        icon="lkt-icn-undo"
         @click="onClick"
     />
 </template>

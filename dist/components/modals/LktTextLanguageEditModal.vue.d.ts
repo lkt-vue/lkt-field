@@ -8,9 +8,9 @@ type __VLS_Props = {
     translations: LktObject;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{}>, {
-    translations: LktObject;
     modalKey: string;
     modalName: string;
     zIndex: number;
+    translations: LktObject;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 export default _default;

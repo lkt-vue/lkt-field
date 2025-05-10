@@ -46,8 +46,8 @@ declare const _default: DefineComponent<__VLS_Props, {
     onNavigate?: ((...args: any[]) => any) | undefined;
     onUntag?: ((...args: any[]) => any) | undefined;
 }>, {
-    modelValue: ValidFieldValue;
     prop: LktObject;
+    modelValue: ValidFieldValue;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     queryField: HTMLInputElement;
     selectButton: unknown;
