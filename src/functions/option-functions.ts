@@ -19,6 +19,7 @@ export const prepareOptions = (options: any, prop: LktObject): Option[] => {
         }
     }
 
+
     if (!Array.isArray(options)) return [];
     if (options.length === 0) return options;
     return options.map(opt => {
@@ -30,7 +31,17 @@ export const prepareOptions = (options: any, prop: LktObject): Option[] => {
             })
         }
         return undefined;
-    }).filter(opt => typeof opt !== 'undefined');
+    })
+        .filter(opt => typeof opt !== 'undefined')
+        .reduce((acc, current) => {
+            const x = acc.find(item => item.value === current.value);
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
+            }
+        }, [])
+        ;
 };
 
 export const filterOptions = (options: Option[], query: string = '', includeEquals: boolean = true, customFilter: Function|undefined = undefined) => {

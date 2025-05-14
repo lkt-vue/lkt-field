@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { LktObject, Option } from 'lkt-vue-kernel';
+    import { AnchorConfig, AnchorType, LktObject, Option } from 'lkt-vue-kernel';
     import { computed } from 'vue';
     import { Settings } from '../../settings/Settings';
 
@@ -71,8 +71,8 @@
         computedContainerComponent = computed(() => {
             if (optionSlot.value) return optionSlot.value;
             if (props.isTag) return 'lkt-tag';
-            if (!props.editable && (props.modal !== '' || props.option.modal !== '')) return 'lkt-button';
-            if (!props.editable && props.download !== '') return 'lkt-anchor';
+            if (!props.editable && ((typeof props.modal !== 'undefined' && props.modal !== '') || (typeof props.option.modal !== 'undefined' && props.option.modal !== ''))) return 'lkt-button';
+            if (!props.editable && (typeof props.download !== 'undefined' && props.download !== '')) return 'lkt-anchor';
             return 'div';
         }),
         computedContainerAttrs = computed(() => {
@@ -108,10 +108,9 @@
 
                 let isDownload = props.download !== '';
 
-                return {
-                    href,
-                    target: isDownload ? '_blank' : '',
-                    download: isDownload,
+                return <AnchorConfig>{
+                    to: href,
+                    type: isDownload ? AnchorType.Download : undefined,
                 };
             }
 

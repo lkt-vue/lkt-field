@@ -183,7 +183,7 @@
                     </div>
 
                     <ul v-else-if="calculatedValue.length > 0" class="lkt-field-select-read" :class="`multiple-display-${multipleDisplay}`">
-                        <template v-for="(_, i) in calculatedValue">
+                        <template v-for="(_, i) in calculatedValue" :key="`${i}-${calculatedValue[i].value}`">
                             <li :title="calculatedValue[i]?.label">
                                 <dropdown-option
                                     :option="calculatedValue[i]"

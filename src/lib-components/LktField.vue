@@ -27,6 +27,9 @@
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
+        TooltipConfig,
+        TooltipLocationX,
+        TooltipLocationY,
         ValidationStatus,
     } from 'lkt-vue-kernel';
     import UndoButton from '../components/buttons/UndoButton.vue';
@@ -173,7 +176,7 @@
     });
 
     const editableValue = [FieldType.Card, FieldType.Elements].includes(props.type) ? value : ref(extractEditableValue(value.value, computedLang.value));
-    const originalEditableValue = ref(JSON.parse(JSON.stringify(editableValue.value)));
+    const originalEditableValue = ref(typeof editableValue.value === 'object' ? JSON.parse(JSON.stringify(editableValue.value)) : editableValue.value);
 
     const optionsHaystack = ref(<Option[]>[]),
         visibleOptions = ref(<Option[]>[]);
@@ -541,18 +544,36 @@
         emits('update:valid', v);
     });
 
+    const enabledPropsOptionsWatcher = ref(true);
+    watch(enabledPropsOptionsWatcher, (v) => {
+        if (!v) {
+            nextTick(() => {
+                enabledPropsOptionsWatcher.value = true;
+            })
+        }
+    })
+
     watch(optionsHaystack, (v) => {
+        if (typeof props.events?.updatedOptions === 'function') {
+            enabledPropsOptionsWatcher.value = false;
+            props.events.updatedOptions({
+                options: v
+            });
+        }
         emits('update:options', v);
     });
 
     watch(() => props.options, (v) => {
+        if (!enabledPropsOptionsWatcher.value) return;
         optionsHaystack.value = prepareOptions(v, props.prop);
         if (props.type === FieldType.Select) {
             buildVisibleOptions(searchString.value, false);
         } else {
             buildVisibleOptions(editableValue.value, false);
         }
-    });
+        pickedOptions.value = [];
+        updatePickedOption();
+    }, {deep: true});
 
     const doValidation = async () => {
 
@@ -1618,13 +1639,15 @@
         <lkt-tooltip
             v-if="computedEditable && fieldTypesWithOptions.includes(type)"
             ref="dropdownEl"
-            class="lkt-field--dropdown"
             v-model="showOptions"
-            :referrer="container"
-            referrer-width
-            location-x="left-corner"
-            location-y="bottom"
-            v-bind="tooltipConfig"
+            v-bind="<TooltipConfig>{
+                class: 'lkt-field--dropdown',
+                referrer: container,
+                referrerWidth: true,
+                locationX: TooltipLocationX.LeftCorner,
+                locationY: TooltipLocationY.Bottom,
+                ...tooltipConfig
+            }"
         >
             <div v-if="showOptions">
                 <lkt-loader v-if="isLoading" />
