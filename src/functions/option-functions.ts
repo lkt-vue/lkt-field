@@ -19,10 +19,8 @@ export const prepareOptions = (options: any, prop: LktObject): Option[] => {
         }
     }
 
-
-    if (!Array.isArray(options)) return [];
-    if (options.length === 0) return options;
-    return options.map(opt => {
+    if (!Array.isArray(options) || options.length === 0) return [];
+    return removeDuplicatedOptions(options.map(opt => {
         if (typeof opt === 'object') return new Option(opt);
         if (typeof opt === 'string' || typeof opt === 'number') {
             return new Option({
@@ -32,17 +30,21 @@ export const prepareOptions = (options: any, prop: LktObject): Option[] => {
         }
         return undefined;
     })
-        .filter(opt => typeof opt !== 'undefined')
-        .reduce((acc, current) => {
-            const x = acc.find(item => item.value === current.value);
-            if (!x) {
-                return acc.concat([current]);
-            } else {
-                return acc;
-            }
-        }, [])
+        .filter((opt: Option|undefined) => typeof opt !== 'undefined')
+    )
         ;
 };
+
+export const removeDuplicatedOptions = (options: Option[]):Option[] => {
+    return options.reduce((acc: Option[], current: Option): Option[] => {
+        const x = acc.find((item: Option) => item.value === current.value);
+        if (!x) {
+            return acc.concat([current]);
+        } else {
+            return acc;
+        }
+    }, []);
+}
 
 export const filterOptions = (options: Option[], query: string = '', includeEquals: boolean = true, customFilter: Function|undefined = undefined) => {
     if (query === '' && typeof customFilter !== 'function') return options;
@@ -76,18 +78,7 @@ export const findOptionByValue = (options: Option[], query: ValidOptionValue) =>
 };
 
 export const receiveOptions = (currentOptions: Option[], receivedOptions: Option[], prop: LktObject) => {
-    const set = new Set();
-    const temp: Option[] = [...currentOptions, ...prepareOptions(receivedOptions, prop)];
-    const r: Option[] = [];
-    temp.forEach(z => {
-        let k = [z.value, z.label].join('-');
-        if (!set.has(k)) {
-            r.push(z);
-            set.add(k);
-        }
-    });
-
-    return r;
+    return removeDuplicatedOptions([...currentOptions, ...prepareOptions(receivedOptions, prop)]);
 };
 
 export const optionIsActive = (option: Option, value: ValidOptionValue | ValidOptionValue[], isMultiple: boolean) => {

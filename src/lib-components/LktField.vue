@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { formatNumber, generateRandomString, isEmail, stripTags } from 'lkt-string-tools';
+    import { formatNumber, generateRandomString, isEmail, stripTags, trim } from 'lkt-string-tools';
     import { ComponentPublicInstance, computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
@@ -546,11 +546,7 @@
 
     const enabledPropsOptionsWatcher = ref(true);
     watch(enabledPropsOptionsWatcher, (v) => {
-        if (!v) {
-            nextTick(() => {
-                enabledPropsOptionsWatcher.value = true;
-            })
-        }
+        if (!v) nextTick(() => {enabledPropsOptionsWatcher.value = true;})
     })
 
     watch(optionsHaystack, (v) => {
@@ -563,8 +559,14 @@
         emits('update:options', v);
     });
 
-    watch(() => props.options, (v) => {
+    watch(() => props.options, (v, oldValue) => {
         if (!enabledPropsOptionsWatcher.value) return;
+
+        let checker = new DataState({
+            opts: oldValue,
+        });
+        checker.increment({opts: v});
+        if (!checker.changed()) return;
         optionsHaystack.value = prepareOptions(v, props.prop);
         if (props.type === FieldType.Select) {
             buildVisibleOptions(searchString.value, false);
@@ -617,18 +619,39 @@
             }
         }
 
-        if (![FieldType.Number, FieldType.Email].includes(props.type) && props.mandatory && editableValue.value === '') {
-            r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+        // Check if mandatory and return if empty
+        if (props.mandatory) {
+            switch (props.type) {
+                case FieldType.Select:
+                    if (props.multiple && pickedOptions.value.length === 0) {
+                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                    } else if (!props.multiple && !editableValue.value) {
+                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                    }
+                    break;
 
-        } else if (props.type !== FieldType.Email) {
+                case FieldType.Html:
+                    let content = trim(stripTags(editableValue.value));
+                    if (content.length === 0) {
+                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                    }
+                    break;
 
-            if (min > 0) {
-                if (props.type !== FieldType.Number && editableValue.value.length < min) {
-                    r.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
+                default:
+                    if (![FieldType.Number].includes(props.type) && editableValue.value === '') {
+                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                    }
+            }
 
-                } else if (editableValue.value < min) {
-                    r.push(FieldValidation.createMinNum(min, ValidationStatus.Ko));
-                }
+            if (r.length > 0) return r;
+        }
+
+        if (min > 0) {
+            if (props.type !== FieldType.Number && editableValue.value.length < min) {
+                r.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
+
+            } else if (editableValue.value < min) {
+                r.push(FieldValidation.createMinNum(min, ValidationStatus.Ko));
             }
         }
 
@@ -642,10 +665,7 @@
         }
 
         if (props.type === FieldType.Email) {
-            if (props.mandatory && editableValue.value === '') {
-                r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
-
-            } else if (!isEmail(editableValue.value)) {
+            if (!isEmail(editableValue.value)) {
                 r.push(FieldValidation.createEmail(ValidationStatus.Ko));
             }
         }
@@ -676,7 +696,7 @@
                     if (props.searchable) {
                         visibleOptions.value = filterOptions(optionsHaystack.value, query, true, props.optionsConfig?.filter);
                     } else {
-                        visibleOptions.value = optionsHaystack.value;
+                        visibleOptions.value = JSON.parse(JSON.stringify(optionsHaystack.value));
                     }
                     isLoading.value = false;
                     if (ableToShowOptions) showOptions.value = (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') || visibleOptions.value.length > 0;

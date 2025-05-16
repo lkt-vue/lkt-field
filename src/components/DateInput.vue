@@ -4,7 +4,7 @@
     import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
     import { Settings } from '../settings/Settings';
-    import { ButtonType, TooltipLocationX, TooltipLocationY } from 'lkt-vue-kernel';
+    import { ButtonConfig, ButtonType, TooltipLocationX, TooltipLocationY } from 'lkt-vue-kernel';
 
     const emit = defineEmits([
         'update:modelValue',
@@ -66,13 +66,15 @@
 
 <template>
     <lkt-button
-        :type="ButtonType.Tooltip"
-        class="lkt-field--toggle-button"
-        :text="visibleDateValue"
-        :tooltip="{
-            class: 'lkt-field--date--tooltip',
-            locationY: TooltipLocationY.Bottom,
-            locationX: TooltipLocationX.LeftCorner,
+        v-bind="<ButtonConfig>{
+            type: ButtonType.Tooltip,
+            class: 'lkt-field--toggle-button',
+            text: visibleDateValue,
+            tooltip: {
+                class: 'lkt-field--date--tooltip',
+                locationY: TooltipLocationY.Bottom,
+                locationX: TooltipLocationX.LeftCorner,
+            }
         }"
     >
         <template #tooltip>
