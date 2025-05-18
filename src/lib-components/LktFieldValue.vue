@@ -88,19 +88,23 @@
             return Settings.customValueSlots[props.valueSlot] ?? '';
         });
 
-    let calculatedValue = props.value;
-    if (props.type === FieldType.Select && props.multiple && !Array.isArray(calculatedValue)) {
-        calculatedValue = [];
-    }
+    const computedValue = computed(() => {
+        let r = props.value;
+        if (props.type === FieldType.Select && props.multiple && !Array.isArray(r)) {
+            r = [];
+        }
 
-    if (props.type === FieldType.Textarea || props.type === FieldType.Text) {
-        if (typeof props.readModeConfig?.textMaxLength !== 'undefined' && calculatedValue.length > props.readModeConfig.textMaxLength) {
-            calculatedValue = calculatedValue.substring(0, props.readModeConfig.textMaxLength) + '...';
+        if (props.type === FieldType.Textarea || props.type === FieldType.Text) {
+            if (typeof props.readModeConfig?.textMaxLength !== 'undefined' && r.length > props.readModeConfig.textMaxLength) {
+                r = r.substring(0, props.readModeConfig.textMaxLength) + '...';
+            }
+            else if (typeof Settings.readTextMaxLength !== 'undefined' && r.length > Settings.readTextMaxLength) {
+                r = r.substring(0, Settings.readTextMaxLength) + '...';
+            }
         }
-        else if (typeof Settings.readTextMaxLength !== 'undefined' && calculatedValue.length > Settings.readTextMaxLength) {
-            calculatedValue = calculatedValue.substring(0, Settings.readTextMaxLength) + '...';
-        }
-    }
+
+        return r;
+    })
 </script>
 
 <template>
@@ -108,7 +112,7 @@
         <template v-if="slots['value']">
             <slot
                 name="value"
-                :value="calculatedValue"
+                :value="computedValue"
                 :title="title"
                 :data="slotData" />
         </template>
@@ -121,7 +125,7 @@
         <component
             v-else-if="customValueSlot"
             :is="customValueSlot"
-            :value="calculatedValue"
+            :value="computedValue"
             :title="title"
             :data="slotData" />
 
@@ -135,12 +139,12 @@
                     >
                         <lkt-image
                             v-if="type === FieldType.Image"
-                            :src="calculatedValue"
+                            :src="computedValue"
                             class="lkt-field--image-cover"
                         />
                         <lkt-image
                             v-if="type === FieldType.Image"
-                            :src="calculatedValue"
+                            :src="computedValue"
                             class="lkt-field--image-main"
                         />
                     </lkt-button>
@@ -151,27 +155,27 @@
                 type="mail"
                 class="lkt-field--read-value"
                 :title="title"
-                :to="calculatedValue">{{ calculatedValue }}
+                :to="computedValue">{{ computedValue }}
             </lkt-anchor>
             <lkt-anchor
                 v-else-if="type === FieldType.Tel"
                 type="tel"
                 class="lkt-field--read-value"
                 :title="title"
-                :to="calculatedValue">{{ calculatedValue }}
+                :to="computedValue">{{ computedValue }}
             </lkt-anchor>
             <div
                 v-else-if="booleanFieldTypes.includes(type)"
                 class="lkt-field--read-value">
                 <lkt-tag
-                    :icon="calculatedValue ? 'lkt-icn-check' : 'lkt-icn-cancel'"
+                    :icon="computedValue ? 'lkt-icn-check' : 'lkt-icn-cancel'"
                     :featured-text="label"
                     :title="title" />
             </div>
             <div
                 v-else-if="type === FieldType.Date"
                 class="lkt-field--read-value"
-                v-html="calculatedValue" :title="title"/>
+                v-html="computedValue" :title="title"/>
             <div
                 v-else-if="type === FieldType.Select"
                 class="lkt-field--read-value"
@@ -179,14 +183,14 @@
 
                 <template v-if="multiple">
                     <div v-if="multipleDisplay === MultipleOptionsDisplay.Count">
-                        {{ calculatedValue.length }}
+                        {{ computedValue.length }}
                     </div>
 
-                    <ul v-else-if="calculatedValue.length > 0" class="lkt-field-select-read" :class="`multiple-display-${multipleDisplay}`">
-                        <template v-for="(_, i) in calculatedValue" :key="`${i}-${calculatedValue[i].value}`">
-                            <li :title="calculatedValue[i]?.label">
+                    <ul v-else-if="computedValue.length > 0" class="lkt-field-select-read" :class="`multiple-display-${multipleDisplay}`">
+                        <template v-for="(_, i) in computedValue" :key="`${i}-${computedValue[i].value}`">
+                            <li :title="computedValue[i]?.label">
                                 <dropdown-option
-                                    :option="calculatedValue[i]"
+                                    :option="computedValue[i]"
                                     :option-slot="optionSlot"
                                     :icon="optionsIcon"
                                     :text="optionsText"
@@ -203,8 +207,8 @@
                 </template>
 
                 <dropdown-option
-                    v-else-if="calculatedValue.length > 0"
-                    :option="calculatedValue[0]"
+                    v-else-if="computedValue.length > 0"
+                    :option="computedValue[0]"
                     :option-slot="optionSlot"
                     :icon="optionsIcon"
                     :text="optionsText"
@@ -224,12 +228,12 @@
                 :modal-key="modalKey"
                 :modal-data="modalData"
             >
-                <div v-html="calculatedValue"/>
+                <div v-html="computedValue"/>
             </lkt-button>
             <dropdown-option
                 class="lkt-field--read-value"
                 v-else-if="download"
-                :option="<Option>{value: '', label: calculatedValue}"
+                :option="<Option>{value: '', label: computedValue}"
                 :download="download"
                 :text="optionsText"
                 :custom-class="optionsClass"
@@ -242,7 +246,7 @@
             <div
                 v-else
                 class="lkt-field--read-value"
-                v-html="calculatedValue" :title="title"/>
+                v-html="computedValue" :title="title"/>
         </template>
     </div>
 </template>
