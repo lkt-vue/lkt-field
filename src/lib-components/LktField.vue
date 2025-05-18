@@ -505,13 +505,15 @@
     watch(() => props.validation?.checkEqualTo, () => doValidation());
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
+        console.log('baby, valueModel: ', v);
         if ([FieldType.Card, FieldType.Elements].includes(props.type)) {
             editableValue.value = v;
         } else if (props.type !== FieldType.Date) {
             editableValue.value = extractEditableValue(v, computedLang.value);
         }
-    });
+    }, {deep: true});
     watch(editableValue, (v) => {
+        console.log('baby, valueEditable: ', v);
         if (typeof value.value === 'object' && [FieldType.Card, FieldType.Elements].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
@@ -520,12 +522,13 @@
         }
 
         if (props.type === FieldType.Number) reAssignNumericValue(v);
-    });
+    }, {deep: true});
 
 
 
     let validationTimeout: number | undefined;
     watch(value, (v) => {
+        console.log('baby, valueValue: ', v);
         if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
             if (props.type === FieldType.Select && typeof props.optionsConfig?.filter === 'function') {
@@ -1005,40 +1008,61 @@
                 //@ts-ignore
                 pickedIndex = getInValueOptionIndex(option, editableValue.value);
             }
+            searchString.value = '';
             if (pickedIndex === -1) {
                 optionsHaystack.value.push(option);
                 visibleOptions.value.push(option);
                 pickedOptions.value.push(option);
                 onClickOption(option, true);
+                // if (props.optionValueType === 'option') {
+                //     console.log('baby, add 1');
+                //     //@ts-ignore
+                //     editableValue.value.push(option.value);
+                // } else {
+                //     console.log('baby, add 2');
+                //     //@ts-ignore
+                //     editableValue.value.push(String(option.value));
+                // }
+                // // onClickOption(option, true);
+                // turnOnSelectSearchMode();
+                // emits('selected-option', option);
             }
-            searchString.value = '';
         },
         onUntagSelectInput = (option: Option) => {
-            let pickedIndex = -1;
-            if (props.optionValueType === 'option') {
-                //@ts-ignore
-                pickedIndex = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
-            } else {
-                //@ts-ignore
-                pickedIndex = getInValueOptionIndex(option, editableValue.value);
-            }
 
-            if (pickedIndex >= 0) {
-                editableValue.value.splice(pickedIndex, 1);
-                pickedOptions.value.splice(pickedIndex, 1);
+            let hasToUntag = true;
+            while (hasToUntag) {
+                let pickedIndex = -1;
+                if (props.optionValueType === 'option') {
+                    //@ts-ignore
+                    pickedIndex = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
+                } else {
+                    //@ts-ignore
+                    pickedIndex = getInValueOptionIndex(option, editableValue.value);
+                }
 
-                if (props.canTag) {
+                if (pickedIndex >= 0) {
                     optionsHaystack.value.splice(
-                        optionsHaystack.value.findIndex(opt => opt.value === option.value),
+                        optionsHaystack.value.findIndex(opt => opt.value == option.value),
                         1,
                     );
 
                     visibleOptions.value.splice(
-                        visibleOptions.value.findIndex(opt => opt.value === option.value),
+                        visibleOptions.value.findIndex(opt => opt.value == option.value),
                         1,
                     );
+
+                    pickedOptions.value.splice(
+                        pickedOptions.value.findIndex(opt => opt.value == option.value),
+                        1,
+                    );
+
+                    editableValue.value.splice(pickedIndex, 1);
+                }  else {
+                    hasToUntag = false;
                 }
             }
+
             searchString.value = '';
         },
         onFocusSelectInput = () => {

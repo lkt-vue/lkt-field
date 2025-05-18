@@ -201,7 +201,7 @@
             </div>
 
             <ul v-else class="lkt-field-select-read" :class="`multiple-display-${multipleDisplayEdition}`">
-                <li v-for="(option, i) in pickedOptions" :title="option.label">
+                <li v-for="(option, i) in pickedOptions" :title="option.label" :key="`${i}-${option.value}`">
                     <dropdown-option
                         :option="pickedOptions[i]"
                         :option-slot="optionSlot"

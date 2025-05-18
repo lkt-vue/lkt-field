@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { AnchorConfig, AnchorType, LktObject, Option } from 'lkt-vue-kernel';
+    import { AnchorConfig, AnchorType, LktObject, Option, TagType } from 'lkt-vue-kernel';
     import { computed } from 'vue';
     import { Settings } from '../../settings/Settings';
 
@@ -116,7 +116,7 @@
 
             if (computedContainerComponent.value === 'lkt-tag') {
                 return {
-                    type: 'action-icon',
+                    type: TagType.ActionIcon,
                     icon: 'lkt-icn-cancel',
                 };
             }
