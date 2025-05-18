@@ -16,8 +16,11 @@ export declare class Settings {
     static showPasswordOnText: string;
     static showPasswordOffText: string;
     static dateReadFormat: string;
+    static dateTimeReadFormat: string;
     static defaultDateReadFormat: string;
+    static defaultDateTimeReadFormat: string;
     static langDateReadFormat: LktObject;
+    static langDateTimeReadFormat: LktObject;
     static acceptTypes: LktObject;
     static validationIconSlot: string | Component;
     static validationMessages: LktObject;

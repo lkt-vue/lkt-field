@@ -74,6 +74,7 @@
     import FileUploadButton from '@/components/buttons/FileUploadButton.vue';
     import { openToast } from 'lkt-toast';
     import { DataState } from 'lkt-data-state';
+    import TimeInput from '@/components/TimeInput.vue';
 
     // Emits
     const emits = defineEmits([
@@ -131,8 +132,11 @@
     } else if (booleanFieldTypes.includes(props.type)) {
         if (typeof _val !== 'boolean') _val = false;
 
-    } else if (props.type === FieldType.Date && !calculatedIcon) {
+    } else if ([FieldType.Date, FieldType.DateTime].includes(props.type) && !calculatedIcon) {
         calculatedIcon = Settings.defaultDateIcon;
+
+    } else if (props.type === FieldType.Time && !calculatedIcon) {
+        calculatedIcon = 'lkt-icn-clock';
 
     } else if (props.type === FieldType.Number && props.canStep && fieldFeaturedButton === '') {
         fieldFeaturedButton = Settings.defaultNumberFeaturedButton;
@@ -230,8 +234,7 @@
         }
     };
 
-    const computedIsDate = computed(() => props.type === FieldType.Date),
-        computedIsFile = computed(() => props.type === FieldType.File),
+    const computedIsFile = computed(() => props.type === FieldType.File),
         computedIsImage = computed(() => props.type === FieldType.Image);
 
     const computedInputElement = computed(() => {
@@ -241,7 +244,7 @@
     });
 
     const changed = computed(() => {
-            if (props.type === FieldType.Date) {
+            if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 return value.value !== originalValue.value;
             }
             if (props.type === FieldType.Select) {
@@ -289,7 +292,7 @@
         }),
         autocompleteText = computed(() => props.autocomplete === true ? 'on' : 'off'),
         isFilled = computed(() => {
-            if (props.type === FieldType.Date) {
+            if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 return value.value !== '';
             }
             return editableValue.value !== '';
@@ -507,7 +510,7 @@
     watch(() => props.modelValue, (v) => {
         if ([FieldType.Card, FieldType.Elements].includes(props.type)) {
             editableValue.value = v;
-        } else if (props.type !== FieldType.Date) {
+        } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
             editableValue.value = extractEditableValue(v, computedLang.value);
         }
     }, {deep: true});
@@ -717,6 +720,8 @@
             if ([
                 FieldType.Tel,
                 FieldType.Date,
+                FieldType.DateTime,
+                FieldType.Time,
                 FieldType.Color,
                 FieldType.File,
                 FieldType.Html,
@@ -825,7 +830,7 @@
                     inputElement.value.setValue(originalEditableValue.value);
                 }
                 return;
-            } else if (props.type === FieldType.Date) {
+            } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 value.value = originalValue.value;
                 return;
             } else if (props.type === FieldType.File) {
@@ -852,7 +857,7 @@
                     inputElement.value.setValue('');
                 }
                 return;
-            } else if (props.type === FieldType.Date) {
+            } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 value.value = '';
                 return;
             } else if (props.type === FieldType.File) {
@@ -1202,6 +1207,7 @@
                 return pickedOptions.value;
 
             case FieldType.Date:
+            case FieldType.DateTime:
                 //@ts-ignore
                 return getVisibleDateValue(value.value, computedDateReadFormat.value);
 
@@ -1255,7 +1261,7 @@
                 />
             </div>
 
-            <div v-if="computedIcon" class="lkt-field--icon">
+            <div v-if="computedIcon && (!computedEditable || ![FieldType.Time, FieldType.Date, FieldType.DateTime].includes(type))" class="lkt-field--icon">
                 <i :class="computedIcon" />
             </div>
 
@@ -1330,12 +1336,24 @@
                 />
 
                 <date-input
-                    v-else-if="computedIsDate"
+                    v-else-if="[FieldType.Date, FieldType.DateTime].includes(type)"
                     v-model="value"
                     :id="Identifier"
                     :tabindex="tabindex"
                     :lang="computedLang"
                     :name="name"
+                    :icon="computedIcon"
+                    :is-date-time="FieldType.DateTime === type"
+                />
+
+                <time-input
+                    v-else-if="type === FieldType.Time"
+                    v-model="value"
+                    :id="Identifier"
+                    :tabindex="tabindex"
+                    :lang="computedLang"
+                    :name="name"
+                    :icon="computedIcon"
                 />
 
                 <select-input

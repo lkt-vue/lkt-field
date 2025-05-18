@@ -22,11 +22,18 @@ export class Settings {
     static showPasswordOffText: string = '';
 
     static dateReadFormat = '';
+    static dateTimeReadFormat = '';
     static defaultDateReadFormat = 'Y-m-d';
+    static defaultDateTimeReadFormat = 'Y-m-d H:i';
 
     static langDateReadFormat: LktObject = {
         en: 'Y-m-d',
         es: 'd/m/Y',
+    };
+
+    static langDateTimeReadFormat: LktObject = {
+        en: 'Y-m-d H:i',
+        es: 'd/m/Y H:i',
     };
 
     static acceptTypes: LktObject = {

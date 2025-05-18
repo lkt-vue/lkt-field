@@ -3,6 +3,7 @@
     import { computed, nextTick, ref, watch } from 'vue';
     import { date } from 'lkt-date-tools';
     import { isValidDateObject } from '../../functions/date-functions';
+    import { ButtonConfig } from 'lkt-vue-kernel';
 
     const emit = defineEmits([
         'update:modelValue'
@@ -91,7 +92,7 @@
             doRefresh();
         },
         doRefresh = () => {
-            refreshing.value = true;
+            // refreshing.value = true;
         };
 
 </script>
@@ -100,9 +101,25 @@
     <div class="lkt-calendar">
         <div class="calendar">
             <header class="lkt-calendar--header-grid">
-                <lkt-button class="lkt-calendar--day" @click="onClickPrev">◀</lkt-button>
+                <lkt-button
+                    v-bind="<ButtonConfig>{
+                        class: 'lkt-calendar--day',
+                        icon: 'lkt-icn-triangle-left',
+                        events: {
+                            click: onClickPrev
+                        }
+                    }"
+                />
                 <div class="lkt-calendar--header-text" v-html="visibleText"></div>
-                <lkt-button class="lkt-calendar--day" @click="onClickNext">▶</lkt-button>
+                <lkt-button
+                    v-bind="<ButtonConfig>{
+                        class: 'lkt-calendar--day',
+                        icon: 'lkt-icn-triangle-right',
+                        events: {
+                            click: onClickNext
+                        }
+                    }"
+                />
 
             </header>
 

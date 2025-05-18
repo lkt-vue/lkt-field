@@ -6,7 +6,6 @@ type __VLS_Props = {
     tabindex: number;
     lang: string;
     icon: string;
-    isDateTime: boolean;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     "update:modelValue": (...args: any[]) => void;
