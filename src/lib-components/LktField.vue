@@ -505,7 +505,6 @@
     watch(() => props.validation?.checkEqualTo, () => doValidation());
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
-        console.log('baby, valueModel: ', v);
         if ([FieldType.Card, FieldType.Elements].includes(props.type)) {
             editableValue.value = v;
         } else if (props.type !== FieldType.Date) {
@@ -513,7 +512,6 @@
         }
     }, {deep: true});
     watch(editableValue, (v) => {
-        console.log('baby, valueEditable: ', v);
         if (typeof value.value === 'object' && [FieldType.Card, FieldType.Elements].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
@@ -528,7 +526,6 @@
 
     let validationTimeout: number | undefined;
     watch(value, (v) => {
-        console.log('baby, valueValue: ', v);
         if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
             if (props.type === FieldType.Select && typeof props.optionsConfig?.filter === 'function') {
@@ -840,6 +837,7 @@
                 editableValue.value = props.multiple
                     ? JSON.parse(JSON.stringify(originalEditableValue.value))
                     : originalEditableValue.value;
+                //@todo: if props.canTag, should reset options
                 pickedOptions.value = [];
                 updatePickedOption();
                 return;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-    import { computed, ref, watch } from 'vue';
+    import { computed, nextTick, ref, watch } from 'vue';
     import { date } from 'lkt-date-tools';
     import { isValidDateObject } from '../../functions/date-functions';
 
@@ -14,7 +14,7 @@
 
     const pickedDate = ref(props.modelValue);
     watch(() => props.modelValue, v => pickedDate.value = v, { deep: true });
-    watch(pickedDate, v => emit('update:modelValue', v));
+    watch(pickedDate, v => emit('update:modelValue', v), {deep: true});
 
     const today = ref(new Date());
     const visibleDate = ref(new Date());
@@ -25,6 +25,10 @@
     const visibleMonth = ref(visibleDate.value.getMonth());
     const refreshing = ref(false);
     const visibleText = ref(date('Y-m', visibleDate.value));
+
+    watch(refreshing, (v) => {
+        if (v) nextTick(() => refreshing.value = false);
+    })
 
     const computedNumberOfDays = computed(() => {
             const lastDay = new Date(visibleYear.value, visibleMonth.value + 1, 0);
@@ -78,13 +82,16 @@
             };
         },
         onClickDay = (day: number) => {
-            pickedDate.value?.setFullYear(visibleYear.value, visibleMonth.value, day);
-            pickedDate.value = new Date(pickedDate.value);
+            if (typeof pickedDate.value === 'undefined') {
+                pickedDate.value = new Date(visibleYear.value, visibleMonth.value, day);
+            } else {
+                pickedDate.value?.setFullYear(visibleYear.value, visibleMonth.value, day);
+                pickedDate.value = new Date(pickedDate.value);
+            }
             doRefresh();
         },
         doRefresh = () => {
-            // refreshing.value = true;
-            // nextTick(() => refreshing.value = false);
+            refreshing.value = true;
         };
 
 </script>
