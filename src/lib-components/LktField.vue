@@ -1014,18 +1014,6 @@
                 visibleOptions.value.push(option);
                 pickedOptions.value.push(option);
                 onClickOption(option, true);
-                // if (props.optionValueType === 'option') {
-                //     console.log('baby, add 1');
-                //     //@ts-ignore
-                //     editableValue.value.push(option.value);
-                // } else {
-                //     console.log('baby, add 2');
-                //     //@ts-ignore
-                //     editableValue.value.push(String(option.value));
-                // }
-                // // onClickOption(option, true);
-                // turnOnSelectSearchMode();
-                // emits('selected-option', option);
             }
         },
         onUntagSelectInput = (option: Option) => {
@@ -1376,6 +1364,7 @@
                     :search-placeholder="computedSearchPlaceholder"
                     :multiple-display-edition="multipleDisplayEdition"
                     :prop="prop"
+                    :max="MaximumValue"
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"
                     @navigate="onNavigateSelectInput"

@@ -15768,7 +15768,7 @@ const pr = {
 }), vr = {
   key: 0,
   class: "lkt-field--searchable-box"
-}, br = ["value", "placeholder"], yr = { key: 0 }, _r = ["title"], Cr = /* @__PURE__ */ Ce({
+}, br = ["value", "placeholder", "disabled"], yr = { key: 0 }, _r = ["title"], Cr = /* @__PURE__ */ Ce({
   __name: "SelectInput",
   props: {
     modelValue: { type: [String, Number, Boolean, Object, Array], default: !1 },
@@ -15791,7 +15791,8 @@ const pr = {
     searchPlaceholder: {},
     multipleDisplayEdition: {},
     searchString: {},
-    prop: { default: () => ({}) }
+    prop: { default: () => ({}) },
+    max: {}
   },
   emits: [
     "update:modelValue",
@@ -15878,6 +15879,7 @@ const pr = {
             ref: f,
             value: d.value,
             placeholder: h.searchPlaceholder,
+            disabled: h.pickedOptions.length === h.max,
             type: "text",
             tabindex: "-1",
             autocomplete: "off",
@@ -17544,6 +17546,7 @@ const pr = {
                   "search-placeholder": it.value,
                   "multiple-display-edition": x.multipleDisplayEdition,
                   prop: x.prop,
+                  max: Ae.value,
                   onFocus: ml,
                   onBlur: gl,
                   onNavigate: Jn,
@@ -17551,7 +17554,7 @@ const pr = {
                   onChange: Vt,
                   onTag: eo,
                   onUntag: to
-                }, null, 8, ["modelValue", "show-options", "searchable", "search-mode", "search-string", "multiple", "can-tag", "options-text", "options-icon", "options-class", "option-slot", "options-modal", "options-download", "options-label-formatter", "options-modal-data", "picked-options", "editable", "focusing", "search-placeholder", "multiple-display-edition", "prop"])) : x.type === $(q).Calc ? (O(), Q(Lr, {
+                }, null, 8, ["modelValue", "show-options", "searchable", "search-mode", "search-string", "multiple", "can-tag", "options-text", "options-icon", "options-class", "option-slot", "options-modal", "options-download", "options-label-formatter", "options-modal-data", "picked-options", "editable", "focusing", "search-placeholder", "multiple-display-edition", "prop", "max"])) : x.type === $(q).Calc ? (O(), Q(Lr, {
                   key: 8,
                   ref_key: "inputElement",
                   ref: k,

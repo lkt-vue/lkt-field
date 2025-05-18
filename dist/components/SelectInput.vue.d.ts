@@ -22,6 +22,7 @@ type __VLS_Props = {
     multipleDisplayEdition: string;
     searchString: string;
     prop?: LktObject;
+    max?: number;
 };
 declare const _default: DefineComponent<__VLS_Props, {
     keepFocused: () => void;

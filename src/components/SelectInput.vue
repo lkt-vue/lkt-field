@@ -37,6 +37,7 @@
         multipleDisplayEdition: string
         searchString: string
         prop?: LktObject
+        max?: number
     }>(), {
         modelValue: false,
         prop: () => ({})
@@ -176,6 +177,7 @@
             ref="queryField"
             :value="query"
             :placeholder="searchPlaceholder"
+            :disabled="pickedOptions.length === max"
             type="text"
             tabindex="-1"
             autocomplete="off"
