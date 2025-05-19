@@ -250,8 +250,8 @@
             if (props.type === FieldType.Select) {
                 if (props.multiple) {
                     if (props.optionValueType !== 'option') {
-                        let dataState = new DataState({v: originalEditableValue.value});
-                        dataState.increment({v: editableValue.value});
+                        let dataState = new DataState({ v: originalEditableValue.value });
+                        dataState.increment({ v: editableValue.value });
                         return dataState.changed();
                     }
                 }
@@ -513,7 +513,7 @@
         } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
             editableValue.value = extractEditableValue(v, computedLang.value);
         }
-    }, {deep: true});
+    }, { deep: true });
     watch(editableValue, (v) => {
         if (typeof value.value === 'object' && [FieldType.Card, FieldType.Elements].includes(props.type)) {
             //@ts-ignore
@@ -523,8 +523,7 @@
         }
 
         if (props.type === FieldType.Number) reAssignNumericValue(v);
-    }, {deep: true});
-
+    }, { deep: true });
 
 
     let validationTimeout: number | undefined;
@@ -549,14 +548,16 @@
 
     const enabledPropsOptionsWatcher = ref(true);
     watch(enabledPropsOptionsWatcher, (v) => {
-        if (!v) nextTick(() => {enabledPropsOptionsWatcher.value = true;})
-    })
+        if (!v) nextTick(() => {
+            enabledPropsOptionsWatcher.value = true;
+        });
+    });
 
     watch(optionsHaystack, (v) => {
         if (typeof props.events?.updatedOptions === 'function') {
             enabledPropsOptionsWatcher.value = false;
             props.events.updatedOptions({
-                options: v
+                options: v,
             });
         }
         emits('update:options', v);
@@ -568,7 +569,7 @@
         let checker = new DataState({
             opts: oldValue,
         });
-        checker.increment({opts: v});
+        checker.increment({ opts: v });
         if (!checker.changed()) return;
         optionsHaystack.value = prepareOptions(v, props.prop);
         if (props.type === FieldType.Select) {
@@ -578,7 +579,7 @@
         }
         pickedOptions.value = [];
         updatePickedOption();
-    }, {deep: true});
+    }, { deep: true });
 
     const doValidation = async () => {
 
@@ -820,7 +821,7 @@
         }
 
         return true;
-    })
+    });
 
     const
         doUndo = () => {
@@ -1049,7 +1050,7 @@
                     );
 
                     editableValue.value.splice(pickedIndex, 1);
-                }  else {
+                } else {
                     hasToUntag = false;
                 }
             }
@@ -1219,10 +1220,27 @@
                 return editableValue.value;
         }
     });
+
+    const computedCanRender = computed(() => {
+            if (typeof props.canRender === 'function') return props.canRender({
+                prop: props.prop
+            });
+            if (typeof props.canRender === 'boolean') return props.canRender;
+            return true;
+        }),
+        computedCanDisplay = computed(() => {
+            if (typeof props.canDisplay === 'function') return props.canDisplay({
+                prop: props.prop
+            });
+            if (typeof props.canDisplay === 'boolean') return props.canDisplay;
+            return true;
+        });
 </script>
 
 <template>
     <div
+        v-if="computedCanRender"
+        v-show="computedCanDisplay"
         class="lkt-field"
         :class="classes"
         :data-show-ui="showInfoUi"
@@ -1261,7 +1279,9 @@
                 />
             </div>
 
-            <div v-if="computedIcon && (!computedEditable || ![FieldType.Time, FieldType.Date, FieldType.DateTime].includes(type))" class="lkt-field--icon">
+            <div
+                v-if="computedIcon && (!computedEditable || ![FieldType.Time, FieldType.Date, FieldType.DateTime].includes(type))"
+                class="lkt-field--icon">
                 <i :class="computedIcon" />
             </div>
 

@@ -78,7 +78,7 @@ export const findOptionByValue = (options: Option[], query: ValidOptionValue) =>
 };
 
 export const receiveOptions = (currentOptions: Option[], receivedOptions: Option[], prop: LktObject) => {
-    return removeDuplicatedOptions([...currentOptions, ...prepareOptions(receivedOptions, prop)]);
+    return removeDuplicatedOptions([...prepareOptions(receivedOptions, prop), ...currentOptions]);
 };
 
 export const optionIsActive = (option: Option, value: ValidOptionValue | ValidOptionValue[], isMultiple: boolean) => {
