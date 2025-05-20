@@ -1,6 +1,6 @@
 import { Component, Plugin } from 'vue';
 import { default as LktField } from './lib-components/LktField.vue';
-import { FieldConfig } from 'lkt-vue-kernel';
+import { FieldConfig, IconConfig } from 'lkt-vue-kernel';
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
 declare const LktFieldPlugin: Plugin;
 export default LktFieldPlugin;
@@ -19,6 +19,9 @@ export declare const setFieldDateReadFormat: (format: string) => string;
 export declare const setFieldDefaultDateReadFormat: (format: string) => string;
 export declare const setFieldValidationMessage: (code: string, message: string, stack?: string) => void;
 export declare const setFieldValidationIconSlot: (component: string | Component) => boolean;
+export declare const setFieldValidationIconOk: (icon: string | IconConfig) => boolean;
+export declare const setFieldValidationIconKo: (icon: string | IconConfig) => boolean;
+export declare const setFieldValidationIconInfo: (icon: string | IconConfig) => boolean;
 export declare const setFieldNumberFormat: (decimals?: number, decimalSeparator?: string, thousandsSeparator?: string, removeDecimalsIfZero?: boolean, lang?: string) => boolean;
 export declare const setReadTextMaxLength: (length: number) => void;
 export declare const setModalPerItemType: (itemType: string, modal: string) => void;

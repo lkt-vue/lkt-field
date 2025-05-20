@@ -4,7 +4,7 @@
     import { __ } from 'lkt-i18n';
     import { fill } from 'lkt-string-tools';
     import { Settings } from '../../settings/Settings';
-    import { FieldValidation } from 'lkt-vue-kernel';
+    import { FieldValidation, IconConfig, ValidationStatus } from 'lkt-vue-kernel';
 
     const props = withDefaults(defineProps<{
         validation: FieldValidation
@@ -45,12 +45,30 @@
             r.push('is-' + props.validation.status);
 
             return r.join(' ');
+        }),
+        computedIconConfig = computed(() => {
+            switch (props.validation.status) {
+                case ValidationStatus.Ok:
+                    return Settings.validationIconOk;
+                case ValidationStatus.Ko:
+                    return Settings.validationIconKo;
+                case ValidationStatus.Info:
+                    return Settings.validationIconInfo;
+            }
         });
 </script>
 
 <template>
     <div class="lkt-field-validation-message" :class="computedClasses">
-        <template v-if="hasIconSlot">
+        <template v-if="computedIconConfig && typeof computedIconConfig === 'string'">
+            <lkt-icon v-bind="<IconConfig>{
+                icon: computedIconConfig
+            }"/>
+        </template>
+        <template v-else-if="computedIconConfig && typeof computedIconConfig === 'object'">
+            <lkt-icon v-bind="computedIconConfig"/>
+        </template>
+        <template v-else-if="hasIconSlot">
             <component
                 :is="iconSlot" />
         </template>

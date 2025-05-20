@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-vue-kernel';
+import { IconConfig, LktObject } from 'lkt-vue-kernel';
 import { Component } from 'vue';
 export declare class Settings {
     static defaultEmptyValueSlot: string | Component | undefined;
@@ -22,6 +22,9 @@ export declare class Settings {
     static langDateReadFormat: LktObject;
     static langDateTimeReadFormat: LktObject;
     static acceptTypes: LktObject;
+    static validationIconOk: string | IconConfig;
+    static validationIconKo: string | IconConfig;
+    static validationIconInfo: string | IconConfig;
     static validationIconSlot: string | Component;
     static validationMessages: LktObject;
     static amountOfDecimals?: number;

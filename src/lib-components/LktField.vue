@@ -179,7 +179,7 @@
         return 'Y-m-d';
     });
 
-    const editableValue = [FieldType.Card, FieldType.Elements].includes(props.type) ? value : ref(extractEditableValue(value.value, computedLang.value));
+    const editableValue = [FieldType.Card].includes(props.type) ? value : ref(extractEditableValue(value.value, computedLang.value));
     const originalEditableValue = ref(typeof editableValue.value === 'object' ? JSON.parse(JSON.stringify(editableValue.value)) : editableValue.value);
 
     const optionsHaystack = ref(<Option[]>[]),
@@ -434,9 +434,16 @@
             return !extractPropValue(props.readMode, props.prop);
         }),
 
-
         computedModalData = computed(() => {
             if (typeof props.modalData === 'function') return props.modalData(props.prop);
+            if (typeof props.modalData === 'string') return extractPropValue(props.modalData, props.prop);
+            if (typeof props.modalData === 'object' && !Array.isArray(props.modalData)) {
+                let r = {};
+                for (let k in props.modalData) {
+                    r[k] = extractPropValue(props.modalData[k], props.prop);
+                }
+                return r;
+            }
             return props.modalData;
         }),
         computedIcon = computed(() => {
@@ -508,14 +515,14 @@
     watch(() => props.validation?.checkEqualTo, () => doValidation());
     watch(() => props.valid, (v) => isValid.value = v);
     watch(() => props.modelValue, (v) => {
-        if ([FieldType.Card, FieldType.Elements].includes(props.type)) {
+        if ([FieldType.Card].includes(props.type)) {
             editableValue.value = v;
         } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
             editableValue.value = extractEditableValue(v, computedLang.value);
         }
     }, { deep: true });
     watch(editableValue, (v) => {
-        if (typeof value.value === 'object' && [FieldType.Card, FieldType.Elements].includes(props.type)) {
+        if (typeof value.value === 'object' && [FieldType.Card].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
         } else {

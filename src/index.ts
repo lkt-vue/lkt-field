@@ -21,7 +21,7 @@ import '../styles/helper-styles.css';
 import { Settings } from './settings/Settings';
 import { addModal } from 'lkt-modal';
 import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditModal.vue';
-import { FieldConfig } from 'lkt-vue-kernel';
+import { FieldConfig, IconConfig } from 'lkt-vue-kernel';
 import LktFileBrowserModal from '@/components/modals/LktFileBrowserModal.vue';
 
 export { setTextValueSlot, setTextEditSlot } from './functions/settings-functions';
@@ -72,6 +72,21 @@ export const setFieldValidationMessage = (code: string, message: string, stack: 
 
 export const setFieldValidationIconSlot = (component: string | Component) => {
     Settings.validationIconSlot = component;
+    return true;
+};
+
+export const setFieldValidationIconOk = (icon: string | IconConfig) => {
+    Settings.validationIconOk = icon;
+    return true;
+};
+
+export const setFieldValidationIconKo = (icon: string | IconConfig) => {
+    Settings.validationIconKo = icon;
+    return true;
+};
+
+export const setFieldValidationIconInfo = (icon: string | IconConfig) => {
+    Settings.validationIconInfo = icon;
     return true;
 };
 

@@ -1,4 +1,4 @@
-import { LktObject } from 'lkt-vue-kernel';
+import { IconConfig, LktObject } from 'lkt-vue-kernel';
 import { Component } from 'vue';
 
 export class Settings {
@@ -40,6 +40,10 @@ export class Settings {
         file: '*/*',
         image: 'image/*',
     };
+
+    static validationIconOk:string|IconConfig = '';
+    static validationIconKo:string|IconConfig = '';
+    static validationIconInfo:string|IconConfig = '';
 
     static validationIconSlot: string|Component = '';
 
