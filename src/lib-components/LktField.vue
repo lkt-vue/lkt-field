@@ -193,10 +193,18 @@
                 for (let k in editableValue.value) {
                     let option = undefined;
                     if (props.optionValueType === 'option') {
-                        option = findOptionByValue(optionsHaystack.value, editableValue.value[k].value);
+                        if (props.searchable) {
+                            option = findOptionByValue(optionsHaystack.value, editableValue.value[k].value);
+                        } else {
+                            option = findOptionByValue(visibleOptions.value, editableValue.value[k].value);
+                        }
 
                     } else {
-                        option = findOptionByValue(optionsHaystack.value, editableValue.value[k]);
+                        if (props.searchable) {
+                            option = findOptionByValue(optionsHaystack.value, editableValue.value[k]);
+                        } else {
+                            option = findOptionByValue(visibleOptions.value, editableValue.value[k]);
+                        }
                     }
                     if (typeof option !== 'undefined') {
                         if (pickedOptions.value.length === 0) {
@@ -214,9 +222,17 @@
             let option = undefined;
 
             if (props.optionValueType === 'option') {
-                option = findOptionByValue(optionsHaystack.value, editableValue.value.map((opt: Option) => opt.value));
+                if (props.searchable) {
+                    option = findOptionByValue(optionsHaystack.value, editableValue.value.map((opt: Option) => opt.value));
+                } else {
+                    option = findOptionByValue(visibleOptions.value, editableValue.value.map((opt: Option) => opt.value));
+                }
             } else {
-                option = findOptionByValue(optionsHaystack.value, editableValue.value);
+                if (props.searchable) {
+                    option = findOptionByValue(optionsHaystack.value, editableValue.value);
+                } else {
+                    option = findOptionByValue(visibleOptions.value, editableValue.value);
+                }
             }
             if (typeof option !== 'undefined') {
                 if (pickedOptions.value.length === 0) {
@@ -233,6 +249,29 @@
             _doUpdate(searchString.value);
         }
     };
+
+    const pickFirstOption = () => {
+
+        let option = visibleOptions.value[0];
+
+        if (props.optionValueType === 'option') {
+            if (props.multiple) {
+                editableValue.value.push(option)
+            } else {
+                editableValue.value = option;
+            }
+
+        } else {
+            if (props.multiple) {
+                editableValue.value.push(option.value)
+            } else {
+                editableValue.value = option.value;
+            }
+        }
+
+
+        pickedOptions.value.push(option);
+    }
 
     const computedIsFile = computed(() => props.type === FieldType.File),
         computedIsImage = computed(() => props.type === FieldType.Image);
@@ -519,6 +558,12 @@
             editableValue.value = v;
         } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
             editableValue.value = extractEditableValue(v, computedLang.value);
+        } else if (props.type === FieldType.Select) {
+            if (!v && props.optionsConfig?.autoPickFirstOptionIfEmpty) {
+                pickedOptions.value = [];
+                buildVisibleOptions(searchString.value, false);
+                pickFirstOption();
+            }
         }
     }, { deep: true });
     watch(editableValue, (v) => {
@@ -537,8 +582,10 @@
     watch(value, (v) => {
         if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
-            if (props.type === FieldType.Select && typeof props.optionsConfig?.filter === 'function') {
-                buildVisibleOptions(searchString.value, false);
+            if (props.type === FieldType.Select) {
+                if (typeof props.optionsConfig?.filter === 'function') {
+                    buildVisibleOptions(searchString.value, false);
+                }
             }
 
             if (validationTimeout) clearTimeout(validationTimeout);
@@ -944,6 +991,9 @@
                     pickedOptions.value.splice(k, 1);
                 }
                 turnOnSelectSearchMode();
+                if (typeof props.events?.clickOption === 'function') {
+                    props.events?.clickOption({ option });
+                }
                 emits('selected-option', option);
 
             } else {
@@ -958,6 +1008,9 @@
                 pickedOptions.value.splice(0, 1, option);
                 showOptions.value = false;
                 searchMode.value = false;
+                if (typeof props.events?.clickOption === 'function') {
+                    props.events?.clickOption({ option });
+                }
                 emits('selected-option', option);
             }
         },
