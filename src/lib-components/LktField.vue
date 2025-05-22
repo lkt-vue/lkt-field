@@ -23,7 +23,7 @@
         getDefaultValues,
         LktObject,
         LktSettings,
-        Option,
+        Option, OptionConfig,
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
@@ -823,6 +823,13 @@
                         }
                         optionsAutoLoaded.value = true;
                         optionsAutoLoading.value = false;
+                    }
+
+                    if (typeof props.events?.loadOptionsEnd === 'function') {
+                        props.events?.loadOptionsEnd({
+                            options: <Array<OptionConfig>>optionsHaystack.value,
+                            httpResponse: results,
+                        });
                     }
 
                     emits('options-loaded', results.data);
