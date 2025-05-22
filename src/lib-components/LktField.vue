@@ -564,6 +564,8 @@
                 buildVisibleOptions(searchString.value, false);
                 pickFirstOption();
             }
+        } else {
+            editableValue.value = v;
         }
     }, { deep: true });
     watch(editableValue, (v) => {

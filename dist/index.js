@@ -17245,7 +17245,7 @@ const vr = {
       return (w = a.validation) == null ? void 0 : w.checkEqualTo;
     }, () => Rt()), re(() => a.valid, (w) => r.value = w), re(() => a.modelValue, (w) => {
       var j;
-      [W.Card].includes(a.type) ? k.value = w : [W.Date, W.DateTime].includes(a.type) ? k.value = cn(w, B.value) : a.type === W.Select && !w && (j = a.optionsConfig) != null && j.autoPickFirstOptionIfEmpty && (M.value = [], Et(U.value, !1), K());
+      [W.Card].includes(a.type) ? k.value = w : [W.Date, W.DateTime].includes(a.type) ? k.value = cn(w, B.value) : a.type === W.Select ? !w && ((j = a.optionsConfig) != null && j.autoPickFirstOptionIfEmpty) && (M.value = [], Et(U.value, !1), K()) : k.value = w;
     }, { deep: !0 }), re(k, (w) => {
       typeof s.value == "object" && [W.Card].includes(a.type) ? s.value[B.value] = w : s.value = w, a.type === W.Number && fo(w);
     }, { deep: !0 });
