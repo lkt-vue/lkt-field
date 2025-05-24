@@ -20,7 +20,6 @@ import '../styles/tags-styles.css';
 import '../styles/helper-styles.css';
 import { Settings } from './settings/Settings';
 import { addModal } from 'lkt-modal';
-import LktTextLanguageEditModal from './components/modals/LktTextLanguageEditModal.vue';
 import { FieldConfig, IconConfig } from 'lkt-vue-kernel';
 import LktFileBrowserModal from '@/components/modals/LktFileBrowserModal.vue';
 
@@ -33,7 +32,6 @@ const LktFieldPlugin: Plugin = {
             app.component('lkt-field', libComponent);
 
             // Register modals
-            addModal('lkt-field-language-edit', LktTextLanguageEditModal);
             addModal('lkt-file-browser', LktFileBrowserModal);
         }
     },

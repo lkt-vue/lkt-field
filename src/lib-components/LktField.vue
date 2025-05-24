@@ -3,7 +3,7 @@
     import { ComponentPublicInstance, computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
-    import { currentLanguage } from 'lkt-i18n';
+    import { computedCurrentLanguage, currentLanguage } from 'lkt-i18n';
     import {
         booleanFieldTypes,
         ButtonConfig,
@@ -549,6 +549,29 @@
         return r;
     };
 
+    const translations = ref(<LktObject>{});
+    if (props.canI18n && typeof props.modelValue === 'object' && !Array.isArray(props.modelValue)) {
+        translations.value = JSON.parse(JSON.stringify(props.modelValue)) ?? {};
+    }
+
+    const translationsDataState = ref(new DataState(translations.value));
+
+    watch(translations, (v, oldValue) => {
+
+        let stateChecker = new DataState(translationsDataState.value.getOriginalData());
+        stateChecker.increment(v);
+
+        if (stateChecker.changed()) {
+            emits('update:modelValue', v);
+
+            if (validationTimeout) clearTimeout(validationTimeout);
+
+            validationTimeout = setTimeout(() => {
+                doValidation();
+            }, 150);
+        }
+    }, {deep: true})
+
 
     // Watch data
     watch(() => props.validation?.checkEqualTo, () => doValidation());
@@ -564,12 +587,20 @@
                 buildVisibleOptions(searchString.value, false);
                 pickFirstOption();
             }
+        } else if (props.canI18n) {
+            let stateChecker = new DataState(translations.value);
+            stateChecker.increment(v);
+            if (stateChecker.changed()) {
+                translations.value = JSON.parse(JSON.stringify(v)) ?? {};
+            }
+
         } else {
             editableValue.value = v;
         }
     }, { deep: true });
+
     watch(editableValue, (v) => {
-        if (typeof value.value === 'object' && [FieldType.Card].includes(props.type)) {
+        if (typeof v === 'object' && ![FieldType.Card].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
         } else {
@@ -666,13 +697,18 @@
 
         let r = [];
 
+        let checkedValue = editableValue.value;
+        if (props.canI18n) {
+            checkedValue = translations[computedLang];
+        }
+
         //@ts-ignore
         let min = typeof props.min === 'undefined' ? 0 : parseFloat(props.min),
             //@ts-ignore
             max = typeof props.max === 'undefined' ? 0 : parseFloat(props.max);
 
         if (props.type === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
-            if (editableValue.value < min || editableValue.value > max) {
+            if (checkedValue < min || checkedValue > max) {
                 r.push(FieldValidation.createNumBetween(min, max, ValidationStatus.Ko));
                 isValid.value = false;
                 return r;
@@ -685,20 +721,20 @@
                 case FieldType.Select:
                     if (props.multiple && pickedOptions.value.length === 0) {
                         r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
-                    } else if (!props.multiple && !editableValue.value) {
+                    } else if (!props.multiple && !checkedValue) {
                         r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
                     }
                     break;
 
                 case FieldType.Html:
-                    let content = trim(stripTags(editableValue.value));
+                    let content = trim(stripTags(checkedValue));
                     if (content.length === 0) {
                         r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
                     }
                     break;
 
                 default:
-                    if (![FieldType.Number].includes(props.type) && editableValue.value === '') {
+                    if (![FieldType.Number].includes(props.type) && checkedValue === '') {
                         r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
                     }
             }
@@ -707,38 +743,38 @@
         }
 
         if (min > 0) {
-            if (props.type !== FieldType.Number && editableValue.value.length < min) {
+            if (props.type !== FieldType.Number && checkedValue.length < min) {
                 r.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
 
-            } else if (editableValue.value < min) {
+            } else if (checkedValue < min) {
                 r.push(FieldValidation.createMinNum(min, ValidationStatus.Ko));
             }
         }
 
         if (max > 0) {
-            if (props.type !== FieldType.Number && editableValue.value.length > max) {
+            if (props.type !== FieldType.Number && checkedValue.length > max) {
                 r.push(FieldValidation.createMaxStr(max, ValidationStatus.Ko));
 
-            } else if (editableValue.value > max) {
+            } else if (checkedValue > max) {
                 r.push(FieldValidation.createMaxNum(max, ValidationStatus.Ko));
             }
         }
 
         if (props.type === FieldType.Email) {
-            if (!isEmail(editableValue.value)) {
+            if (!isEmail(checkedValue)) {
                 r.push(FieldValidation.createEmail(ValidationStatus.Ko));
             }
         }
 
         if (textFieldTypes.includes(props.type)) {
-            validateAmountOfNumbers(r, editableValue.value, props.validation?.minNumbers, props.validation?.maxNumbers);
-            validateAmountOfUpperChars(r, editableValue.value, props.validation?.minUpperChars, props.validation?.maxUpperChars);
-            validateAmountOfLowerChars(r, editableValue.value, props.validation?.minLowerChars, props.validation?.maxLowerChars);
-            validateAmountOfChars(r, editableValue.value, props.validation?.minChars, props.validation?.maxChars);
-            validateAmountOfSpecialChars(r, editableValue.value, props.validation?.minSpecialChars, props.validation?.maxSpecialChars);
+            validateAmountOfNumbers(r, checkedValue, props.validation?.minNumbers, props.validation?.maxNumbers);
+            validateAmountOfUpperChars(r, checkedValue, props.validation?.minUpperChars, props.validation?.maxUpperChars);
+            validateAmountOfLowerChars(r, checkedValue, props.validation?.minLowerChars, props.validation?.maxLowerChars);
+            validateAmountOfChars(r, checkedValue, props.validation?.minChars, props.validation?.maxChars);
+            validateAmountOfSpecialChars(r, checkedValue, props.validation?.minSpecialChars, props.validation?.maxSpecialChars);
         }
 
-        if (props.validation?.checkEqualTo && editableValue.value !== props.validation?.checkEqualTo) {
+        if (props.validation?.checkEqualTo && checkedValue !== props.validation?.checkEqualTo) {
             r.push(FieldValidation.createEqualTo(props.validation?.checkEqualTo, ValidationStatus.Ko));
         }
 
@@ -1286,6 +1322,7 @@
                 return value.value;
 
             default:
+                if (props.canI18n) return translations.value[computedLang.value];
                 return editableValue.value;
         }
     });
@@ -1333,8 +1370,9 @@
 
                 <i18n-button
                     v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n"
-                    v-model="value"
+                    :translations="translations"
                     is-featured
+                    :referrer="container"
                     :type="type" />
 
                 <lkt-button
@@ -1575,6 +1613,30 @@
                 </card-input>
 
                 <input
+                    v-else-if="computedInputElement === 'input' && canI18n"
+                    v-model="translations[computedLang]"
+                    :ref="(el:any) => inputElement = el"
+                    :value="translations[computedLang]"
+                    :type="computedInputType"
+                    :name="name"
+                    :id="Identifier"
+                    :disabled="computedIsDisabled"
+                    :readonly="readonly"
+                    :placeholder="computedPlaceholder"
+                    :tabindex="tabindex"
+                    :autocomplete="autocompleteText"
+                    :min="MinimumValue"
+                    :max="MaximumValue"
+                    :step="step"
+                    v-on:keyup="onKeyUp"
+                    v-on:keydown="onKeyDown"
+                    v-on:focus="onFocus"
+                    v-on:blur="onBlur"
+                    v-on:click="onClick"
+                    v-on:change="onChange"
+                />
+
+                <input
                     v-else-if="computedInputElement === 'input'"
                     v-model="editableValue"
                     :ref="(el:any) => inputElement = el"
@@ -1590,6 +1652,24 @@
                     :min="MinimumValue"
                     :max="MaximumValue"
                     :step="step"
+                    v-on:keyup="onKeyUp"
+                    v-on:keydown="onKeyDown"
+                    v-on:focus="onFocus"
+                    v-on:blur="onBlur"
+                    v-on:click="onClick"
+                    v-on:change="onChange"
+                />
+                <textarea
+                    v-else-if="computedInputElement === 'textarea' && canI18n"
+                    v-model="translations[computedLang]"
+                    :ref="(el:any) => inputElement = el"
+                    :name="name"
+                    :id="Identifier"
+                    :disabled="computedIsDisabled"
+                    :readonly="readonly"
+                    :placeholder="computedPlaceholder"
+                    :tabindex="tabindex"
+                    :autocomplete="autocompleteText"
                     v-on:keyup="onKeyUp"
                     v-on:keydown="onKeyDown"
                     v-on:focus="onFocus"
@@ -1732,8 +1812,9 @@
 
                 <i18n-button
                     v-show="computedShowI18nInNav"
-                    v-model="value"
+                    :translations="translations"
                     :type="type"
+                    :referrer="container"
                 />
 
                 <edition-button

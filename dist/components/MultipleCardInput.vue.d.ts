@@ -19,9 +19,9 @@ declare function __VLS_template(): any;
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
 declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{}>, {
     modelValue: LktObject[];
-    editable: boolean;
     max: number | false;
     itemType: string | number | Function | ((...args: any[]) => ScanPropTarget);
+    editable: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;

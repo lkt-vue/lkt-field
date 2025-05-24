@@ -52,13 +52,13 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     modalKey: string;
     modalData: LktObject;
     prop: LktObject;
-    optionSlot: string;
-    download: string | Function;
     emptyValueSlot: string;
+    optionSlot: string;
     valueSlot: string;
     slotData: LktObject;
     multiple: boolean;
     multipleDisplay: MultipleOptionsDisplay;
+    download: string | Function;
     optionsIcon: string | Function;
     optionsModal: string | Function;
     optionsDownload: string | Function;

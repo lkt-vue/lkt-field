@@ -28,8 +28,8 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     prop: LktObject;
     option: Option;
     optionSlot: string;
-    editable: boolean;
     download: string | Function;
+    editable: boolean;
     isTag: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 export default _default;

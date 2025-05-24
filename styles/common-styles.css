@@ -236,3 +236,7 @@
     --lkt-image--min-height: var(--lkt-field-large-field-min-height);
     --lkt-image--min-width: 100%;
 }
+
+.lkt-field-i18n-tooltip {
+    --lkt-tooltip--min-width: 320px;
+}
