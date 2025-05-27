@@ -1,4 +1,4 @@
-import { LktObject, Option } from 'lkt-vue-kernel';
+import { AnchorConfig, LktObject, Option } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     option: Option;
@@ -10,6 +10,7 @@ type __VLS_Props = {
     modal?: string | Function;
     modalData?: LktObject | Function;
     download?: string | Function;
+    anchor?: AnchorConfig | Function;
     labelFormatter?: Function;
     isTag?: boolean;
     prop?: LktObject;

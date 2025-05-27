@@ -40,7 +40,7 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     modalKey: string | number | Function;
     modalData: LktObject;
     modelValue: LktObject;
-    itemType: string | number | Function | ((...args: any[]) => ScanPropTarget);
+    itemType: string | number | Function | LktObject | ((...args: any[]) => ScanPropTarget);
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;

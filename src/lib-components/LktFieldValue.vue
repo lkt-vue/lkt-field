@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
     import {
+        AnchorConfig,
         booleanFieldTypes,
         FieldReadModeConfig,
         FieldType,
@@ -24,6 +25,7 @@
         emptyValueSlot?: string
         slotData?: LktObject
         download?: string | Function
+        anchor?: AnchorConfig | Function
         multiple?: boolean
         multipleDisplay?: MultipleOptionsDisplay
         modal?: string
@@ -198,6 +200,7 @@
                                     :modal="optionsModal"
                                     :modal-data="optionsModalData"
                                     :download="optionsDownload"
+                                    :anchor="anchor"
                                     :label-formatter="optionsLabelFormatter"
                                     :prop="prop"
                                 />
@@ -216,6 +219,7 @@
                     :modal="optionsModal"
                     :modal-data="optionsModalData"
                     :download="optionsDownload"
+                    :anchor="anchor"
                     :label-formatter="optionsLabelFormatter"
                     :prop="prop"
                 />
@@ -235,6 +239,7 @@
                 v-else-if="download"
                 :option="<Option>{value: '', label: computedValue}"
                 :download="download"
+                :anchor="anchor"
                 :text="optionsText"
                 :custom-class="optionsClass"
                 :prop="prop"

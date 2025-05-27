@@ -18,6 +18,7 @@
         modal?: string | Function
         modalData?: LktObject | Function
         download?: string | Function
+        anchor?: AnchorConfig | Function
         labelFormatter?: Function
         isTag?: boolean
         prop?: LktObject
@@ -73,6 +74,7 @@
             if (props.isTag) return 'lkt-tag';
             if (!props.editable && ((typeof props.modal !== 'undefined' && props.modal !== '') || (typeof props.option.modal !== 'undefined' && props.option.modal !== ''))) return 'lkt-button';
             if (!props.editable && (typeof props.download !== 'undefined' && props.download !== '')) return 'lkt-anchor';
+            if (!props.editable && (typeof props.anchor !== 'undefined')) return 'lkt-anchor';
             return 'div';
         }),
         computedContainerAttrs = computed(() => {
@@ -95,6 +97,10 @@
             }
 
             if (computedContainerComponent.value === 'lkt-anchor') {
+
+                if (typeof props.anchor === 'function') return <AnchorConfig>{ ...props.anchor({data:  props.option }), prop: props.option };
+                if (typeof props.anchor === 'object') return <AnchorConfig>{ ...props.anchor, prop: props.option };
+
                 let href = props.download;
                 if (typeof props.download === 'function') {
                     href = () => {
@@ -111,6 +117,7 @@
                 return <AnchorConfig>{
                     to: href,
                     type: isDownload ? AnchorType.Download : undefined,
+                    prop: props.option,
                 };
             }
 

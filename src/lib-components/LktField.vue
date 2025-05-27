@@ -831,10 +831,9 @@
 
             if (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') {
                 isLoading.value = true;
-                let resourceData: LktObject = {};
-                if (typeof props.optionsConfig?.http?.data === 'object') {
-                    resourceData = { ...props.optionsConfig.http.data };
-                }
+                let resourceData: LktObject = extractPropValue(props.optionsConfig?.http?.data, props.prop);
+                if (typeof resourceData !== 'object') resourceData = {};
+
                 if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query;
                 if (props.optionsConfig?.http?.events?.onStart && typeof props.optionsConfig?.http?.events?.onStart === 'function') {
                     props.optionsConfig.http.events.onStart();
@@ -1723,6 +1722,7 @@
                 :empty-value-slot="emptyValueSlot"
                 :slot-data="slotData"
                 :download="calculatedDownload"
+                :anchor="optionsConfig?.anchor"
                 :multiple="multiple"
                 :multipleDisplay="multipleDisplay"
                 :modal="computedModal"

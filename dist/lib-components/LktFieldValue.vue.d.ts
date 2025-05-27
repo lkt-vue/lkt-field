@@ -1,4 +1,4 @@
-import { FieldReadModeConfig, FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
+import { AnchorConfig, FieldReadModeConfig, FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     type?: FieldType;
@@ -10,6 +10,7 @@ type __VLS_Props = {
     emptyValueSlot?: string;
     slotData?: LktObject;
     download?: string | Function;
+    anchor?: AnchorConfig | Function;
     multiple?: boolean;
     multipleDisplay?: MultipleOptionsDisplay;
     modal?: string;
