@@ -420,14 +420,18 @@
             return editableValue.value;
         }),
         MinimumValue = computed((): number => {
-            if (typeof props.min === 'string') return parseFloat(props.min);
-            if (typeof props.min === 'number') return props.min;
+            let val = extractPropValue(props.min, props.prop);
+
+            if (typeof val === 'string') return parseFloat(val);
+            if (typeof val === 'number') return val;
             //@ts-ignore
             return false;
         }),
         MaximumValue = computed((): number => {
-            if (typeof props.max === 'string') return parseFloat(props.max);
-            if (typeof props.max === 'number') return props.max;
+            let val = extractPropValue(props.max, props.prop);
+
+            if (typeof val === 'string') return parseFloat(val);
+            if (typeof val === 'number') return val;
             //@ts-ignore
             return false;
         }),
@@ -703,9 +707,9 @@
         }
 
         //@ts-ignore
-        let min = typeof props.min === 'undefined' ? 0 : parseFloat(props.min),
+        let min = MinimumValue.value,
             //@ts-ignore
-            max = typeof props.max === 'undefined' ? 0 : parseFloat(props.max);
+            max = MaximumValue.value;
 
         if (props.type === FieldType.Number && typeof props.min !== 'undefined' && typeof props.max !== 'undefined') {
             if (checkedValue < min || checkedValue > max) {
@@ -1196,7 +1200,7 @@
             let step = props.step ?? 1;
             if (typeof step === 'string') step = parseFloat(step);
             let amountOfDecimals = String(step).split('.')[0].length;
-            if (!props.min || editableValue.value > props.min) {
+            if (!MinimumValue.value || editableValue.value > MinimumValue.value) {
                 editableValue.value = parseFloat((parseFloat(editableValue.value) - step).toFixed(amountOfDecimals));
             }
         },
@@ -1204,7 +1208,7 @@
             let step = props.step ?? 1;
             if (typeof step === 'string') step = parseFloat(step);
             let amountOfDecimals = String(step).split('.')[0].length;
-            if (!props.max || editableValue.value < props.max) {
+            if (!MaximumValue.value || editableValue.value < MaximumValue.value) {
                 editableValue.value = parseFloat((parseFloat(editableValue.value) + step).toFixed(amountOfDecimals));
             }
         },
