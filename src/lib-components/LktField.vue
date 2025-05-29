@@ -334,6 +334,10 @@
             if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 return value.value !== '';
             }
+            if ([FieldType.Select].includes(props.type)) {
+                if (props.optionsConfig?.zeroMeansEmpty) return !(value.value === '' || value.value === 0)
+                return value.value !== '';
+            }
             return editableValue.value !== '';
         }),
         computedInputType = computed(() => {
@@ -1200,16 +1204,20 @@
             let step = props.step ?? 1;
             if (typeof step === 'string') step = parseFloat(step);
             let amountOfDecimals = String(step).split('.')[0].length;
-            if (!MinimumValue.value || editableValue.value > MinimumValue.value) {
-                editableValue.value = parseFloat((parseFloat(editableValue.value) - step).toFixed(amountOfDecimals));
+            let v = parseFloat(editableValue.value);
+            if (isNaN(v)) v = 0;
+            if (!MinimumValue.value || v > MinimumValue.value) {
+                editableValue.value = parseFloat((v - step).toFixed(amountOfDecimals));
             }
         },
         onClickIncrease = () => {
             let step = props.step ?? 1;
             if (typeof step === 'string') step = parseFloat(step);
             let amountOfDecimals = String(step).split('.')[0].length;
-            if (!MaximumValue.value || editableValue.value < MaximumValue.value) {
-                editableValue.value = parseFloat((parseFloat(editableValue.value) + step).toFixed(amountOfDecimals));
+            let v = parseFloat(editableValue.value);
+            if (isNaN(v)) v = 0;
+            if (!MaximumValue.value || v < MaximumValue.value) {
+                editableValue.value = parseFloat((v + step).toFixed(amountOfDecimals));
             }
         },
         onClickSwitchEdition = () => {

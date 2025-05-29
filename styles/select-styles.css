@@ -119,6 +119,7 @@
 .lkt-field--searchable-box {
     display: flex;
     align-items: center;
+    width: 100%;
     padding: var(--lkt-field--input--padding);
     border-bottom: var(--lkt-field--border-width) var(--lkt-field--border-style) var(--lkt-field--border-color);
 }

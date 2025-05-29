@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { ButtonType, LktObject, MultipleOptionsDisplay, Option, ValidFieldValue } from 'lkt-vue-kernel';
-    import { nextTick, ref, watch } from 'vue';
+    import { ButtonType, LktObject, MultipleOptionsDisplay, Option, TagConfig, ValidFieldValue } from 'lkt-vue-kernel';
+    import { computed, nextTick, ref, watch } from 'vue';
 
     const emit = defineEmits([
         'update:modelValue',
@@ -112,7 +112,17 @@
             queryHasFocus.value = true;
         };
 
+    const keepFocused = () => {
+        clearTimeout(queryBlurTimeout);
+        clearTimeout(buttonBlurTimeout);
+        nextTick(() => {
+            //@ts-ignore
+            if (queryField.value) queryField.value.focus();
+        })
+    }
+
     const onBlurSelectButton = (event: Event) => {
+            if (computedRenderSearchUI.value) return;
             buttonBlurTimeout = setTimeout(() => {
                 buttonHasFocus.value = false;
             }, 100);
@@ -132,45 +142,41 @@
         };
 
     defineExpose({
-        keepFocused: () => {
-            clearTimeout(queryBlurTimeout);
-            clearTimeout(buttonBlurTimeout);
-            //@ts-ignore
-            if (queryField.value) queryField.value.focus();
-        },
+        keepFocused,
     });
 
     watch(() => props.pickedOptions, () => {
         emit('change')
     }, {deep: true})
 
+    const computedRenderMultipleSearchUi = computed(() => {
+        return props.multiple && (props.canTag || props.searchable);
+    })
+
+    const computedRenderSearchUI = computed(() => {
+        return !props.multiple && props.searchable && hasFocus.value;
+    })
+
 </script>
 
 <template>
-    <div v-if="(searchable && (multiple || searchMode)) || tagsEnabled" class="lkt-field--searchable-box">
+    <div v-if="computedRenderSearchUI || computedRenderMultipleSearchUi" class="lkt-field--searchable-box">
 
         <lkt-tag
             v-if="multiple"
-            :icon="optionsIcon"
-            :text="pickedOptions.length"
+            v-bind="<TagConfig>{
+                icon: optionsIcon,
+                text: pickedOptions.length
+            }"
         />
 
         <lkt-tag
             v-else-if="pickedOptions.length > 0"
-        >
-            <dropdown-option
-                :option="pickedOptions[0]"
-                :option-slot="optionSlot"
-                :icon="optionsIcon"
-                :text="optionsText"
-                :custom-class="optionsClass"
-                :modal="optionsModal"
-                :modal-data="optionsModalData"
-                :download="optionsDownload"
-                :label-formatter="optionsLabelFormatter"
-                :editable="editable"
-            />
-        </lkt-tag>
+            v-bind="<TagConfig>{
+                icon: pickedOptions[0].icon ?? optionsIcon,
+                text: pickedOptions[0].label
+            }"
+        />
 
         <input
             v-model="query"
@@ -190,7 +196,7 @@
     <lkt-button
         ref="selectButton"
         :type="tagsEnabled ? ButtonType.Content : ButtonType.Button"
-        v-show="multiple || (!searchable || !searchMode)"
+        v-show="!computedRenderSearchUI || computedRenderMultipleSearchUi"
         class="lkt-field--toggle-button lkt-field--select-button"
         v-model:open-tooltip="visibleOptions"
         @keyup="onKeyUpSelectButton"
