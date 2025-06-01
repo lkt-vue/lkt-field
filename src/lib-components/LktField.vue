@@ -1380,7 +1380,7 @@
                 />
 
                 <i18n-button
-                    v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n"
+                    v-if="computedShowI18n && fieldFeaturedButton === 'i18n' && canI18n && container"
                     :translations="translations"
                     is-featured
                     :referrer="container"
@@ -1823,7 +1823,7 @@
                 />
 
                 <i18n-button
-                    v-show="computedShowI18nInNav"
+                    v-if="computedShowI18nInNav && container"
                     :translations="translations"
                     :type="type"
                     :referrer="container"
