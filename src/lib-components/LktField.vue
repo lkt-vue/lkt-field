@@ -314,6 +314,7 @@
             if (computedShowSubtractStepInNav.value) ++r;
             if (computedShowIncreaseStep.value) ++r;
             if (props.customButtonText || props.customButtonClass) ++r;
+            if (typeof props.createButton === 'object') ++r;
 
             if (r > 0 && props.type === FieldType.Textarea) return 1;
             if (r > 0 && props.type === FieldType.Html) return 1;
@@ -1840,6 +1841,28 @@
                     :text="customButtonText"
                     class="lkt-field--info-btn lkt-field--custom-btn"
                     :icon="customButtonClass"
+                />
+
+                <lkt-button
+                    v-if="typeof createButton === 'object' && createButton && computedEditable"
+                    v-bind="{
+                        icon: 'lkt-icn-add',
+                        ...createButton,
+                        modalData: {
+                            ...createButton.modalData,
+                            events: {
+                                onCreate: () => {
+                                    if (createButton && typeof createButton?.modalData?.events?.onCreate === 'function') {
+                                        createButton?.modalData?.events?.onCreate();
+                                    }
+                                    if (typeof events?.itemCreated === 'function') {
+                                        events?.itemCreated();
+                                    }
+                                }
+                            }
+                        }
+                    }"
+                    class="lkt-field--info-btn"
                 />
 
                 <dropdown-button
