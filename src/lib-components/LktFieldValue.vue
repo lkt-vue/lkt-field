@@ -1,12 +1,11 @@
 <script setup lang="ts">
-
     import {
         AnchorConfig,
         booleanFieldTypes,
         FieldReadModeConfig,
         FieldType,
         LktObject,
-        MultipleOptionsDisplay, Option,
+        MultipleOptionsDisplay, Option, OptionsConfig,
     } from 'lkt-vue-kernel';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
@@ -39,10 +38,9 @@
         optionsText?: string | Function
         optionsClass?: string | Function
         optionsLabelFormatter?: Function
-        optionsResource?: string
-        optionsResourceData?: LktObject
         prop?: LktObject
         readModeConfig?: FieldReadModeConfig
+        optionsConfig: OptionsConfig
     }>(), {
         type: FieldType.Text,
         title: '',
@@ -60,8 +58,6 @@
         optionsModal: '',
         optionsModalData: () => ({}),
         optionsIcon: '',
-        optionsResource: '',
-        optionsResourceData: () => ({}),
         prop: () => ({}),
     });
 
@@ -187,6 +183,12 @@
                     <div v-if="multipleDisplay === MultipleOptionsDisplay.Count">
                         {{ computedValue.length }}
                     </div>
+
+                    <lkt-table
+                        v-else-if="multipleDisplay === MultipleOptionsDisplay.Table"
+                        :model-value="computedValue"
+                        v-bind="optionsConfig.table"
+                    />
 
                     <ul v-else-if="computedValue.length > 0" class="lkt-field-select-read" :class="`multiple-display-${multipleDisplay}`">
                         <template v-for="(_, i) in computedValue" :key="`${i}-${computedValue[i].value}`">

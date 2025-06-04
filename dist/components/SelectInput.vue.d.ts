@@ -1,4 +1,4 @@
-import { LktObject, Option, ValidFieldValue } from 'lkt-vue-kernel';
+import { LktObject, Option, OptionsConfig, ValidFieldValue } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: ValidFieldValue;
@@ -6,14 +6,8 @@ type __VLS_Props = {
     searchMode: boolean;
     multiple: boolean;
     canTag: boolean;
-    optionsIcon: string | Function;
-    optionsText: string | Function;
-    optionsClass: string | Function;
+    optionsConfig: OptionsConfig;
     optionSlot?: string;
-    optionsModal: string | Function;
-    optionsDownload: string | Function;
-    optionsLabelFormatter?: Function;
-    optionsModalData: LktObject;
     pickedOptions: Option[];
     showOptions: boolean;
     editable: boolean;
@@ -33,6 +27,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     blur: (...args: any[]) => void;
     change: (...args: any[]) => void;
     "update:showOptions": (...args: any[]) => void;
+    "update:pickedOptions": (...args: any[]) => void;
     navigate: (...args: any[]) => void;
     tag: (...args: any[]) => void;
     untag: (...args: any[]) => void;
@@ -43,6 +38,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     onBlur?: ((...args: any[]) => any) | undefined;
     onChange?: ((...args: any[]) => any) | undefined;
     "onUpdate:showOptions"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:pickedOptions"?: ((...args: any[]) => any) | undefined;
     onNavigate?: ((...args: any[]) => any) | undefined;
     onTag?: ((...args: any[]) => any) | undefined;
     onUntag?: ((...args: any[]) => any) | undefined;

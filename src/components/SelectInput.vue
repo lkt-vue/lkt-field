@@ -1,11 +1,20 @@
 <script setup lang="ts">
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { ButtonType, LktObject, MultipleOptionsDisplay, Option, TagConfig, ValidFieldValue } from 'lkt-vue-kernel';
+    import {
+        ButtonType,
+        LktObject,
+        MultipleOptionsDisplay,
+        Option, OptionsConfig,
+        TableConfig,
+        TagConfig,
+        ValidFieldValue,
+    } from 'lkt-vue-kernel';
     import { computed, nextTick, ref, watch } from 'vue';
 
     const emit = defineEmits([
         'update:modelValue',
         'update:showOptions',
+        'update:pickedOptions',
         'focus',
         'blur',
         'navigate',
@@ -21,14 +30,8 @@
         searchMode: boolean
         multiple: boolean
         canTag: boolean
-        optionsIcon: string|Function
-        optionsText: string|Function
-        optionsClass: string|Function
+        optionsConfig: OptionsConfig
         optionSlot?: string
-        optionsModal: string | Function
-        optionsDownload: string | Function
-        optionsLabelFormatter?: Function
-        optionsModalData: LktObject
         pickedOptions: Option[]
         showOptions: boolean
         editable: boolean
@@ -49,7 +52,8 @@
      * Search query
      */
     const query = ref(props.searchString),
-        queryField = ref(null);
+        queryField = ref(null),
+        editableOptions = ref(props.pickedOptions);
 
     /**
      * Options visibility
@@ -145,8 +149,13 @@
         keepFocused,
     });
 
-    watch(() => props.pickedOptions, () => {
+    watch(() => props.pickedOptions, (v) => {
         emit('change')
+        editableOptions.value = v;
+    }, {deep: true})
+
+    watch(editableOptions, (v) => {
+        emit('update:pickedOptions', v);
     }, {deep: true})
 
     const computedRenderMultipleSearchUi = computed(() => {
@@ -165,7 +174,7 @@
         <lkt-tag
             v-if="multiple"
             v-bind="<TagConfig>{
-                icon: optionsIcon,
+                icon: optionsConfig.icon,
                 text: pickedOptions.length
             }"
         />
@@ -173,7 +182,7 @@
         <lkt-tag
             v-else-if="pickedOptions.length > 0"
             v-bind="<TagConfig>{
-                icon: pickedOptions[0].icon ?? optionsIcon,
+                icon: pickedOptions[0].icon ?? optionsConfig.icon,
                 text: pickedOptions[0].label
             }"
         />
@@ -208,18 +217,27 @@
                 {{ pickedOptions.length }}
             </div>
 
+            <lkt-table
+                v-else-if="multipleDisplayEdition === MultipleOptionsDisplay.Table"
+                v-model="editableOptions"
+                v-bind="<TableConfig>{
+                    ...optionsConfig.table,
+                    editMode: editable
+                }"
+            />
+
             <ul v-else class="lkt-field-select-read" :class="`multiple-display-${multipleDisplayEdition}`">
                 <li v-for="(option, i) in pickedOptions" :title="option.label" :key="`${i}-${option.value}`">
                     <dropdown-option
                         :option="pickedOptions[i]"
                         :option-slot="optionSlot"
-                        :icon="optionsIcon"
-                        :text="optionsText"
-                        :custom-class="optionsClass"
-                        :modal="optionsModal"
-                        :modal-data="optionsModalData"
-                        :download="optionsDownload"
-                        :label-formatter="optionsLabelFormatter"
+                        :icon="optionsConfig.icon"
+                        :text="optionsConfig.text"
+                        :custom-class="optionsConfig.class"
+                        :modal="optionsConfig.modal"
+                        :modal-data="optionsConfig.modalData"
+                        :download="optionsConfig.download"
+                        :label-formatter="optionsConfig.labelFormatter"
                         :editable="editable"
                         :is-tag="tagsEnabled"
                         :prop="prop"
@@ -233,13 +251,13 @@
             v-else-if="!multiple && pickedOptions.length > 0"
             :option="pickedOptions[0]"
             :option-slot="optionSlot"
-            :icon="optionsIcon"
-            :text="optionsText"
-            :custom-class="optionsClass"
-            :modal="optionsModal"
-            :modal-data="optionsModalData"
-            :download="optionsDownload"
-            :label-formatter="optionsLabelFormatter"
+            :icon="optionsConfig.icon"
+            :text="optionsConfig.text"
+            :custom-class="optionsConfig.class"
+            :modal="optionsConfig.modal"
+            :modal-data="optionsConfig.modalData"
+            :download="optionsConfig.download"
+            :label-formatter="optionsConfig.labelFormatter"
             :editable="editable"
             :prop="prop"
         />

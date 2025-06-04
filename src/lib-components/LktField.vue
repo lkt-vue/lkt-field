@@ -1133,6 +1133,15 @@
                 onClickOption(option, true);
             }
         },
+        onUpdatedPickedOptions = () => {
+            editableValue.value.splice(0, editableValue.value.length)
+            if (props.optionValueType === 'option') {
+                editableValue.value = JSON.parse(JSON.stringify(pickedOptions.value));
+            } else {
+                editableValue.value = pickedOptions.value.map(z => z.value);
+            }
+            // @todo: faltaría parsear las opciones y actualizar el editableValue
+        },
         onUntagSelectInput = (option: Option) => {
 
             let hasToUntag = true;
@@ -1500,20 +1509,14 @@
                     ref="inputElement"
                     v-model="editableValue"
                     v-model:show-options="showOptions"
+                    v-model:picked-options="pickedOptions"
                     :searchable="searchable"
                     :search-mode="searchMode"
                     :search-string="searchString"
                     :multiple="multiple"
                     :can-tag="canTag"
-                    :options-text="optionsConfig?.text"
-                    :options-icon="optionsConfig?.icon"
-                    :options-class="optionsConfig?.class"
+                    :options-config="optionsConfig"
                     :option-slot="optionSlot"
-                    :options-modal="optionsConfig?.modal"
-                    :options-download="optionsConfig?.download"
-                    :options-label-formatter="optionsConfig?.labelFormatter"
-                    :options-modal-data="optionsConfig?.modalData"
-                    :picked-options="pickedOptions"
                     :editable="computedEditable"
                     :focusing="focusing"
                     :search-placeholder="computedSearchPlaceholder"
@@ -1527,6 +1530,7 @@
                     @change="onChange"
                     @tag="onTagSelectInput"
                     @untag="onUntagSelectInput"
+                    @update:picked-options="onUpdatedPickedOptions"
                 />
                 <calc-input
                     ref="inputElement"
@@ -1741,6 +1745,7 @@
                 :modal="computedModal"
                 :modal-key="calculatedModalKey"
                 :modal-data="computedModalData"
+                :options-config="optionsConfig"
                 :option-slot="optionSlot"
                 :options-download="optionsConfig?.download"
                 :options-modal="optionsConfig?.modal"
@@ -1749,8 +1754,6 @@
                 :options-text="optionsConfig?.text"
                 :options-class="optionsConfig?.class"
                 :options-label-formatter="optionsConfig?.labelFormatter"
-                :options-resource="optionsConfig?.http?.resource"
-                :options-resource-data="optionsConfig?.http?.data"
                 :read-mode-config="readModeConfig"
                 :prop="prop"
                 @click="onClick"

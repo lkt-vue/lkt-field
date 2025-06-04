@@ -1,4 +1,4 @@
-import { AnchorConfig, FieldReadModeConfig, FieldType, LktObject, MultipleOptionsDisplay } from 'lkt-vue-kernel';
+import { AnchorConfig, FieldReadModeConfig, FieldType, LktObject, MultipleOptionsDisplay, OptionsConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     type?: FieldType;
@@ -24,10 +24,9 @@ type __VLS_Props = {
     optionsText?: string | Function;
     optionsClass?: string | Function;
     optionsLabelFormatter?: Function;
-    optionsResource?: string;
-    optionsResourceData?: LktObject;
     prop?: LktObject;
     readModeConfig?: FieldReadModeConfig;
+    optionsConfig: OptionsConfig;
 };
 declare function __VLS_template(): {
     attrs: Partial<{}>;
@@ -60,12 +59,10 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     multiple: boolean;
     multipleDisplay: MultipleOptionsDisplay;
     download: string | Function;
-    optionsIcon: string | Function;
-    optionsModal: string | Function;
     optionsDownload: string | Function;
+    optionsModal: string | Function;
     optionsModalData: LktObject | Function;
-    optionsResource: string;
-    optionsResourceData: LktObject;
+    optionsIcon: string | Function;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;
