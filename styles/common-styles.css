@@ -101,8 +101,7 @@
     transition: var(--lkt-field--input--transition);
 }
 
-.lkt-field.has-focus .lkt-field-content,
-.lkt-field-select.has-focus .lkt-field-main {
+.lkt-field.has-focus > .lkt-field-content {
     outline: 0;
     border-color: var(--lkt-field--focus--border-color);
     box-shadow: var(--lkt-field--focus--shadow);

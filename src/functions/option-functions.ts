@@ -1,6 +1,6 @@
-import { extractPropValue, LktObject, LktSettings, Option, OptionConfig } from 'lkt-vue-kernel';
-import { ValidOptionValue } from 'lkt-vue-kernel';
+import { extractPropValue, LktObject, LktSettings, Option, OptionConfig, ValidOptionValue } from 'lkt-vue-kernel';
 import { __ } from 'lkt-i18n';
+import { Component } from 'vue';
 
 export const prepareOptions = (options: any, prop: LktObject): Option[] => {
     if (typeof options === 'string') {
@@ -81,7 +81,7 @@ export const receiveOptions = (currentOptions: Option[], receivedOptions: Option
     return removeDuplicatedOptions([...prepareOptions(receivedOptions, prop), ...currentOptions]);
 };
 
-export const optionIsActive = (option: Option, value: ValidOptionValue | ValidOptionValue[], isMultiple: boolean) => {
+export const optionIsActive = (option: OptionConfig, value: ValidOptionValue | ValidOptionValue[], isMultiple: boolean) => {
     if (isMultiple) {
         if (Array.isArray(value)) {
             let r = value.findIndex((v) => {
@@ -95,7 +95,7 @@ export const optionIsActive = (option: Option, value: ValidOptionValue | ValidOp
     return option.value == value;
 };
 
-export const getInValueOptionIndex = (option: Option, value: ValidOptionValue[]): number => {
+export const getInValueOptionIndex = (option: OptionConfig, value: ValidOptionValue[]): number => {
     //@ts-ignore
     let r = value.findIndex((v) => {
         return v == option.value;
@@ -103,3 +103,82 @@ export const getInValueOptionIndex = (option: Option, value: ValidOptionValue[])
     if (typeof r === 'undefined') r = -1;
     return r;
 };
+
+export const handleOptionClickSingle = (args: {
+    option: OptionConfig,
+    value: OptionConfig|ValidOptionValue
+    pickedOptions: Array<OptionConfig>
+    optionValueType: string | 'option'
+    focusedOptionIndex: number
+    showOptions: boolean
+    searchMode: boolean
+    callback?: Function
+}) => {
+    if (args.option.disabled) return false;
+
+    args.focusedOptionIndex = -1;
+    if (args.optionValueType === 'option') {
+        args.value = args.option;
+    } else {
+        args.value = String(args.option.value);
+    }
+    args.pickedOptions.splice(0, 1, args.option);
+    args.showOptions = false;
+    args.searchMode = false;
+
+    if (typeof args.callback === 'function') {
+        args.callback({ option: args.option });
+    }
+
+    return true;
+}
+
+export const handleOptionClickMultiple = (args: {
+    option: OptionConfig,
+    value: Array<OptionConfig|ValidOptionValue>
+    pickedOptions: Array<OptionConfig>
+    tagMode: boolean
+    searchMode: boolean
+    optionValueType: string | 'option'
+    searchField?: Component|null
+    callback?: Function
+    keepFocused?: Function
+}) => {
+    if (args.option.disabled) return false;
+
+    let k = -1;
+
+    if (args.optionValueType === 'option') {
+        k = getInValueOptionIndex(args.option, args.value.map(opt => opt.value));
+    } else {
+        k = getInValueOptionIndex(args.option, <Array<ValidOptionValue>>args.value);
+    }
+
+    if (k === -1) {
+        if (args.optionValueType === 'option') {
+            args.value.push(args.option);
+        } else {
+            args.value.push(String(args.option.value));
+        }
+        if (!args.tagMode) args.pickedOptions.push(args.option);
+
+    } else if (!args.tagMode) {
+        args.value.splice(k, 1);
+        args.pickedOptions.splice(k, 1);
+    }
+
+    if (typeof args.keepFocused === 'function') {
+        //@ts-ignore
+        args.keepFocused();
+    }
+    else if (args.searchMode && args.searchField) {
+        //@ts-ignore
+        args.searchField.keepFocused();
+    }
+
+    if (typeof args.callback === 'function') {
+        args.callback({ option: args.option });
+    }
+
+    return true;
+}

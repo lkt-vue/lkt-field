@@ -1,123 +1,103 @@
 <script setup lang="ts">
-    import { AnchorConfig, AnchorType, LktObject, Option, TagType } from 'lkt-vue-kernel';
+    import { AnchorConfig, AnchorType, extractPropValue, TagConfig, TagType } from 'lkt-vue-kernel';
     import { computed } from 'vue';
     import { Settings } from '../../settings/Settings';
+    import { DropdownOptionProps } from '../../config/DropdownOptionProps.ts';
 
     const emit = defineEmits([
         'click',
         'click-icon'
     ]);
 
-    const props = withDefaults(defineProps<{
-        option: Option
-        optionSlot?: string
-        editable?: boolean
-        icon?: string | Function
-        text?: string | Function
-        customClass?: string | Function
-        modal?: string | Function
-        modalData?: LktObject | Function
-        download?: string | Function
-        anchor?: AnchorConfig | Function
-        labelFormatter?: Function
-        isTag?: boolean
-        prop?: LktObject
-    }>(), {
-        option: () => (new Option()),
-        optionSlot: '',
-        editable: false,
-        icon: '',
-        text: '',
-        modal: '',
-        modalData: () => ({}),
-        download: '',
-        isTag: false,
-        prop: () => ({})
-    });
+    const props = withDefaults(defineProps<DropdownOptionProps>(), {});
+
+    console.log('props: ', props);
 
     const computedIcon = computed(() => {
-            if (props.option.icon !== '') return props.option.icon;
+            if (props.item.icon !== '') return props.item.icon;
 
-            if (typeof props.icon === 'function') {
-                return props.icon(props.option, props.prop);
+            if (typeof props.data.optionsConfig.icon === 'function') {
+                return props.data.optionsConfig.icon(props.item, props.data.prop);
             }
-            return props.icon;
+            return props.data.optionsConfig.icon;
         }),
         computedText = computed(() => {
-            if (typeof props.text !== 'undefined') {
-                if (typeof props.text === 'function') {
-                    return props.text(props.option, props.prop);
+            if (typeof props.data.optionsConfig.text !== 'undefined') {
+                if (typeof props.data.optionsConfig.text === 'function') {
+                    return props.data.optionsConfig.text(props.item, props.data.prop);
                 }
 
-                if (props.text !== '') return props.text;
+                if (props.data.optionsConfig.text !== '') return props.data.optionsConfig.text;
             }
 
 
             return computedLabel.value;
         }),
         computedLabel = computed(() => {
-            if (typeof props.labelFormatter === 'function') return props.labelFormatter(props.option);
-            return props.option.label;
+            if (typeof props.data.optionsConfig.labelFormatter === 'function') return props.data.optionsConfig.labelFormatter(props.item);
+            return props.item.label;
         }),
         computedClass = computed(() => {
-            if (typeof props.customClass === 'function') return props.customClass(props.option);
-            if (typeof props.customClass !== 'undefined') return props.customClass;
-            return `lkt-opt-${props.option.value}`;
+            if (typeof props.data.optionsConfig.class === 'function') return props.data.optionsConfig.class(props.item);
+            if (typeof props.data.optionsConfig.class !== 'undefined') return props.data.optionsConfig.class;
+            return `lkt-opt-${props.item.value}`;
         }),
         optionSlot = computed(() => {
-            if (!props.optionSlot) return undefined;
-            if (typeof Settings.optionSlots[props.optionSlot] === 'undefined') return undefined;
-            return Settings.optionSlots[props.optionSlot];
+            if (!props.data.optionSlot) return undefined;
+            if (typeof Settings.optionSlots[props.data.optionSlot] === 'undefined') return undefined;
+            return Settings.optionSlots[props.data.optionSlot];
         }),
         computedContainerComponent = computed(() => {
             if (optionSlot.value) return optionSlot.value;
-            if (props.isTag) return 'lkt-tag';
-            if (!props.editable && ((typeof props.modal !== 'undefined' && props.modal !== '') || (typeof props.option.modal !== 'undefined' && props.option.modal !== ''))) return 'lkt-button';
-            if (!props.editable && (typeof props.download !== 'undefined' && props.download !== '')) return 'lkt-anchor';
-            if (!props.editable && (typeof props.anchor !== 'undefined')) return 'lkt-anchor';
+            if (props.data.isTag) return 'lkt-tag';
+            if (!props.editing && ((typeof props.data.optionsConfig.modal !== 'undefined' && props.data.optionsConfig.modal !== '') || (typeof props.item.modal !== 'undefined' && props.item.modal !== ''))) return 'lkt-button';
+            if (!props.editing && (typeof props.data.optionsConfig.download !== 'undefined' && props.data.optionsConfig.download !== '')) return 'lkt-anchor';
+            if (!props.editing && (typeof props.data.optionsConfig.anchor !== 'undefined')) return 'lkt-anchor';
             return 'div';
         }),
         computedContainerAttrs = computed(() => {
             if (computedContainerComponent.value === 'lkt-button') {
-                let modal = props.option.modal;
-                if (props.modal) modal = props.modal;
+                let modal = props.item.modal;
+                if (props.data.optionsConfig.modal) modal = props.data.optionsConfig.modal;
                 let modalVal = modal;
                 if (typeof modal === 'function') {
                     modalVal = () => {
-                        return modal(props.option);
+                        return modal(props.item);
                     };
                 }
 
                 return {
                     modal: modalVal,
-                    modalData: props.modalData,
-                    modalKey: props.option.value,
+                    modalData: props.data.optionsConfig.modalData,
+                    modalKey: props.item.value,
                     icon: computedIcon.value,
                 };
             }
 
             if (computedContainerComponent.value === 'lkt-anchor') {
 
-                if (typeof props.anchor === 'function') return <AnchorConfig>{ ...props.anchor({data:  props.option }), prop: props.option };
-                if (typeof props.anchor === 'object') return <AnchorConfig>{ ...props.anchor, prop: props.option };
+                if (typeof props.data.optionsConfig.anchor === 'function') return <AnchorConfig>{ ...props.data.optionsConfig.anchor({data:  props.item }), prop: props.item };
+                if (typeof props.data.optionsConfig.anchor === 'object') return <AnchorConfig>{ ...props.data.optionsConfig.anchor, prop: props.item };
 
-                let href = props.download;
-                if (typeof props.download === 'function') {
+                let href = props.data.optionsConfig.download;
+                if (typeof props.data.optionsConfig.download === 'function') {
                     href = () => {
-                        return props.download(props.option);
+                        //@ts-ignore
+                        return props.data.optionsConfig?.download(props.item);
                     };
 
-                } else if (props.download.startsWith('prop:')) {
-                    href = props.download.substring(5);
-                    href = props.option[href];
+                } else if (props.data.optionsConfig?.download?.startsWith('prop:')) {
+                    href = extractPropValue(props.data.optionsConfig?.download, props.item);
+                    // href = props.data.optionsConfig?.download.substring(5);
+                    // href = props.item[href];
                 }
 
-                let isDownload = props.download !== '';
+                let isDownload = props.data.optionsConfig.download !== '';
 
                 return <AnchorConfig>{
                     to: href,
                     type: isDownload ? AnchorType.Download : undefined,
-                    prop: props.option,
+                    prop: props.item,
                 };
             }
 
@@ -129,13 +109,22 @@
             }
 
             return {};
+        }),
+        computedTags = computed((): Array<TagConfig> => {
+            if (typeof props.item.tags === 'undefined') return [];
+            //@ts-ignore
+            if (typeof props.item.tags === 'function') return props.item.tags();
+            return props.item.tags;
         });
 
     const onClick = () => {
+            if (typeof props.events.click === 'function') {
+                props.events.click(props.item, props.index);
+            }
             emit('click');
         },
         onClickIcon = () => {
-            emit('click-icon', props.option);
+            emit('click-icon', props.item);
         };
 </script>
 
@@ -146,7 +135,7 @@
         class="lkt-field--dropdown-option"
         :class="computedClass"
         :title="computedText"
-        @click="onClick"
+        @click.stop="onClick"
         @click-icon="onClickIcon"
     >
         <div
@@ -159,7 +148,7 @@
         </div>
 
         <lkt-tag
-            v-for="tag in option.tags"
+            v-for="tag in computedTags"
             v-bind="tag"
         />
     </component>

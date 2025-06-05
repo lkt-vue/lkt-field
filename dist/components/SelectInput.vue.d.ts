@@ -1,25 +1,9 @@
-import { LktObject, Option, OptionsConfig, ValidFieldValue } from 'lkt-vue-kernel';
+import { SelectInputProps } from '../config/SelectInputProps.d.ts';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
-type __VLS_Props = {
-    modelValue: ValidFieldValue;
-    searchable: boolean;
-    searchMode: boolean;
-    multiple: boolean;
-    canTag: boolean;
-    optionsConfig: OptionsConfig;
-    optionSlot?: string;
-    pickedOptions: Option[];
-    showOptions: boolean;
-    editable: boolean;
-    focusing: boolean;
-    searchPlaceholder: string;
-    multipleDisplayEdition: string;
-    searchString: string;
-    prop?: LktObject;
-    max?: number;
-};
-declare const _default: DefineComponent<__VLS_Props, {
+import { LktObject, ValidFieldValue } from 'lkt-vue-kernel';
+declare const _default: DefineComponent<SelectInputProps, {
     keepFocused: () => void;
+    switchShowOptions: () => void;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     search: (...args: any[]) => void;
     "update:modelValue": (...args: any[]) => void;
@@ -31,7 +15,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     navigate: (...args: any[]) => void;
     tag: (...args: any[]) => void;
     untag: (...args: any[]) => void;
-}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{
+}, string, PublicProps, Readonly<SelectInputProps> & Readonly<{
     onSearch?: ((...args: any[]) => any) | undefined;
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     onFocus?: ((...args: any[]) => any) | undefined;
@@ -48,5 +32,7 @@ declare const _default: DefineComponent<__VLS_Props, {
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     queryField: HTMLInputElement;
     selectButton: unknown;
+    dropdownEl: unknown;
+    optionList: unknown;
 }, any>;
 export default _default;

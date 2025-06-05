@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, watch } from 'vue';
+    import { markRaw, ref, watch } from 'vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { TableConfig, TableType } from 'lkt-vue-kernel';
 
@@ -90,17 +90,21 @@
                 paginator: {
                     resource: optionsResource,
                     resourceData: filters,
+                },
+                itemSlotComponent: markRaw(DropdownOption),
+                itemSlotData: {
+                    optionSlot: '',
+                    editable,
+                    prop: {},
+                    isTag: false,
+                    optionsConfig: {},
+                },
+                itemSlotEvents: {
+                    click: cancelBlur
                 }
             }"
             @page="cancelBlur"
             @click="cancelBlur"
-        >
-            <template #item="{item, index, isLoading, canCreate, canUpdate, canDrop, canRead, doDrop}">
-                <dropdown-option
-                    :option="item"
-                    @click="cancelBlur"
-                />
-            </template>
-        </lkt-table>
+        />
     </lkt-tooltip>
 </template>

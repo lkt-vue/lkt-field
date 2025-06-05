@@ -42,7 +42,7 @@
     import {
         filterOptions,
         findOptionByValue,
-        getInValueOptionIndex,
+        getInValueOptionIndex, handleOptionClickMultiple,
         optionIsActive,
         prepareOptions,
         receiveOptions,
@@ -75,6 +75,8 @@
     import { openToast } from 'lkt-toast';
     import { DataState } from 'lkt-data-state';
     import TimeInput from '@/components/TimeInput.vue';
+    import { SelectInputProps } from '@/config/SelectInputProps.ts';
+    import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
 
     // Emits
     const emits = defineEmits([
@@ -609,7 +611,7 @@
     }, { deep: true });
 
     watch(editableValue, (v) => {
-        if (typeof v === 'object' && ![FieldType.Card].includes(props.type)) {
+        if (typeof v === 'object' && !Array.isArray(v) && ![FieldType.Card].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
         } else {
@@ -1018,35 +1020,48 @@
             if (option.disabled) return;
 
             if (props.multiple) {
-                let k = -1;
+                handleOptionClickMultiple({
+                    option,
+                    value: editableValue.value,
+                    pickedOptions: pickedOptions.value,
+                    tagMode: tagging,
+                    searchMode: props.searchable,
+                    optionValueType: props.optionValueType,
+                    searchField: inputElement.value,
+                    callback: props.events?.clickOption
+                });
 
-                if (props.optionValueType === 'option') {
-                    //@ts-ignore
-                    k = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
-                } else {
-                    //@ts-ignore
-                    k = getInValueOptionIndex(option, editableValue.value);
-                }
+                console.log('new login triggered!!');
 
-                if (k === -1) {
-                    if (props.optionValueType === 'option') {
-                        //@ts-ignore
-                        editableValue.value.push(option.value);
-                    } else {
-                        //@ts-ignore
-                        editableValue.value.push(String(option.value));
-                    }
-                    if (!tagging) pickedOptions.value.push(option);
-
-                } else if (!tagging) {
-                    //@ts-ignore
-                    editableValue.value.splice(k, 1);
-                    pickedOptions.value.splice(k, 1);
-                }
-                turnOnSelectSearchMode();
-                if (typeof props.events?.clickOption === 'function') {
-                    props.events?.clickOption({ option });
-                }
+                // let k = -1;
+                //
+                // if (props.optionValueType === 'option') {
+                //     //@ts-ignore
+                //     k = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
+                // } else {
+                //     //@ts-ignore
+                //     k = getInValueOptionIndex(option, editableValue.value);
+                // }
+                //
+                // if (k === -1) {
+                //     if (props.optionValueType === 'option') {
+                //         //@ts-ignore
+                //         editableValue.value.push(option.value);
+                //     } else {
+                //         //@ts-ignore
+                //         editableValue.value.push(String(option.value));
+                //     }
+                //     if (!tagging) pickedOptions.value.push(option);
+                //
+                // } else if (!tagging) {
+                //     //@ts-ignore
+                //     editableValue.value.splice(k, 1);
+                //     pickedOptions.value.splice(k, 1);
+                // }
+                // turnOnSelectSearchMode();
+                // if (typeof props.events?.clickOption === 'function') {
+                //     props.events?.clickOption({ option });
+                // }
                 emits('selected-option', option);
 
             } else {
@@ -1510,19 +1525,27 @@
                     v-model="editableValue"
                     v-model:show-options="showOptions"
                     v-model:picked-options="pickedOptions"
-                    :searchable="searchable"
-                    :search-mode="searchMode"
-                    :search-string="searchString"
-                    :multiple="multiple"
-                    :can-tag="canTag"
-                    :options-config="optionsConfig"
-                    :option-slot="optionSlot"
-                    :editable="computedEditable"
-                    :focusing="focusing"
-                    :search-placeholder="computedSearchPlaceholder"
-                    :multiple-display-edition="multipleDisplayEdition"
-                    :prop="prop"
-                    :max="MaximumValue"
+                    v-bind="<SelectInputProps>{
+                        visibleOptions,
+                        searchable,
+                        searchMode,
+                        searchString,
+                        multiple,
+                        canTag,
+                        optionsConfig,
+                        optionSlot,
+                        editable: computedEditable,
+                        focusing,
+                        searchPlaceholder: computedSearchPlaceholder,
+                        multipleDisplayEdition: multipleDisplayEdition,
+                        prop,
+                        max: MaximumValue,
+                        tooltip: tooltipConfig,
+                        events,
+                        optionValueType,
+                        focusedOptionIndex,
+                        referrer: container,
+                    }"
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"
                     @navigate="onNavigateSelectInput"
@@ -1894,7 +1917,7 @@
             :stack="validation?.stack" />
 
         <lkt-tooltip
-            v-if="computedEditable && fieldTypesWithOptions.includes(type)"
+            v-if="computedEditable && [FieldType.Text].includes(type)"
             ref="dropdownEl"
             v-model="showOptions"
             v-bind="<TooltipConfig>{
@@ -1929,15 +1952,16 @@
                         </template>
                         <template v-else>
                             <dropdown-option
-                                :option="option"
-                                :option-slot="optionSlot"
-                                :icon="optionsConfig?.icon"
-                                :text="optionsConfig?.text"
-                                :modal="optionsConfig?.modal"
-                                :modal-data="optionsConfig?.modalData"
-                                :download="optionsConfig?.download"
-                                :label-formatter="optionsConfig?.labelFormatter"
-                                :editable="computedEditable"
+                                v-bind="<DropdownOptionProps>{
+                                    item: option,
+                                    data: {
+                                        optionSlot,
+                                        editable: computedEditable,
+                                        prop,
+                                        isTag: canTag,
+                                        optionsConfig,
+                                    }
+                                }"
                             />
                         </template>
                     </li>

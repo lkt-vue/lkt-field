@@ -10,6 +10,7 @@
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
     import { Settings } from '../settings/Settings';
+    import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
 
     const emit = defineEmits(['click']);
     const slots = useSlots();
@@ -194,17 +195,15 @@
                         <template v-for="(_, i) in computedValue" :key="`${i}-${computedValue[i].value}`">
                             <li :title="computedValue[i]?.label">
                                 <dropdown-option
-                                    :option="computedValue[i]"
-                                    :option-slot="optionSlot"
-                                    :icon="optionsIcon"
-                                    :text="optionsText"
-                                    :custom-class="optionsClass"
-                                    :modal="optionsModal"
-                                    :modal-data="optionsModalData"
-                                    :download="optionsDownload"
-                                    :anchor="anchor"
-                                    :label-formatter="optionsLabelFormatter"
-                                    :prop="prop"
+                                    v-bind="<DropdownOptionProps>{
+                                        item: computedValue[i],
+                                        data: {
+                                            optionSlot,
+                                            editable: false,
+                                            prop,
+                                            optionsConfig,
+                                        }
+                                    }"
                                 />
                             </li>
                         </template>
@@ -213,17 +212,15 @@
 
                 <dropdown-option
                     v-else-if="computedValue.length > 0"
-                    :option="computedValue[0]"
-                    :option-slot="optionSlot"
-                    :icon="optionsIcon"
-                    :text="optionsText"
-                    :custom-class="optionsClass"
-                    :modal="optionsModal"
-                    :modal-data="optionsModalData"
-                    :download="optionsDownload"
-                    :anchor="anchor"
-                    :label-formatter="optionsLabelFormatter"
-                    :prop="prop"
+                    v-bind="<DropdownOptionProps>{
+                        item: computedValue[0],
+                        data: {
+                            optionSlot,
+                            editable: false,
+                            prop,
+                            optionsConfig,
+                        }
+                    }"
                 />
             </div>
             <lkt-button
@@ -236,15 +233,20 @@
             >
                 <div v-html="computedValue"/>
             </lkt-button>
+
             <dropdown-option
-                class="lkt-field--read-value"
                 v-else-if="download"
-                :option="<Option>{value: '', label: computedValue}"
-                :download="download"
-                :anchor="anchor"
-                :text="optionsText"
-                :custom-class="optionsClass"
-                :prop="prop"
+                v-bind="<DropdownOptionProps>{
+                    item: {value: '', label: computedValue},
+                    data: {
+                        optionSlot,
+                        editable: false,
+                        prop,
+                        optionsConfig,
+                        anchor,
+                        download,
+                    }
+                }"
             />
             <div
                 v-else-if="type === FieldType.Number"

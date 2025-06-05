@@ -1,36 +1,10 @@
-import { AnchorConfig, LktObject, Option } from 'lkt-vue-kernel';
+import { DropdownOptionProps } from '../../config/DropdownOptionProps.d.ts';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
-type __VLS_Props = {
-    option: Option;
-    optionSlot?: string;
-    editable?: boolean;
-    icon?: string | Function;
-    text?: string | Function;
-    customClass?: string | Function;
-    modal?: string | Function;
-    modalData?: LktObject | Function;
-    download?: string | Function;
-    anchor?: AnchorConfig | Function;
-    labelFormatter?: Function;
-    isTag?: boolean;
-    prop?: LktObject;
-};
-declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+declare const _default: DefineComponent<DropdownOptionProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     click: (...args: any[]) => void;
     "click-icon": (...args: any[]) => void;
-}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{
+}, string, PublicProps, Readonly<DropdownOptionProps> & Readonly<{
     onClick?: ((...args: any[]) => any) | undefined;
     "onClick-icon"?: ((...args: any[]) => any) | undefined;
-}>, {
-    text: string | Function;
-    icon: string | Function;
-    modal: string | Function;
-    modalData: LktObject | Function;
-    prop: LktObject;
-    option: Option;
-    optionSlot: string;
-    download: string | Function;
-    editable: boolean;
-    isTag: boolean;
-}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
+}>, {}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 export default _default;

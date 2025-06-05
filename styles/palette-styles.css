@@ -38,15 +38,3 @@
     padding: 0;
     cursor: default;
 }
-
-.has-focus.lkt-field-select .lkt-field__select {
-    outline: 0;
-    border: var(--lkt-field--border-width) var(--lkt-field--border-style) var(--lkt-field--focus--border-color);
-    box-shadow: var(--lkt-field--focus--shadow);
-}
-
-.lkt-field-select.is-disabled .lkt-field__select {
-    box-shadow: none;
-    border: var(--lkt-field--border-width) var(--lkt-field--border-style) var(--lkt-field--disabled--border-color);
-    background-color: var(--lkt-field--disabled--input--background) !important;
-}

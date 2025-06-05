@@ -1,15 +1,26 @@
 <script setup lang="ts">
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import {
+        ButtonConfig,
         ButtonType,
-        LktObject,
         MultipleOptionsDisplay,
-        Option, OptionsConfig,
+        Option,
+        OptionConfig,
         TableConfig,
+        TableType,
         TagConfig,
-        ValidFieldValue,
+        TooltipConfig,
+        TooltipLocationX,
+        TooltipLocationY,
     } from 'lkt-vue-kernel';
-    import { computed, nextTick, ref, watch } from 'vue';
+    import { computed, markRaw, nextTick, ref, watch } from 'vue';
+    import {
+        handleOptionClickMultiple,
+        handleOptionClickSingle,
+        optionIsActive,
+    } from '@/functions/option-functions.ts';
+    import { SelectInputProps } from '@/config/SelectInputProps.ts';
+    import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
 
     const emit = defineEmits([
         'update:modelValue',
@@ -24,24 +35,10 @@
         'untag',
     ]);
 
-    const props = withDefaults(defineProps<{
-        modelValue: ValidFieldValue
-        searchable: boolean
-        searchMode: boolean
-        multiple: boolean
-        canTag: boolean
-        optionsConfig: OptionsConfig
-        optionSlot?: string
-        pickedOptions: Option[]
-        showOptions: boolean
-        editable: boolean
-        focusing: boolean
-        searchPlaceholder: string
-        multipleDisplayEdition: string
-        searchString: string
-        prop?: LktObject
-        max?: number
-    }>(), {
+    const selectButton = ref(null);
+    const dropdownEl = ref(null);
+
+    const props = withDefaults(defineProps<SelectInputProps>(), {
         modelValue: false,
         prop: () => ({})
     });
@@ -58,8 +55,8 @@
     /**
      * Options visibility
      */
-    const visibleOptions = ref(props.showOptions);
-    watch(visibleOptions, v => {
+    const editableShowOptions = ref(props.showOptions);
+    watch(editableShowOptions, v => {
         if (!tagsEnabled) emit('update:showOptions', v);
     });
 
@@ -70,10 +67,19 @@
         queryHasFocus = ref(false),
         buttonHasFocus = ref(false);
 
+    watch(() => props.focusing, (v) => {
+        if (v) {
+            buttonHasFocus.value = true;
+        } else {
+            buttonHasFocus.value = false;
+        }
+        checkGlobalFocus();
+    });
+
     const checkGlobalFocus = () => {
         nextTick(() => {
             hasFocus.value = queryHasFocus.value || buttonHasFocus.value;
-            visibleOptions.value = hasFocus.value;
+            editableShowOptions.value = hasFocus.value;
         });
     };
 
@@ -147,6 +153,9 @@
 
     defineExpose({
         keepFocused,
+        switchShowOptions: () => {
+            editableShowOptions.value = !editableShowOptions.value;
+        }
     });
 
     watch(() => props.pickedOptions, (v) => {
@@ -158,6 +167,14 @@
         emit('update:pickedOptions', v);
     }, {deep: true})
 
+    watch(editableShowOptions, (v) => {
+        if (!v) {
+            buttonHasFocus.value = false;
+            queryHasFocus.value = false;
+            checkGlobalFocus();
+        }
+    })
+
     const computedRenderMultipleSearchUi = computed(() => {
         return props.multiple && (props.canTag || props.searchable);
     })
@@ -165,6 +182,33 @@
     const computedRenderSearchUI = computed(() => {
         return !props.multiple && props.searchable && hasFocus.value;
     })
+
+    const onClickOption = (option: OptionConfig) => {
+
+        const fineHandled = props.multiple
+            ? handleOptionClickMultiple({
+                option,
+                value: props.modelValue,
+                pickedOptions: props.pickedOptions,
+                tagMode: tagsEnabled,
+                searchMode: props.searchable,
+                keepFocused,
+                optionValueType: props.optionValueType,
+                callback: props.events?.clickOption
+            })
+            : handleOptionClickSingle({
+                option,
+                value: props.modelValue,
+                pickedOptions: props.pickedOptions,
+                showOptions: editableShowOptions.value,
+                optionValueType: props.optionValueType,
+                callback: props.events?.clickOption
+            });
+
+        if (fineHandled) {
+            emit('selected-option', option);
+        }
+    };
 
 </script>
 
@@ -204,10 +248,11 @@
 
     <lkt-button
         ref="selectButton"
-        :type="tagsEnabled ? ButtonType.Content : ButtonType.Button"
         v-show="!computedRenderSearchUI || computedRenderMultipleSearchUi"
-        class="lkt-field--toggle-button lkt-field--select-button"
-        v-model:open-tooltip="visibleOptions"
+        v-bind="<ButtonConfig>{
+            type: tagsEnabled ? ButtonType.Content : ButtonType.Button,
+            class: 'lkt-field--toggle-button lkt-field--select-button',
+        }"
         @keyup="onKeyUpSelectButton"
         @blur="onBlurSelectButton"
         @focus="onFocusSelectButton"
@@ -226,40 +271,84 @@
                 }"
             />
 
-            <ul v-else class="lkt-field-select-read" :class="`multiple-display-${multipleDisplayEdition}`">
-                <li v-for="(option, i) in pickedOptions" :title="option.label" :key="`${i}-${option.value}`">
-                    <dropdown-option
-                        :option="pickedOptions[i]"
-                        :option-slot="optionSlot"
-                        :icon="optionsConfig.icon"
-                        :text="optionsConfig.text"
-                        :custom-class="optionsConfig.class"
-                        :modal="optionsConfig.modal"
-                        :modal-data="optionsConfig.modalData"
-                        :download="optionsConfig.download"
-                        :label-formatter="optionsConfig.labelFormatter"
-                        :editable="editable"
-                        :is-tag="tagsEnabled"
-                        :prop="prop"
-                        :key="i"
-                        @click-icon="onClickOptionIcon"
-                    />
-                </li>
-            </ul>
+            <lkt-table
+                v-else
+                v-model="editableOptions"
+                v-bind="<TableConfig>{
+                    type: TableType.Ul,
+                    editMode: editable,
+                    itemsContainerClass: `lkt-field-select-read multiple-display-${multipleDisplayEdition}`,
+                    itemSlotComponent: markRaw(DropdownOption),
+                    itemSlotData: {
+                        optionSlot,
+                        editable,
+                        prop,
+                        isTag: tagsEnabled,
+                        optionsConfig,
+                    },
+                    itemSlotEvents: {
+                        clickIcon: onClickOptionIcon
+                    }
+                }"
+            />
         </template>
         <dropdown-option
             v-else-if="!multiple && pickedOptions.length > 0"
-            :option="pickedOptions[0]"
-            :option-slot="optionSlot"
-            :icon="optionsConfig.icon"
-            :text="optionsConfig.text"
-            :custom-class="optionsConfig.class"
-            :modal="optionsConfig.modal"
-            :modal-data="optionsConfig.modalData"
-            :download="optionsConfig.download"
-            :label-formatter="optionsConfig.labelFormatter"
-            :editable="editable"
-            :prop="prop"
+            v-bind="<DropdownOptionProps>{
+                item: pickedOptions[0],
+                data: {
+                    optionSlot,
+                    editable,
+                    prop,
+                    isTag: tagsEnabled,
+                    optionsConfig,
+                }
+            }"
         />
     </lkt-button>
+
+    <lkt-tooltip
+        ref="dropdownEl"
+        v-model="editableShowOptions"
+        v-bind="<TooltipConfig>{
+            class: 'lkt-field--dropdown',
+            referrer,
+            referrerWidth: true,
+            locationX: TooltipLocationX.LeftCorner,
+            locationY: TooltipLocationY.Bottom,
+            ...tooltip
+        }"
+    >
+        <lkt-loader v-if="isLoading" />
+        <lkt-table
+            v-if="!isLoading"
+            ref="optionList"
+            v-model="visibleOptions"
+            v-bind="<TableConfig>{
+                type: TableType.Ul,
+                editMode: editable,
+                itemsContainerClass: `lkt-field--dropdown-options`,
+                itemContainerClass: (option: OptionConfig, index: number) => {
+                    let r = [];
+                    if (optionIsActive(option, props.modelValue, multiple)) r.push('is-active');
+                    if (props.focusedOptionIndex === index) r.push('is-focused');
+                    if (option.disabled) r.push('is-disabled')
+                    return r.join(' ');
+                },
+                itemSlotComponent: markRaw(DropdownOption),
+                itemSlotData: {
+                    optionSlot,
+                    editable,
+                    prop,
+                    isTag: tagsEnabled,
+                    optionsConfig,
+                },
+                itemSlotEvents: {
+                    click: (item: OptionConfig, i: number) => {
+                        onClickOption(item);
+                    }
+                }
+            }"
+        />
+    </lkt-tooltip>
 </template>

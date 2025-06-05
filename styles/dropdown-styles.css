@@ -30,11 +30,16 @@
     border-radius: var(--lkt-field--input--border-radius);
 }
 
-.lkt-field--dropdown-options li .lkt-field--dropdown-option{
-    padding: var(--lkt-field--option--padding);
+.lkt-field--dropdown-options li .lkt-field--dropdown-option {
     transition: var(--lkt-field--input--transition);
     color: var(--lkt-field--option--color);
     scroll-margin-top: 10px;
+}
+.lkt-field--dropdown-options li .lkt-button.lkt-field--dropdown-option .lkt-button-main {
+    padding: var(--lkt-field--option--padding);
+}
+.lkt-field--dropdown-options li div.lkt-field--dropdown-option:not(.lkt-button) {
+    padding: var(--lkt-field--option--padding);
 }
 .lkt-field--dropdown-options li:nth-child(odd) .lkt-field--dropdown-option {
     background: var(--lkt-field--odd-option--background);
