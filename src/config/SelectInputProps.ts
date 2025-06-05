@@ -7,6 +7,7 @@ export interface SelectInputProps {
     isLoading: boolean
     multiple: boolean
     canTag: boolean
+    options: any
     optionsConfig: OptionsConfig
     optionSlot?: string
     pickedOptions: Option[]

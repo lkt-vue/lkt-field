@@ -2,6 +2,7 @@ import { LktObject, Option, OptionConfig, ValidOptionValue } from 'lkt-vue-kerne
 import { Component } from 'vue';
 export declare const prepareOptions: (options: any, prop: LktObject) => Option[];
 export declare const removeDuplicatedOptions: (options: Option[]) => Option[];
+export declare const canDisplayOption: (option: OptionConfig, query?: string, includeEquals?: boolean, customFilter?: Function | undefined) => boolean;
 export declare const filterOptions: (options: Option[], query?: string, includeEquals?: boolean, customFilter?: Function | undefined) => Option[];
 export declare const findOptionByValue: (options: Option[], query: ValidOptionValue) => Option | undefined;
 export declare const receiveOptions: (currentOptions: Option[], receivedOptions: Option[], prop: LktObject) => Option[];

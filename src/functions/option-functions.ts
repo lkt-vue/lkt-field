@@ -46,6 +46,17 @@ export const removeDuplicatedOptions = (options: Option[]):Option[] => {
     }, []);
 }
 
+export const canDisplayOption = (option: OptionConfig, query: string = '', includeEquals: boolean = true, customFilter: Function|undefined = undefined): boolean => {
+    if (query === '' && typeof customFilter !== 'function') return true;
+
+    const q = String(query).toLowerCase();
+
+    let label = String(option.label).toLowerCase();
+    if (!(label.indexOf(q) !== -1 && (includeEquals || label !== q))) return false;
+    if (typeof customFilter === 'function' && !customFilter(option)) return false;
+    return true;
+};
+
 export const filterOptions = (options: Option[], query: string = '', includeEquals: boolean = true, customFilter: Function|undefined = undefined) => {
     if (query === '' && typeof customFilter !== 'function') return options;
 

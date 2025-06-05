@@ -820,6 +820,7 @@
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
+        console.log('called fetchOptions: ', query);
             if (!computedEditable.value && (!props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value)) return;
             if ([
                 FieldType.Tel,
@@ -833,6 +834,7 @@
                 FieldType.Password,
                 FieldType.Range,
                 FieldType.Textarea,
+                FieldType.Select,
             ].includes(props.type)) return;
 
             isLoading.value = false;
@@ -1030,38 +1032,6 @@
                     searchField: inputElement.value,
                     callback: props.events?.clickOption
                 });
-
-                console.log('new login triggered!!');
-
-                // let k = -1;
-                //
-                // if (props.optionValueType === 'option') {
-                //     //@ts-ignore
-                //     k = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
-                // } else {
-                //     //@ts-ignore
-                //     k = getInValueOptionIndex(option, editableValue.value);
-                // }
-                //
-                // if (k === -1) {
-                //     if (props.optionValueType === 'option') {
-                //         //@ts-ignore
-                //         editableValue.value.push(option.value);
-                //     } else {
-                //         //@ts-ignore
-                //         editableValue.value.push(String(option.value));
-                //     }
-                //     if (!tagging) pickedOptions.value.push(option);
-                //
-                // } else if (!tagging) {
-                //     //@ts-ignore
-                //     editableValue.value.splice(k, 1);
-                //     pickedOptions.value.splice(k, 1);
-                // }
-                // turnOnSelectSearchMode();
-                // if (typeof props.events?.clickOption === 'function') {
-                //     props.events?.clickOption({ option });
-                // }
                 emits('selected-option', option);
 
             } else {
@@ -1532,6 +1502,7 @@
                         searchString,
                         multiple,
                         canTag,
+                        options,
                         optionsConfig,
                         optionSlot,
                         editable: computedEditable,

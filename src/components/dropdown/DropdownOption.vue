@@ -11,8 +11,6 @@
 
     const props = withDefaults(defineProps<DropdownOptionProps>(), {});
 
-    console.log('props: ', props);
-
     const computedIcon = computed(() => {
             if (props.item.icon !== '') return props.item.icon;
 

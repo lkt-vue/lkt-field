@@ -15,9 +15,12 @@
     } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, ref, watch } from 'vue';
     import {
+        canDisplayOption,
         handleOptionClickMultiple,
         handleOptionClickSingle,
         optionIsActive,
+        prepareOptions,
+        receiveOptions,
     } from '@/functions/option-functions.ts';
     import { SelectInputProps } from '@/config/SelectInputProps.ts';
     import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
@@ -44,6 +47,9 @@
     });
 
     const tagsEnabled = props.multiple && props.canTag;
+
+    const tableItems = ref(<Array<OptionConfig>>prepareOptions(props.options, props.prop));
+    console.log('tableItems: ', tableItems.value);
 
     /**
      * Search query
@@ -281,7 +287,7 @@
                     itemSlotComponent: markRaw(DropdownOption),
                     itemSlotData: {
                         optionSlot,
-                        editable,
+                        editable: false,
                         prop,
                         isTag: tagsEnabled,
                         optionsConfig,
@@ -298,7 +304,7 @@
                 item: pickedOptions[0],
                 data: {
                     optionSlot,
-                    editable,
+                    editable: false,
                     prop,
                     isTag: tagsEnabled,
                     optionsConfig,
@@ -319,14 +325,26 @@
             ...tooltip
         }"
     >
-        <lkt-loader v-if="isLoading" />
         <lkt-table
-            v-if="!isLoading"
             ref="optionList"
-            v-model="visibleOptions"
+            v-if="editableShowOptions"
+            v-model="tableItems"
             v-bind="<TableConfig>{
                 type: TableType.Ul,
                 editMode: editable,
+                paginator: {
+                    resource: optionsConfig.http?.resource,
+                    resourceData: optionsConfig.http?.data,
+                },
+                events: {
+                    parseResults: (data: OptionConfig[]) => {
+                        return receiveOptions(tableItems, data, prop);
+                    }
+                },
+                itemDisplayChecker: (option: OptionConfig) => {
+                    console.log('canDisplayOption: ', canDisplayOption(option, query, true, optionsConfig?.filter));
+                    return canDisplayOption(option, query, true, optionsConfig?.filter)
+                },
                 itemsContainerClass: `lkt-field--dropdown-options`,
                 itemContainerClass: (option: OptionConfig, index: number) => {
                     let r = [];
