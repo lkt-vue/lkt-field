@@ -193,3 +193,45 @@ export const handleOptionClickMultiple = (args: {
 
     return true;
 }
+
+const syncPickedOptions = (args: {
+    query: string
+    value: Array<OptionConfig|ValidOptionValue>
+    options: Array<OptionConfig>
+    pickedOptions: Array<OptionConfig>
+    multiple: boolean
+    optionValueType: string | 'option'
+}) => {
+    if (args.multiple) {
+        let l = args.options.length;
+        for (let i = 0; i < l; ++i) {
+            let option = args.optionValueType === 'option'
+                ? findOptionByValue(args.options, args.value[i].value)
+                : findOptionByValue(args.options, args.value[i])
+            ;
+
+            if (typeof option !== 'undefined') {
+                if (args.pickedOptions.length === 0) {
+                    args.pickedOptions.push(option);
+                } else {
+                    args.pickedOptions.splice(i, 1, option);
+                }
+            }
+        }
+
+        return;
+
+        let option = args.optionValueType === 'option'
+            ? findOptionByValue(args.options, args.value.map((opt: OptionConfig) => opt.value))
+            : findOptionByValue(args.options, args.value)
+        ;
+
+        if (typeof option !== 'undefined') {
+            if (args.pickedOptions.length === 0) {
+                args.pickedOptions.push(option);
+            } else {
+                args.pickedOptions.splice(0, 1, option);
+            }
+        }
+    }
+}

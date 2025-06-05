@@ -3,7 +3,7 @@
     import { ComponentPublicInstance, computed, nextTick, onMounted, ref, useSlots, watch } from 'vue';
     import { Settings } from '../settings/Settings';
     import { httpCall, HTTPResponse } from 'lkt-http-client';
-    import { computedCurrentLanguage, currentLanguage } from 'lkt-i18n';
+    import { currentLanguage } from 'lkt-i18n';
     import {
         booleanFieldTypes,
         ButtonConfig,
@@ -23,7 +23,8 @@
         getDefaultValues,
         LktObject,
         LktSettings,
-        Option, OptionConfig,
+        Option,
+        OptionConfig,
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
@@ -42,7 +43,8 @@
     import {
         filterOptions,
         findOptionByValue,
-        getInValueOptionIndex, handleOptionClickMultiple,
+        getInValueOptionIndex,
+        handleOptionClickMultiple,
         optionIsActive,
         prepareOptions,
         receiveOptions,
@@ -188,6 +190,7 @@
         visibleOptions = ref(<Option[]>[]);
 
     const updatePickedOption = () => {
+        return;
 
         const _doUpdate = (query: string) => {
             visibleOptions.value = filterOptions(optionsHaystack.value, query, true, props.optionsConfig?.filter);
@@ -651,33 +654,33 @@
         });
     });
 
-    watch(optionsHaystack, (v) => {
-        if (typeof props.events?.updatedOptions === 'function') {
-            enabledPropsOptionsWatcher.value = false;
-            props.events.updatedOptions({
-                options: v,
-            });
-        }
-        emits('update:options', v);
-    });
+    // watch(optionsHaystack, (v) => {
+    //     if (typeof props.events?.updatedOptions === 'function') {
+    //         enabledPropsOptionsWatcher.value = false;
+    //         props.events.updatedOptions({
+    //             options: v,
+    //         });
+    //     }
+    //     emits('update:options', v);
+    // });
 
-    watch(() => props.options, (v, oldValue) => {
-        if (!enabledPropsOptionsWatcher.value) return;
-
-        let checker = new DataState({
-            opts: oldValue,
-        });
-        checker.increment({ opts: v });
-        if (!checker.changed()) return;
-        optionsHaystack.value = prepareOptions(v, props.prop);
-        if (props.type === FieldType.Select) {
-            buildVisibleOptions(searchString.value, false);
-        } else {
-            buildVisibleOptions(editableValue.value, false);
-        }
-        pickedOptions.value = [];
-        updatePickedOption();
-    }, { deep: true });
+    // watch(() => props.options, (v, oldValue) => {
+    //     if (!enabledPropsOptionsWatcher.value) return;
+    //
+    //     let checker = new DataState({
+    //         opts: oldValue,
+    //     });
+    //     checker.increment({ opts: v });
+    //     if (!checker.changed()) return;
+    //     optionsHaystack.value = prepareOptions(v, props.prop);
+    //     if (props.type === FieldType.Select) {
+    //         buildVisibleOptions(searchString.value, false);
+    //     } else {
+    //         buildVisibleOptions(editableValue.value, false);
+    //     }
+    //     pickedOptions.value = [];
+    //     updatePickedOption();
+    // }, { deep: true });
 
     const doValidation = async () => {
 
@@ -820,6 +823,7 @@
             }
         },
         fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
+        return;
         console.log('called fetchOptions: ', query);
             if (!computedEditable.value && (!props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value)) return;
             if ([
@@ -1018,6 +1022,9 @@
             return onFocus();
         },
         onClickOption = (option: Option, tagging: boolean = false) => {
+        return;
+
+            if (props.type === FieldType.Select) return;
 
             if (option.disabled) return;
 
@@ -1119,6 +1126,7 @@
             }
         },
         onUpdatedPickedOptions = () => {
+        return;
             editableValue.value.splice(0, editableValue.value.length)
             if (props.optionValueType === 'option') {
                 editableValue.value = JSON.parse(JSON.stringify(pickedOptions.value));

@@ -48,7 +48,9 @@
 
     const tagsEnabled = props.multiple && props.canTag;
 
-    const tableItems = ref(<Array<OptionConfig>>prepareOptions(props.options, props.prop));
+    const originalOptions = typeof props.options === 'object' ? JSON.parse(JSON.stringify(props.options)) : props.options;
+
+    const tableItems = ref(<Array<OptionConfig>>[...prepareOptions(originalOptions, props.prop)]);
     console.log('tableItems: ', tableItems.value);
 
     /**
@@ -64,7 +66,13 @@
     const editableShowOptions = ref(props.showOptions);
     watch(editableShowOptions, v => {
         if (!tagsEnabled) emit('update:showOptions', v);
+        nextTick(() => {
+            canRenderDropdownTable.value = editableShowOptions.value;
+            console.log('tableItems: ', tableItems.value);
+        })
     });
+
+    const canRenderDropdownTable = ref(false);
 
     /**
      * Focus state
@@ -327,22 +335,28 @@
     >
         <lkt-table
             ref="optionList"
-            v-if="editableShowOptions"
+            v-if="canRenderDropdownTable"
             v-model="tableItems"
             v-bind="<TableConfig>{
                 type: TableType.Ul,
                 editMode: editable,
-                paginator: {
+                paginator: optionsConfig.http?.resource ? {
                     resource: optionsConfig.http?.resource,
                     resourceData: optionsConfig.http?.data,
-                },
+                    events: {
+                        httpStart: optionsConfig.http?.events?.onStart,
+                        httpEnd: optionsConfig.http?.events?.onEnd,
+                    }
+                } : undefined,
                 events: {
                     parseResults: (data: OptionConfig[]) => {
-                        return receiveOptions(tableItems, data, prop);
+                        if (optionsConfig.http?.resource) {
+                            return receiveOptions(prepareOptions(originalOptions, props.prop), data, prop);
+                        }
+                        return prepareOptions(originalOptions, props.prop);
                     }
                 },
                 itemDisplayChecker: (option: OptionConfig) => {
-                    console.log('canDisplayOption: ', canDisplayOption(option, query, true, optionsConfig?.filter));
                     return canDisplayOption(option, query, true, optionsConfig?.filter)
                 },
                 itemsContainerClass: `lkt-field--dropdown-options`,
