@@ -1,6 +1,6 @@
 import { extractPropValue, LktObject, LktSettings, Option, OptionConfig, ValidOptionValue } from 'lkt-vue-kernel';
 import { __ } from 'lkt-i18n';
-import { Component } from 'vue';
+import { Component, Ref } from 'vue';
 
 export const prepareOptions = (options: any, prop: LktObject): Option[] => {
     if (typeof options === 'string') {
@@ -117,7 +117,7 @@ export const getInValueOptionIndex = (option: OptionConfig, value: ValidOptionVa
 
 export const handleOptionClickSingle = (args: {
     option: OptionConfig,
-    value: OptionConfig|ValidOptionValue
+    value: Ref<OptionConfig|ValidOptionValue>
     pickedOptions: Array<OptionConfig>
     optionValueType: string | 'option'
     focusedOptionIndex: number
@@ -125,13 +125,15 @@ export const handleOptionClickSingle = (args: {
     searchMode: boolean
     callback?: Function
 }) => {
+
+    console.log('handleOptionClickSingle: ', args);
     if (args.option.disabled) return false;
 
     args.focusedOptionIndex = -1;
     if (args.optionValueType === 'option') {
-        args.value = args.option;
+        args.value.value = args.option;
     } else {
-        args.value = String(args.option.value);
+        args.value.value = String(args.option.value);
     }
     args.pickedOptions.splice(0, 1, args.option);
     args.showOptions = false;
@@ -146,7 +148,7 @@ export const handleOptionClickSingle = (args: {
 
 export const handleOptionClickMultiple = (args: {
     option: OptionConfig,
-    value: Array<OptionConfig|ValidOptionValue>
+    value: Ref<Array<OptionConfig|ValidOptionValue>>
     pickedOptions: Array<OptionConfig>
     tagMode: boolean
     searchMode: boolean
@@ -160,21 +162,21 @@ export const handleOptionClickMultiple = (args: {
     let k = -1;
 
     if (args.optionValueType === 'option') {
-        k = getInValueOptionIndex(args.option, args.value.map(opt => opt.value));
+        k = getInValueOptionIndex(args.option, args.value.value.map(opt => opt.value));
     } else {
-        k = getInValueOptionIndex(args.option, <Array<ValidOptionValue>>args.value);
+        k = getInValueOptionIndex(args.option, <Array<ValidOptionValue>>args.value.value);
     }
 
     if (k === -1) {
         if (args.optionValueType === 'option') {
-            args.value.push(args.option);
+            args.value.value.push(args.option);
         } else {
-            args.value.push(String(args.option.value));
+            args.value.value.push(String(args.option.value));
         }
         if (!args.tagMode) args.pickedOptions.push(args.option);
 
     } else if (!args.tagMode) {
-        args.value.splice(k, 1);
+        args.value.value.splice(k, 1);
         args.pickedOptions.splice(k, 1);
     }
 
@@ -194,14 +196,15 @@ export const handleOptionClickMultiple = (args: {
     return true;
 }
 
-const syncPickedOptions = (args: {
+export const syncPickedOptions = (args: {
     query: string
-    value: Array<OptionConfig|ValidOptionValue>
+    value: OptionConfig|ValidOptionValue|Array<OptionConfig|ValidOptionValue>
     options: Array<OptionConfig>
     pickedOptions: Array<OptionConfig>
     multiple: boolean
     optionValueType: string | 'option'
 }) => {
+    console.log('triggered syncPickedOPtions!!: ', args)
     if (args.multiple) {
         let l = args.options.length;
         for (let i = 0; i < l; ++i) {
@@ -220,18 +223,18 @@ const syncPickedOptions = (args: {
         }
 
         return;
+    }
 
-        let option = args.optionValueType === 'option'
-            ? findOptionByValue(args.options, args.value.map((opt: OptionConfig) => opt.value))
-            : findOptionByValue(args.options, args.value)
-        ;
+    let option = args.optionValueType === 'option'
+        ? findOptionByValue(args.options, args.value.map((opt: OptionConfig) => opt.value))
+        : findOptionByValue(args.options, args.value)
+    ;
 
-        if (typeof option !== 'undefined') {
-            if (args.pickedOptions.length === 0) {
-                args.pickedOptions.push(option);
-            } else {
-                args.pickedOptions.splice(0, 1, option);
-            }
+    if (typeof option !== 'undefined') {
+        if (args.pickedOptions.length === 0) {
+            args.pickedOptions.push(option);
+        } else {
+            args.pickedOptions.splice(0, 1, option);
         }
     }
 }

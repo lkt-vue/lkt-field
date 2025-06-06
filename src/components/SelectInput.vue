@@ -13,17 +13,18 @@
         TooltipLocationX,
         TooltipLocationY,
     } from 'lkt-vue-kernel';
-    import { computed, markRaw, nextTick, ref, watch } from 'vue';
+    import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
         canDisplayOption,
         handleOptionClickMultiple,
         handleOptionClickSingle,
         optionIsActive,
         prepareOptions,
-        receiveOptions,
+        receiveOptions, syncPickedOptions,
     } from '@/functions/option-functions.ts';
     import { SelectInputProps } from '@/config/SelectInputProps.ts';
     import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
+    import { Settings } from '@/settings/Settings.ts';
 
     const emit = defineEmits([
         'update:modelValue',
@@ -36,22 +37,33 @@
         'change',
         'tag',
         'untag',
+        'loaded',
     ]);
 
     const selectButton = ref(null);
     const dropdownEl = ref(null);
 
     const props = withDefaults(defineProps<SelectInputProps>(), {
-        modelValue: false,
+        autoLoading: false,
         prop: () => ({})
     });
+
+    const editableValue = ref(props.modelValue);
+
+    watch(() => props.modelValue, (v) => {
+        editableValue.value = v;
+    }, {deep: true})
+
+    watch(editableValue, (v) => {
+        console.log('update selectinput editableValue: ', v)
+        emit('update:modelValue', v);
+    }, {deep: true})
 
     const tagsEnabled = props.multiple && props.canTag;
 
     const originalOptions = typeof props.options === 'object' ? JSON.parse(JSON.stringify(props.options)) : props.options;
 
     const tableItems = ref(<Array<OptionConfig>>[...prepareOptions(originalOptions, props.prop)]);
-    console.log('tableItems: ', tableItems.value);
 
     /**
      * Search query
@@ -68,7 +80,6 @@
         if (!tagsEnabled) emit('update:showOptions', v);
         nextTick(() => {
             canRenderDropdownTable.value = editableShowOptions.value;
-            console.log('tableItems: ', tableItems.value);
         })
     });
 
@@ -202,7 +213,7 @@
         const fineHandled = props.multiple
             ? handleOptionClickMultiple({
                 option,
-                value: props.modelValue,
+                value: editableValue,
                 pickedOptions: props.pickedOptions,
                 tagMode: tagsEnabled,
                 searchMode: props.searchable,
@@ -212,7 +223,7 @@
             })
             : handleOptionClickSingle({
                 option,
-                value: props.modelValue,
+                value: editableValue,
                 pickedOptions: props.pickedOptions,
                 showOptions: editableShowOptions.value,
                 optionValueType: props.optionValueType,
@@ -224,10 +235,62 @@
         }
     };
 
+    const syncPicked = () => {
+        if (props.multiple) {
+            syncPickedOptions({
+                query: query.value,
+                value: editableValue.value,
+                options: tableItems.value,
+                pickedOptions: props.pickedOptions,
+                multiple: props.multiple,
+                optionValueType: props.optionValueType,
+            })
+        } else {
+            syncPickedOptions({
+                query: query.value,
+                value: editableValue.value,
+                options: tableItems.value,
+                pickedOptions: props.pickedOptions,
+                multiple: props.multiple,
+                optionValueType: props.optionValueType,
+            })
+        }
+
+        emit('loaded');
+    }
+
+    const computedDropdownPaginatorConfig = computed(() => {
+
+        if (!props.optionsConfig.http?.resource) return undefined;
+
+        let resourceData = {
+            ...props.optionsConfig.http?.data
+        };
+
+        if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query.value;
+
+        return {
+            resource: props.optionsConfig.http?.resource,
+            resourceData,
+            events: {
+                httpStart: props.optionsConfig.http?.events?.onStart,
+                httpEnd: props.optionsConfig.http?.events?.onEnd,
+            }
+        }
+    }),
+        computedDropdownTag = computed(() => {
+            if (props.autoLoading) return 'div';
+            return 'lkt-tooltip';
+        })
+
+    onMounted(() => {
+        syncPicked();
+    })
+
 </script>
 
 <template>
-    <div v-if="computedRenderSearchUI || computedRenderMultipleSearchUi" class="lkt-field--searchable-box">
+    <div v-if="!autoLoading && (computedRenderSearchUI || computedRenderMultipleSearchUi)" class="lkt-field--searchable-box">
 
         <lkt-tag
             v-if="multiple"
@@ -261,6 +324,7 @@
     </div>
 
     <lkt-button
+        v-if="!autoLoading"
         ref="selectButton"
         v-show="!computedRenderSearchUI || computedRenderMultipleSearchUi"
         v-bind="<ButtonConfig>{
@@ -295,7 +359,7 @@
                     itemSlotComponent: markRaw(DropdownOption),
                     itemSlotData: {
                         optionSlot,
-                        editable: false,
+                        previewMode: true,
                         prop,
                         isTag: tagsEnabled,
                         optionsConfig,
@@ -312,7 +376,7 @@
                 item: pickedOptions[0],
                 data: {
                     optionSlot,
-                    editable: false,
+                    previewMode: true,
                     prop,
                     isTag: tagsEnabled,
                     optionsConfig,
@@ -321,10 +385,11 @@
         />
     </lkt-button>
 
-    <lkt-tooltip
+    <component
         ref="dropdownEl"
+        :is="computedDropdownTag"
         v-model="editableShowOptions"
-        v-bind="<TooltipConfig>{
+        v-bind="autoLoading ? {} : <TooltipConfig>{
             class: 'lkt-field--dropdown',
             referrer,
             referrerWidth: true,
@@ -335,19 +400,13 @@
     >
         <lkt-table
             ref="optionList"
-            v-if="canRenderDropdownTable"
+            v-if="autoLoading || canRenderDropdownTable"
+            v-show="!autoLoading"
             v-model="tableItems"
             v-bind="<TableConfig>{
                 type: TableType.Ul,
                 editMode: editable,
-                paginator: optionsConfig.http?.resource ? {
-                    resource: optionsConfig.http?.resource,
-                    resourceData: optionsConfig.http?.data,
-                    events: {
-                        httpStart: optionsConfig.http?.events?.onStart,
-                        httpEnd: optionsConfig.http?.events?.onEnd,
-                    }
-                } : undefined,
+                paginator: computedDropdownPaginatorConfig,
                 events: {
                     parseResults: (data: OptionConfig[]) => {
                         if (optionsConfig.http?.resource) {
@@ -362,7 +421,7 @@
                 itemsContainerClass: `lkt-field--dropdown-options`,
                 itemContainerClass: (option: OptionConfig, index: number) => {
                     let r = [];
-                    if (optionIsActive(option, props.modelValue, multiple)) r.push('is-active');
+                    if (optionIsActive(option, editableValue, multiple)) r.push('is-active');
                     if (props.focusedOptionIndex === index) r.push('is-focused');
                     if (option.disabled) r.push('is-disabled')
                     return r.join(' ');
@@ -381,6 +440,7 @@
                     }
                 }
             }"
+            @read-response="syncPicked"
         />
-    </lkt-tooltip>
+    </component>
 </template>

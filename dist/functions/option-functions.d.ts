@@ -1,5 +1,5 @@
 import { LktObject, Option, OptionConfig, ValidOptionValue } from 'lkt-vue-kernel';
-import { Component } from 'vue';
+import { Component, Ref } from 'vue';
 export declare const prepareOptions: (options: any, prop: LktObject) => Option[];
 export declare const removeDuplicatedOptions: (options: Option[]) => Option[];
 export declare const canDisplayOption: (option: OptionConfig, query?: string, includeEquals?: boolean, customFilter?: Function | undefined) => boolean;
@@ -10,7 +10,7 @@ export declare const optionIsActive: (option: OptionConfig, value: ValidOptionVa
 export declare const getInValueOptionIndex: (option: OptionConfig, value: ValidOptionValue[]) => number;
 export declare const handleOptionClickSingle: (args: {
     option: OptionConfig;
-    value: OptionConfig | ValidOptionValue;
+    value: Ref<OptionConfig | ValidOptionValue>;
     pickedOptions: Array<OptionConfig>;
     optionValueType: string | "option";
     focusedOptionIndex: number;
@@ -20,7 +20,7 @@ export declare const handleOptionClickSingle: (args: {
 }) => boolean;
 export declare const handleOptionClickMultiple: (args: {
     option: OptionConfig;
-    value: Array<OptionConfig | ValidOptionValue>;
+    value: Ref<Array<OptionConfig | ValidOptionValue>>;
     pickedOptions: Array<OptionConfig>;
     tagMode: boolean;
     searchMode: boolean;
@@ -29,3 +29,11 @@ export declare const handleOptionClickMultiple: (args: {
     callback?: Function;
     keepFocused?: Function;
 }) => boolean;
+export declare const syncPickedOptions: (args: {
+    query: string;
+    value: OptionConfig | ValidOptionValue | Array<OptionConfig | ValidOptionValue>;
+    options: Array<OptionConfig>;
+    pickedOptions: Array<OptionConfig>;
+    multiple: boolean;
+    optionValueType: string | "option";
+}) => void;

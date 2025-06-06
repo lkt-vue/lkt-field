@@ -48,9 +48,9 @@
         computedContainerComponent = computed(() => {
             if (optionSlot.value) return optionSlot.value;
             if (props.data.isTag) return 'lkt-tag';
-            if (!props.editing && ((typeof props.data.optionsConfig.modal !== 'undefined' && props.data.optionsConfig.modal !== '') || (typeof props.item.modal !== 'undefined' && props.item.modal !== ''))) return 'lkt-button';
-            if (!props.editing && (typeof props.data.optionsConfig.download !== 'undefined' && props.data.optionsConfig.download !== '')) return 'lkt-anchor';
-            if (!props.editing && (typeof props.data.optionsConfig.anchor !== 'undefined')) return 'lkt-anchor';
+            if (!props.editing && !props.data.previewMode && ((typeof props.data.optionsConfig.modal !== 'undefined' && props.data.optionsConfig.modal !== '') || (typeof props.item.modal !== 'undefined' && props.item.modal !== ''))) return 'lkt-button';
+            if (!props.editing && !props.data.previewMode && (typeof props.data.optionsConfig.download !== 'undefined' && props.data.optionsConfig.download !== '')) return 'lkt-anchor';
+            if (!props.editing && !props.data.previewMode && (typeof props.data.optionsConfig.anchor !== 'undefined')) return 'lkt-anchor';
             return 'div';
         }),
         computedContainerAttrs = computed(() => {
@@ -116,12 +116,15 @@
         });
 
     const onClick = () => {
-            if (typeof props.events.click === 'function') {
+            if (typeof props.events?.click === 'function') {
                 props.events.click(props.item, props.index);
             }
             emit('click');
         },
         onClickIcon = () => {
+            if (typeof props.events?.clickIcon === 'function') {
+                props.events.clickIcon(props.item, props.index);
+            }
             emit('click-icon', props.item);
         };
 </script>

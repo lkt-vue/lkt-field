@@ -1,6 +1,6 @@
-import { LktObject, Option, OptionsConfig, TooltipConfig, ValidFieldValue } from 'lkt-vue-kernel';
+import { LktObject, Option, OptionConfig, OptionsConfig, TooltipConfig, ValidOptionValue } from 'lkt-vue-kernel';
 export interface SelectInputProps {
-    modelValue: ValidFieldValue;
+    modelValue: OptionConfig | ValidOptionValue | Array<OptionConfig | ValidOptionValue>;
     searchable: boolean;
     searchMode: boolean;
     isLoading: boolean;
@@ -24,4 +24,5 @@ export interface SelectInputProps {
     focusedOptionIndex: number;
     events?: LktObject;
     referrer?: any;
+    autoLoading?: boolean;
 }

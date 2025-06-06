@@ -113,6 +113,8 @@
     // Constant data
     const Identifier = generateRandomString(16);
 
+    const selectOptionsAutoLoaded = ref(false);
+
     // Calculated data
     let calculatedModal = extractPropValue(props.modal, props.prop);
     let calculatedModalKey = extractPropValue(props.modalKey, props.prop);
@@ -614,6 +616,9 @@
     }, { deep: true });
 
     watch(editableValue, (v) => {
+        if (props.type === FieldType.Select) {
+            console.log('updated editableValue!!: ', v)
+        }
         if (typeof v === 'object' && !Array.isArray(v) && ![FieldType.Card].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
@@ -627,6 +632,9 @@
 
     let validationTimeout: number | undefined;
     watch(value, (v) => {
+        if (props.type === FieldType.Select) {
+            console.log('updated value!!: ', v)
+        }
         if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
             if (props.type === FieldType.Select) {
@@ -1947,5 +1955,46 @@
                 </ul>
             </div>
         </lkt-tooltip>
+
+        <template v-if="ready && type === FieldType.Select && !selectOptionsAutoLoaded">
+            <select-input
+                ref="inputElement"
+                v-model:picked-options="pickedOptions"
+                v-bind="<SelectInputProps>{
+                    modelValue: editableValue,
+                    showOptions,
+                    visibleOptions,
+                    searchable,
+                    searchMode,
+                    searchString,
+                    multiple,
+                    canTag,
+                    options,
+                    optionsConfig,
+                    optionSlot,
+                    editable: computedEditable,
+                    focusing,
+                    searchPlaceholder: computedSearchPlaceholder,
+                    multipleDisplayEdition: multipleDisplayEdition,
+                    prop,
+                    max: MaximumValue,
+                    tooltip: tooltipConfig,
+                    events,
+                    optionValueType,
+                    focusedOptionIndex,
+                    referrer: container,
+                    autoLoading: true,
+                }"
+                @focus="onFocusSelectInput"
+                @blur="onBlurSelectInput"
+                @navigate="onNavigateSelectInput"
+                @search="onSearchSelectInput"
+                @change="onChange"
+                @tag="onTagSelectInput"
+                @untag="onUntagSelectInput"
+                @update:picked-options="onUpdatedPickedOptions"
+                @loaded="selectOptionsAutoLoaded = true"
+            />
+        </template>
     </div>
 </template>
