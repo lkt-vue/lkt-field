@@ -11,7 +11,6 @@ declare const _default: DefineComponent<SelectInputProps, {
     blur: (...args: any[]) => void;
     change: (...args: any[]) => void;
     "update:showOptions": (...args: any[]) => void;
-    "update:pickedOptions": (...args: any[]) => void;
     tag: (...args: any[]) => void;
     untag: (...args: any[]) => void;
     loaded: (...args: any[]) => void;
@@ -22,7 +21,6 @@ declare const _default: DefineComponent<SelectInputProps, {
     onBlur?: ((...args: any[]) => any) | undefined;
     onChange?: ((...args: any[]) => any) | undefined;
     "onUpdate:showOptions"?: ((...args: any[]) => any) | undefined;
-    "onUpdate:pickedOptions"?: ((...args: any[]) => any) | undefined;
     onTag?: ((...args: any[]) => any) | undefined;
     onUntag?: ((...args: any[]) => any) | undefined;
     onLoaded?: ((...args: any[]) => any) | undefined;

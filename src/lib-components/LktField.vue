@@ -172,9 +172,7 @@
     const searchString = ref(''),
         focusedOptionIndex = ref(-1),
         pickedOptions = ref(<Option[]>[]),
-        searchMode = ref(false),
-        optionsAutoLoaded = ref(false),
-        optionsAutoLoading = ref(false);
+        searchMode = ref(false);
 
     const computedLang = computed(() => currentLanguage.value);
     const computedDateReadFormat = computed(() => {
@@ -876,10 +874,8 @@
         },
         getValue = () => editableValue.value,
         onKeyUp = ($event: KeyboardEvent) => {
-
             if (fieldTypesWithOptions.includes(props.type)) {
                 navigateOptions($event);
-
             }
             emits('keyup', $event);
         },
@@ -978,9 +974,6 @@
             hadFirstBlur.value = true;
             focusing.value = false;
             emits('blur', event);
-        },
-        onNavigateSelectInput = (event: KeyboardEvent) => {
-            navigateOptions(event);
         },
         onTagSelectInput = (query: string) => {
             let option = new Option({
@@ -1399,7 +1392,6 @@
                     @change="onChange"
                     @tag="onTagSelectInput"
                     @untag="onUntagSelectInput"
-                    @update:picked-options="onUpdatedPickedOptions"
                 />
                 <calc-input
                     ref="inputElement"
@@ -1848,7 +1840,6 @@
                 @change="onChange"
                 @tag="onTagSelectInput"
                 @untag="onUntagSelectInput"
-                @update:picked-options="onUpdatedPickedOptions"
                 @loaded="selectOptionsAutoLoaded = true"
             />
         </template>

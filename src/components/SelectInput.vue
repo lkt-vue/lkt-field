@@ -30,7 +30,6 @@
     const emit = defineEmits([
         'update:modelValue',
         'update:showOptions',
-        'update:pickedOptions',
         'update:options',
         'focus',
         'blur',
@@ -222,10 +221,6 @@
     watch(() => props.pickedOptions, (v) => {
         emit('change')
         editableOptions.value = v;
-    }, {deep: true})
-
-    watch(editableOptions, (v) => {
-        emit('update:pickedOptions', v);
     }, {deep: true})
 
     watch(editableShowOptions, (v) => {
