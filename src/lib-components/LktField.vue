@@ -24,7 +24,6 @@
         LktObject,
         LktSettings,
         Option,
-        OptionConfig,
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
@@ -46,8 +45,6 @@
         getInValueOptionIndex,
         handleOptionClickMultiple,
         optionIsActive,
-        prepareOptions,
-        receiveOptions,
     } from '../functions/option-functions';
     import { getVisibleDateValue } from '../functions/date-functions';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
@@ -188,72 +185,6 @@
 
     const optionsHaystack = ref(<Option[]>[]),
         visibleOptions = ref(<Option[]>[]);
-
-    const updatePickedOption = () => {
-        return;
-
-        const _doUpdate = (query: string) => {
-            visibleOptions.value = filterOptions(optionsHaystack.value, query, true, props.optionsConfig?.filter);
-            if (props.multiple) {
-                for (let k in editableValue.value) {
-                    let option = undefined;
-                    if (props.optionValueType === 'option') {
-                        if (props.searchable) {
-                            option = findOptionByValue(optionsHaystack.value, editableValue.value[k].value);
-                        } else {
-                            option = findOptionByValue(visibleOptions.value, editableValue.value[k].value);
-                        }
-
-                    } else {
-                        if (props.searchable) {
-                            option = findOptionByValue(optionsHaystack.value, editableValue.value[k]);
-                        } else {
-                            option = findOptionByValue(visibleOptions.value, editableValue.value[k]);
-                        }
-                    }
-                    if (typeof option !== 'undefined') {
-                        if (pickedOptions.value.length === 0) {
-                            pickedOptions.value.push(option);
-                        } else {
-                            //@ts-ignore
-                            pickedOptions.value.splice(k, 1, option);
-                        }
-                    }
-                }
-
-                return;
-            }
-
-            let option = undefined;
-
-            if (props.optionValueType === 'option') {
-                if (props.searchable) {
-                    option = findOptionByValue(optionsHaystack.value, editableValue.value.map((opt: Option) => opt.value));
-                } else {
-                    option = findOptionByValue(visibleOptions.value, editableValue.value.map((opt: Option) => opt.value));
-                }
-            } else {
-                if (props.searchable) {
-                    option = findOptionByValue(optionsHaystack.value, editableValue.value);
-                } else {
-                    option = findOptionByValue(visibleOptions.value, editableValue.value);
-                }
-            }
-            if (typeof option !== 'undefined') {
-                if (pickedOptions.value.length === 0) {
-                    pickedOptions.value.push(option);
-                } else {
-                    pickedOptions.value.splice(0, 1, option);
-                }
-            }
-        };
-
-        if (props.type === FieldType.Text) {
-            _doUpdate(editableValue.value);
-        } else if (props.type === FieldType.Select) {
-            _doUpdate(searchString.value);
-        }
-    };
 
     const pickFirstOption = () => {
 
@@ -654,16 +585,6 @@
         });
     });
 
-    // watch(optionsHaystack, (v) => {
-    //     if (typeof props.events?.updatedOptions === 'function') {
-    //         enabledPropsOptionsWatcher.value = false;
-    //         props.events.updatedOptions({
-    //             options: v,
-    //         });
-    //     }
-    //     emits('update:options', v);
-    // });
-
     const doValidation = async () => {
 
         localValidationStatus.value = [];
@@ -842,9 +763,6 @@
                 editableValue.value = props.multiple
                     ? JSON.parse(JSON.stringify(originalEditableValue.value))
                     : originalEditableValue.value;
-                //@todo: if props.canTag, should reset options
-                pickedOptions.value = [];
-                updatePickedOption();
                 return;
             }
 
@@ -866,8 +784,6 @@
                 return;
             } else if (props.type === FieldType.Select) {
                 editableValue.value = props.multiple ? [] : '';
-                pickedOptions.value = [];
-                updatePickedOption();
                 return;
             }
             editableValue.value = '';
@@ -996,16 +912,6 @@
                 pickedOptions.value.push(option);
                 onClickOption(option, true);
             }
-        },
-        onUpdatedPickedOptions = () => {
-        return;
-            editableValue.value.splice(0, editableValue.value.length)
-            if (props.optionValueType === 'option') {
-                editableValue.value = JSON.parse(JSON.stringify(pickedOptions.value));
-            } else {
-                editableValue.value = pickedOptions.value.map(z => z.value);
-            }
-            // @todo: faltaría parsear las opciones y actualizar el editableValue
         },
         onUntagSelectInput = (option: Option) => {
 

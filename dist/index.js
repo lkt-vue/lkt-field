@@ -17547,7 +17547,7 @@ const fr = {
         r.value = s.value, E.value = _.value;
         return;
       } else if (a.type === $.Select) {
-        T.value = a.multiple ? JSON.parse(JSON.stringify(B.value)) : B.value, U.value = [];
+        T.value = a.multiple ? JSON.parse(JSON.stringify(B.value)) : B.value;
         return;
       }
       T.value = B.value;
@@ -17562,7 +17562,7 @@ const fr = {
         r.value = "", E.value = "";
         return;
       } else if (a.type === $.Select) {
-        T.value = a.multiple ? [] : "", U.value = [];
+        T.value = a.multiple ? [] : "";
         return;
       }
       T.value = "";
