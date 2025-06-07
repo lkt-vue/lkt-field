@@ -7,6 +7,7 @@ declare const _default: DefineComponent<SelectInputProps, {
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     search: (...args: any[]) => void;
     "update:modelValue": (...args: any[]) => void;
+    "update:options": (...args: any[]) => void;
     focus: (...args: any[]) => void;
     blur: (...args: any[]) => void;
     change: (...args: any[]) => void;
@@ -19,6 +20,7 @@ declare const _default: DefineComponent<SelectInputProps, {
 }, string, PublicProps, Readonly<SelectInputProps> & Readonly<{
     onSearch?: ((...args: any[]) => any) | undefined;
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:options"?: ((...args: any[]) => any) | undefined;
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
     onChange?: ((...args: any[]) => any) | undefined;

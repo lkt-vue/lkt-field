@@ -25,11 +25,13 @@
     import { SelectInputProps } from '@/config/SelectInputProps.ts';
     import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
     import { Settings } from '@/settings/Settings.ts';
+    import { DataState } from 'lkt-data-state';
 
     const emit = defineEmits([
         'update:modelValue',
         'update:showOptions',
         'update:pickedOptions',
+        'update:options',
         'focus',
         'blur',
         'navigate',
@@ -55,7 +57,6 @@
     }, {deep: true})
 
     watch(editableValue, (v) => {
-        console.log('update selectinput editableValue: ', v)
         emit('update:modelValue', v);
     }, {deep: true})
 
@@ -63,7 +64,36 @@
 
     const originalOptions = typeof props.options === 'object' ? JSON.parse(JSON.stringify(props.options)) : props.options;
 
-    const tableItems = ref(<Array<OptionConfig>>[...prepareOptions(originalOptions, props.prop)]);
+    const dropdownOptions = ref(<Array<OptionConfig>>[...prepareOptions(originalOptions, props.prop)]);
+
+    const enabledPropsOptionsWatcher = ref(true);
+    watch(enabledPropsOptionsWatcher, (v) => {
+        if (!v) nextTick(() => {
+            enabledPropsOptionsWatcher.value = true;
+        });
+    });
+
+    watch(dropdownOptions, (v) => {
+        if (typeof props.events?.updatedOptions === 'function') {
+            enabledPropsOptionsWatcher.value = false;
+            props.events.updatedOptions({
+                options: v,
+            });
+        }
+        emit('update:options', v);
+    });
+
+    watch(() => props.options, (v, oldValue) => {
+        if (!enabledPropsOptionsWatcher.value) return;
+
+        let checker = new DataState({
+            opts: oldValue,
+        });
+        checker.increment({ opts: v });
+        if (!checker.changed()) return;
+        dropdownOptions.value = prepareOptions(v, props.prop);
+        syncPicked();
+    }, { deep: true });
 
     /**
      * Search query
@@ -240,7 +270,7 @@
             syncPickedOptions({
                 query: query.value,
                 value: editableValue.value,
-                options: tableItems.value,
+                options: dropdownOptions.value,
                 pickedOptions: props.pickedOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
@@ -249,7 +279,7 @@
             syncPickedOptions({
                 query: query.value,
                 value: editableValue.value,
-                options: tableItems.value,
+                options: dropdownOptions.value,
                 pickedOptions: props.pickedOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
@@ -402,7 +432,7 @@
             ref="optionList"
             v-if="autoLoading || canRenderDropdownTable"
             v-show="!autoLoading"
-            v-model="tableItems"
+            v-model="dropdownOptions"
             v-bind="<TableConfig>{
                 type: TableType.Ul,
                 editMode: editable,
