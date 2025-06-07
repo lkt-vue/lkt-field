@@ -600,7 +600,6 @@
         } else if (props.type === FieldType.Select) {
             if (!v && props.optionsConfig?.autoPickFirstOptionIfEmpty) {
                 pickedOptions.value = [];
-                buildVisibleOptions(searchString.value, false);
                 pickFirstOption();
             }
         } else if (props.canI18n) {
@@ -637,11 +636,6 @@
         }
         if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
-            if (props.type === FieldType.Select) {
-                if (typeof props.optionsConfig?.filter === 'function') {
-                    buildVisibleOptions(searchString.value, false);
-                }
-            }
 
             if (validationTimeout) clearTimeout(validationTimeout);
 
@@ -671,24 +665,6 @@
     //     }
     //     emits('update:options', v);
     // });
-
-    // watch(() => props.options, (v, oldValue) => {
-    //     if (!enabledPropsOptionsWatcher.value) return;
-    //
-    //     let checker = new DataState({
-    //         opts: oldValue,
-    //     });
-    //     checker.increment({ opts: v });
-    //     if (!checker.changed()) return;
-    //     optionsHaystack.value = prepareOptions(v, props.prop);
-    //     if (props.type === FieldType.Select) {
-    //         buildVisibleOptions(searchString.value, false);
-    //     } else {
-    //         buildVisibleOptions(editableValue.value, false);
-    //     }
-    //     pickedOptions.value = [];
-    //     updatePickedOption();
-    // }, { deep: true });
 
     const doValidation = async () => {
 
@@ -803,105 +779,7 @@
         return r;
     };
 
-    const buildVisibleOptions = (query: string, ableToShowOptions: boolean = true) => {
-            if (optionsHaystack.value.length === 0) {
-                visibleOptions.value = [];
-                return;
-            }
-
-            switch (props.type) {
-                case FieldType.Select:
-                    if (props.searchable) {
-                        visibleOptions.value = filterOptions(optionsHaystack.value, query, true, props.optionsConfig?.filter);
-                    } else {
-                        visibleOptions.value = JSON.parse(JSON.stringify(optionsHaystack.value));
-                    }
-                    isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') || visibleOptions.value.length > 0;
-
-                    updatePickedOption();
-                    return;
-
-                case FieldType.Text:
-                case FieldType.Search:
-                    visibleOptions.value = filterOptions(optionsHaystack.value, query, false, props.optionsConfig?.filter);
-                    isLoading.value = false;
-                    if (ableToShowOptions) showOptions.value = (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') || visibleOptions.value.length > 0;
-                    return;
-            }
-        },
-        fetchOptions = async (query: string, ableToShowOptions: boolean = true) => {
-        return;
-        console.log('called fetchOptions: ', query);
-            if (!computedEditable.value && (!props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value)) return;
-            if ([
-                FieldType.Tel,
-                FieldType.Date,
-                FieldType.DateTime,
-                FieldType.Time,
-                FieldType.Color,
-                FieldType.File,
-                FieldType.Html,
-                FieldType.Image,
-                FieldType.Password,
-                FieldType.Range,
-                FieldType.Textarea,
-                FieldType.Select,
-            ].includes(props.type)) return;
-
-            isLoading.value = false;
-            if (props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value) {
-                optionsAutoLoading.value = true;
-            }
-
-            if (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '') {
-                isLoading.value = true;
-                let resourceData: LktObject = extractPropValue(props.optionsConfig?.http?.data, props.prop);
-                if (typeof resourceData !== 'object') resourceData = {};
-
-                if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query;
-                if (props.optionsConfig?.http?.events?.onStart && typeof props.optionsConfig?.http?.events?.onStart === 'function') {
-                    props.optionsConfig.http.events.onStart();
-                }
-                const results: HTTPResponse = await httpCall(props.optionsConfig?.http?.resource, resourceData);
-                if (props.optionsConfig?.http?.events?.onEnd && typeof props.optionsConfig?.http?.events?.onEnd === 'function') {
-                    props.optionsConfig.http.events.onEnd(results);
-                }
-                const isValidData = Array.isArray(results.data) && results.data.length > 0;
-                isLoading.value = false;
-                if (isValidData) {
-                    optionsHaystack.value = receiveOptions(optionsHaystack.value, results.data as Option[], props.prop);
-                    buildVisibleOptions(query, ableToShowOptions);
-
-                    if (props.optionsConfig?.autoloadResource && !optionsAutoLoaded.value) {
-                        if (props.optionsConfig?.autoloadResource === 'feed') {
-                            if (props.multiple) {
-                                visibleOptions.value.forEach(opt => {
-                                    onClickOption(opt);
-                                });
-                            } else if (visibleOptions.value.length > 0) {
-                                onClickOption(visibleOptions.value[0]);
-                            }
-                        }
-                        optionsAutoLoaded.value = true;
-                        optionsAutoLoading.value = false;
-                    }
-
-                    if (typeof props.events?.loadOptionsEnd === 'function') {
-                        props.events?.loadOptionsEnd({
-                            options: <Array<OptionConfig>>optionsHaystack.value,
-                            httpResponse: results,
-                        });
-                    }
-
-                    emits('options-loaded', results.data);
-                }
-
-            } else {
-                buildVisibleOptions(query, ableToShowOptions);
-            }
-        },
-        navigateOptions = (event: KeyboardEvent) => {
+    const navigateOptions = (event: KeyboardEvent) => {
             let amountOfOptions = visibleOptions.value.length - 1;
             if (amountOfOptions === -1) return;
 
@@ -1000,11 +878,8 @@
         onKeyUp = ($event: KeyboardEvent) => {
 
             if (fieldTypesWithOptions.includes(props.type)) {
-                fetchOptions(editableValue.value);
                 navigateOptions($event);
 
-            } else if (props.type === FieldType.Select) {
-                navigateOptions($event);
             }
             emits('keyup', $event);
         },
@@ -1107,10 +982,6 @@
         onNavigateSelectInput = (event: KeyboardEvent) => {
             navigateOptions(event);
         },
-        onSearchSelectInput = (query: string) => {
-            searchString.value = query;
-            fetchOptions(query);
-        },
         onTagSelectInput = (query: string) => {
             let option = new Option({
                 value: query,
@@ -1192,7 +1063,6 @@
             showOptions.value = true;
 
             doValidation();
-            fetchOptions(searchString.value, false);
 
             if (props.searchable) turnOnSelectSearchMode();
 
@@ -1300,17 +1170,9 @@
         customEditSlot = computed(() => Settings.customEditSlots[props.editSlot]);
 
     onMounted(() => {
-        optionsHaystack.value = prepareOptions(props.options, props.prop);
-        buildVisibleOptions('', false);
-        updatePickedOption();
-
         if (props.type === FieldType.Select) {
             if (props.multiple) {
                 searchMode.value = true;
-            }
-
-            if (props.optionsConfig?.autoloadResource) {
-                fetchOptions('', false);
             }
         }
 
@@ -1530,13 +1392,10 @@
                         tooltip: tooltipConfig,
                         events,
                         optionValueType,
-                        focusedOptionIndex,
                         referrer: container,
                     }"
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"
-                    @navigate="onNavigateSelectInput"
-                    @search="onSearchSelectInput"
                     @change="onChange"
                     @tag="onTagSelectInput"
                     @untag="onUntagSelectInput"
@@ -1981,14 +1840,11 @@
                     tooltip: tooltipConfig,
                     events,
                     optionValueType,
-                    focusedOptionIndex,
                     referrer: container,
                     autoLoading: true,
                 }"
                 @focus="onFocusSelectInput"
                 @blur="onBlurSelectInput"
-                @navigate="onNavigateSelectInput"
-                @search="onSearchSelectInput"
                 @change="onChange"
                 @tag="onTagSelectInput"
                 @untag="onUntagSelectInput"

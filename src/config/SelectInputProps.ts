@@ -29,7 +29,6 @@ export interface SelectInputProps {
     max?: number
     tooltip?: TooltipConfig
     optionValueType: string,
-    focusedOptionIndex: number,
     events?: LktObject
     referrer?: any
     autoLoading?: boolean

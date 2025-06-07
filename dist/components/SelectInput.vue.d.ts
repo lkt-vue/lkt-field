@@ -5,7 +5,6 @@ declare const _default: DefineComponent<SelectInputProps, {
     keepFocused: () => void;
     switchShowOptions: () => void;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
-    search: (...args: any[]) => void;
     "update:modelValue": (...args: any[]) => void;
     "update:options": (...args: any[]) => void;
     focus: (...args: any[]) => void;
@@ -13,12 +12,10 @@ declare const _default: DefineComponent<SelectInputProps, {
     change: (...args: any[]) => void;
     "update:showOptions": (...args: any[]) => void;
     "update:pickedOptions": (...args: any[]) => void;
-    navigate: (...args: any[]) => void;
     tag: (...args: any[]) => void;
     untag: (...args: any[]) => void;
     loaded: (...args: any[]) => void;
 }, string, PublicProps, Readonly<SelectInputProps> & Readonly<{
-    onSearch?: ((...args: any[]) => any) | undefined;
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     "onUpdate:options"?: ((...args: any[]) => any) | undefined;
     onFocus?: ((...args: any[]) => any) | undefined;
@@ -26,7 +23,6 @@ declare const _default: DefineComponent<SelectInputProps, {
     onChange?: ((...args: any[]) => any) | undefined;
     "onUpdate:showOptions"?: ((...args: any[]) => any) | undefined;
     "onUpdate:pickedOptions"?: ((...args: any[]) => any) | undefined;
-    onNavigate?: ((...args: any[]) => any) | undefined;
     onTag?: ((...args: any[]) => any) | undefined;
     onUntag?: ((...args: any[]) => any) | undefined;
     onLoaded?: ((...args: any[]) => any) | undefined;

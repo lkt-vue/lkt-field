@@ -1,4 +1,12 @@
-import { extractPropValue, LktObject, LktSettings, Option, OptionConfig, ValidOptionValue } from 'lkt-vue-kernel';
+import {
+    extractPropValue,
+    LktObject,
+    LktSettings,
+    Option,
+    OptionConfig,
+    OptionsConfig,
+    ValidOptionValue,
+} from 'lkt-vue-kernel';
 import { __ } from 'lkt-i18n';
 import { Component, Ref } from 'vue';
 
@@ -237,4 +245,74 @@ export const syncPickedOptions = (args: {
             args.pickedOptions.splice(0, 1, option);
         }
     }
+}
+
+/**
+ * Returns false if nothing to do, true if successfully updated pointer, or an OptionConfig if selected
+ * @param args
+ */
+export const handleDropdownOptionsKeyboardNavigation = (args: {
+    event: KeyboardEvent,
+    options: Ref<Array<OptionConfig>>
+    focusing: boolean,
+    container: Ref<HTMLElement|null>
+    focusedIndex: Ref<number>
+    optionsConfig: OptionsConfig
+    query: string
+}): boolean|OptionConfig => {
+
+    console.log('handleDropdownOptionsKeyboardNavigation: ', args);
+
+    let amountOfOptions = args.options.value.length - 1;
+    if (amountOfOptions === -1) return false;
+
+    const key = args.event.key ?? '';
+
+    if (args.focusing) {
+
+        // Event handle
+        if (['ArrowDown', 'ArrowUp', 'Enter'].includes(key)) {
+            args.event.preventDefault();
+            args.event.stopPropagation();
+        }
+
+        if (key === 'ArrowDown') {
+            ++args.focusedIndex.value;
+            if (args.focusedIndex.value > amountOfOptions) args.focusedIndex.value = 0;
+
+            let option = <OptionConfig>args.options.value[args.focusedIndex.value];
+
+            while (!canDisplayOption(option, args.query, args.optionsConfig.filter) && args.focusedIndex.value < amountOfOptions) {
+                ++args.focusedIndex.value;
+                option = <OptionConfig>args.options.value[args.focusedIndex.value];
+            }
+
+
+            let el = args.container.value?.querySelector('[data-index="' + args.focusedIndex.value + '"]');
+            if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
+            return true;
+
+        } else if (key === 'ArrowUp') {
+            --args.focusedIndex.value;
+            if (args.focusedIndex.value < 0) args.focusedIndex.value = amountOfOptions;
+
+            let option = <OptionConfig>args.options.value[args.focusedIndex.value];
+
+            while (!canDisplayOption(option, args.query, args.optionsConfig.filter) && args.focusedIndex.value > 0) {
+                --args.focusedIndex.value;
+                option = <OptionConfig>args.options.value[args.focusedIndex.value];
+            }
+
+            let el = args.container.value?.querySelector('[data-index="' + args.focusedIndex.value + '"]');
+            if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
+            return true;
+
+        } else if (key === 'Enter') {
+            if (args.focusedIndex.value > -1) {
+                return <OptionConfig>args.options.value[args.focusedIndex.value]
+            }
+        }
+    }
+
+    return false;
 }

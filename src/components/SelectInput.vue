@@ -15,7 +15,7 @@
     } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
-        canDisplayOption,
+        canDisplayOption, handleDropdownOptionsKeyboardNavigation,
         handleOptionClickMultiple,
         handleOptionClickSingle,
         optionIsActive,
@@ -34,8 +34,6 @@
         'update:options',
         'focus',
         'blur',
-        'navigate',
-        'search',
         'change',
         'tag',
         'untag',
@@ -51,6 +49,8 @@
     });
 
     const editableValue = ref(props.modelValue);
+
+    const focusedOptionIndex = ref(-1);
 
     watch(() => props.modelValue, (v) => {
         editableValue.value = v;
@@ -168,9 +168,15 @@
                 query.value = '';
             }
             else if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
-                emit('navigate', event);
-            } else {
-                emit('search', query.value);
+                handleDropdownOptionsKeyboardNavigation({
+                    event,
+                    options: dropdownOptions,
+                    focusing: props.focusing,
+                    container: dropdownEl,
+                    focusedIndex: focusedOptionIndex,
+                    optionsConfig: props.optionsConfig,
+                    query: query.value,
+                })
             }
         },
         onFocusQueryInput = (event: FocusEvent) => {
@@ -287,6 +293,11 @@
         }
 
         emit('loaded');
+    }
+
+    const onReadResponse = () => {
+        focusedOptionIndex.value = -1;
+        syncPicked();
     }
 
     const computedDropdownPaginatorConfig = computed(() => {
@@ -452,7 +463,7 @@
                 itemContainerClass: (option: OptionConfig, index: number) => {
                     let r = [];
                     if (optionIsActive(option, editableValue, multiple)) r.push('is-active');
-                    if (props.focusedOptionIndex === index) r.push('is-focused');
+                    if (focusedOptionIndex === index) r.push('is-focused');
                     if (option.disabled) r.push('is-disabled')
                     return r.join(' ');
                 },
@@ -470,7 +481,7 @@
                     }
                 }
             }"
-            @read-response="syncPicked"
+            @read-response="onReadResponse"
         />
     </component>
 </template>

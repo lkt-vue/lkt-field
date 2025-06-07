@@ -1,4 +1,4 @@
-import { LktObject, Option, OptionConfig, ValidOptionValue } from 'lkt-vue-kernel';
+import { LktObject, Option, OptionConfig, OptionsConfig, ValidOptionValue } from 'lkt-vue-kernel';
 import { Component, Ref } from 'vue';
 export declare const prepareOptions: (options: any, prop: LktObject) => Option[];
 export declare const removeDuplicatedOptions: (options: Option[]) => Option[];
@@ -37,3 +37,16 @@ export declare const syncPickedOptions: (args: {
     multiple: boolean;
     optionValueType: string | "option";
 }) => void;
+/**
+ * Returns false if nothing to do, true if successfully updated pointer, or an OptionConfig if selected
+ * @param args
+ */
+export declare const handleDropdownOptionsKeyboardNavigation: (args: {
+    event: KeyboardEvent;
+    options: Ref<Array<OptionConfig>>;
+    focusing: boolean;
+    container: Ref<HTMLElement | null>;
+    focusedIndex: Ref<number>;
+    optionsConfig: OptionsConfig;
+    query: string;
+}) => boolean | OptionConfig;
