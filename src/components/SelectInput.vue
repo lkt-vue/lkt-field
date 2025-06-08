@@ -46,7 +46,7 @@
     const props = withDefaults(defineProps<SelectInputProps>(), {
         autoLoading: false,
         isAutoCompleteText: false,
-        prop: () => ({})
+        prop: () => ({}),
     });
 
     const editableValue = ref(props.modelValue);
@@ -55,11 +55,11 @@
 
     watch(() => props.modelValue, (v) => {
         editableValue.value = v;
-    }, {deep: true})
+    }, { deep: true });
 
     watch(editableValue, (v) => {
         emit('update:modelValue', v);
-    }, {deep: true})
+    }, { deep: true });
 
     const tagsEnabled = props.multiple && props.canTag;
 
@@ -111,7 +111,7 @@
         if (!tagsEnabled) emit('update:showOptions', v);
         nextTick(() => {
             canRenderDropdownTable.value = editableShowOptions.value;
-        })
+        });
     });
 
     const canRenderDropdownTable = ref(false);
@@ -154,8 +154,8 @@
         else emit('blur');
     });
 
-    let queryBlurTimeout:ReturnType<typeof setTimeout>|undefined = undefined,
-        buttonBlurTimeout:ReturnType<typeof setTimeout>|undefined = undefined;
+    let queryBlurTimeout: ReturnType<typeof setTimeout> | undefined = undefined,
+        buttonBlurTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
     const onBlurQueryInput = (event: Event) => {
             queryBlurTimeout = setTimeout(() => {
@@ -165,17 +165,18 @@
         onKeyUpQueryInput = (event: KeyboardEvent) => {
             queryHasFocus.value = true;
             if (tagsEnabled && event.key === 'Enter') {
+                if (query.value.length === 0) return;
+
                 if (createTag({
                     value: editableValue,
                     query: query.value,
                     optionValueType: props.optionValueType,
                     options: dropdownOptions,
-                    pickedOptions: props.pickedOptions
+                    pickedOptions: props.pickedOptions,
                 })) {
                     query.value = '';
                 }
-            }
-            else if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
+            } else if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
                 handleDropdownOptionsKeyboardNavigation({
                     event,
                     options: dropdownOptions,
@@ -184,7 +185,7 @@
                     focusedIndex: focusedOptionIndex,
                     optionsConfig: props.optionsConfig,
                     query: query.value,
-                })
+                });
             }
         },
         onFocusQueryInput = (event: FocusEvent) => {
@@ -197,8 +198,8 @@
         nextTick(() => {
             //@ts-ignore
             if (queryField.value) queryField.value.focus();
-        })
-    }
+        });
+    };
 
     const onBlurSelectButton = (event: Event) => {
             if (computedRenderSearchUI.value) return;
@@ -222,20 +223,20 @@
                 option,
                 optionValueType: props.optionValueType,
                 options: dropdownOptions,
-                pickedOptions: props.pickedOptions
-            })
+                pickedOptions: props.pickedOptions,
+            });
         },
         doClear = () => {
             if (props.isAutoCompleteText) query.value = '';
             props.pickedOptions.splice(0, props.pickedOptions.length);
             nextTick(() => {
                 syncPicked();
-            })
+            });
         },
         doUndo = () => {
             nextTick(() => {
                 syncPicked();
-            })
+            });
         };
 
     defineExpose({
@@ -244,13 +245,13 @@
         keepFocused,
         switchShowOptions: () => {
             editableShowOptions.value = !editableShowOptions.value;
-        }
+        },
     });
 
     watch(() => props.pickedOptions, (v) => {
-        emit('change')
+        emit('change');
         editableOptions.value = v;
-    }, {deep: true})
+    }, { deep: true });
 
     watch(editableShowOptions, (v) => {
         if (!v) {
@@ -258,15 +259,15 @@
             queryHasFocus.value = false;
             checkGlobalFocus();
         }
-    })
+    });
 
     const computedRenderMultipleSearchUi = computed(() => {
         return props.multiple && (props.canTag || props.searchable);
-    })
+    });
 
     const computedRenderSearchUI = computed(() => {
         return !props.multiple && props.searchable && hasFocus.value;
-    })
+    });
 
     const onClickOption = (option: OptionConfig) => {
 
@@ -285,7 +286,7 @@
                 searchMode: props.searchable,
                 keepFocused,
                 optionValueType: props.optionValueType,
-                callback: props.events?.clickOption
+                callback: props.events?.clickOption,
             })
             : handleOptionClickSingle({
                 option,
@@ -293,7 +294,7 @@
                 pickedOptions: props.pickedOptions,
                 showOptions: editableShowOptions.value,
                 optionValueType: props.optionValueType,
-                callback: props.events?.clickOption
+                callback: props.events?.clickOption,
             });
 
         if (fineHandled) {
@@ -310,7 +311,7 @@
                 pickedOptions: props.pickedOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
-            })
+            });
         } else {
             syncPickedOptions({
                 query: query.value,
@@ -319,40 +320,44 @@
                 pickedOptions: props.pickedOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
-            })
+            });
         }
 
         emit('loaded');
-    }
+    };
 
     const onReadResponse = () => {
         focusedOptionIndex.value = -1;
         syncPicked();
-    }
+    };
 
     const computedDropdownPaginatorConfig = computed(() => {
 
-        if (!props.optionsConfig.http?.resource) return undefined;
+            if (!props.optionsConfig.http?.resource) return undefined;
 
-        let resourceData = {
-            ...props.optionsConfig.http?.data
-        };
+            let resourceData = {
+                ...props.optionsConfig.http?.data,
+            };
 
-        if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query.value;
+            if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query.value;
 
-        return {
-            resource: props.optionsConfig.http?.resource,
-            resourceData,
-            events: {
-                httpStart: props.optionsConfig.http?.events?.onStart,
-                httpEnd: props.optionsConfig.http?.events?.onEnd,
-            }
-        }
-    }),
+            return {
+                resource: props.optionsConfig.http?.resource,
+                resourceData,
+                events: {
+                    httpStart: props.optionsConfig.http?.events?.onStart,
+                    httpEnd: props.optionsConfig.http?.events?.onEnd,
+                },
+            };
+        }),
         computedDropdownTag = computed(() => {
             if (props.autoLoading) return 'div';
             return 'lkt-tooltip';
-        })
+        }),
+        computedReferrer = computed(() => {
+            if (props.multiple) return queryField.value;
+            return props.referrer;
+        });
 
     onMounted(() => {
         if (props.isAutoCompleteText) {
@@ -360,7 +365,7 @@
             query.value = editableValue.value;
         }
         syncPicked();
-    })
+    });
 
 </script>
 
@@ -380,7 +385,8 @@
             @focus="onFocusQueryInput"
         />
     </div>
-    <div v-else-if="!autoLoading && (computedRenderSearchUI || computedRenderMultipleSearchUi)" class="lkt-field--searchable-box">
+    <div v-else-if="!autoLoading && (computedRenderSearchUI || computedRenderMultipleSearchUi)"
+         class="lkt-field--searchable-box">
 
         <lkt-tag
             v-if="multiple"
@@ -481,7 +487,7 @@
         v-model="editableShowOptions"
         v-bind="autoLoading ? {} : <TooltipConfig>{
             class: 'lkt-field--dropdown',
-            referrer,
+            referrer: computedReferrer,
             referrerWidth: true,
             locationX: TooltipLocationX.LeftCorner,
             locationY: TooltipLocationY.Bottom,

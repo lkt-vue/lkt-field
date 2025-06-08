@@ -146,12 +146,9 @@
         originalFileName = ref(props.fileName),
         visibleFileName = ref(props.fileName);
 
-    const dropdownEl = ref(<Element | ComponentPublicInstance | null>null),
-        container = ref(<Element | ComponentPublicInstance | null>null),
-        optionList = ref(<Element | ComponentPublicInstance | null>null);
+    const container = ref(<Element | ComponentPublicInstance | null>null);
 
     const showOptions = ref(false),
-        isLoading = ref(false),
         ready = ref(false);
 
     const searchString = ref(''),
@@ -196,9 +193,6 @@
 
         pickedOptions.value.push(option);
     }
-
-    const computedIsFile = computed(() => props.type === FieldType.File),
-        computedIsImage = computed(() => props.type === FieldType.Image);
 
     const computedInputElement = computed(() => {
         if (props.type === FieldType.Textarea) return 'textarea';
