@@ -15,12 +15,12 @@
     } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
-        canDisplayOption, handleDropdownOptionsKeyboardNavigation,
+        canDisplayOption, createTag, handleDropdownOptionsKeyboardNavigation,
         handleOptionClickMultiple,
         handleOptionClickSingle,
         optionIsActive,
         prepareOptions,
-        receiveOptions, syncPickedOptions,
+        receiveOptions, removeTag, syncPickedOptions,
     } from '@/functions/option-functions.ts';
     import { SelectInputProps } from '@/config/SelectInputProps.ts';
     import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
@@ -34,8 +34,6 @@
         'focus',
         'blur',
         'change',
-        'tag',
-        'untag',
         'loaded',
     ]);
 
@@ -163,8 +161,15 @@
         onKeyUpQueryInput = (event: KeyboardEvent) => {
             queryHasFocus.value = true;
             if (tagsEnabled && event.key === 'Enter') {
-                emit('tag', query.value);
-                query.value = '';
+                if (createTag({
+                    value: editableValue,
+                    query: query.value,
+                    optionValueType: props.optionValueType,
+                    options: dropdownOptions,
+                    pickedOptions: props.pickedOptions
+                })) {
+                    query.value = '';
+                }
             }
             else if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
                 handleDropdownOptionsKeyboardNavigation({
@@ -207,8 +212,14 @@
         onFocusSelectButton = (event: FocusEvent) => {
             buttonHasFocus.value = true;
         },
-        onClickOptionIcon = (option: Option) => {
-            emit('untag', option);
+        onClickOptionIcon = (option: OptionConfig) => {
+            removeTag({
+                value: editableValue,
+                option,
+                optionValueType: props.optionValueType,
+                options: dropdownOptions,
+                pickedOptions: props.pickedOptions
+            })
         };
 
     defineExpose({

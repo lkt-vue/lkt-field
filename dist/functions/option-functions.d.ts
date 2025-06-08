@@ -50,3 +50,17 @@ export declare const handleDropdownOptionsKeyboardNavigation: (args: {
     optionsConfig: OptionsConfig;
     query: string;
 }) => boolean | OptionConfig;
+export declare const createTag: (args: {
+    value: Ref<Array<OptionConfig | ValidOptionValue>>;
+    query: string;
+    optionValueType: string | "option";
+    options: Ref<Array<OptionConfig>>;
+    pickedOptions: Array<OptionConfig>;
+}) => boolean;
+export declare const removeTag: (args: {
+    value: Ref<Array<OptionConfig | ValidOptionValue>>;
+    option: OptionConfig;
+    optionValueType: string | "option";
+    options: Ref<Array<OptionConfig>>;
+    pickedOptions: Array<OptionConfig>;
+}) => boolean;

@@ -133,8 +133,6 @@ export const handleOptionClickSingle = (args: {
     searchMode: boolean
     callback?: Function
 }) => {
-
-    console.log('handleOptionClickSingle: ', args);
     if (args.option.disabled) return false;
 
     args.focusedOptionIndex = -1;
@@ -212,7 +210,6 @@ export const syncPickedOptions = (args: {
     multiple: boolean
     optionValueType: string | 'option'
 }) => {
-    console.log('triggered syncPickedOPtions!!: ', args)
     if (args.multiple) {
         let l = args.options.length;
         for (let i = 0; i < l; ++i) {
@@ -260,8 +257,6 @@ export const handleDropdownOptionsKeyboardNavigation = (args: {
     optionsConfig: OptionsConfig
     query: string
 }): boolean|OptionConfig => {
-
-    console.log('handleDropdownOptionsKeyboardNavigation: ', args);
 
     let amountOfOptions = args.options.value.length - 1;
     if (amountOfOptions === -1) return false;
@@ -315,4 +310,66 @@ export const handleDropdownOptionsKeyboardNavigation = (args: {
     }
 
     return false;
+}
+
+export const createTag = (args: {
+    value: Ref<Array<OptionConfig|ValidOptionValue>>
+    query: string,
+    optionValueType: string | 'option'
+    options: Ref<Array<OptionConfig>>
+    pickedOptions: Array<OptionConfig>
+}) => {
+
+    let option = new Option({
+        value: args.query,
+        label: args.query,
+    });
+
+    let index = args.optionValueType === 'option'
+        ? getInValueOptionIndex(option, args.value.value.map(opt => opt.value))
+        : getInValueOptionIndex(option, args.value.value)
+    ;
+
+    if (index === -1) {
+        args.value.value.push(args.optionValueType === 'option' ? option : option.value);
+        args.options.value.push(option);
+        args.pickedOptions.push(option);
+        return true;
+    }
+
+    return false;
+}
+
+export const removeTag = (args: {
+    value: Ref<Array<OptionConfig|ValidOptionValue>>
+    option: OptionConfig,
+    optionValueType: string | 'option'
+    options: Ref<Array<OptionConfig>>
+    pickedOptions: Array<OptionConfig>
+}) => {
+
+    let hasToUntag = true;
+    while (hasToUntag) {
+
+        let index = args.optionValueType === 'option'
+            ? getInValueOptionIndex(args.option, args.value.value.map(opt => opt.value))
+            : getInValueOptionIndex(args.option, args.value.value)
+        ;
+
+        if (index >= 0) {
+            args.options.value.splice(
+                args.options.value.findIndex(opt => opt.value == args.option.value),
+                1,
+            );
+            args.pickedOptions.splice(
+                args.pickedOptions.findIndex(opt => opt.value == args.option.value),
+                1,
+            );
+
+            args.value.value.splice(index, 1);
+        } else {
+            hasToUntag = false;
+        }
+    }
+    return true;
 }

@@ -544,9 +544,6 @@
     }, { deep: true });
 
     watch(editableValue, (v) => {
-        if (props.type === FieldType.Select) {
-            console.log('updated editableValue!!: ', v)
-        }
         if (typeof v === 'object' && !Array.isArray(v) && ![FieldType.Card].includes(props.type)) {
             //@ts-ignore
             value.value[computedLang.value] = v;
@@ -560,9 +557,6 @@
 
     let validationTimeout: number | undefined;
     watch(value, (v) => {
-        if (props.type === FieldType.Select) {
-            console.log('updated value!!: ', v)
-        }
         if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
 
@@ -890,65 +884,6 @@
             hadFirstBlur.value = true;
             focusing.value = false;
             emits('blur', event);
-        },
-        onTagSelectInput = (query: string) => {
-            let option = new Option({
-                value: query,
-                label: query,
-            });
-
-            let pickedIndex = -1;
-            if (props.optionValueType === 'option') {
-                //@ts-ignore
-                pickedIndex = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
-            } else {
-                //@ts-ignore
-                pickedIndex = getInValueOptionIndex(option, editableValue.value);
-            }
-            searchString.value = '';
-            if (pickedIndex === -1) {
-                optionsHaystack.value.push(option);
-                visibleOptions.value.push(option);
-                pickedOptions.value.push(option);
-                onClickOption(option, true);
-            }
-        },
-        onUntagSelectInput = (option: Option) => {
-
-            let hasToUntag = true;
-            while (hasToUntag) {
-                let pickedIndex = -1;
-                if (props.optionValueType === 'option') {
-                    //@ts-ignore
-                    pickedIndex = getInValueOptionIndex(option, editableValue.value.map(opt => opt.value));
-                } else {
-                    //@ts-ignore
-                    pickedIndex = getInValueOptionIndex(option, editableValue.value);
-                }
-
-                if (pickedIndex >= 0) {
-                    optionsHaystack.value.splice(
-                        optionsHaystack.value.findIndex(opt => opt.value == option.value),
-                        1,
-                    );
-
-                    visibleOptions.value.splice(
-                        visibleOptions.value.findIndex(opt => opt.value == option.value),
-                        1,
-                    );
-
-                    pickedOptions.value.splice(
-                        pickedOptions.value.findIndex(opt => opt.value == option.value),
-                        1,
-                    );
-
-                    editableValue.value.splice(pickedIndex, 1);
-                } else {
-                    hasToUntag = false;
-                }
-            }
-
-            searchString.value = '';
         },
         onFocusSelectInput = () => {
             hadFirstFocus.value = true;
@@ -1296,8 +1231,6 @@
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"
                     @change="onChange"
-                    @tag="onTagSelectInput"
-                    @untag="onUntagSelectInput"
                 />
                 <calc-input
                     ref="inputElement"
@@ -1744,8 +1677,6 @@
                 @focus="onFocusSelectInput"
                 @blur="onBlurSelectInput"
                 @change="onChange"
-                @tag="onTagSelectInput"
-                @untag="onUntagSelectInput"
                 @loaded="selectOptionsAutoLoaded = true"
             />
         </template>
