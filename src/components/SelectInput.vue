@@ -99,7 +99,7 @@
     /**
      * Search query
      */
-    const query = ref(props.searchString),
+    const query = ref(''),
         queryField = ref(null),
         editableOptions = ref(props.pickedOptions);
 

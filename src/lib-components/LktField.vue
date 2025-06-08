@@ -151,9 +151,7 @@
     const showOptions = ref(false),
         ready = ref(false);
 
-    const searchString = ref(''),
-        focusedOptionIndex = ref(-1),
-        pickedOptions = ref(<Option[]>[]),
+    const pickedOptions = ref(<Option[]>[]),
         searchMode = ref(false);
 
     const computedLang = computed(() => currentLanguage.value);
@@ -788,7 +786,6 @@
                 }
 
                 hadFirstBlur.value = true;
-                focusedOptionIndex.value = -1;
                 showOptions.value = false;
                 focusing.value = false;
                 doValidation();
@@ -1178,7 +1175,6 @@
                         visibleOptions,
                         searchable,
                         searchMode,
-                        searchString,
                         multiple,
                         canTag,
                         options,
@@ -1571,7 +1567,6 @@
                     visibleOptions,
                     searchable,
                     searchMode,
-                    searchString,
                     multiple,
                     canTag,
                     options,

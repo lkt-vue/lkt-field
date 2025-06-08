@@ -25,7 +25,6 @@ export interface SelectInputProps {
     focusing: boolean
     searchPlaceholder: string
     multipleDisplayEdition: string
-    searchString: string
     prop?: LktObject
     max?: number
     tooltip?: TooltipConfig
