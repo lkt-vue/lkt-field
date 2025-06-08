@@ -30,8 +30,7 @@ export declare const handleOptionClickMultiple: (args: {
     keepFocused?: Function;
 }) => boolean;
 export declare const syncPickedOptions: (args: {
-    query: string;
-    value: OptionConfig | ValidOptionValue | Array<OptionConfig | ValidOptionValue>;
+    value: Ref<OptionConfig | ValidOptionValue | Array<OptionConfig | ValidOptionValue>>;
     options: Array<OptionConfig>;
     pickedOptions: Array<OptionConfig>;
     multiple: boolean;

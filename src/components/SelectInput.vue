@@ -289,7 +289,7 @@
             return;
         }
 
-        const fineHandled = props.multiple
+        props.multiple
             ? handleOptionClickMultiple({
                 option,
                 value: editableValue,
@@ -308,17 +308,12 @@
                 optionValueType: props.optionValueType,
                 callback: props.events?.clickOption,
             });
-
-        if (fineHandled) {
-            emit('selected-option', option);
-        }
     };
 
     const syncPicked = () => {
         if (props.multiple) {
             syncPickedOptions({
-                query: query.value,
-                value: editableValue.value,
+                value: editableValue,
                 options: dropdownOptions.value,
                 pickedOptions: props.pickedOptions,
                 multiple: props.multiple,
@@ -326,8 +321,7 @@
             });
         } else {
             syncPickedOptions({
-                query: query.value,
-                value: editableValue.value,
+                value: editableValue,
                 options: dropdownOptions.value,
                 pickedOptions: props.pickedOptions,
                 multiple: props.multiple,

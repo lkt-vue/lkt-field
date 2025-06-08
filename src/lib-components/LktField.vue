@@ -22,7 +22,7 @@
         getDefaultValues,
         LktObject,
         LktSettings,
-        Option,
+        OptionConfig,
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
@@ -151,7 +151,7 @@
     const showOptions = ref(false),
         ready = ref(false);
 
-    const pickedOptions = ref(<Option[]>[]),
+    const pickedOptions = ref(<OptionConfig[]>[]),
         searchMode = ref(false);
 
     const computedLang = computed(() => currentLanguage.value);
@@ -1517,12 +1517,12 @@
             :items="localValidationStatus"
             :stack="validation?.stack" />
 
-        <template v-if="ready && type === FieldType.Select && !selectOptionsAutoLoaded">
+        <template v-if="ready && type === FieldType.Select">
             <select-input
                 ref="inputElement"
-                v-model:picked-options="pickedOptions"
                 v-bind="<SelectInputProps>{
                     modelValue: editableValue,
+                    pickedOptions,
                     showOptions,
                     searchable,
                     searchMode,

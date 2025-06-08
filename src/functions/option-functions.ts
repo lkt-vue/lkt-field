@@ -203,8 +203,7 @@ export const handleOptionClickMultiple = (args: {
 }
 
 export const syncPickedOptions = (args: {
-    query: string
-    value: OptionConfig|ValidOptionValue|Array<OptionConfig|ValidOptionValue>
+    value: Ref<OptionConfig|ValidOptionValue|Array<OptionConfig|ValidOptionValue>>
     options: Array<OptionConfig>
     pickedOptions: Array<OptionConfig>
     multiple: boolean
@@ -214,8 +213,8 @@ export const syncPickedOptions = (args: {
         let l = args.options.length;
         for (let i = 0; i < l; ++i) {
             let option = args.optionValueType === 'option'
-                ? findOptionByValue(args.options, args.value[i].value)
-                : findOptionByValue(args.options, args.value[i])
+                ? findOptionByValue(args.options, args.value.value[i].value)
+                : findOptionByValue(args.options, args.value.value[i])
             ;
 
             if (typeof option !== 'undefined') {
@@ -231,8 +230,8 @@ export const syncPickedOptions = (args: {
     }
 
     let option = args.optionValueType === 'option'
-        ? findOptionByValue(args.options, args.value.map((opt: OptionConfig) => opt.value))
-        : findOptionByValue(args.options, args.value)
+        ? findOptionByValue(args.options, args.value.value.map((opt: OptionConfig) => opt.value))
+        : findOptionByValue(args.options, args.value.value)
     ;
 
     if (typeof option !== 'undefined') {
