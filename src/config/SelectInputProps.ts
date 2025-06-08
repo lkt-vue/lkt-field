@@ -19,7 +19,6 @@ export interface SelectInputProps {
     optionsConfig: OptionsConfig
     optionSlot?: string
     pickedOptions: Option[]
-    visibleOptions: Option[]
     showOptions: boolean
     editable: boolean
     focusing: boolean

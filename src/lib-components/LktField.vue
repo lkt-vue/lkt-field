@@ -166,32 +166,6 @@
     const editableValue = [FieldType.Card].includes(props.type) ? value : ref(extractEditableValue(value.value, computedLang.value));
     const originalEditableValue = ref(typeof editableValue.value === 'object' ? JSON.parse(JSON.stringify(editableValue.value)) : editableValue.value);
 
-    const optionsHaystack = ref(<Option[]>[]),
-        visibleOptions = ref(<Option[]>[]);
-
-    const pickFirstOption = () => {
-
-        let option = visibleOptions.value[0];
-
-        if (props.optionValueType === 'option') {
-            if (props.multiple) {
-                editableValue.value.push(option)
-            } else {
-                editableValue.value = option;
-            }
-
-        } else {
-            if (props.multiple) {
-                editableValue.value.push(option.value)
-            } else {
-                editableValue.value = option.value;
-            }
-        }
-
-
-        pickedOptions.value.push(option);
-    }
-
     const computedInputElement = computed(() => {
         if (props.type === FieldType.Textarea) return 'textarea';
         if (props.type === FieldType.Html) return 'div';
@@ -437,10 +411,7 @@
         computedShowPasswordRevealInNav = computed(() => computedShowPasswordReveal.value && !props.infoButtonEllipsis && fieldFeaturedButton !== 'password'),
         computedShowI18nInNav = computed(() => computedShowI18n.value && !props.infoButtonEllipsis && fieldFeaturedButton !== 'i18n'),
         computedShowDropdownButton = computed(() => {
-            if (props.type === FieldType.Calc) return false;
-            if (props.type === FieldType.Search) return false;
-            if (![FieldType.Select, FieldType.Text].includes(props.type)) return false;
-            return visibleOptions.value.length > 0 || optionsHaystack.value.length > 0 || (typeof props.optionsConfig?.http?.resource !== 'undefined' && props.optionsConfig?.http?.resource !== '');
+            return props.type === FieldType.Select;
         }),
         computedShowSwitchEditionInNav = computed(() => props.allowReadModeSwitch && !props.infoButtonEllipsis),
         computedShowFileUploadInNav = computed(() => typeof props.fileUploadButton === 'object' && Object.keys(props.fileUploadButton).length > 0)
@@ -481,7 +452,7 @@
 
     const translationsDataState = ref(new DataState(translations.value));
 
-    watch(translations, (v, oldValue) => {
+    watch(translations, (v) => {
 
         let stateChecker = new DataState(translationsDataState.value.getOriginalData());
         stateChecker.increment(v);
@@ -507,10 +478,7 @@
         } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
             editableValue.value = extractEditableValue(v, computedLang.value);
         } else if (props.type === FieldType.Select) {
-            if (!v && props.optionsConfig?.autoPickFirstOptionIfEmpty) {
-                pickedOptions.value = [];
-                pickFirstOption();
-            }
+            // nothing...
         } else if (props.canI18n) {
             let stateChecker = new DataState(translations.value);
             stateChecker.increment(v);
@@ -805,13 +773,6 @@
         onFocusSelectInput = () => {
             hadFirstFocus.value = true;
             focusing.value = true;
-
-            if (!props.optionsConfig?.http?.resource && visibleOptions.value.length === 0) {
-                showOptions.value = false;
-                return;
-            }
-
-            showOptions.value = true;
 
             doValidation();
 
@@ -1172,7 +1133,6 @@
                     v-model:show-options="showOptions"
                     v-model:picked-options="pickedOptions"
                     v-bind="<SelectInputProps>{
-                        visibleOptions,
                         searchable,
                         searchMode,
                         multiple,
@@ -1207,7 +1167,7 @@
                     :focusing="focusing"
                     :disabled="computedIsDisabled"
                     :readonly="readonly"
-                    :options="optionsHaystack"
+                    :options="options"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
                 />
@@ -1564,7 +1524,6 @@
                 v-bind="<SelectInputProps>{
                     modelValue: editableValue,
                     showOptions,
-                    visibleOptions,
                     searchable,
                     searchMode,
                     multiple,

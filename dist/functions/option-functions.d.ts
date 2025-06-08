@@ -64,3 +64,10 @@ export declare const removeTag: (args: {
     options: Ref<Array<OptionConfig>>;
     pickedOptions: Array<OptionConfig>;
 }) => boolean;
+export declare const pickFirstOption: (args: {
+    value: Ref<Array<OptionConfig | ValidOptionValue>>;
+    optionValueType: string | "option";
+    multiple: boolean;
+    options: Ref<Array<OptionConfig>>;
+    pickedOptions: Array<OptionConfig>;
+}) => void;

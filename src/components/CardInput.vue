@@ -28,18 +28,13 @@
     });
 
     const value = ref(props.modelValue);
-
-    const onClick = (event: MouseEvent, data: LktObject) => {
-        // console.log(data);
-    };
 </script>
 
 <template>
     <lkt-button
         :modal="modal"
         :modal-key="modalKey"
-        :modal-data="modalData"
-        @click="onClick">
+        :modal-data="modalData">
         <template v-if="value">
             <slot
                 name="item"

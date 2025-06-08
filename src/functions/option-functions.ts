@@ -373,3 +373,30 @@ export const removeTag = (args: {
     }
     return true;
 }
+
+export const pickFirstOption = (args: {
+    value: Ref<Array<OptionConfig|ValidOptionValue>>
+    optionValueType: string | 'option'
+    multiple: boolean
+    options: Ref<Array<OptionConfig>>
+    pickedOptions: Array<OptionConfig>
+}) => {
+    let option = args.options.value[0];
+
+    if (args.optionValueType === 'option') {
+        if (args.multiple) {
+            args.value.value.push(option)
+        } else {
+            args.value.value = option;
+        }
+
+    } else {
+        if (args.multiple) {
+            args.value.value.push(option.value)
+        } else {
+            args.value.value = option.value;
+        }
+    }
+
+    args.pickedOptions.push(option);
+}

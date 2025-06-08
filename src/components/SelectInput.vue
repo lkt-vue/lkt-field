@@ -19,7 +19,7 @@
         handleDropdownOptionsKeyboardNavigation,
         handleOptionClickMultiple,
         handleOptionClickSingle,
-        optionIsActive,
+        optionIsActive, pickFirstOption,
         prepareOptions,
         receiveOptions,
         removeTag,
@@ -53,14 +53,6 @@
 
     const focusedOptionIndex = ref(-1);
 
-    watch(() => props.modelValue, (v) => {
-        editableValue.value = v;
-    }, { deep: true });
-
-    watch(editableValue, (v) => {
-        emit('update:modelValue', v);
-    }, { deep: true });
-
     const tagsEnabled = props.multiple && props.canTag;
 
     const originalOptions = typeof props.options === 'object' ? JSON.parse(JSON.stringify(props.options)) : props.options;
@@ -73,6 +65,26 @@
             enabledPropsOptionsWatcher.value = true;
         });
     });
+
+    watch(() => props.modelValue, (v) => {
+        if (!v && props.optionsConfig?.autoPickFirstOptionIfEmpty) {
+            props.pickedOptions.splice(0, props.pickedOptions.length);
+            pickFirstOption({
+                value: editableValue,
+                optionValueType: props.optionValueType,
+                multiple: props.multiple,
+                options: dropdownOptions,
+                pickedOptions: props.pickedOptions,
+            });
+
+        } else {
+            editableValue.value = v;
+        }
+    }, { deep: true });
+
+    watch(editableValue, (v) => {
+        emit('update:modelValue', v);
+    }, { deep: true });
 
     watch(dropdownOptions, (v) => {
         if (typeof props.events?.updatedOptions === 'function') {
@@ -355,7 +367,9 @@
             return 'lkt-tooltip';
         }),
         computedReferrer = computed(() => {
-            if (props.multiple) return queryField.value;
+            if (props.isAutoCompleteText || computedRenderSearchUI.value || computedRenderMultipleSearchUi.value) return queryField.value;
+            //@ts-ignore
+            // if (props.multiple) return selectButton.value;
             return props.referrer;
         });
 
