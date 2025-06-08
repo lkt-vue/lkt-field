@@ -1,0 +1,16 @@
+export enum InternalInputComponent {
+    TextInput,
+    TextareaInput,
+    HtmlInput,
+    BooleanInput,
+    MultipleColorInput,
+    SingleColorInput,
+    FileInput,
+    DateInput,
+    TimeInput,
+    SelectInput,
+    CalcInput,
+    SearchInput,
+    MultipleCardInput,
+    SingleCardInput,
+}

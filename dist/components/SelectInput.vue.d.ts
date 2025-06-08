@@ -2,6 +2,8 @@ import { SelectInputProps } from '../config/SelectInputProps.d.ts';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 import { LktObject } from 'lkt-vue-kernel';
 declare const _default: DefineComponent<SelectInputProps, {
+    doClear: () => void;
+    doUndo: () => void;
     keepFocused: () => void;
     switchShowOptions: () => void;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
@@ -22,6 +24,7 @@ declare const _default: DefineComponent<SelectInputProps, {
     onLoaded?: ((...args: any[]) => any) | undefined;
 }>, {
     prop: LktObject;
+    isAutoCompleteText: boolean;
     autoLoading: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     queryField: HTMLInputElement;

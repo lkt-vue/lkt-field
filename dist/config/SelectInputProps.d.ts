@@ -1,6 +1,7 @@
 import { LktObject, Option, OptionConfig, OptionsConfig, TooltipConfig, ValidOptionValue } from 'lkt-vue-kernel';
 export interface SelectInputProps {
     modelValue: OptionConfig | ValidOptionValue | Array<OptionConfig | ValidOptionValue>;
+    isAutoCompleteText?: boolean;
     searchable: boolean;
     searchMode: boolean;
     isLoading: boolean;

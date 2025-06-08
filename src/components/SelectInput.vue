@@ -4,7 +4,6 @@
         ButtonConfig,
         ButtonType,
         MultipleOptionsDisplay,
-        Option,
         OptionConfig,
         TableConfig,
         TableType,
@@ -15,12 +14,16 @@
     } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
-        canDisplayOption, createTag, handleDropdownOptionsKeyboardNavigation,
+        canDisplayOption,
+        createTag,
+        handleDropdownOptionsKeyboardNavigation,
         handleOptionClickMultiple,
         handleOptionClickSingle,
         optionIsActive,
         prepareOptions,
-        receiveOptions, removeTag, syncPickedOptions,
+        receiveOptions,
+        removeTag,
+        syncPickedOptions,
     } from '@/functions/option-functions.ts';
     import { SelectInputProps } from '@/config/SelectInputProps.ts';
     import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
@@ -42,6 +45,7 @@
 
     const props = withDefaults(defineProps<SelectInputProps>(), {
         autoLoading: false,
+        isAutoCompleteText: false,
         prop: () => ({})
     });
 
@@ -220,9 +224,23 @@
                 options: dropdownOptions,
                 pickedOptions: props.pickedOptions
             })
+        },
+        doClear = () => {
+            if (props.isAutoCompleteText) query.value = '';
+            props.pickedOptions.splice(0, props.pickedOptions.length);
+            nextTick(() => {
+                syncPicked();
+            })
+        },
+        doUndo = () => {
+            nextTick(() => {
+                syncPicked();
+            })
         };
 
     defineExpose({
+        doClear,
+        doUndo,
         keepFocused,
         switchShowOptions: () => {
             editableShowOptions.value = !editableShowOptions.value;
@@ -251,6 +269,12 @@
     })
 
     const onClickOption = (option: OptionConfig) => {
+
+        if (props.isAutoCompleteText) {
+            query.value = option.value;
+            editableValue.value = option.value;
+            return;
+        }
 
         const fineHandled = props.multiple
             ? handleOptionClickMultiple({
@@ -331,13 +355,32 @@
         })
 
     onMounted(() => {
+        if (props.isAutoCompleteText) {
+            //@ts-ignore
+            query.value = editableValue.value;
+        }
         syncPicked();
     })
 
 </script>
 
 <template>
-    <div v-if="!autoLoading && (computedRenderSearchUI || computedRenderMultipleSearchUi)" class="lkt-field--searchable-box">
+    <div v-if="isAutoCompleteText" class="lkt-field--searchable-box">
+        <input
+            v-model="query"
+            ref="queryField"
+            :value="query"
+            :placeholder="searchPlaceholder"
+            :disabled="pickedOptions.length === max"
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+            @keyup="onKeyUpQueryInput"
+            @blur="onBlurQueryInput"
+            @focus="onFocusQueryInput"
+        />
+    </div>
+    <div v-else-if="!autoLoading && (computedRenderSearchUI || computedRenderMultipleSearchUi)" class="lkt-field--searchable-box">
 
         <lkt-tag
             v-if="multiple"
@@ -371,7 +414,7 @@
     </div>
 
     <lkt-button
-        v-if="!autoLoading"
+        v-if="!autoLoading && !isAutoCompleteText"
         ref="selectButton"
         v-show="!computedRenderSearchUI || computedRenderMultipleSearchUi"
         v-bind="<ButtonConfig>{

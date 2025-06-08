@@ -14,7 +14,6 @@
         FieldConfig,
         fieldsWithMultipleMode,
         FieldType,
-        fieldTypesWithOptions,
         fieldTypesWithoutClear,
         fieldTypesWithoutUndo,
         FieldValidation,
@@ -27,9 +26,6 @@
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
-        TooltipConfig,
-        TooltipLocationX,
-        TooltipLocationY,
         ValidationStatus,
     } from 'lkt-vue-kernel';
     import UndoButton from '../components/buttons/UndoButton.vue';
@@ -39,16 +35,8 @@
     import EllipsisActionsButton from '../components/buttons/EllipsisActionsButton.vue';
     import I18nButton from '../components/buttons/I18nButton.vue';
     import { ensureNumberBetween } from '../functions/numeric-functions';
-    import {
-        filterOptions,
-        findOptionByValue,
-        getInValueOptionIndex,
-        handleOptionClickMultiple,
-        optionIsActive,
-    } from '../functions/option-functions';
     import { getVisibleDateValue } from '../functions/date-functions';
     import DropdownButton from '../components/buttons/DropdownButton.vue';
-    import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import ColorInput from '../components/ColorInput.vue';
     import MultipleColorInput from '../components/MultipleColorInput.vue';
     import {
@@ -75,7 +63,7 @@
     import { DataState } from 'lkt-data-state';
     import TimeInput from '@/components/TimeInput.vue';
     import { SelectInputProps } from '@/config/SelectInputProps.ts';
-    import { DropdownOptionProps } from '@/config/DropdownOptionProps.ts';
+    import { InternalInputComponent } from '@/enum/InternalInputComponent.ts';
 
     // Emits
     const emits = defineEmits([
@@ -692,41 +680,6 @@
         return r;
     };
 
-    const navigateOptions = (event: KeyboardEvent) => {
-            let amountOfOptions = visibleOptions.value.length - 1;
-            if (amountOfOptions === -1) return;
-
-            const key = event.key ?? '';
-
-            if (focusing.value) {
-
-                if (['ArrowDown', 'ArrowUp', 'Enter'].includes(key)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                if (key === 'ArrowDown') {
-                    ++focusedOptionIndex.value;
-                    if (focusedOptionIndex.value > amountOfOptions) focusedOptionIndex.value = 0;
-                    //@ts-ignore
-                    let el = optionList.value?.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
-                    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
-
-                } else if (key === 'ArrowUp') {
-                    --focusedOptionIndex.value;
-                    if (focusedOptionIndex.value < 0) focusedOptionIndex.value = amountOfOptions;
-
-                    //@ts-ignore
-                    let el = optionList.value?.querySelector('[data-index="' + focusedOptionIndex.value + '"]');
-                    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
-
-                } else if (key === 'Enter') {
-                    if (focusedOptionIndex.value > -1) {
-                        onClickOption(visibleOptions.value[focusedOptionIndex.value]);
-                    }
-                }
-            }
-        };
-
     const computedCanRenderValidations = computed(() => {
         if (localValidationStatus.value.length === 0) return false;
 
@@ -739,54 +692,65 @@
 
     const
         doUndo = () => {
-            if (props.type === FieldType.Html) {
-                if (inputElement.value) {
+            switch (computedInternalInput.value) {
+                case InternalInputComponent.HtmlInput:
+                    if (inputElement.value) {
+                        //@ts-ignore
+                        inputElement.value.setValue(originalEditableValue.value);
+                    }
+                    return;
+
+                case InternalInputComponent.DateInput:
+                    value.value = originalValue.value;
+                    return;
+
+                case InternalInputComponent.FileInput:
+                    value.value = originalValue.value;
+                    visibleFileName.value = originalFileName.value;
+                    return;
+
+                case InternalInputComponent.SelectInput:
+                    editableValue.value = props.multiple
+                        ? JSON.parse(JSON.stringify(originalEditableValue.value))
+                        : originalEditableValue.value;
                     //@ts-ignore
-                    inputElement.value.setValue(originalEditableValue.value);
-                }
-                return;
-            } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
-                value.value = originalValue.value;
-                return;
-            } else if (props.type === FieldType.File) {
-                value.value = originalValue.value;
-                visibleFileName.value = originalFileName.value;
-                return;
+                    inputElement.value?.doUndo();
+                    return;
 
-            } else if (props.type === FieldType.Select) {
-                editableValue.value = props.multiple
-                    ? JSON.parse(JSON.stringify(originalEditableValue.value))
-                    : originalEditableValue.value;
-                return;
+                default:
+                    editableValue.value = originalEditableValue.value;
             }
-
-            editableValue.value = originalEditableValue.value;
         },
         doClear = () => {
-            if (props.type === FieldType.Html) {
-                if (inputElement.value) {
+            switch (computedInternalInput.value) {
+                case InternalInputComponent.HtmlInput:
+                    if (inputElement.value) {
+                        //@ts-ignore
+                        inputElement.value.setValue('');
+                    }
+                    return;
+
+                case InternalInputComponent.DateInput:
+                    value.value = '';
+                    return;
+
+                case InternalInputComponent.FileInput:
+                    value.value = '';
+                    visibleFileName.value = '';
+                    return;
+
+                case InternalInputComponent.SelectInput:
+                    editableValue.value = props.multiple ? [] : '';
                     //@ts-ignore
-                    inputElement.value.setValue('');
-                }
-                return;
-            } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
-                value.value = '';
-                return;
-            } else if (props.type === FieldType.File) {
-                value.value = '';
-                visibleFileName.value = '';
-                return;
-            } else if (props.type === FieldType.Select) {
-                editableValue.value = props.multiple ? [] : '';
-                return;
+                    inputElement.value?.doClear();
+                    return;
+
+                default:
+                    editableValue.value = '';
             }
-            editableValue.value = '';
         },
         getValue = () => editableValue.value,
         onKeyUp = ($event: KeyboardEvent) => {
-            if (fieldTypesWithOptions.includes(props.type)) {
-                navigateOptions($event);
-            }
             emits('keyup', $event);
         },
         turnOnSelectSearchMode = () => {
@@ -809,44 +773,6 @@
                 return;
             }
             return onFocus();
-        },
-        onClickOption = (option: Option, tagging: boolean = false) => {
-        return;
-
-            if (props.type === FieldType.Select) return;
-
-            if (option.disabled) return;
-
-            if (props.multiple) {
-                handleOptionClickMultiple({
-                    option,
-                    value: editableValue.value,
-                    pickedOptions: pickedOptions.value,
-                    tagMode: tagging,
-                    searchMode: props.searchable,
-                    optionValueType: props.optionValueType,
-                    searchField: inputElement.value,
-                    callback: props.events?.clickOption
-                });
-                emits('selected-option', option);
-
-            } else {
-                focusedOptionIndex.value = -1;
-                if (props.optionValueType === 'option') {
-                    //@ts-ignore
-                    editableValue.value = option;
-                } else {
-                    //@ts-ignore
-                    editableValue.value = String(option.value);
-                }
-                pickedOptions.value.splice(0, 1, option);
-                showOptions.value = false;
-                searchMode.value = false;
-                if (typeof props.events?.clickOption === 'function') {
-                    props.events?.clickOption({ option });
-                }
-                emits('selected-option', option);
-            }
         },
         onKeyDown = ($event: KeyboardEvent) => emits('keydown', $event),
         onFocus = ($event?: FocusEvent) => {
@@ -1059,6 +985,53 @@
             if (typeof props.canDisplay === 'boolean') return props.canDisplay;
             return true;
         });
+
+    const computedInternalInput = computed(() => {
+        if (booleanFieldTypes.includes(props.type)) return InternalInputComponent.BooleanInput;
+        switch (props.type) {
+            case FieldType.Color:
+                if (props.multiple) return InternalInputComponent.MultipleColorInput;
+                return InternalInputComponent.SingleColorInput;
+
+            case FieldType.Card:
+                if (props.multiple) return InternalInputComponent.MultipleCardInput;
+                return InternalInputComponent.SingleCardInput;
+
+            case FieldType.File:
+            case FieldType.Image:
+                return InternalInputComponent.FileInput;
+
+            case FieldType.Date:
+            case FieldType.DateTime:
+                return InternalInputComponent.DateInput;
+
+            case FieldType.Time:
+                return InternalInputComponent.TimeInput;
+
+            case FieldType.Select:
+                return InternalInputComponent.SelectInput;
+
+            case FieldType.Calc:
+                return InternalInputComponent.CalcInput;
+
+            case FieldType.Search:
+                return InternalInputComponent.SearchInput;
+
+            case FieldType.Html:
+                return InternalInputComponent.HtmlInput;
+
+            default:
+                if (computedInputElement.value === 'input') {
+                    if (props.options || props.optionsConfig.http) {
+                        return InternalInputComponent.SelectInput;
+                    }
+                    return InternalInputComponent.TextInput;
+                }
+                if (computedInputElement.value === 'textarea') {
+                    return InternalInputComponent.TextareaInput;
+                }
+        }
+    })
 </script>
 
 <template>
@@ -1126,7 +1099,7 @@
                 </div>
 
                 <boolean-input
-                    v-else-if="booleanFieldTypes.includes(type)"
+                    v-else-if="computedInternalInput === InternalInputComponent.BooleanInput"
                     v-model="editableValue"
                     ref="inputElement"
                     :id="Identifier"
@@ -1142,7 +1115,7 @@
                 />
 
                 <multiple-color-input
-                    v-else-if="type === FieldType.Color && multiple"
+                    v-else-if="computedInternalInput === InternalInputComponent.MultipleColorInput"
                     v-model="editableValue"
                     ref="inputElement"
                     :edit-mode="computedEditable"
@@ -1151,13 +1124,13 @@
                 />
 
                 <color-input
-                    v-else-if="type === FieldType.Color"
+                    v-else-if="computedInternalInput === InternalInputComponent.SingleColorInput"
                     v-model="editableValue"
                     @change="onChange"
                     ref="inputElement" />
 
                 <file-input
-                    v-else-if="computedIsFile || computedIsImage"
+                    v-else-if="computedInternalInput === InternalInputComponent.FileInput"
                     v-model="value"
                     v-model:file-name="visibleFileName"
                     ref="inputElement"
@@ -1181,7 +1154,7 @@
                 />
 
                 <date-input
-                    v-else-if="[FieldType.Date, FieldType.DateTime].includes(type)"
+                    v-else-if="computedInternalInput === InternalInputComponent.DateInput"
                     v-model="value"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1192,7 +1165,7 @@
                 />
 
                 <time-input
-                    v-else-if="type === FieldType.Time"
+                    v-else-if="computedInternalInput === InternalInputComponent.TimeInput"
                     v-model="value"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1202,7 +1175,7 @@
                 />
 
                 <select-input
-                    v-else-if="type === FieldType.Select"
+                    v-else-if="computedInternalInput === InternalInputComponent.SelectInput"
                     ref="inputElement"
                     v-model="editableValue"
                     v-model:show-options="showOptions"
@@ -1227,6 +1200,7 @@
                         events,
                         optionValueType,
                         referrer: container,
+                        isAutoCompleteText: type !== FieldType.Select,
                     }"
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"
@@ -1234,7 +1208,7 @@
                 />
                 <calc-input
                     ref="inputElement"
-                    v-else-if="type === FieldType.Calc"
+                    v-else-if="computedInternalInput === InternalInputComponent.CalcInput"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1250,7 +1224,7 @@
 
                 <search-input
                     ref="inputElement"
-                    v-else-if="type === FieldType.Search"
+                    v-else-if="computedInternalInput === InternalInputComponent.SearchInput"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1267,7 +1241,7 @@
                 />
 
                 <multiple-card-input
-                    v-else-if="type === FieldType.Card && props.multiple"
+                    v-else-if="computedInternalInput === InternalInputComponent.MultipleCardInput"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1298,7 +1272,7 @@
                 </multiple-card-input>
 
                 <card-input
-                    v-else-if="type === FieldType.Card"
+                    v-else-if="computedInternalInput === InternalInputComponent.SingleCardInput"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="tabindex"
@@ -1329,7 +1303,7 @@
                 </card-input>
 
                 <input
-                    v-else-if="computedInputElement === 'input' && canI18n"
+                    v-else-if="canI18n && computedInternalInput === InternalInputComponent.TextInput"
                     v-model="translations[computedLang]"
                     :ref="(el:any) => inputElement = el"
                     :value="translations[computedLang]"
@@ -1353,7 +1327,7 @@
                 />
 
                 <input
-                    v-else-if="computedInputElement === 'input'"
+                    v-else-if="computedInternalInput === InternalInputComponent.TextInput"
                     v-model="editableValue"
                     :ref="(el:any) => inputElement = el"
                     :value="editableValue"
@@ -1376,7 +1350,7 @@
                     v-on:change="onChange"
                 />
                 <textarea
-                    v-else-if="computedInputElement === 'textarea' && canI18n"
+                    v-else-if="canI18n && computedInternalInput === InternalInputComponent.TextareaInput"
                     v-model="translations[computedLang]"
                     :ref="(el:any) => inputElement = el"
                     :name="name"
@@ -1394,7 +1368,7 @@
                     v-on:change="onChange"
                 />
                 <textarea
-                    v-else-if="computedInputElement === 'textarea'"
+                    v-else-if="computedInternalInput === InternalInputComponent.TextareaInput"
                     v-model="editableValue"
                     :ref="(el:any) => inputElement = el"
                     :name="name"
@@ -1413,7 +1387,7 @@
                 />
                 <html-input
                     ref="inputElement"
-                    v-else-if="type === FieldType.Html"
+                    v-else-if="computedInternalInput === InternalInputComponent.HtmlInput"
                     v-model="editableValue"
                     :id="Identifier"
                     :tabindex="<number>tabindex"
@@ -1592,59 +1566,6 @@
             v-if="computedEditable && computedCanRenderValidations"
             :items="localValidationStatus"
             :stack="validation?.stack" />
-
-        <lkt-tooltip
-            v-if="computedEditable && [FieldType.Text].includes(type)"
-            ref="dropdownEl"
-            v-model="showOptions"
-            v-bind="<TooltipConfig>{
-                class: 'lkt-field--dropdown',
-                referrer: container,
-                referrerWidth: true,
-                locationX: TooltipLocationX.LeftCorner,
-                locationY: TooltipLocationY.Bottom,
-                ...tooltipConfig
-            }"
-        >
-            <div v-if="showOptions">
-                <lkt-loader v-if="isLoading" />
-                <ul class="lkt-field--dropdown-options" v-if="!isLoading" ref="optionList">
-                    <li v-for="(option, i) in visibleOptions"
-                        :class="{
-                                'is-active': optionIsActive(option, value, multiple),
-                                'is-focused': i === focusedOptionIndex,
-                                'is-disabled': option.disabled,
-                            }"
-                        :data-index="i"
-                        @click="() => onClickOption(option)">
-                        <template v-if="slots.option">
-                            <slot name="option"
-                                  :option="option"
-                                  :data="slotData"
-                                  :modal="optionsConfig?.modal"
-                                  :modal-data="optionsConfig?.modalData"
-                                  :download="optionsConfig?.download"
-                                  :editable="computedEditable"
-                            />
-                        </template>
-                        <template v-else>
-                            <dropdown-option
-                                v-bind="<DropdownOptionProps>{
-                                    item: option,
-                                    data: {
-                                        optionSlot,
-                                        editable: computedEditable,
-                                        prop,
-                                        isTag: canTag,
-                                        optionsConfig,
-                                    }
-                                }"
-                            />
-                        </template>
-                    </li>
-                </ul>
-            </div>
-        </lkt-tooltip>
 
         <template v-if="ready && type === FieldType.Select && !selectOptionsAutoLoaded">
             <select-input
