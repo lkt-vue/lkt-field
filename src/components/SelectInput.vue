@@ -227,7 +227,15 @@
             buttonHasFocus.value = true;
 
             if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
-                emit('navigate', event);
+                handleDropdownOptionsKeyboardNavigation({
+                    event,
+                    options: dropdownOptions,
+                    focusing: props.focusing,
+                    container: dropdownEl,
+                    focusedIndex: focusedOptionIndex,
+                    optionsConfig: props.optionsConfig,
+                    query: query.value,
+                });
             }
         },
         onFocusSelectButton = (event: FocusEvent) => {
