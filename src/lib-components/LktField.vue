@@ -477,8 +477,6 @@
             editableValue.value = v;
         } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
             editableValue.value = extractEditableValue(v, computedLang.value);
-        } else if (props.type === FieldType.Select) {
-            // nothing...
         } else if (props.canI18n) {
             let stateChecker = new DataState(translations.value);
             stateChecker.increment(v);

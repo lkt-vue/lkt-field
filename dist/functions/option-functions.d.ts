@@ -67,6 +67,8 @@ export declare const pickFirstOption: (args: {
     value: Ref<Array<OptionConfig | ValidOptionValue>>;
     optionValueType: string | "option";
     multiple: boolean;
+    query: string;
+    optionsConfig: OptionsConfig;
     options: Ref<Array<OptionConfig>>;
     pickedOptions: Array<OptionConfig>;
 }) => void;

@@ -69,13 +69,17 @@
     watch(() => props.modelValue, (v) => {
         if (!v && props.optionsConfig?.autoPickFirstOptionIfEmpty) {
             props.pickedOptions.splice(0, props.pickedOptions.length);
-            pickFirstOption({
-                value: editableValue,
-                optionValueType: props.optionValueType,
-                multiple: props.multiple,
-                options: dropdownOptions,
-                pickedOptions: props.pickedOptions,
-            });
+            nextTick(() => {
+                pickFirstOption({
+                    value: editableValue,
+                    optionValueType: props.optionValueType,
+                    multiple: props.multiple,
+                    query: query.value,
+                    optionsConfig: props.optionsConfig,
+                    options: dropdownOptions,
+                    pickedOptions: props.pickedOptions,
+                });
+            })
 
         } else {
             editableValue.value = v;
@@ -289,7 +293,7 @@
             return;
         }
 
-        props.multiple
+        const fineHandled = props.multiple
             ? handleOptionClickMultiple({
                 option,
                 value: editableValue,
@@ -308,6 +312,13 @@
                 optionValueType: props.optionValueType,
                 callback: props.events?.clickOption,
             });
+
+        if (fineHandled && typeof props.events.clickOption === 'function') {
+            console.log('clickedOption!');
+            props.events.clickOption({
+                option,
+            });
+        }
     };
 
     const syncPicked = () => {

@@ -276,7 +276,7 @@ export const handleDropdownOptionsKeyboardNavigation = (args: {
 
             let option = <OptionConfig>args.options.value[args.focusedIndex.value];
 
-            while (!canDisplayOption(option, args.query, args.optionsConfig.filter) && args.focusedIndex.value < amountOfOptions) {
+            while (!canDisplayOption(option, args.query, true, args.optionsConfig.filter) && args.focusedIndex.value < amountOfOptions) {
                 ++args.focusedIndex.value;
                 option = <OptionConfig>args.options.value[args.focusedIndex.value];
             }
@@ -292,7 +292,7 @@ export const handleDropdownOptionsKeyboardNavigation = (args: {
 
             let option = <OptionConfig>args.options.value[args.focusedIndex.value];
 
-            while (!canDisplayOption(option, args.query, args.optionsConfig.filter) && args.focusedIndex.value > 0) {
+            while (!canDisplayOption(option, args.query, args.optionsConfig?.filter) && args.focusedIndex.value > 0) {
                 --args.focusedIndex.value;
                 option = <OptionConfig>args.options.value[args.focusedIndex.value];
             }
@@ -377,10 +377,18 @@ export const pickFirstOption = (args: {
     value: Ref<Array<OptionConfig|ValidOptionValue>>
     optionValueType: string | 'option'
     multiple: boolean
+    query: string
+    optionsConfig: OptionsConfig
     options: Ref<Array<OptionConfig>>
     pickedOptions: Array<OptionConfig>
 }) => {
-    let option = args.options.value[0];
+    let index = 0, amountOfOptions = args.options.value.length;
+    let option = <OptionConfig>args.options.value[index];
+
+    while (!canDisplayOption(option, args.query, true, args.optionsConfig?.filter) && index < amountOfOptions) {
+        ++index;
+        option = <OptionConfig>args.options.value[index];
+    }
 
     if (args.optionValueType === 'option') {
         if (args.multiple) {
@@ -397,5 +405,9 @@ export const pickFirstOption = (args: {
         }
     }
 
-    args.pickedOptions.push(option);
+    if (args.multiple) {
+        args.pickedOptions.push(option);
+    } else {
+        args.pickedOptions.splice(0, 1, option);
+    }
 }
