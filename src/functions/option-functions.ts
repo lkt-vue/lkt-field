@@ -282,7 +282,7 @@ export const handleDropdownOptionsKeyboardNavigation = (args: {
             }
 
 
-            let el = args.container.value?.querySelector('[data-index="' + args.focusedIndex.value + '"]');
+            let el = typeof args.container.value?.querySelector === 'function' && args.container.value?.querySelector('[data-index="' + args.focusedIndex.value + '"]');
             if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
             return true;
 
@@ -297,7 +297,7 @@ export const handleDropdownOptionsKeyboardNavigation = (args: {
                 option = <OptionConfig>args.options.value[args.focusedIndex.value];
             }
 
-            let el = args.container.value?.querySelector('[data-index="' + args.focusedIndex.value + '"]');
+            let el = typeof args.container.value?.querySelector === 'function' && args.container.value?.querySelector('[data-index="' + args.focusedIndex.value + '"]');
             if (el) el.scrollIntoView({ behavior: 'instant', block: 'start', inline: 'nearest' });
             return true;
 

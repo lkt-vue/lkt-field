@@ -193,7 +193,7 @@
                     query.value = '';
                 }
             } else if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
-                handleDropdownOptionsKeyboardNavigation({
+                let handled = handleDropdownOptionsKeyboardNavigation({
                     event,
                     options: dropdownOptions,
                     focusing: props.focusing,
@@ -202,6 +202,10 @@
                     optionsConfig: props.optionsConfig,
                     query: query.value,
                 });
+
+                if (typeof handled === 'object') {
+                    onClickOption(handled);
+                }
             }
         },
         onFocusQueryInput = (event: FocusEvent) => {
@@ -227,7 +231,7 @@
             buttonHasFocus.value = true;
 
             if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
-                handleDropdownOptionsKeyboardNavigation({
+                let handled = handleDropdownOptionsKeyboardNavigation({
                     event,
                     options: dropdownOptions,
                     focusing: props.focusing,
@@ -236,6 +240,10 @@
                     optionsConfig: props.optionsConfig,
                     query: query.value,
                 });
+
+                if (typeof handled === 'object') {
+                    onClickOption(handled);
+                }
             }
         },
         onFocusSelectButton = (event: FocusEvent) => {
