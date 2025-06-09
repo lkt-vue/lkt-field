@@ -10,7 +10,7 @@
         TagConfig,
         TooltipConfig,
         TooltipLocationX,
-        TooltipLocationY,
+        TooltipLocationY, ValidFieldValue,
     } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
@@ -243,13 +243,45 @@
             });
         },
         doClear = () => {
-            if (props.isAutoCompleteText) query.value = '';
+            if (props.isAutoCompleteText) {
+                query.value = '';
+                editableValue.value = '';
+
+            } else {
+
+                if (props.multiple) {
+                    (<Array<OptionConfig>>editableValue.value).splice(0, (<Array<OptionConfig>>editableValue.value).length);
+                } else {
+                    editableValue.value = '';
+                }
+            }
+
             props.pickedOptions.splice(0, props.pickedOptions.length);
             nextTick(() => {
                 syncPicked();
             });
         },
-        doUndo = () => {
+        doUndo = (originalValue: ValidFieldValue) => {
+            if (props.isAutoCompleteText) {
+                editableValue.value = <string>originalValue;
+
+            } else {
+
+                if (props.multiple) {
+                    (<Array<OptionConfig>>editableValue.value).splice(0, (<Array<OptionConfig>>editableValue.value).length);
+                    let i = 0, l = (<Array<OptionConfig>>originalValue).length;
+                    while (i < l) {
+                        (<Array<OptionConfig>>editableValue.value).push(
+                            (<Array<OptionConfig>>originalValue)[i]
+                        )
+                        ++i;
+                    }
+                } else {
+                    editableValue.value = <string>originalValue;
+                }
+            }
+
+            props.pickedOptions.splice(0, props.pickedOptions.length);
             nextTick(() => {
                 syncPicked();
             });

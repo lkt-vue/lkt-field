@@ -668,11 +668,8 @@
                     return;
 
                 case InternalInputComponent.SelectInput:
-                    editableValue.value = props.multiple
-                        ? JSON.parse(JSON.stringify(originalEditableValue.value))
-                        : originalEditableValue.value;
                     //@ts-ignore
-                    inputElement.value?.doUndo();
+                    inputElement.value?.doUndo(originalEditableValue.value);
                     return;
 
                 default:
@@ -698,7 +695,6 @@
                     return;
 
                 case InternalInputComponent.SelectInput:
-                    editableValue.value = props.multiple ? [] : '';
                     //@ts-ignore
                     inputElement.value?.doClear();
                     return;

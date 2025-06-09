@@ -1,9 +1,9 @@
+import { ValidFieldValue, LktObject } from 'lkt-vue-kernel';
 import { SelectInputProps } from '../config/SelectInputProps.d.ts';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
-import { LktObject } from 'lkt-vue-kernel';
 declare const _default: DefineComponent<SelectInputProps, {
     doClear: () => void;
-    doUndo: () => void;
+    doUndo: (originalValue: ValidFieldValue) => void;
     keepFocused: () => void;
     switchShowOptions: () => void;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {

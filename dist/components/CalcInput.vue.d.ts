@@ -1,8 +1,8 @@
-import { Option } from 'lkt-vue-kernel';
+import { OptionConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: string;
-    options?: Option[];
+    options?: Array<OptionConfig>;
     editable: boolean;
     focusing: boolean;
     disabled: boolean;
@@ -19,7 +19,7 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     onBlur?: ((...args: any[]) => any) | undefined;
 }>, {
     modelValue: string;
-    options: Option[];
+    options: Array<OptionConfig>;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     container: HTMLDivElement;
     input: HTMLInputElement;
