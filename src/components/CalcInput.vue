@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
-    import { Option } from 'lkt-vue-kernel';
+    import { OptionConfig } from 'lkt-vue-kernel';
     import { ref, watch } from 'vue';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
     const props = withDefaults(defineProps<{
         modelValue: string
-        options?: Option[]
+        options?: Array<OptionConfig>
         editable: boolean
         focusing: boolean
         disabled: boolean
@@ -63,7 +63,7 @@
             value.value += ' ';
             focusFormula();
         },
-        addCustomNumber = (button: Option) => {
+        addCustomNumber = (button: OptionConfig) => {
             value.value += '' + button.value;
             focusFormula();
         };
