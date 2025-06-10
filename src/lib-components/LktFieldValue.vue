@@ -18,6 +18,7 @@
     const props = withDefaults(defineProps<{
         type?: FieldType
         value: any
+        isLoading?: boolean
         label?: string
         title?: string
         fileName?: string
@@ -50,6 +51,7 @@
         slotData: () => ({}),
         download: '',
         multiple: false,
+        isLoading: false,
         multipleDisplay: MultipleOptionsDisplay.List,
         modal: '',
         modalKey: '',
@@ -108,7 +110,8 @@
 
 <template>
     <div class="lkt-field--read" v-on:click="onClick">
-        <template v-if="slots['value']">
+        <lkt-loader v-if="isLoading"/>
+        <template v-else-if="slots['value']">
             <slot
                 name="value"
                 :value="computedValue"

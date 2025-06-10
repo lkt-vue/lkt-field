@@ -38,6 +38,8 @@
         'blur',
         'change',
         'loaded',
+        'autoload-start',
+        'autoload-end',
     ]);
 
     const selectButton = ref(null);
@@ -45,6 +47,7 @@
 
     const props = withDefaults(defineProps<SelectInputProps>(), {
         autoLoading: false,
+        localAutoLoad: false,
         isAutoCompleteText: false,
         prop: () => ({}),
     });
@@ -392,6 +395,18 @@
     };
 
     const onReadResponse = () => {
+
+        if (props.autoLoading && props.optionsConfig.autoloadResource === 'feed' && props.multiple) {
+            for (let i = 0; i < dropdownOptions.value.length; ++i) {
+                if (props.optionValueType === 'option') {
+                    editableValue.value.push(dropdownOptions.value[i]);
+
+                } else {
+                    editableValue.value.push(dropdownOptions.value[i].value);
+                }
+            }
+        }
+
         focusedOptionIndex.value = -1;
         syncPicked();
     };
@@ -406,12 +421,31 @@
 
             if (Settings.searchKeyForResource !== '') resourceData[Settings.searchKeyForResource] = query.value;
 
+            const httpStart = (data: any) => {
+                if (props.autoLoading && props.optionsConfig.autoloadResource) {
+                    emit('autoload-start')
+                }
+
+                if (typeof props.optionsConfig.http?.events?.onStart === 'function') {
+                    props.optionsConfig.http?.events?.onStart(data);
+                }
+            }
+            const httpEnd = (data: any) => {
+                if (props.autoLoading && props.optionsConfig.autoloadResource) {
+                    emit('autoload-end')
+                }
+
+                if (typeof props.optionsConfig.http?.events?.onEnd === 'function') {
+                    props.optionsConfig.http?.events?.onEnd(data);
+                }
+            }
+
             return {
                 resource: props.optionsConfig.http?.resource,
                 resourceData,
                 events: {
-                    httpStart: props.optionsConfig.http?.events?.onStart,
-                    httpEnd: props.optionsConfig.http?.events?.onEnd,
+                    httpStart,
+                    httpEnd,
                 },
             };
         }),
@@ -563,7 +597,7 @@
     >
         <lkt-table
             ref="optionList"
-            v-if="autoLoading || canRenderDropdownTable"
+            v-if="(autoLoading && !localAutoLoad) || canRenderDropdownTable"
             v-show="!autoLoading"
             v-model="dropdownOptions"
             v-bind="<TableConfig>{

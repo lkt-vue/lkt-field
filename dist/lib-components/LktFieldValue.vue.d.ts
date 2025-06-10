@@ -3,6 +3,7 @@ import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOp
 type __VLS_Props = {
     type?: FieldType;
     value: any;
+    isLoading?: boolean;
     label?: string;
     title?: string;
     fileName?: string;
@@ -59,6 +60,7 @@ declare const __VLS_component: DefineComponent<__VLS_Props, {}, {}, {}, {}, Comp
     multiple: boolean;
     multipleDisplay: MultipleOptionsDisplay;
     download: string | Function;
+    isLoading: boolean;
     optionsDownload: string | Function;
     optionsModal: string | Function;
     optionsModalData: LktObject | Function;

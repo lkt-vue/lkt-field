@@ -23,4 +23,5 @@ export interface SelectInputProps {
     events?: LktObject;
     referrer?: any;
     autoLoading?: boolean;
+    localAutoLoad?: boolean;
 }

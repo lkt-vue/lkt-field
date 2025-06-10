@@ -99,6 +99,7 @@
     const Identifier = generateRandomString(16);
 
     const selectOptionsAutoLoaded = ref(false);
+    const selectOptionsAutoLoading = ref(false);
 
     // Calculated data
     let calculatedModal = extractPropValue(props.modal, props.prop);
@@ -968,7 +969,7 @@
 
             default:
                 if (computedInputElement.value === 'input') {
-                    if (props.options || props.optionsConfig.http) {
+                    if (props.options.length > 0 || (props.optionsConfig?.http && Object.keys(props.optionsConfig?.http).length > 0)) {
                         return InternalInputComponent.SelectInput;
                     }
                     return InternalInputComponent.TextInput;
@@ -1350,6 +1351,7 @@
                 v-if="!computedEditable"
                 :value="computedReadValue"
                 :type="type"
+                :is-loading="selectOptionsAutoLoading"
                 :label="computedLabel"
                 :title="readModeTitle"
                 :file-name="visibleFileName"
@@ -1536,11 +1538,14 @@
                     optionValueType,
                     referrer: container,
                     autoLoading: true,
+                    localAutoLoad: !optionsConfig?.autoloadResource
                 }"
                 @focus="onFocusSelectInput"
                 @blur="onBlurSelectInput"
                 @change="onChange"
                 @loaded="selectOptionsAutoLoaded = true"
+                @autoload-start="selectOptionsAutoLoading = true"
+                @autoload-end="selectOptionsAutoLoading = false"
             />
         </template>
     </div>

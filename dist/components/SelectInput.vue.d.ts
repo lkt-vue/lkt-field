@@ -14,6 +14,8 @@ declare const _default: DefineComponent<SelectInputProps, {
     change: (...args: any[]) => void;
     "update:showOptions": (...args: any[]) => void;
     loaded: (...args: any[]) => void;
+    "autoload-start": (...args: any[]) => void;
+    "autoload-end": (...args: any[]) => void;
 }, string, PublicProps, Readonly<SelectInputProps> & Readonly<{
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
     "onUpdate:options"?: ((...args: any[]) => any) | undefined;
@@ -22,10 +24,13 @@ declare const _default: DefineComponent<SelectInputProps, {
     onChange?: ((...args: any[]) => any) | undefined;
     "onUpdate:showOptions"?: ((...args: any[]) => any) | undefined;
     onLoaded?: ((...args: any[]) => any) | undefined;
+    "onAutoload-start"?: ((...args: any[]) => any) | undefined;
+    "onAutoload-end"?: ((...args: any[]) => any) | undefined;
 }>, {
     prop: LktObject;
     isAutoCompleteText: boolean;
     autoLoading: boolean;
+    localAutoLoad: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     queryField: HTMLInputElement;
     selectButton: unknown;
