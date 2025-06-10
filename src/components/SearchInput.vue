@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { markRaw, ref, watch } from 'vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { TableConfig, TableType } from 'lkt-vue-kernel';
+    import { TableConfig, TableType, TooltipConfig, TooltipLocationX, TooltipLocationY } from 'lkt-vue-kernel';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
@@ -17,6 +17,7 @@
         readonly: boolean
         tabindex: number
         container: HTMLElement
+        tooltip: TooltipConfig
     }>(), {
         modelValue: '',
     });
@@ -78,10 +79,13 @@
         ref="dropdownEl"
         class="lkt-field--dropdown lkt-field--search-results"
         v-model="hasFocus"
-        :referrer="container"
-        referrer-width
-        location-x="left-corner"
-        location-y="bottom"
+        v-bind="<TooltipConfig>{
+            ...tooltip,
+            referrer: container,
+            referrerWidth: true,
+            locationX: TooltipLocationX.LeftCorner,
+            locationY: TooltipLocationY.Bottom
+        }"
     >
         <lkt-table
             v-bind="<TableConfig>{

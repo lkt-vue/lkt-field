@@ -1181,6 +1181,7 @@
                     :readonly="readonly"
                     :options-resource="optionsConfig?.http?.resource"
                     :container="container"
+                    :tooltip="tooltipConfig"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
                 />
