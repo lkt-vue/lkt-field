@@ -16078,9 +16078,9 @@ const ja = {
         showOptions: s.value,
         optionValueType: u.optionValueType,
         callback: (j = u.events) == null ? void 0 : j.clickOption
-      })) && typeof u.events.clickOption == "function" && (console.log("clickedOption!"), u.events.clickOption({
+      })) && typeof u.events.clickOption == "function" && u.events.clickOption({
         option: D
-      }));
+      });
     }, H = () => {
       u.multiple ? Ul({
         value: f,

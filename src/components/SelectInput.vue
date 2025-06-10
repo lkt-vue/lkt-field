@@ -365,7 +365,6 @@
             });
 
         if (fineHandled && typeof props.events.clickOption === 'function') {
-            console.log('clickedOption!');
             props.events.clickOption({
                 option,
             });
