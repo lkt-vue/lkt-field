@@ -2,7 +2,6 @@ import {
     extractPropValue,
     LktObject,
     LktSettings,
-    Option,
     OptionConfig,
     OptionsConfig,
     ValidOptionValue,
@@ -10,7 +9,7 @@ import {
 import { __ } from 'lkt-i18n';
 import { Component, Ref } from 'vue';
 
-export const prepareOptions = (options: any, prop: LktObject): Option[] => {
+export const prepareOptions = (options: any, prop: LktObject): OptionConfig[] => {
     if (typeof options === 'string') {
         options = extractPropValue(options, prop);
         if (typeof options === 'string' && options.startsWith('__:')) {
@@ -29,23 +28,23 @@ export const prepareOptions = (options: any, prop: LktObject): Option[] => {
 
     if (!Array.isArray(options) || options.length === 0) return [];
     return removeDuplicatedOptions(options.map(opt => {
-        if (typeof opt === 'object') return new Option(opt);
+        if (typeof opt === 'object') return opt;
         if (typeof opt === 'string' || typeof opt === 'number') {
-            return new Option({
+            return <OptionConfig>{
                 label: String(opt),
                 value: opt,
-            })
+            }
         }
         return undefined;
     })
-        .filter((opt: Option|undefined) => typeof opt !== 'undefined')
+        .filter((opt: OptionConfig|undefined) => typeof opt !== 'undefined')
     )
         ;
 };
 
-export const removeDuplicatedOptions = (options: Option[]):Option[] => {
-    return options.reduce((acc: Option[], current: Option): Option[] => {
-        const x = acc.find((item: Option) => item.value === current.value);
+export const removeDuplicatedOptions = (options: OptionConfig[]):OptionConfig[] => {
+    return options.reduce((acc: OptionConfig[], current: OptionConfig): OptionConfig[] => {
+        const x = acc.find((item: OptionConfig) => item.value === current.value);
         if (!x) {
             return acc.concat([current]);
         } else {
@@ -65,7 +64,7 @@ export const canDisplayOption = (option: OptionConfig, query: string = '', inclu
     return true;
 };
 
-export const filterOptions = (options: Option[], query: string = '', includeEquals: boolean = true, customFilter: Function|undefined = undefined) => {
+export const filterOptions = (options: OptionConfig[], query: string = '', includeEquals: boolean = true, customFilter: Function|undefined = undefined) => {
     if (query === '' && typeof customFilter !== 'function') return options;
 
     let r = options;
@@ -73,7 +72,7 @@ export const filterOptions = (options: Option[], query: string = '', includeEqua
     const q = String(query).toLowerCase();
 
     if (q !== '') {
-        r = r.filter((z: Option) => {
+        r = r.filter((z: OptionConfig) => {
             let label = String(z.label).toLowerCase();
             return label.indexOf(q) !== -1
                 && (includeEquals || label !== q);
@@ -87,16 +86,16 @@ export const filterOptions = (options: Option[], query: string = '', includeEqua
     return r;
 };
 
-export const findOptionByValue = (options: Option[], query: ValidOptionValue) => {
+export const findOptionByValue = (options: OptionConfig[], query: ValidOptionValue) => {
     if (query === '') return undefined;
 
-    return options.find((z: Option) => {
+    return options.find((z: OptionConfig) => {
         if (Array.isArray(query)) return query.includes(z.value);
         return z.value == query;
     });
 };
 
-export const receiveOptions = (currentOptions: Option[], receivedOptions: Option[], prop: LktObject) => {
+export const receiveOptions = (currentOptions: OptionConfig[], receivedOptions: OptionConfig[], prop: LktObject) => {
     return removeDuplicatedOptions([...prepareOptions(receivedOptions, prop), ...currentOptions]);
 };
 
@@ -319,10 +318,10 @@ export const createTag = (args: {
     pickedOptions: Array<OptionConfig>
 }) => {
 
-    let option = new Option({
+    let option = <OptionConfig>{
         value: args.query,
         label: args.query,
-    });
+    };
 
     let index = args.optionValueType === 'option'
         ? getInValueOptionIndex(option, args.value.value.map(opt => opt.value))

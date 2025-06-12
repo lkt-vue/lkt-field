@@ -1,11 +1,11 @@
-import { LktObject, Option, OptionConfig, OptionsConfig, ValidOptionValue } from 'lkt-vue-kernel';
+import { LktObject, OptionConfig, OptionsConfig, ValidOptionValue } from 'lkt-vue-kernel';
 import { Component, Ref } from 'vue';
-export declare const prepareOptions: (options: any, prop: LktObject) => Option[];
-export declare const removeDuplicatedOptions: (options: Option[]) => Option[];
+export declare const prepareOptions: (options: any, prop: LktObject) => OptionConfig[];
+export declare const removeDuplicatedOptions: (options: OptionConfig[]) => OptionConfig[];
 export declare const canDisplayOption: (option: OptionConfig, query?: string, includeEquals?: boolean, customFilter?: Function | undefined) => boolean;
-export declare const filterOptions: (options: Option[], query?: string, includeEquals?: boolean, customFilter?: Function | undefined) => Option[];
-export declare const findOptionByValue: (options: Option[], query: ValidOptionValue) => Option | undefined;
-export declare const receiveOptions: (currentOptions: Option[], receivedOptions: Option[], prop: LktObject) => Option[];
+export declare const filterOptions: (options: OptionConfig[], query?: string, includeEquals?: boolean, customFilter?: Function | undefined) => OptionConfig[];
+export declare const findOptionByValue: (options: OptionConfig[], query: ValidOptionValue) => OptionConfig | undefined;
+export declare const receiveOptions: (currentOptions: OptionConfig[], receivedOptions: OptionConfig[], prop: LktObject) => OptionConfig[];
 export declare const optionIsActive: (option: OptionConfig, value: ValidOptionValue | ValidOptionValue[], isMultiple: boolean) => boolean;
 export declare const getInValueOptionIndex: (option: OptionConfig, value: ValidOptionValue[]) => number;
 export declare const handleOptionClickSingle: (args: {

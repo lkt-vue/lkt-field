@@ -58,7 +58,7 @@
 
     const tagsEnabled = props.multiple && props.canTag;
 
-    const originalOptions = typeof props.options === 'object' ? JSON.parse(JSON.stringify(props.options)) : props.options;
+    const originalOptions = typeof props.options === 'object' && props.optionValueType !== 'option' ? JSON.parse(JSON.stringify(props.options)) : props.options;
 
     const dropdownOptions = ref(<Array<OptionConfig>>[...prepareOptions(originalOptions, props.prop)]);
 
@@ -524,7 +524,7 @@
         ref="selectButton"
         v-show="!computedRenderSearchUI || computedRenderMultipleSearchUi"
         v-bind="<ButtonConfig>{
-            type: tagsEnabled ? ButtonType.Content : ButtonType.Button,
+            type: tagsEnabled || !(typeof optionsConfig?.canRenderDropdown === 'undefined' || optionsConfig?.canRenderDropdown === true) ? ButtonType.Content : ButtonType.Button,
             class: 'lkt-field--toggle-button lkt-field--select-button',
         }"
         @keyup="onKeyUpSelectButton"
@@ -582,6 +582,7 @@
     </lkt-button>
 
     <component
+        v-if="typeof optionsConfig?.canRenderDropdown === 'undefined' || optionsConfig?.canRenderDropdown === true"
         ref="dropdownEl"
         :is="computedDropdownTag"
         v-model="editableShowOptions"

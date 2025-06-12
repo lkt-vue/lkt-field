@@ -12,9 +12,9 @@
     const props = withDefaults(defineProps<DropdownOptionProps>(), {});
 
     const computedIcon = computed(() => {
-            if (props.item.icon !== '') return props.item.icon;
+            if (props.item?.icon) return props.item.icon;
 
-            if (typeof props.data.optionsConfig.icon === 'function') {
+            if (typeof props.data?.optionsConfig?.icon === 'function') {
                 return props.data.optionsConfig.icon(props.item, props.data.prop);
             }
             return props.data.optionsConfig.icon;

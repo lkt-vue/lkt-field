@@ -1,11 +1,4 @@
-import {
-    LktObject,
-    Option,
-    OptionConfig,
-    OptionsConfig,
-    TooltipConfig,
-    ValidOptionValue,
-} from 'lkt-vue-kernel';
+import { LktObject, OptionConfig, OptionsConfig, TooltipConfig, ValidOptionValue } from 'lkt-vue-kernel';
 
 export interface SelectInputProps {
     modelValue: OptionConfig | ValidOptionValue | Array<OptionConfig|ValidOptionValue>
@@ -18,7 +11,7 @@ export interface SelectInputProps {
     options: any
     optionsConfig: OptionsConfig
     optionSlot?: string
-    pickedOptions: Option[]
+    pickedOptions: OptionConfig[]
     showOptions: boolean
     editable: boolean
     focusing: boolean

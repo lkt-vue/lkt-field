@@ -164,7 +164,7 @@
         return 'Y-m-d';
     });
 
-    const editableValue = [FieldType.Card].includes(props.type) ? value : ref(extractEditableValue(value.value, computedLang.value));
+    const editableValue = value;
     const originalEditableValue = ref(typeof editableValue.value === 'object' ? JSON.parse(JSON.stringify(editableValue.value)) : editableValue.value);
 
     const computedInputElement = computed(() => {
@@ -477,7 +477,7 @@
         if ([FieldType.Card].includes(props.type)) {
             editableValue.value = v;
         } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
-            editableValue.value = extractEditableValue(v, computedLang.value);
+            editableValue.value = v;
         } else if (props.canI18n) {
             let stateChecker = new DataState(translations.value);
             stateChecker.increment(v);
@@ -506,6 +506,13 @@
     watch(value, (v) => {
         if (ready.value && computedEditable.value) {
             emits('update:modelValue', v);
+
+            if (typeof props.events?.changed === 'function') {
+                console.log('changed!: ');
+                props.events.changed({
+                    prop: props.prop,
+                });
+            }
 
             if (validationTimeout) clearTimeout(validationTimeout);
 

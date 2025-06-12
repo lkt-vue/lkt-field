@@ -41,7 +41,7 @@
     outline: 0;
 }
 
-.lkt-field.is-editable .lkt-field-content {
+.lkt-field.is-editable > .lkt-field-content {
     background-color: var(--lkt-field--background);
     border-width: var(--lkt-field--border-width);
     border-style: var(--lkt-field--border-style);
@@ -61,7 +61,7 @@
     outline: 0;
 }
 
-.lkt-field.is-editable .lkt-field-main {
+.lkt-field.is-editable > .lkt-field-content > .lkt-field-main {
     max-width: calc(100% - var(--lkt-field--icons-amount) * var(--lkt-field--input--height));
     text-overflow: ellipsis;
     overflow: hidden;
@@ -76,29 +76,12 @@
     overflow: initial;
 }
 
-.lkt-field.is-select.is-multiple .lkt-field-main {
+.lkt-field.is-select.is-multiple > .lkt-field-content >  .lkt-field-main {
     flex-direction: column;
 }
 
 .lkt-field.is-boolean .lkt-field-main {
     justify-content: flex-start;
-}
-
-.lkt-field-select .lkt-field-main {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    outline: 0;
-    background-color: var(--lkt-field--background);
-    border-width: var(--lkt-field--border-width);
-    border-style: var(--lkt-field--border-style);
-    border-color: var(--lkt-field--border-color);
-    box-shadow: var(--lkt-field--box-shadow);
-    border-radius: var(--lkt-field--border-radius);
-    transition: var(--lkt-field--input--transition);
 }
 
 .lkt-field.has-focus > .lkt-field-content {

@@ -5,7 +5,8 @@
         FieldReadModeConfig,
         FieldType,
         LktObject,
-        MultipleOptionsDisplay, Option, OptionsConfig,
+        MultipleOptionsDisplay,
+        OptionsConfig,
     } from 'lkt-vue-kernel';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
