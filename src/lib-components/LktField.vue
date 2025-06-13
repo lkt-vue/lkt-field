@@ -55,7 +55,7 @@
     import LktFieldValue from '../lib-components/LktFieldValue.vue';
     import FileInput from '../components/FileInput.vue';
     import DateInput from '../components/DateInput.vue';
-    import { appendIconToLabel, extractEditableValue } from '../functions/calcultad-data-functions';
+    import { appendIconToLabel } from '../functions/calcultad-data-functions';
     import CardInput from '../components/CardInput.vue';
     import MultipleCardInput from '../components/MultipleCardInput.vue';
     import FileUploadButton from '@/components/buttons/FileUploadButton.vue';
@@ -476,7 +476,7 @@
     watch(() => props.modelValue, (v) => {
         if ([FieldType.Card].includes(props.type)) {
             editableValue.value = v;
-        } else if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
+        } else if (computedInternalInput.value === InternalInputComponent.DateInput) {
             editableValue.value = v;
         } else if (props.canI18n) {
             let stateChecker = new DataState(translations.value);
@@ -508,7 +508,6 @@
             emits('update:modelValue', v);
 
             if (typeof props.events?.changed === 'function') {
-                console.log('changed!: ');
                 props.events.changed({
                     prop: props.prop,
                 });
@@ -524,13 +523,6 @@
 
     watch(isValid, (v) => {
         emits('update:valid', v);
-    });
-
-    const enabledPropsOptionsWatcher = ref(true);
-    watch(enabledPropsOptionsWatcher, (v) => {
-        if (!v) nextTick(() => {
-            enabledPropsOptionsWatcher.value = true;
-        });
     });
 
     const doValidation = async () => {
@@ -1497,7 +1489,7 @@
                 />
 
                 <dropdown-button
-                    v-if="computedEditable"
+                    v-if="computedEditable && typeof optionsConfig?.canRenderDropdown === 'undefined' || optionsConfig?.canRenderDropdown === true"
                     v-show="computedShowDropdownButton"
                     @click="onClickDropdownButton"
                 />

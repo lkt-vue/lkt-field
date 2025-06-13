@@ -34,6 +34,7 @@
         'update:modelValue',
         'update:showOptions',
         'update:options',
+        'update:pickedOptions',
         'focus',
         'blur',
         'change',
@@ -60,7 +61,7 @@
 
     const originalOptions = typeof props.options === 'object' && props.optionValueType !== 'option' ? JSON.parse(JSON.stringify(props.options)) : props.options;
 
-    const dropdownOptions = ref(<Array<OptionConfig>>[...prepareOptions(originalOptions, props.prop)]);
+    const dropdownOptions = ref(<Array<OptionConfig>>[...prepareOptions(props.options, props.prop)]);
 
     const enabledPropsOptionsWatcher = ref(true);
     watch(enabledPropsOptionsWatcher, (v) => {
@@ -121,6 +122,10 @@
     const query = ref(''),
         queryField = ref(null),
         editableOptions = ref(props.pickedOptions);
+
+    watch(editableOptions, (v) => {
+        emit('update:pickedOptions', v);
+    });
 
     /**
      * Options visibility
@@ -191,7 +196,7 @@
                     query: query.value,
                     optionValueType: props.optionValueType,
                     options: dropdownOptions,
-                    pickedOptions: props.pickedOptions,
+                    pickedOptions: editableOptions.value,
                 })) {
                     query.value = '';
                 }
@@ -258,7 +263,7 @@
                 option,
                 optionValueType: props.optionValueType,
                 options: dropdownOptions,
-                pickedOptions: props.pickedOptions,
+                pickedOptions: editableOptions.value,
             });
         },
         doClear = () => {
@@ -275,7 +280,7 @@
                 }
             }
 
-            props.pickedOptions.splice(0, props.pickedOptions.length);
+            editableOptions.value.splice(0, editableOptions.value.length);
             nextTick(() => {
                 syncPicked();
             });
@@ -300,7 +305,7 @@
                 }
             }
 
-            props.pickedOptions.splice(0, props.pickedOptions.length);
+            editableOptions.value.splice(0, editableOptions.value.length);
             nextTick(() => {
                 syncPicked();
             });
@@ -348,7 +353,7 @@
             ? handleOptionClickMultiple({
                 option,
                 value: editableValue,
-                pickedOptions: props.pickedOptions,
+                pickedOptions: editableOptions.value,
                 tagMode: tagsEnabled,
                 searchMode: props.searchable,
                 keepFocused,
@@ -358,7 +363,7 @@
             : handleOptionClickSingle({
                 option,
                 value: editableValue,
-                pickedOptions: props.pickedOptions,
+                pickedOptions: editableOptions.value,
                 showOptions: editableShowOptions.value,
                 optionValueType: props.optionValueType,
                 callback: props.events?.clickOption,
@@ -376,7 +381,7 @@
             syncPickedOptions({
                 value: editableValue,
                 options: dropdownOptions.value,
-                pickedOptions: props.pickedOptions,
+                pickedOptions: editableOptions.value,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
             });
@@ -384,7 +389,7 @@
             syncPickedOptions({
                 value: editableValue,
                 options: dropdownOptions.value,
-                pickedOptions: props.pickedOptions,
+                pickedOptions: editableOptions.value,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
             });
@@ -476,7 +481,7 @@
             ref="queryField"
             :value="query"
             :placeholder="searchPlaceholder"
-            :disabled="pickedOptions.length === max"
+            :disabled="editableOptions.length === max"
             type="text"
             tabindex="-1"
             autocomplete="off"
@@ -492,15 +497,15 @@
             v-if="multiple"
             v-bind="<TagConfig>{
                 icon: optionsConfig.icon,
-                text: pickedOptions.length
+                text: editableOptions.length
             }"
         />
 
         <lkt-tag
-            v-else-if="pickedOptions.length > 0"
+            v-else-if="editableOptions.length > 0"
             v-bind="<TagConfig>{
-                icon: pickedOptions[0].icon ?? optionsConfig.icon,
-                text: pickedOptions[0].label
+                icon: editableOptions[0].icon ?? optionsConfig.icon,
+                text: editableOptions[0].label
             }"
         />
 
@@ -509,7 +514,7 @@
             ref="queryField"
             :value="query"
             :placeholder="searchPlaceholder"
-            :disabled="pickedOptions.length === max"
+            :disabled="editableOptions.length === max"
             type="text"
             tabindex="-1"
             autocomplete="off"
@@ -531,9 +536,9 @@
         @blur="onBlurSelectButton"
         @focus="onFocusSelectButton"
     >
-        <template v-if="tagsEnabled || (multiple && pickedOptions.length > 0)">
+        <template v-if="tagsEnabled || (multiple && editableOptions.length > 0)">
             <div v-if="multipleDisplayEdition === MultipleOptionsDisplay.Count">
-                {{ pickedOptions.length }}
+                {{ editableOptions.length }}
             </div>
 
             <lkt-table
@@ -567,9 +572,9 @@
             />
         </template>
         <dropdown-option
-            v-else-if="!multiple && pickedOptions.length > 0"
+            v-else-if="!multiple && editableOptions.length > 0"
             v-bind="<DropdownOptionProps>{
-                item: pickedOptions[0],
+                item: editableOptions[0],
                 data: {
                     optionSlot,
                     previewMode: true,

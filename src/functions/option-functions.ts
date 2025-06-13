@@ -43,6 +43,7 @@ export const prepareOptions = (options: any, prop: LktObject): OptionConfig[] =>
 };
 
 export const removeDuplicatedOptions = (options: OptionConfig[]):OptionConfig[] => {
+
     return options.reduce((acc: OptionConfig[], current: OptionConfig): OptionConfig[] => {
         const x = acc.find((item: OptionConfig) => item.value === current.value);
         if (!x) {
