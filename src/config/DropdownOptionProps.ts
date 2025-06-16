@@ -1,4 +1,4 @@
-import { ItemSlotComponentConfig, LktObject, OptionConfig, OptionsConfig } from 'lkt-vue-kernel';
+import { ItemSlotComponentConfig, LktObject, OptionConfig, OptionsConfig, ValidOptionValue } from 'lkt-vue-kernel';
 
 export interface DropdownOptionProps extends ItemSlotComponentConfig {
     item: OptionConfig
@@ -8,5 +8,9 @@ export interface DropdownOptionProps extends ItemSlotComponentConfig {
         isTag?: boolean
         optionsConfig: OptionsConfig
         prop: LktObject
+        query?: string
+        editableValue?: OptionConfig | ValidOptionValue | Array<OptionConfig|ValidOptionValue>
+        multiple?: boolean
+        focusedOptionIndex?: number
     }
 }

@@ -6,5 +6,5 @@ declare const _default: DefineComponent<DropdownOptionProps, {}, {}, {}, {}, Com
 }, string, PublicProps, Readonly<DropdownOptionProps> & Readonly<{
     onClick?: ((...args: any[]) => any) | undefined;
     "onClick-icon"?: ((...args: any[]) => any) | undefined;
-}>, {}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
+}>, {}, {}, {}, {}, string, ComponentProvideOptions, false, any, any>;
 export default _default;

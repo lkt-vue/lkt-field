@@ -30,39 +30,43 @@
     border-radius: var(--lkt-field--input--border-radius);
 }
 
-.lkt-field--dropdown-options li .lkt-field--dropdown-option {
+.lkt-field--dropdown-options > li > .lkt-field--dropdown-option {
     transition: var(--lkt-field--input--transition);
     color: var(--lkt-field--option--color);
     scroll-margin-top: 10px;
 }
-.lkt-field--dropdown-options li .lkt-button.lkt-field--dropdown-option .lkt-button-main {
+.lkt-field--dropdown-options > li > .lkt-button.lkt-field--dropdown-option .lkt-button-main {
     padding: var(--lkt-field--option--padding);
 }
-.lkt-field--dropdown-options li div.lkt-field--dropdown-option:not(.lkt-button) {
+.lkt-field--dropdown-options > li > div.lkt-field--dropdown-option:not(.lkt-button) {
     padding: var(--lkt-field--option--padding);
 }
-.lkt-field--dropdown-options li:nth-child(odd) .lkt-field--dropdown-option {
+.lkt-field--dropdown-options > li:nth-child(odd) > .lkt-field--dropdown-option {
     background: var(--lkt-field--odd-option--background);
     color: var(--lkt-field--odd-option--color);
 }
-.lkt-field--dropdown-options li:nth-child(even)  .lkt-field--dropdown-option{
+.lkt-field--dropdown-options > li:nth-child(even) > .lkt-field--dropdown-option{
     background: var(--lkt-field--even-option--background);
     color: var(--lkt-field--even-option--color);
 }
-.lkt-field--dropdown-options li:nth-child(odd):hover .lkt-field--dropdown-option,
-.lkt-field--dropdown-options li:nth-child(odd).is-focused .lkt-field--dropdown-option {
+.lkt-field--dropdown-options > li:nth-child(odd):hover > .lkt-field--dropdown-option,
+.lkt-field--dropdown-options > li:nth-child(odd).is-focused > .lkt-field--dropdown-option {
     background: var(--lkt-field--hover--odd-option--background);
     color: var(--lkt-field--hover--odd-option--color);
 }
-.lkt-field--dropdown-options li:nth-child(even):hover .lkt-field--dropdown-option,
-.lkt-field--dropdown-options li:nth-child(even).is-focused .lkt-field--dropdown-option {
+.lkt-field--dropdown-options > li:nth-child(even):hover > .lkt-field--dropdown-option,
+.lkt-field--dropdown-options > li:nth-child(even).is-focused > .lkt-field--dropdown-option {
     background: var(--lkt-field--hover--even-option--background);
     color: var(--lkt-field--hover--even-option--color);
 }
 
-.lkt-field--dropdown-options li.is-active .lkt-field--dropdown-option {
+.lkt-field--dropdown-options > li.is-active > .lkt-field--dropdown-option {
     background: var(--lkt-field--active--option--background);
     color: var(--lkt-field--active--option--color);
+}
+
+.lkt-field--dropdown-option + .lkt-field--dropdown-children {
+    padding-left: 20px;
 }
 
 .lkt-field--dropdown-option {

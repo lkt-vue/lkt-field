@@ -635,6 +635,10 @@
                     prop,
                     isTag: tagsEnabled,
                     optionsConfig,
+                    query,
+                    editableValue,
+                    multiple,
+                    focusedOptionIndex,
                 },
                 itemSlotEvents: {
                     click: (item: OptionConfig, i: number) => {

@@ -1,8 +1,18 @@
 <script setup lang="ts">
-    import { AnchorConfig, AnchorType, extractPropValue, OptionConfig, TagConfig, TagType } from 'lkt-vue-kernel';
-    import { computed } from 'vue';
+    import {
+        AnchorConfig,
+        AnchorType,
+        extractPropValue,
+        OptionConfig,
+        TableConfig, TableType,
+        TagConfig,
+        TagType,
+    } from 'lkt-vue-kernel';
+    import { computed, markRaw } from 'vue';
     import { Settings } from '../../settings/Settings';
     import { DropdownOptionProps } from '../../config/DropdownOptionProps.ts';
+    import { canDisplayOption, optionIsActive, prepareOptions, receiveOptions } from '@/functions/option-functions.ts';
+    import DropdownOption from '@/components/dropdown/DropdownOption.vue';
 
     const emit = defineEmits([
         'click',
@@ -116,8 +126,15 @@
         });
 
     const onClick = () => {
+            if (props.item.children && props.item.children.length > 0) return;
             if (typeof props.events?.click === 'function') {
                 props.events.click(props.item, props.index);
+            }
+            emit('click');
+        },
+        onChildClick = (child: OptionConfig) => {
+            if (typeof props.events?.click === 'function') {
+                props.events.click(child, props.index);
             }
             emit('click');
         },
@@ -164,4 +181,32 @@
             v-bind="tag"
         />
     </component>
+    <lkt-table
+        ref="optionList"
+        v-if="item.children && item.children.length > 0"
+        v-model="item.children"
+        v-bind="<TableConfig>{
+            type: TableType.Ul,
+            class: 'lkt-field--dropdown-children',
+            editMode: editing,
+            itemDisplayChecker: (option: OptionConfig) => {
+                return canDisplayOption(option, data.query, true, data.optionsConfig?.filter)
+            },
+            itemsContainerClass: `lkt-field--dropdown-options`,
+            itemContainerClass: (option: OptionConfig, index: number) => {
+                let r = [];
+                if (optionIsActive(option, data.editableValue, data.multiple)) r.push('is-active');
+                if (data.focusedOptionIndex === index) r.push('is-focused');
+                if (option.disabled) r.push('is-disabled')
+                return r.join(' ');
+            },
+            itemSlotComponent: markRaw(DropdownOption),
+            itemSlotData: data,
+            itemSlotEvents: {
+                click: (item: OptionConfig, i: number) => {
+                    onChildClick(item);
+                }
+            }
+        }"
+    />
 </template>
