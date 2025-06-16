@@ -183,7 +183,7 @@
     </component>
     <lkt-table
         ref="optionList"
-        v-if="item.children && item.children.length > 0"
+        v-if="false && item.children && item.children.length > 0"
         v-model="item.children"
         v-bind="<TableConfig>{
             type: TableType.Ul,
