@@ -2,7 +2,7 @@
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import {
         ButtonConfig,
-        ButtonType,
+        ButtonType, LktObject,
         MultipleOptionsDisplay,
         OptionConfig,
         TableConfig,
@@ -83,7 +83,7 @@
                     options: dropdownOptions,
                     pickedOptions: props.pickedOptions,
                 });
-            })
+            });
 
         } else {
             editableValue.value = v;
@@ -130,15 +130,21 @@
     /**
      * Options visibility
      */
+    const canRenderDropdownTable = ref(false);
     const editableShowOptions = ref(props.showOptions);
+
     watch(editableShowOptions, v => {
         if (!tagsEnabled) emit('update:showOptions', v);
         nextTick(() => {
+            if (!v) {
+                buttonHasFocus.value = false;
+                queryHasFocus.value = false;
+                hasFocus.value = false;
+            }
             canRenderDropdownTable.value = editableShowOptions.value;
         });
     });
 
-    const canRenderDropdownTable = ref(false);
 
     /**
      * Focus state
@@ -148,29 +154,15 @@
         buttonHasFocus = ref(false);
 
     watch(() => props.focusing, (v) => {
-        if (v) {
-            buttonHasFocus.value = true;
-        } else {
-            buttonHasFocus.value = false;
-        }
-        checkGlobalFocus();
-    });
+        if (v === hasFocus.value) return;
 
-    const checkGlobalFocus = () => {
         nextTick(() => {
-            hasFocus.value = queryHasFocus.value || buttonHasFocus.value;
-            editableShowOptions.value = hasFocus.value;
+            if (v) {
+                onFocusSelectButton();
+            } else {
+                onBlurSelectButton();
+            }
         });
-    };
-
-    watch(queryHasFocus, v => {
-        if (v) buttonHasFocus.value = false;
-        checkGlobalFocus();
-    });
-
-    watch(buttonHasFocus, v => {
-        if (v) queryHasFocus.value = false;
-        checkGlobalFocus();
     });
 
     watch(hasFocus, v => {
@@ -184,6 +176,8 @@
     const onBlurQueryInput = (event: Event) => {
             queryBlurTimeout = setTimeout(() => {
                 queryHasFocus.value = false;
+                hasFocus.value = buttonHasFocus.value;
+                editableShowOptions.value = hasFocus.value;
             }, 100);
         },
         onKeyUpQueryInput = (event: KeyboardEvent) => {
@@ -214,25 +208,37 @@
                 if (typeof handled === 'object') {
                     onClickOption(handled);
                 }
+            } else if (['Escape'].includes(event.key)) {
+                queryHasFocus.value = false;
+                buttonHasFocus.value = false;
+                hasFocus.value = false;
+                editableShowOptions.value = false;
             }
         },
         onFocusQueryInput = (event: FocusEvent) => {
             queryHasFocus.value = true;
+            buttonHasFocus.value = false;
+            hasFocus.value = true;
+            editableShowOptions.value = true;
         };
 
     const keepFocused = () => {
         clearTimeout(queryBlurTimeout);
         clearTimeout(buttonBlurTimeout);
-        nextTick(() => {
-            //@ts-ignore
-            if (queryField.value) queryField.value.focus();
-        });
+        setTimeout(() => {
+            if (queryField.value) {
+                //@ts-ignore
+                queryField.value.focus();
+            }
+        }, 100);
     };
 
-    const onBlurSelectButton = (event: Event) => {
+    const onBlurSelectButton = (event?: Event) => {
             if (computedRenderSearchUI.value) return;
             buttonBlurTimeout = setTimeout(() => {
                 buttonHasFocus.value = false;
+                hasFocus.value = queryHasFocus.value;
+                editableShowOptions.value = hasFocus.value;
             }, 100);
         },
         onKeyUpSelectButton = (event: KeyboardEvent) => {
@@ -252,10 +258,28 @@
                 if (typeof handled === 'object') {
                     onClickOption(handled);
                 }
+            } else if (['Escape'].includes(event.key)) {
+                queryHasFocus.value = false;
+                buttonHasFocus.value = false;
+                hasFocus.value = false;
+                editableShowOptions.value = false;
             }
         },
-        onFocusSelectButton = (event: FocusEvent) => {
-            buttonHasFocus.value = true;
+        onFocusSelectButton = (event?: FocusEvent) => {
+            if (props.searchable) {
+                buttonHasFocus.value = false;
+                queryHasFocus.value = true;
+                hasFocus.value = true;
+                editableShowOptions.value = true;
+                nextTick(() => {
+                    keepFocused();
+                });
+            } else {
+                buttonHasFocus.value = true;
+                queryHasFocus.value = false;
+                hasFocus.value = true;
+                editableShowOptions.value = true;
+            }
         },
         onClickOptionIcon = (option: OptionConfig) => {
             removeTag({
@@ -296,8 +320,8 @@
                     let i = 0, l = (<Array<OptionConfig>>originalValue).length;
                     while (i < l) {
                         (<Array<OptionConfig>>editableValue.value).push(
-                            (<Array<OptionConfig>>originalValue)[i]
-                        )
+                            (<Array<OptionConfig>>originalValue)[i],
+                        );
                         ++i;
                     }
                 } else {
@@ -324,14 +348,6 @@
         emit('change');
         editableOptions.value = v;
     }, { deep: true });
-
-    watch(editableShowOptions, (v) => {
-        if (!v) {
-            buttonHasFocus.value = false;
-            queryHasFocus.value = false;
-            checkGlobalFocus();
-        }
-    });
 
     const computedRenderMultipleSearchUi = computed(() => {
         return props.multiple && (props.canTag || props.searchable);
@@ -369,10 +385,14 @@
                 callback: props.events?.clickOption,
             });
 
-        if (fineHandled && typeof props.events.clickOption === 'function') {
-            props.events.clickOption({
-                option,
-            });
+        if (fineHandled) {
+            if (props.searchable && !props.multiple) query.value = '';
+
+            if (typeof props.events.clickOption === 'function') {
+                props.events.clickOption({
+                    option,
+                });
+            }
         }
     };
 
@@ -400,20 +420,20 @@
 
     const onReadResponse = () => {
 
-        if (props.autoLoading && props.optionsConfig.autoloadResource === 'feed' && props.multiple) {
-            for (let i = 0; i < dropdownOptions.value.length; ++i) {
-                if (props.optionValueType === 'option') {
-                    editableValue.value.push(dropdownOptions.value[i]);
+            if (props.autoLoading && props.optionsConfig.autoloadResource === 'feed' && props.multiple) {
+                for (let i = 0; i < dropdownOptions.value.length; ++i) {
+                    if (props.optionValueType === 'option') {
+                        editableValue.value.push(dropdownOptions.value[i]);
 
-                } else {
-                    editableValue.value.push(dropdownOptions.value[i].value);
+                    } else {
+                        editableValue.value.push(dropdownOptions.value[i].value);
+                    }
                 }
             }
-        }
 
-        focusedOptionIndex.value = -1;
-        syncPicked();
-    };
+            focusedOptionIndex.value = -1;
+            syncPicked();
+        };
 
     const computedDropdownPaginatorConfig = computed(() => {
 
@@ -427,22 +447,22 @@
 
             const httpStart = (data: any) => {
                 if (props.autoLoading && props.optionsConfig.autoloadResource) {
-                    emit('autoload-start')
+                    emit('autoload-start');
                 }
 
                 if (typeof props.optionsConfig.http?.events?.onStart === 'function') {
                     props.optionsConfig.http?.events?.onStart(data);
                 }
-            }
+            };
             const httpEnd = (data: any) => {
                 if (props.autoLoading && props.optionsConfig.autoloadResource) {
-                    emit('autoload-end')
+                    emit('autoload-end');
                 }
 
                 if (typeof props.optionsConfig.http?.events?.onEnd === 'function') {
                     props.optionsConfig.http?.events?.onEnd(data);
                 }
-            }
+            };
 
             return {
                 resource: props.optionsConfig.http?.resource,
@@ -590,14 +610,15 @@
         v-if="typeof optionsConfig?.canRenderDropdown === 'undefined' || optionsConfig?.canRenderDropdown === true"
         ref="dropdownEl"
         :is="computedDropdownTag"
-        v-model="editableShowOptions"
         v-bind="autoLoading ? {} : <TooltipConfig>{
             class: 'lkt-field--dropdown',
             referrer: computedReferrer,
             referrerWidth: true,
             locationX: TooltipLocationX.LeftCorner,
             locationY: TooltipLocationY.Bottom,
-            ...tooltip
+            ...tooltip,
+            modelValue: editableShowOptions,
+            remoteControl: true,
         }"
     >
         <lkt-table
@@ -610,9 +631,9 @@
                 editMode: editable,
                 paginator: computedDropdownPaginatorConfig,
                 events: {
-                    parseResults: (data: OptionConfig[]) => {
+                    parseResults: (data: LktObject[]) => {
                         if (optionsConfig.http?.resource) {
-                            return receiveOptions(prepareOptions(originalOptions, props.prop), data, prop);
+                            return receiveOptions(prepareOptions(originalOptions, props.prop), <OptionConfig[]>data, prop);
                         }
                         return prepareOptions(originalOptions, props.prop);
                     }

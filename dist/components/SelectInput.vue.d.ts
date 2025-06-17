@@ -1,4 +1,4 @@
-import { ValidFieldValue, LktObject } from 'lkt-vue-kernel';
+import { LktObject, ValidFieldValue } from 'lkt-vue-kernel';
 import { SelectInputProps } from '../config/SelectInputProps.d.ts';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 declare const _default: DefineComponent<SelectInputProps, {

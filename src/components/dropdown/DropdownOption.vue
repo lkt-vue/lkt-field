@@ -141,6 +141,7 @@
         onInternalClick = (event: MouseEvent) => {
             if (props.editing) {
                 event.stopPropagation();
+                event.preventDefault();
                 onClick();
             }
         },
@@ -159,7 +160,7 @@
         class="lkt-field--dropdown-option"
         :class="computedClass"
         :title="computedText"
-        @click.stop="onClick"
+        @click.stop.prevent="onClick"
         @click-icon="onClickIcon"
     >
         <div
