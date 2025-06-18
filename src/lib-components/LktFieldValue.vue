@@ -7,6 +7,7 @@
         LktObject,
         MultipleOptionsDisplay,
         OptionsConfig,
+        TableConfig,
     } from 'lkt-vue-kernel';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
@@ -175,6 +176,15 @@
                     :featured-text="label"
                     :title="title" />
             </div>
+
+            <lkt-table
+                v-else-if="type === FieldType.Table"
+                v-model="computedValue"
+                v-bind="<TableConfig>{
+                        ...optionsConfig?.table,
+                        editMode: false,
+                    }"
+            />
             <div
                 v-else-if="type === FieldType.Date"
                 class="lkt-field--read-value"

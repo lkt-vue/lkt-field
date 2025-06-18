@@ -12,5 +12,6 @@ export declare enum InternalInputComponent {
     CalcInput = 10,
     SearchInput = 11,
     MultipleCardInput = 12,
-    SingleCardInput = 13
+    SingleCardInput = 13,
+    TableInput = 14
 }

@@ -23,6 +23,7 @@
         LktObject,
         LktSettings,
         OptionConfig,
+        TableConfig,
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
@@ -134,6 +135,10 @@
         fieldFeaturedButton = Settings.defaultNumberFeaturedButton;
     }
 
+    if (props.type === FieldType.Table) {
+        _val = JSON.parse(JSON.stringify(props.modelValue))
+    }
+
     // Reactive data
     const originalValue = ref(_val),
         value = ref(_val),
@@ -177,7 +182,7 @@
             if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 return value.value !== originalValue.value;
             }
-            if (props.type === FieldType.Select) {
+            else if (props.type === FieldType.Select) {
                 if (props.multiple) {
                     if (props.optionValueType !== 'option') {
                         let dataState = new DataState({ v: originalEditableValue.value });
@@ -185,6 +190,11 @@
                         return dataState.changed();
                     }
                 }
+            }
+            else if (props.type === FieldType.Table) {
+                let dataState = new DataState({ v: originalEditableValue.value });
+                dataState.increment({ v: editableValue.value });
+                return dataState.changed();
             }
             return editableValue.value !== originalEditableValue.value;
         }),
@@ -209,6 +219,7 @@
 
             if (r > 0 && props.type === FieldType.Textarea) return 1;
             if (r > 0 && props.type === FieldType.Html) return 1;
+            if (r > 0 && props.type === FieldType.Table) return 1;
             if (r > 0 && props.infoButtonEllipsis) return 1;
 
             return r;
@@ -672,6 +683,10 @@
                     inputElement.value?.doUndo(originalEditableValue.value);
                     return;
 
+                case InternalInputComponent.TableInput:
+                    editableValue.value = JSON.parse(JSON.stringify(originalEditableValue.value));
+                    return;
+
                 default:
                     editableValue.value = originalEditableValue.value;
             }
@@ -697,6 +712,10 @@
                 case InternalInputComponent.SelectInput:
                     //@ts-ignore
                     inputElement.value?.doClear();
+                    return;
+
+                case InternalInputComponent.TableInput:
+                    editableValue.value = [];
                     return;
 
                 default:
@@ -965,6 +984,9 @@
 
             case FieldType.Html:
                 return InternalInputComponent.HtmlInput;
+
+            case FieldType.Table:
+                return InternalInputComponent.TableInput;
 
             default:
                 if (computedInputElement.value === 'input') {
@@ -1246,6 +1268,15 @@
                         />
                     </template>
                 </card-input>
+
+                <lkt-table
+                    v-else-if="computedInternalInput === InternalInputComponent.TableInput"
+                    v-model="editableValue"
+                    v-bind="<TableConfig>{
+                        ...optionsConfig?.table,
+                        editMode: computedEditable,
+                    }"
+                />
 
                 <input
                     v-else-if="canI18n && computedInternalInput === InternalInputComponent.TextInput"

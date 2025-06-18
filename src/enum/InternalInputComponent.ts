@@ -13,4 +13,5 @@ export enum InternalInputComponent {
     SearchInput,
     MultipleCardInput,
     SingleCardInput,
+    TableInput,
 }
