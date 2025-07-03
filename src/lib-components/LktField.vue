@@ -7,6 +7,7 @@
     import {
         booleanFieldTypes,
         ButtonConfig,
+        ButtonType,
         extractI18nValue,
         extractPropValue,
         Field,
@@ -1419,6 +1420,15 @@
             </lkt-field-value>
 
             <div v-if="showInfoUi" class="lkt-field--info-nav">
+
+                <lkt-button
+                    v-if="computedShowError"
+                    :title="errorMessage"
+                    class="lkt-field--info-btn"
+                    icon="lkt-icn-attention"
+                    @click="onClickError"
+                />
+
                 <undo-button v-show="computedShowUndoInNav" @click="doUndo" />
                 <clear-button v-show="computedShowClearInNav" @click="doClear" />
 
@@ -1442,26 +1452,22 @@
                     }"
                     @click="onClickIncrease"
                 />
-
-                <lkt-button
-                    v-if="computedShowError"
-                    :title="errorMessage"
-                    class="lkt-field--info-btn"
-                    icon="lkt-icn-attention"
-                    @click="onClickError"
-                />
                 <lkt-button
                     v-if="computedShowInfo"
                     class="lkt-field--info-btn"
                     icon="lkt-icn-info"
                     @click="onClickInfo"
-                    tooltip
-                    show-tooltip-on-hover
-                    :show-tooltip-on-hover-delay="500"
-                    hide-tooltip-on-leave
+                    v-bind="<ButtonConfig>{
+                        type: ButtonType.Tooltip,
+                        tooltip: {
+                            showOnReferrerHover: true,
+                            showOnReferrerHoverDelay: 500,
+                            hideOnReferrerLeave: true,
+                        }
+                    }"
                 >
                     <template #tooltip>
-                        {{ infoMessage }}
+                        <div class="lkt-field--info-msg" v-html="infoMessage"/>
                     </template>
                 </lkt-button>
 
