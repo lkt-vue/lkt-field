@@ -13,6 +13,7 @@
         Field,
         FieldAutoValidationTrigger,
         FieldConfig,
+        FieldReportType,
         fieldsWithMultipleMode,
         FieldType,
         fieldTypesWithoutClear,
@@ -137,7 +138,7 @@
     }
 
     if (props.type === FieldType.Table) {
-        _val = JSON.parse(JSON.stringify(props.modelValue))
+        _val = JSON.parse(JSON.stringify(props.modelValue));
     }
 
     // Reactive data
@@ -182,8 +183,7 @@
     const changed = computed(() => {
             if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 return value.value !== originalValue.value;
-            }
-            else if (props.type === FieldType.Select) {
+            } else if (props.type === FieldType.Select) {
                 if (props.multiple) {
                     if (props.optionValueType !== 'option') {
                         let dataState = new DataState({ v: originalEditableValue.value });
@@ -191,8 +191,7 @@
                         return dataState.changed();
                     }
                 }
-            }
-            else if (props.type === FieldType.Table) {
+            } else if (props.type === FieldType.Table) {
                 let dataState = new DataState({ v: originalEditableValue.value });
                 dataState.increment({ v: editableValue.value });
                 return dataState.changed();
@@ -239,7 +238,7 @@
                 return value.value !== '';
             }
             if ([FieldType.Select].includes(props.type)) {
-                if (props.optionsConfig?.zeroMeansEmpty) return !(value.value === '' || value.value === 0)
+                if (props.optionsConfig?.zeroMeansEmpty) return !(value.value === '' || value.value === 0);
                 return value.value !== '';
             }
             return editableValue.value !== '';
@@ -479,7 +478,7 @@
                 doValidation();
             }, 150);
         }
-    }, {deep: true})
+    }, { deep: true });
 
 
     // Watch data
@@ -651,14 +650,25 @@
     };
 
     const computedCanRenderValidations = computed(() => {
-        if (localValidationStatus.value.length === 0) return false;
+            if (localValidationStatus.value.length === 0) return false;
+            if (props.validation.report === false || props.validation.report === FieldReportType.Inline) return false;
 
-        if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
-            return false;
-        }
+            if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
+                return false;
+            }
 
-        return true;
-    });
+            return true;
+        }),
+        computedCanRenderValidationsInline = computed(() => {
+            if (localValidationStatus.value.length === 0) return false;
+            if (props.validation.report === false || props.validation.report === FieldReportType.Message) return false;
+
+            if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
+                return false;
+            }
+
+            return true;
+        });
 
     const
         doUndo = () => {
@@ -939,14 +949,14 @@
 
     const computedCanRender = computed(() => {
             if (typeof props.canRender === 'function') return props.canRender({
-                prop: props.prop
+                prop: props.prop,
             });
             if (typeof props.canRender === 'boolean') return props.canRender;
             return true;
         }),
         computedCanDisplay = computed(() => {
             if (typeof props.canDisplay === 'function') return props.canDisplay({
-                prop: props.prop
+                prop: props.prop,
             });
             if (typeof props.canDisplay === 'boolean') return props.canDisplay;
             return true;
@@ -1000,7 +1010,7 @@
                     return InternalInputComponent.TextareaInput;
                 }
         }
-    })
+    });
 </script>
 
 <template>
@@ -1424,7 +1434,7 @@
                 <lkt-button
                     v-if="computedShowError"
                     :title="errorMessage"
-                    class="lkt-field--info-btn"
+                    class="lkt-field--danger-btn"
                     icon="lkt-icn-attention"
                     @click="onClickError"
                 />
@@ -1453,6 +1463,26 @@
                     @click="onClickIncrease"
                 />
                 <lkt-button
+                    v-if="computedCanRenderValidationsInline"
+                    class="lkt-field--report-btn"
+                    icon="lkt-icn-attention"
+                    @click="onClickInfo"
+                    v-bind="<ButtonConfig>{
+                        type: ButtonType.Tooltip,
+                        tooltip: {
+                            showOnReferrerHover: true,
+                            showOnReferrerHoverDelay: 500,
+                            hideOnReferrerLeave: true,
+                        }
+                    }"
+                >
+                    <template #tooltip>
+                        <lkt-field-validations
+                            :items="localValidationStatus"
+                            :stack="validation?.stack" />
+                    </template>
+                </lkt-button>
+                <lkt-button
                     v-if="computedShowInfo"
                     class="lkt-field--info-btn"
                     icon="lkt-icn-info"
@@ -1467,7 +1497,7 @@
                     }"
                 >
                     <template #tooltip>
-                        <div class="lkt-field--info-msg" v-html="infoMessage"/>
+                        <div class="lkt-field--info-msg" v-html="infoMessage" />
                     </template>
                 </lkt-button>
 
