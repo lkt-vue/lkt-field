@@ -30,6 +30,10 @@
     border-radius: var(--lkt-field--input--border-radius);
 }
 
+.lkt-field--dropdown-options.lkt-field--radio-options {
+    max-height: initial;
+}
+
 .lkt-field--dropdown-options > li > .lkt-field--dropdown-option {
     transition: var(--lkt-field--input--transition);
     color: var(--lkt-field--option--color);

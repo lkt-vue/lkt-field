@@ -375,6 +375,7 @@
                 keepFocused,
                 optionValueType: props.optionValueType,
                 callback: props.events?.clickOption,
+                optionsConfig: props.optionsConfig,
             })
             : handleOptionClickSingle({
                 option,
@@ -383,6 +384,7 @@
                 showOptions: editableShowOptions.value,
                 optionValueType: props.optionValueType,
                 callback: props.events?.clickOption,
+                optionsConfig: props.optionsConfig,
             });
 
         if (fineHandled) {

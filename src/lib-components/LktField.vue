@@ -67,6 +67,8 @@
     import TimeInput from '@/components/TimeInput.vue';
     import { SelectInputProps } from '@/config/SelectInputProps.ts';
     import { InternalInputComponent } from '@/enum/InternalInputComponent.ts';
+    import { RadioInputProps } from '@/config/RadioInputProps.ts';
+    import RadioInput from '@/components/RadioInput.vue';
 
     // Emits
     const emits = defineEmits([
@@ -217,9 +219,13 @@
             if (props.customButtonText || props.customButtonClass) ++r;
             if (typeof props.createButton === 'object') ++r;
 
-            if (r > 0 && props.type === FieldType.Textarea) return 1;
-            if (r > 0 && props.type === FieldType.Html) return 1;
-            if (r > 0 && props.type === FieldType.Table) return 1;
+            if (r > 1 && [
+                FieldType.Textarea,
+                FieldType.Html,
+                FieldType.Table,
+                FieldType.Radio,
+            ].includes(props.type)) return 1;
+
             if (r > 0 && props.infoButtonEllipsis) return 1;
 
             return r;
@@ -999,6 +1005,9 @@
             case FieldType.Table:
                 return InternalInputComponent.TableInput;
 
+            case FieldType.Radio:
+                return InternalInputComponent.RadioInput;
+
             default:
                 if (computedInputElement.value === 'input') {
                     if (props.options.length > 0 || (props.optionsConfig?.http && Object.keys(props.optionsConfig?.http).length > 0)) {
@@ -1178,6 +1187,35 @@
                         optionValueType,
                         referrer: container,
                         isAutoCompleteText: type !== FieldType.Select,
+                    }"
+                    @focus="onFocusSelectInput"
+                    @blur="onBlurSelectInput"
+                    @change="onChange"
+                />
+
+                <radio-input
+                    v-else-if="computedInternalInput === InternalInputComponent.RadioInput"
+                    ref="inputElement"
+                    v-model="editableValue"
+                    v-model:show-options="showOptions"
+                    v-model:picked-options="pickedOptions"
+                    v-bind="<RadioInputProps>{
+                        searchable,
+                        searchMode,
+                        multiple,
+                        options,
+                        optionsConfig,
+                        optionSlot,
+                        editable: computedEditable,
+                        focusing,
+                        searchPlaceholder: computedSearchPlaceholder,
+                        multipleDisplayEdition: multipleDisplayEdition,
+                        prop,
+                        max: MaximumValue,
+                        tooltip: tooltipConfig,
+                        events,
+                        optionValueType,
+                        referrer: container,
                     }"
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"

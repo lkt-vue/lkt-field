@@ -17,6 +17,7 @@ export declare const handleOptionClickSingle: (args: {
     showOptions: boolean;
     searchMode: boolean;
     callback?: Function;
+    optionsConfig?: OptionsConfig;
 }) => boolean;
 export declare const handleOptionClickMultiple: (args: {
     option: OptionConfig;
@@ -28,6 +29,7 @@ export declare const handleOptionClickMultiple: (args: {
     searchField?: Component | null;
     callback?: Function;
     keepFocused?: Function;
+    optionsConfig?: OptionsConfig;
 }) => boolean;
 export declare const syncPickedOptions: (args: {
     value: Ref<OptionConfig | ValidOptionValue | Array<OptionConfig | ValidOptionValue>>;

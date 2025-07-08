@@ -132,6 +132,7 @@ export const handleOptionClickSingle = (args: {
     showOptions: boolean
     searchMode: boolean
     callback?: Function
+    optionsConfig?: OptionsConfig
 }) => {
     if (args.option.disabled) return false;
 
@@ -139,7 +140,12 @@ export const handleOptionClickSingle = (args: {
     if (args.optionValueType === 'option') {
         args.value.value = args.option;
     } else {
-        args.value.value = String(args.option.value);
+        if (args.optionsConfig?.typeCasting === 'int') {
+            //@ts-ignore
+            args.value.value = parseInt(args.option.value);
+        } else {
+            args.value.value = String(args.option.value);
+        }
     }
     args.pickedOptions.splice(0, 1, args.option);
     args.showOptions = false;
@@ -162,6 +168,7 @@ export const handleOptionClickMultiple = (args: {
     searchField?: Component|null
     callback?: Function
     keepFocused?: Function
+    optionsConfig?: OptionsConfig
 }) => {
     if (args.option.disabled) return false;
 
@@ -177,6 +184,12 @@ export const handleOptionClickMultiple = (args: {
         if (args.optionValueType === 'option') {
             args.value.value.push(args.option);
         } else {
+            if (args.optionsConfig?.typeCasting === 'int') {
+                //@ts-ignore
+                args.value.value.push(parseInt(args.option.value));
+            } else {
+                args.value.value.push(String(args.option.value));
+            }
             args.value.value.push(String(args.option.value));
         }
         if (!args.tagMode) args.pickedOptions.push(args.option);
