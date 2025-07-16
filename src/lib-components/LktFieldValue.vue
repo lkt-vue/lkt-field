@@ -190,7 +190,7 @@
                 class="lkt-field--read-value"
                 v-html="computedValue" :title="title"/>
             <div
-                v-else-if="type === FieldType.Select"
+                v-else-if="[FieldType.Select, FieldType.Radio].includes(type)"
                 class="lkt-field--read-value"
                 :title="title">
 

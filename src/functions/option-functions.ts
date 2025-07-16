@@ -123,6 +123,16 @@ export const getInValueOptionIndex = (option: OptionConfig, value: ValidOptionVa
     return r;
 };
 
+export const getInValueOptionIndexes = (option: OptionConfig, value: ValidOptionValue[]): number[] => {
+    let filtered = value.filter((v) => v == option.value);
+    return filtered.map(v => value.indexOf(v));
+};
+
+export const getInPickedOptionOptionIndexes = (option: OptionConfig, value: OptionConfig[]): number[] => {
+    let filtered = value.filter((v) => v.value == option.value);
+    return filtered.map(v => value.indexOf(v));
+};
+
 export const handleOptionClickSingle = (args: {
     option: OptionConfig,
     value: Ref<OptionConfig|ValidOptionValue>
@@ -161,7 +171,7 @@ export const handleOptionClickSingle = (args: {
 export const handleOptionClickMultiple = (args: {
     option: OptionConfig,
     value: Ref<Array<OptionConfig|ValidOptionValue>>
-    pickedOptions: Array<OptionConfig>
+    pickedOptions: Ref<Array<OptionConfig>>
     tagMode: boolean
     searchMode: boolean
     optionValueType: string | 'option'
@@ -172,15 +182,17 @@ export const handleOptionClickMultiple = (args: {
 }) => {
     if (args.option.disabled) return false;
 
-    let k = -1;
+    let k:number[] = [];
 
     if (args.optionValueType === 'option') {
-        k = getInValueOptionIndex(args.option, args.value.value.map(opt => opt.value));
+        k = getInValueOptionIndexes(args.option, args.value.value?.value);
     } else {
-        k = getInValueOptionIndex(args.option, <Array<ValidOptionValue>>args.value.value);
+        k = getInValueOptionIndexes(args.option, <Array<ValidOptionValue>>args.value.value);
     }
 
-    if (k === -1) {
+    let inPickedOptionsIndexes:number[] = getInPickedOptionOptionIndexes(args.option, args.pickedOptions.value);
+
+    if (k.length === 0) {
         if (args.optionValueType === 'option') {
             args.value.value.push(args.option);
         } else {
@@ -190,13 +202,18 @@ export const handleOptionClickMultiple = (args: {
             } else {
                 args.value.value.push(String(args.option.value));
             }
-            args.value.value.push(String(args.option.value));
         }
-        if (!args.tagMode) args.pickedOptions.push(args.option);
+        if (!args.tagMode) args.pickedOptions.value.push(args.option);
 
     } else if (!args.tagMode) {
-        args.value.value.splice(k, 1);
-        args.pickedOptions.splice(k, 1);
+
+        inPickedOptionsIndexes.forEach(removeIndexKey => {
+            args.pickedOptions.value.splice(removeIndexKey, 1);
+        })
+
+        k.forEach(removeIndexKey => {
+            args.value.value.splice(removeIndexKey, 1);
+        })
     }
 
     if (typeof args.keepFocused === 'function') {
@@ -243,7 +260,7 @@ export const syncPickedOptions = (args: {
     }
 
     let option = args.optionValueType === 'option'
-        ? findOptionByValue(args.options, args.value.value.map((opt: OptionConfig) => opt.value))
+        ? findOptionByValue(args.options, args.value.value?.value)
         : findOptionByValue(args.options, args.value.value)
     ;
 
@@ -338,7 +355,7 @@ export const createTag = (args: {
     };
 
     let index = args.optionValueType === 'option'
-        ? getInValueOptionIndex(option, args.value.value.map(opt => opt.value))
+        ? getInValueOptionIndex(option, args.value.value?.value)
         : getInValueOptionIndex(option, args.value.value)
     ;
 
@@ -364,7 +381,7 @@ export const removeTag = (args: {
     while (hasToUntag) {
 
         let index = args.optionValueType === 'option'
-            ? getInValueOptionIndex(args.option, args.value.value.map(opt => opt.value))
+            ? getInValueOptionIndex(args.option, args.value.value?.value)
             : getInValueOptionIndex(args.option, args.value.value)
         ;
 

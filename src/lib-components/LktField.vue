@@ -185,7 +185,7 @@
     const changed = computed(() => {
             if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 return value.value !== originalValue.value;
-            } else if (props.type === FieldType.Select) {
+            } else if (props.type === FieldType.Select || props.type === FieldType.Radio) {
                 if (props.multiple) {
                     if (props.optionValueType !== 'option') {
                         let dataState = new DataState({ v: originalEditableValue.value });
@@ -243,7 +243,7 @@
             if ([FieldType.Date, FieldType.DateTime].includes(props.type)) {
                 return value.value !== '';
             }
-            if ([FieldType.Select].includes(props.type)) {
+            if ([FieldType.Select, FieldType.Radio].includes(props.type)) {
                 if (props.optionsConfig?.zeroMeansEmpty) return !(value.value === '' || value.value === 0);
                 return value.value !== '';
             }
@@ -286,7 +286,7 @@
 
             if ([FieldType.Textarea, FieldType.Html].includes(props.type)) r.push('is-lg');
             if ([FieldType.Image].includes(props.type)) r.push('is-xl');
-            if (props.multiple && props.type === FieldType.Select) r.push('is-lg');
+            if (props.multiple && [FieldType.Select, FieldType.Radio].includes(props.type)) r.push('is-lg');
 
             if (props.multiple) {
                 if (computedEditable.value) {
@@ -593,6 +593,7 @@
         if (props.mandatory) {
             switch (props.type) {
                 case FieldType.Select:
+                case FieldType.Radio:
                     if (props.multiple && pickedOptions.value.length === 0) {
                         r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
                     } else if (!props.multiple && !checkedValue) {
@@ -936,6 +937,7 @@
     const computedReadValue = computed(() => {
         switch (props.type) {
             case FieldType.Select:
+            case FieldType.Radio:
                 return pickedOptions.value;
 
             case FieldType.Date:
@@ -1618,7 +1620,7 @@
             :items="localValidationStatus"
             :stack="validation?.stack" />
 
-        <template v-if="ready && type === FieldType.Select">
+        <template v-if="ready && (type === FieldType.Select || type === FieldType.Radio)">
             <select-input
                 ref="inputElement"
                 v-bind="<SelectInputProps>{

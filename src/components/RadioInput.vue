@@ -242,7 +242,7 @@
             ? handleOptionClickMultiple({
                 option,
                 value: editableValue,
-                pickedOptions: editableOptions.value,
+                pickedOptions: editableOptions,
                 tagMode: false,
                 searchMode: props.searchable,
                 keepFocused,

@@ -8,6 +8,8 @@ export declare const findOptionByValue: (options: OptionConfig[], query: ValidOp
 export declare const receiveOptions: (currentOptions: OptionConfig[], receivedOptions: OptionConfig[], prop: LktObject) => OptionConfig[];
 export declare const optionIsActive: (option: OptionConfig, value: ValidOptionValue | ValidOptionValue[], isMultiple: boolean) => boolean;
 export declare const getInValueOptionIndex: (option: OptionConfig, value: ValidOptionValue[]) => number;
+export declare const getInValueOptionIndexes: (option: OptionConfig, value: ValidOptionValue[]) => number[];
+export declare const getInPickedOptionOptionIndexes: (option: OptionConfig, value: OptionConfig[]) => number[];
 export declare const handleOptionClickSingle: (args: {
     option: OptionConfig;
     value: Ref<OptionConfig | ValidOptionValue>;
@@ -22,7 +24,7 @@ export declare const handleOptionClickSingle: (args: {
 export declare const handleOptionClickMultiple: (args: {
     option: OptionConfig;
     value: Ref<Array<OptionConfig | ValidOptionValue>>;
-    pickedOptions: Array<OptionConfig>;
+    pickedOptions: Ref<Array<OptionConfig>>;
     tagMode: boolean;
     searchMode: boolean;
     optionValueType: string | "option";
