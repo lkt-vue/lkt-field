@@ -3,7 +3,7 @@
     import { computed, nextTick, ref, watch } from 'vue';
     import { date } from 'lkt-date-tools';
     import { isValidDateObject } from '../../functions/date-functions';
-    import { ButtonConfig } from 'lkt-vue-kernel';
+    import { ButtonConfig, ButtonType, FieldConfig, FieldType } from 'lkt-vue-kernel';
 
     const emit = defineEmits([
         'update:modelValue'
@@ -95,6 +95,20 @@
             // refreshing.value = true;
         };
 
+    watch(visibleYear, () => {
+
+        visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
+        visibleDate.value = new Date(visibleDate.value);
+        visibleText.value = date('Y-m', visibleDate.value);
+    }, {deep: true});
+
+    watch(visibleMonth, () => {
+
+        visibleDate.value.setFullYear(visibleYear.value, visibleMonth.value);
+        visibleDate.value = new Date(visibleDate.value);
+        visibleText.value = date('Y-m', visibleDate.value);
+    }, {deep: true});
+
 </script>
 
 <template>
@@ -110,7 +124,46 @@
                         }
                     }"
                 />
-                <div class="lkt-calendar--header-text" v-html="visibleText"></div>
+                <lkt-button
+                    v-bind="<ButtonConfig>{
+                        type: ButtonType.Tooltip,
+                        text: visibleText,
+                        class: 'lkt-calendar--header-text',
+                    }"
+                >
+                    <template #tooltip>
+                        <div class="lkt-calendar--header-text lkt-flex-row">
+                            <lkt-field
+                                v-model="visibleYear"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Number,
+                                    label: 'Year',
+                                }"
+                            />
+                            <lkt-field
+                                v-model="visibleMonth"
+                                v-bind="<FieldConfig>{
+                                    type: FieldType.Select,
+                                    label: 'Month',
+                                    options: [
+                                        {value: 0, label: '1'},
+                                        {value: 1, label: '2'},
+                                        {value: 2, label: '3'},
+                                        {value: 3, label: '4'},
+                                        {value: 4, label: '5'},
+                                        {value: 5, label: '6'},
+                                        {value: 6, label: '7'},
+                                        {value: 7, label: '8'},
+                                        {value: 8, label: '9'},
+                                        {value: 9, label: '10'},
+                                        {value: 10, label: '11'},
+                                        {value: 11, label: '12'},
+                                        ]
+                                }"
+                            />
+                        </div>
+                    </template>
+                </lkt-button>
                 <lkt-button
                     v-bind="<ButtonConfig>{
                         class: 'lkt-calendar--day',
