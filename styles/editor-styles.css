@@ -14,6 +14,7 @@
 
 .lkt-field .sun-editor .se-wrapper .se-wrapper-inner {
     min-height: var(--lkt-field-large-field-min-height);
+    white-space: break-spaces;
 }
 
 .lkt-field .sun-editor .se-toolbar,
