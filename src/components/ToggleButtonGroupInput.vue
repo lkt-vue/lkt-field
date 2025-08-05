@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { OptionConfig, TableConfig, TableType, ValidFieldValue } from 'lkt-vue-kernel';
+    import { FieldType, OptionConfig, TableConfig, TableType, ValidFieldValue } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
         canDisplayOption,
@@ -12,7 +12,7 @@
         syncPickedOptions,
     } from '@/functions/option-functions.ts';
     import { DataState } from 'lkt-data-state';
-    import { RadioInputProps } from '@/config/RadioInputProps.ts';
+    import { ToggleButtonGroupInputProps } from '@/config/ToggleButtonGroupInputProps.ts';
 
     const emit = defineEmits([
         'update:modelValue',
@@ -27,7 +27,7 @@
         'autoload-end',
     ]);
 
-    const props = withDefaults(defineProps<RadioInputProps>(), {
+    const props = withDefaults(defineProps<ToggleButtonGroupInputProps>(), {
         prop: () => ({}),
     });
 
@@ -193,6 +193,7 @@
             });
         },
         doUndo = (originalValue: ValidFieldValue) => {
+
             if (props.multiple) {
                 (<Array<OptionConfig>>editableValue.value).splice(0, (<Array<OptionConfig>>editableValue.value).length);
                 let i = 0, l = (<Array<OptionConfig>>originalValue).length;
@@ -301,7 +302,7 @@
             itemDisplayChecker: (option: OptionConfig) => {
                 return canDisplayOption(option, query, true, optionsConfig?.filter)
             },
-            itemsContainerClass: `lkt-field--dropdown-options lkt-field--radio-options`,
+            itemsContainerClass: `lkt-field--toggle-button-group-options`,
             itemContainerClass: (option: OptionConfig, index: number) => {
                 let r = [];
                 if (optionIsActive(option, editableValue, multiple)) r.push('is-active');
@@ -320,6 +321,7 @@
                 editableValue,
                 multiple,
                 focusedOptionIndex,
+                fieldType: FieldType.ToggleButtonGroup,
             },
             itemSlotEvents: {
                 click: (item: OptionConfig, i: number) => {

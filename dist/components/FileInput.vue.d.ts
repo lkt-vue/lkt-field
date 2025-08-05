@@ -40,8 +40,8 @@ declare const _default: DefineComponent<__VLS_Props, {
     resource: string;
     resourceData: LktObject;
     modelValue: string;
-    uploading: boolean;
     placeholder: string;
+    uploading: boolean;
     readonly: boolean;
     fileName: string;
     fileBrowserConfig: FileBrowserConfig;

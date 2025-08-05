@@ -1,0 +1,43 @@
+.lkt-field.is-toggle-button-group .lkt-field--toggle-button-group-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.lkt-field--toggle-button-group-options > li {
+    width: 100%;
+}
+
+.lkt-field--toggle-button-group-options > li .lkt-button {
+    --lkt-button--background: var(--lkt-field--input--background);
+    --lkt-button--border-radius: 0;
+    --lkt-button--color: var(--lkt-field--color);
+    --lkt-button--padding: var(--lkt-field--input--padding);
+    --lkt-button--min-height: var(--lkt-field--input--height);
+    --lkt-button--container--width: 100%;
+    border-top: 0;
+    border-bottom: 0;
+}
+
+.lkt-field--toggle-button-group-options > li:first-child .lkt-button {
+    border-left: 0;
+}
+
+.lkt-field--toggle-button-group-options > li:last-child .lkt-button {
+    border-right: 0;
+}
+
+.lkt-field--toggle-button-group-options > li:nth-child(even) .lkt-button {
+    --lkt-button--background: var(--lkt-field--even-option--background);
+    --lkt-button--color: var(--lkt-field--even-option--color);
+}
+
+.lkt-field--toggle-button-group-options > li:nth-child(odd) .lkt-button {
+    --lkt-button--background: var(--lkt-field--odd-option--background);
+    --lkt-button--color: var(--lkt-field--odd-option--color);
+}
+
+.lkt-field--toggle-button-group-options > li.is-active .lkt-button {
+    --lkt-button--background: var(--lkt-field--active--option--background);
+    --lkt-button--color: var(--lkt-field--active--option--color);
+}

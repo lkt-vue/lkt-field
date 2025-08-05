@@ -15,4 +15,5 @@ export enum InternalInputComponent {
     SingleCardInput,
     TableInput,
     RadioInput,
+    ToggleButtonGroupInput,
 }

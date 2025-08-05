@@ -17,6 +17,7 @@ import '../styles/calc-styles.css';
 import '../styles/palette-styles.css';
 import '../styles/state-styles.css';
 import '../styles/tags-styles.css';
+import '../styles/toggle-button-group-styles.css';
 import '../styles/helper-styles.css';
 import { Settings } from './settings/Settings';
 import { addModal } from 'lkt-modal';

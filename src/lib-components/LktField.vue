@@ -69,6 +69,8 @@
     import { InternalInputComponent } from '@/enum/InternalInputComponent.ts';
     import { RadioInputProps } from '@/config/RadioInputProps.ts';
     import RadioInput from '@/components/RadioInput.vue';
+    import ToggleButtonGroupInput from '@/components/ToggleButtonGroupInput.vue';
+    import { ToggleButtonGroupInputProps } from '@/config/ToggleButtonGroupInputProps.ts';
 
     // Emits
     const emits = defineEmits([
@@ -1010,6 +1012,9 @@
             case FieldType.Radio:
                 return InternalInputComponent.RadioInput;
 
+            case FieldType.ToggleButtonGroup:
+                return InternalInputComponent.ToggleButtonGroupInput;
+
             default:
                 if (computedInputElement.value === 'input') {
                     if (props.options.length > 0 || (props.optionsConfig?.http && Object.keys(props.optionsConfig?.http).length > 0)) {
@@ -1202,6 +1207,34 @@
                     v-model:show-options="showOptions"
                     v-model:picked-options="pickedOptions"
                     v-bind="<RadioInputProps>{
+                        searchable,
+                        searchMode,
+                        multiple,
+                        options,
+                        optionsConfig,
+                        optionSlot,
+                        editable: computedEditable,
+                        focusing,
+                        searchPlaceholder: computedSearchPlaceholder,
+                        multipleDisplayEdition: multipleDisplayEdition,
+                        prop,
+                        max: MaximumValue,
+                        tooltip: tooltipConfig,
+                        events,
+                        optionValueType,
+                        referrer: container,
+                    }"
+                    @focus="onFocusSelectInput"
+                    @blur="onBlurSelectInput"
+                    @change="onChange"
+                />
+                <toggle-button-group-input
+                    ref="inputElement"
+                    v-else-if="computedInternalInput === InternalInputComponent.ToggleButtonGroupInput"
+                    v-model="editableValue"
+                    v-model:show-options="showOptions"
+                    v-model:picked-options="pickedOptions"
+                    v-bind="<ToggleButtonGroupInputProps>{
                         searchable,
                         searchMode,
                         multiple,

@@ -1,17 +1,19 @@
 <script setup lang="ts">
     import {
         AnchorConfig,
-        AnchorType,
+        AnchorType, ButtonConfig,
         extractPropValue,
+        FieldType,
         OptionConfig,
-        TableConfig, TableType,
+        TableConfig,
+        TableType,
         TagConfig,
         TagType,
     } from 'lkt-vue-kernel';
     import { computed, markRaw } from 'vue';
     import { Settings } from '../../settings/Settings';
     import { DropdownOptionProps } from '../../config/DropdownOptionProps.ts';
-    import { canDisplayOption, optionIsActive, prepareOptions, receiveOptions } from '@/functions/option-functions.ts';
+    import { canDisplayOption, optionIsActive } from '@/functions/option-functions.ts';
     import DropdownOption from '@/components/dropdown/DropdownOption.vue';
 
     const emit = defineEmits([
@@ -154,7 +156,18 @@
 </script>
 
 <template>
+    <lkt-button
+        v-if="data.fieldType === FieldType.ToggleButtonGroup"
+        v-bind="<ButtonConfig>{
+            icon: computedIcon,
+            text: computedText,
+            events: {
+                click: onClick,
+            }
+        }"
+    />
     <component
+        v-else
         :is="computedContainerComponent"
         v-bind="computedContainerAttrs"
         class="lkt-field--dropdown-option"
