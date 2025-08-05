@@ -15712,7 +15712,7 @@ const ir = {
 }, Ai = (e, t) => {
   let i = t.findIndex((n) => n == e.value);
   return typeof i > "u" && (i = -1), i;
-}, jl = (e, t) => t.filter((n) => n == e.value).map((n) => t.indexOf(n)), sr = (e, t) => t.filter((n) => n.value == e.value).map((n) => t.indexOf(n)), Rn = (e) => {
+}, jl = (e, t) => ((t == null ? void 0 : t.filter((n) => n == e.value)) ?? []).map((n) => t.indexOf(n)), sr = (e, t) => ((t == null ? void 0 : t.filter((n) => n.value == e.value)) ?? []).map((n) => t.indexOf(n)), Rn = (e) => {
   var t;
   return e.option.disabled ? !1 : (e.focusedOptionIndex = -1, e.optionValueType === "option" ? e.value.value = e.option : ((t = e.optionsConfig) == null ? void 0 : t.typeCasting) === "int" ? e.value.value = parseInt(e.option.value) : e.value.value = String(e.option.value), e.pickedOptions.splice(0, 1, e.option), e.showOptions = !1, e.searchMode = !1, typeof e.callback == "function" && e.callback({ option: e.option }), !0);
 }, An = (e) => {
@@ -16093,7 +16093,7 @@ const ir = {
       (u.multiple ? An({
         option: L,
         value: f,
-        pickedOptions: B.value,
+        pickedOptions: B,
         tagMode: g,
         searchMode: u.searchable,
         keepFocused: w,

@@ -13,6 +13,9 @@
     align-items: center;
     z-index: 1;
     height: var(--lkt-field--input--height);
+    width: calc(var(--lkt-field--icons-amount) * var(--lkt-field--input--height));
+    overflow: hidden;
+    border-radius: var(--lkt-field--border-radius);
 }
 
 .lkt-field--atn-btn,

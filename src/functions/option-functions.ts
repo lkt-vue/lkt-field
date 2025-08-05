@@ -124,12 +124,12 @@ export const getInValueOptionIndex = (option: OptionConfig, value: ValidOptionVa
 };
 
 export const getInValueOptionIndexes = (option: OptionConfig, value: ValidOptionValue[]): number[] => {
-    let filtered = value.filter((v) => v == option.value);
+    let filtered = value?.filter((v) => v == option.value) ?? [];
     return filtered.map(v => value.indexOf(v));
 };
 
 export const getInPickedOptionOptionIndexes = (option: OptionConfig, value: OptionConfig[]): number[] => {
-    let filtered = value.filter((v) => v.value == option.value);
+    let filtered = value?.filter((v) => v.value == option.value) ?? [];
     return filtered.map(v => value.indexOf(v));
 };
 

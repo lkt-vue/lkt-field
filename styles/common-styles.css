@@ -59,6 +59,7 @@
     width: 100%;
     max-width: 100%;
     outline: 0;
+    border-radius: var(--lkt-field--border-radius);
 }
 
 .lkt-field.is-editable > .lkt-field-content > .lkt-field-main {
@@ -113,6 +114,7 @@
 
 .lkt-field--label {
     display: block;
+    color: var(--lkt-field--label--color);
     font-weight: var(--lkt-field--label--font-weight);
     font-size: var(--lkt-field--label--font-size);
     line-height: var(--lkt-field--label--line-height);

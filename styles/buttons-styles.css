@@ -28,6 +28,16 @@
     --lkt-button--justify-content: flex-start;
 }
 
+.lkt-field-main > .lkt-field--select-button {
+    --lkt-button--background: var(--lkt-field--input--background);
+    --lkt-button--border-radius: var(--lkt-field--input--border-radius);
+}
+
+.lkt-field .lkt-field--btn-dropdown {
+    --lkt-button--background: var(--lkt-field--input--background);
+    height: 100%;
+}
+
 .lkt-field.is-select.is-multiple .lkt-field--select-button {
     --lkt-button--transition: none;
     --lkt-button--padding: var(--lkt-field--textarea--padding);

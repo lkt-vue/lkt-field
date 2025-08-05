@@ -34,6 +34,7 @@
     --lkt-field--label--font-weight: 600;
     --lkt-field--label--line-height: 1.425;
     --lkt-field--label--margin: 0;
+    --lkt-field--label--color: #444444;
 
     /** Element: Input */
     --lkt-field--input--background: transparent;
