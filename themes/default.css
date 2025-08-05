@@ -90,6 +90,10 @@
     --lkt-field--active--option--background: transparent;
     --lkt-field--active--option--color: #444;
 
+    /** Element: Option, State: Active, Event: Hover */
+    --lkt-field--hover--active--option--background: transparent;
+    --lkt-field--hover--active--option--color: #444;
+
     /** Element: Odd Option */
     --lkt-field--odd-option--background: transparent;
     --lkt-field--odd-option--color: #444;
