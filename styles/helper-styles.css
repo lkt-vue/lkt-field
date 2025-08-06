@@ -1,4 +1,5 @@
 .like-lkt-field-label {
+    user-select: none;
     display: block;
     color: var(--lkt-field--color);
     font-weight: var(--lkt-field--label--font-weight);

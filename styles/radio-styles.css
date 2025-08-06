@@ -1,0 +1,42 @@
+.lkt-field--radio-options .lkt-field--dropdown-option {
+    user-select: none;
+    align-items: flex-start;
+}
+
+.lkt-field--radio-options .lkt-field--dropdown-option:before {
+    content: '';
+    border: var(--lkt-field--radio--border-width) var(--lkt-field--radio--border-style) var(--lkt-field--radio--border-color);
+    border-radius: var(--lkt-field--radio--border-radius);
+    width: var(--lkt-field--radio--size);
+    height: var(--lkt-field--radio--size);
+    min-width: var(--lkt-field--radio--size);
+    min-height: var(--lkt-field--radio--size);
+    max-width: var(--lkt-field--radio--size);
+    max-height: var(--lkt-field--radio--size);
+    background: var(--lkt-field--radio--background);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+
+
+    font-family: lkt-icons;
+    font-style: normal;
+    font-weight: 400;
+    speak: never;
+    text-decoration: inherit;
+    margin-right: .2em;
+    text-align: center;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1em;
+    margin-left: .2em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+}
+
+.lkt-field--radio-options .is-active .lkt-field--dropdown-option:before {
+    content: "";
+    background: var(--lkt-field--active--radio--background);
+}

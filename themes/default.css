@@ -133,4 +133,15 @@
     --lkt-field--state--font-size: 40px;
     --lkt-field--state--gap: 10px;
     --lkt-field--state--right: 5px;
+
+    /** Element: Radio option */
+    --lkt-field--radio--background: transparent;
+    --lkt-field--radio--border-width: 1px;
+    --lkt-field--radio--border-style: solid;
+    --lkt-field--radio--border-color: #444;
+    --lkt-field--radio--border-radius: 100%;
+    --lkt-field--radio--size: 22px;
+
+    /** Element: Radio option, State: Active */
+    --lkt-field--active--radio--background: transparent;
 }

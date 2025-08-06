@@ -1,3 +1,4 @@
+import { IconConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: string;
@@ -5,7 +6,7 @@ type __VLS_Props = {
     id: string;
     tabindex: number;
     lang: string;
-    icon: string;
+    icon: string | IconConfig;
     isDateTime: boolean;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {

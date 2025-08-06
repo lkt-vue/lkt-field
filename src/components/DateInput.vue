@@ -8,7 +8,7 @@
         ButtonConfig,
         ButtonType,
         FieldConfig,
-        FieldType,
+        FieldType, IconConfig,
         TooltipLocationX,
         TooltipLocationY,
     } from 'lkt-vue-kernel';
@@ -24,7 +24,7 @@
         id: string
         tabindex: number
         lang: string
-        icon: string
+        icon: string|IconConfig
         isDateTime: boolean
     }>(), {
         modelValue: '',
