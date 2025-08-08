@@ -1,3 +1,11 @@
+.lkt-field.is-toggle-button-group .lkt-field-content {
+    overflow: hidden;
+}
+
+.lkt-field.is-toggle-button-group .lkt-field-main {
+    border-radius: 0;
+}
+
 .lkt-field.is-toggle-button-group .lkt-field--toggle-button-group-options {
     display: flex;
     flex-direction: row;
@@ -10,7 +18,19 @@
 
 .lkt-field--toggle-button-group-options > li .lkt-button {
     --lkt-button--background: var(--lkt-field--input--background);
+
+    --lkt-button--border-width: 0;
+    --lkt-button--hover--border-width: 0;
+    --lkt-button--focus--border-width: 0;
+    --lkt-button--disabled--border-width: 0;
+    --lkt-button--disabled--hover--border-width: 0;
+
     --lkt-button--border-radius: 0;
+    --lkt-button--hover--border-radius: 0;
+    --lkt-button--disabled--border-radius: 0;
+    --lkt-button--focus--border-radius: 0;
+    --lkt-button--disabled--hover--border-radius: 0;
+
     --lkt-button--color: var(--lkt-field--color);
     --lkt-button--padding: var(--lkt-field--input--padding);
     --lkt-button--min-height: var(--lkt-field--input--height);
