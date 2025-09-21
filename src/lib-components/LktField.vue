@@ -940,6 +940,7 @@
         switch (props.type) {
             case FieldType.Select:
             case FieldType.Radio:
+            case FieldType.ToggleButtonGroup:
                 return pickedOptions.value;
 
             case FieldType.Date:
@@ -1653,7 +1654,7 @@
             :items="localValidationStatus"
             :stack="validation?.stack" />
 
-        <template v-if="ready && (type === FieldType.Select || type === FieldType.Radio)">
+        <template v-if="ready && (type === FieldType.Select || type === FieldType.Radio || type === FieldType.ToggleButtonGroup)">
             <select-input
                 ref="inputElement"
                 v-bind="<SelectInputProps>{

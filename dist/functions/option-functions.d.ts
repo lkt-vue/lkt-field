@@ -39,6 +39,7 @@ export declare const syncPickedOptions: (args: {
     pickedOptions: Array<OptionConfig>;
     multiple: boolean;
     optionValueType: string | "option";
+    optionsConfig?: OptionsConfig;
 }) => void;
 /**
  * Returns false if nothing to do, true if successfully updated pointer, or an OptionConfig if selected

@@ -71,6 +71,8 @@
     const computedEmptyValueSlot = computed(() => {
             switch (props.type) {
                 case FieldType.Select:
+                case FieldType.Radio:
+                case FieldType.ToggleButtonGroup:
                     if (props.multiple && Array.isArray(props.value) && props.value.length > 0) {
                         return '';
                     }
@@ -93,7 +95,7 @@
 
     const computedValue = computed(() => {
         let r = props.value;
-        if (props.type === FieldType.Select && props.multiple && !Array.isArray(r)) {
+        if ([FieldType.Select, FieldType.Radio, FieldType.ToggleButtonGroup].includes(props.type) && props.multiple && !Array.isArray(r)) {
             r = [];
         }
 

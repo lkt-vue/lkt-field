@@ -272,6 +272,7 @@
                 pickedOptions: editableOptions.value,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
+                optionsConfig: props.optionsConfig,
             });
         } else {
             syncPickedOptions({
@@ -280,6 +281,7 @@
                 pickedOptions: editableOptions.value,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
+                optionsConfig: props.optionsConfig,
             });
         }
 

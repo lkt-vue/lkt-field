@@ -238,13 +238,17 @@ export const syncPickedOptions = (args: {
     pickedOptions: Array<OptionConfig>
     multiple: boolean
     optionValueType: string | 'option'
+    optionsConfig?: OptionsConfig
 }) => {
     if (args.multiple) {
         let l = args.options.length;
         for (let i = 0; i < l; ++i) {
             let option = args.optionValueType === 'option'
                 ? findOptionByValue(args.options, args.value.value[i].value)
-                : findOptionByValue(args.options, args.value.value[i])
+                : (args.optionsConfig?.typeCasting === 'int'
+                        ? findOptionByValue(args.options, parseInt(args.value.value[i]))
+                        : findOptionByValue(args.options, args.value.value[i])
+                )
             ;
 
             if (typeof option !== 'undefined') {
@@ -261,7 +265,10 @@ export const syncPickedOptions = (args: {
 
     let option = args.optionValueType === 'option'
         ? findOptionByValue(args.options, args.value.value?.value)
-        : findOptionByValue(args.options, args.value.value)
+        : (args.optionsConfig?.typeCasting === 'int'
+                ? findOptionByValue(args.options, parseInt(args.value.value))
+                : findOptionByValue(args.options, args.value.value)
+        )
     ;
 
     if (typeof option !== 'undefined') {
