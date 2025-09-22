@@ -47,11 +47,21 @@
             return r.join(' ');
         }),
         computedIconConfig = computed(() => {
+            if (props.validation.icon === false) {
+                return false;
+            }
+
+            if (typeof props.validation.icon === 'object' || typeof props.validation.icon === 'string') {
+                return props.validation.icon;
+            }
+
             switch (props.validation.status) {
                 case ValidationStatus.Ok:
                     return Settings.validationIconOk;
+
                 case ValidationStatus.Ko:
                     return Settings.validationIconKo;
+
                 case ValidationStatus.Info:
                     return Settings.validationIconInfo;
             }
@@ -72,6 +82,7 @@
             <component
                 :is="iconSlot" />
         </template>
+
         {{ computedMessage }}
     </div>
 </template>

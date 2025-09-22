@@ -29,6 +29,7 @@
         textFieldTypes,
         ToastConfig,
         ToastPositionX,
+        ValidationCode,
         ValidationStatus,
     } from 'lkt-vue-kernel';
     import UndoButton from '../components/buttons/UndoButton.vue';
@@ -544,9 +545,17 @@
         emits('update:valid', v);
     });
 
+    const hasToOverrideValidation = (code: ValidationCode) => {
+        if (props.validation.defaultValueOverrides?.includes(code) && props.validation?.defaultValue?.length > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     const doValidation = async () => {
 
-        localValidationStatus.value = [];
+        localValidationStatus.value.splice(0, localValidationStatus.value.length);
 
         const remoteValidation = await doRemoteValidation();
         const localValidation = doLocalValidation();
@@ -571,7 +580,7 @@
 
     const doLocalValidation = () => {
 
-        let r = [];
+        let r:Array<FieldValidation> = [];
 
         let checkedValue = editableValue.value;
         if (props.canI18n) {
@@ -596,23 +605,40 @@
             switch (props.type) {
                 case FieldType.Select:
                 case FieldType.Radio:
+                case FieldType.ToggleButtonGroup:
                     if (props.multiple && pickedOptions.value.length === 0) {
-                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        if (hasToOverrideValidation(ValidationCode.Empty)) {
+                            r = [...r, ...props.validation.defaultValue];
+                        } else {
+                            r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        }
                     } else if (!props.multiple && !checkedValue) {
-                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        if (hasToOverrideValidation(ValidationCode.Empty)) {
+                            r = [...r, ...props.validation.defaultValue];
+                        } else {
+                            r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        }
                     }
                     break;
 
                 case FieldType.Html:
                     let content = trim(stripTags(checkedValue));
                     if (content.length === 0) {
-                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        if (hasToOverrideValidation(ValidationCode.Empty)) {
+                            r = [...r, ...props.validation.defaultValue];
+                        } else {
+                            r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        }
                     }
                     break;
 
                 default:
                     if (![FieldType.Number].includes(props.type) && checkedValue === '') {
-                        r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        if (hasToOverrideValidation(ValidationCode.Empty)) {
+                            r = [...r, ...props.validation.defaultValue];
+                        } else {
+                            r.push(FieldValidation.createEmpty(ValidationStatus.Ko));
+                        }
                     }
             }
 
@@ -621,25 +647,45 @@
 
         if (min > 0) {
             if (props.type !== FieldType.Number && checkedValue.length < min) {
-                r.push(FieldValidation.createMinStr(min, ValidationStatus.Ko));
+                if (hasToOverrideValidation(ValidationCode.MinStringLength)) {
+                    r = [...r, ...props.validation.defaultValue];
+                } else {
+                    r.push(FieldValidation.createMinStr(ValidationStatus.Ko));
+                }
 
             } else if (checkedValue < min) {
-                r.push(FieldValidation.createMinNum(min, ValidationStatus.Ko));
+                if (hasToOverrideValidation(ValidationCode.MinNumber)) {
+                    r = [...r, ...props.validation.defaultValue];
+                } else {
+                    r.push(FieldValidation.createMinNum(ValidationStatus.Ko));
+                }
             }
         }
 
         if (max > 0) {
             if (props.type !== FieldType.Number && checkedValue.length > max) {
-                r.push(FieldValidation.createMaxStr(max, ValidationStatus.Ko));
+                if (hasToOverrideValidation(ValidationCode.MaxStringLength)) {
+                    r = [...r, ...props.validation.defaultValue];
+                } else {
+                    r.push(FieldValidation.createMaxStr(ValidationStatus.Ko));
+                }
 
             } else if (checkedValue > max) {
-                r.push(FieldValidation.createMaxNum(max, ValidationStatus.Ko));
+                if (hasToOverrideValidation(ValidationCode.MaxNumber)) {
+                    r = [...r, ...props.validation.defaultValue];
+                } else {
+                    r.push(FieldValidation.createMaxNum(ValidationStatus.Ko));
+                }
             }
         }
 
         if (props.type === FieldType.Email) {
             if (!isEmail(checkedValue)) {
-                r.push(FieldValidation.createEmail(ValidationStatus.Ko));
+                if (hasToOverrideValidation(ValidationCode.Email)) {
+                    r = [...r, ...props.validation.defaultValue];
+                } else {
+                    r.push(FieldValidation.createEmail(ValidationStatus.Ko));
+                }
             }
         }
 
@@ -658,11 +704,54 @@
         return r;
     };
 
+    const ableToRenderValidation = computed(() => {
+        return props.validation?.trigger === FieldAutoValidationTrigger.Blur
+            && hadFirstBlur.value
+            && hadFirstFocus.value;
+    })
+
+    const computedValidationGroup = computed(() => {
+
+        if (!ableToRenderValidation.value && props.validation?.defaultValue?.length > 0) {
+            return 1;
+        }
+
+        if (ableToRenderValidation.value) {
+            return 2;
+        }
+
+        if (localValidationStatus.value.length === 0) {
+            if (props.validation?.defaultValue?.length > 0) {
+                return 1;
+            }
+            return 0;
+        }
+
+        return 2;
+    })
+
+    const computedValidationStatus = computed(() => {
+
+        switch (computedValidationGroup.value) {
+            case 1:
+                if (Array.isArray(props.validation?.defaultValue)) {
+                    return props.validation?.defaultValue;
+                }
+                return [];
+
+            case 2:
+                return localValidationStatus.value;
+
+            default:
+                return [];
+        }
+    })
+
     const computedCanRenderValidations = computed(() => {
-            if (localValidationStatus.value.length === 0) return false;
+            if (computedValidationStatus.value.length === 0) return false;
             if (props.validation.report === false || props.validation.report === FieldReportType.Inline) return false;
 
-            if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
+            if (computedValidationGroup.value === 2 && !ableToRenderValidation.value) {
                 return false;
             }
 
@@ -672,7 +761,7 @@
             if (localValidationStatus.value.length === 0) return false;
             if (props.validation.report === false || props.validation.report === FieldReportType.Message) return false;
 
-            if (props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
+            if (!ableToRenderValidation.value) {
                 return false;
             }
 
@@ -1651,7 +1740,7 @@
 
         <lkt-field-validations
             v-if="computedEditable && computedCanRenderValidations"
-            :items="localValidationStatus"
+            :items="computedValidationStatus"
             :stack="validation?.stack" />
 
         <template v-if="ready && (type === FieldType.Select || type === FieldType.Radio || type === FieldType.ToggleButtonGroup)">
