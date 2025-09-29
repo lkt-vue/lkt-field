@@ -41,8 +41,8 @@
         computedClasses = computed(() => {
             let r = [];
 
-            r.push('code-' + props.validation.code);
-            r.push('is-' + props.validation.status);
+            if (props.validation.code) r.push('code-' + props.validation.code);
+            if (props.validation.status) r.push('is-' + props.validation.status);
 
             return r.join(' ');
         }),
@@ -70,19 +70,28 @@
 
 <template>
     <div class="lkt-field-validation-message" :class="computedClasses">
-        <template v-if="computedIconConfig && typeof computedIconConfig === 'string'">
-            <lkt-icon v-bind="<IconConfig>{
-                icon: computedIconConfig
-            }"/>
-        </template>
-        <template v-else-if="computedIconConfig && typeof computedIconConfig === 'object'">
-            <lkt-icon v-bind="computedIconConfig"/>
-        </template>
-        <template v-else-if="hasIconSlot">
+        <template v-if="validation.element?.tag">
             <component
-                :is="iconSlot" />
+                :is="validation.element.tag"
+                :class="validation.element.class"
+                v-bind="validation.element.props"
+            />
         </template>
+        <template v-else>
+            <template v-if="computedIconConfig && typeof computedIconConfig === 'string'">
+                <lkt-icon v-bind="<IconConfig>{
+                    icon: computedIconConfig
+                }"/>
+            </template>
+            <template v-else-if="computedIconConfig && typeof computedIconConfig === 'object'">
+                <lkt-icon v-bind="computedIconConfig"/>
+            </template>
+            <template v-else-if="hasIconSlot">
+                <component
+                    :is="iconSlot" />
+            </template>
 
-        {{ computedMessage }}
+            {{ computedMessage }}
+        </template>
     </div>
 </template>
