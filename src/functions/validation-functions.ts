@@ -1,7 +1,7 @@
 import { Settings } from '../settings/Settings';
-import { FieldValidation, ValidationCode, ValidationStatus } from 'lkt-vue-kernel';
+import { FieldReportLevel, FieldValidation, ValidationCode, ValidationStatus } from 'lkt-vue-kernel';
 
-export const validateAmountOfNumbers = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
+export const validateAmountOfNumbers = (status: FieldValidation[], reportLevel: FieldReportLevel,  value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
         //@ts-ignore
         let constraint = parseInt(min),
@@ -9,6 +9,8 @@ export const validateAmountOfNumbers = (status: FieldValidation[], value: string
 
         if (val.length < constraint) {
             status.push(FieldValidation.createMinNumbers(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMinNumbers(constraint, ValidationStatus.Ok));
         }
     }
 
@@ -19,11 +21,13 @@ export const validateAmountOfNumbers = (status: FieldValidation[], value: string
 
         if (val.length > constraint) {
             status.push(FieldValidation.createMaxNumbers(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMinNumbers(constraint, ValidationStatus.Ok));
         }
     }
 };
 
-export const validateAmountOfUpperChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
+export const validateAmountOfUpperChars = (status: FieldValidation[], reportLevel: FieldReportLevel, value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
         //@ts-ignore
         let constraint = parseInt(min),
@@ -31,6 +35,8 @@ export const validateAmountOfUpperChars = (status: FieldValidation[], value: str
 
         if (val.length < constraint) {
             status.push(FieldValidation.createMinUpperChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMinUpperChars(constraint, ValidationStatus.Ok));
         }
     }
 
@@ -41,11 +47,13 @@ export const validateAmountOfUpperChars = (status: FieldValidation[], value: str
 
         if (val.length > constraint) {
             status.push(FieldValidation.createMaxUpperChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMaxUpperChars(constraint, ValidationStatus.Ok));
         }
     }
 };
 
-export const validateAmountOfLowerChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
+export const validateAmountOfLowerChars = (status: FieldValidation[], reportLevel: FieldReportLevel, value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
         //@ts-ignore
         let constraint = parseInt(min),
@@ -53,6 +61,8 @@ export const validateAmountOfLowerChars = (status: FieldValidation[], value: str
 
         if (val.length < constraint) {
             status.push(FieldValidation.createMinLowerChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMinLowerChars(constraint, ValidationStatus.Ok));
         }
     }
 
@@ -63,11 +73,13 @@ export const validateAmountOfLowerChars = (status: FieldValidation[], value: str
 
         if (val.length > constraint) {
             status.push(FieldValidation.createMaxLowerChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMaxLowerChars(constraint, ValidationStatus.Ok));
         }
     }
 };
 
-export const validateAmountOfChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
+export const validateAmountOfChars = (status: FieldValidation[], reportLevel: FieldReportLevel, value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
         //@ts-ignore
         let constraint = parseInt(min),
@@ -75,6 +87,8 @@ export const validateAmountOfChars = (status: FieldValidation[], value: string, 
 
         if (val.length < constraint) {
             status.push(FieldValidation.createMinChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMinChars(constraint, ValidationStatus.Ok));
         }
     }
 
@@ -85,11 +99,13 @@ export const validateAmountOfChars = (status: FieldValidation[], value: string, 
 
         if (val.length > constraint) {
             status.push(FieldValidation.createMaxChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMaxChars(constraint, ValidationStatus.Ok));
         }
     }
 };
 
-export const validateAmountOfSpecialChars = (status: FieldValidation[], value: string, min: number | string | undefined, max: number | string | undefined) => {
+export const validateAmountOfSpecialChars = (status: FieldValidation[], reportLevel: FieldReportLevel, value: string, min: number | string | undefined, max: number | string | undefined) => {
     if (typeof min !== 'undefined') {
         //@ts-ignore
         let constraint = parseInt(min),
@@ -97,6 +113,8 @@ export const validateAmountOfSpecialChars = (status: FieldValidation[], value: s
 
         if (val.length < constraint) {
             status.push(FieldValidation.createMinSpecialChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMinSpecialChars(constraint, ValidationStatus.Ok));
         }
     }
 
@@ -107,6 +125,8 @@ export const validateAmountOfSpecialChars = (status: FieldValidation[], value: s
 
         if (val.length > constraint) {
             status.push(FieldValidation.createMaxSpecialChars(constraint, ValidationStatus.Ko));
+        } else if (reportLevel === FieldReportLevel.All) {
+            status.push(FieldValidation.createMaxSpecialChars(constraint, ValidationStatus.Ok));
         }
     }
 };

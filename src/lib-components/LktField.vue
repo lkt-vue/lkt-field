@@ -13,6 +13,7 @@
         Field,
         FieldAutoValidationTrigger,
         FieldConfig,
+        FieldReportLevel,
         FieldReportType,
         fieldsWithMultipleMode,
         FieldType,
@@ -108,6 +109,11 @@
 
     const selectOptionsAutoLoaded = ref(false);
     const selectOptionsAutoLoading = ref(false);
+
+    const computedReportLevel = computed(() => {
+        if (props.validation.reportLevel) return props.validation.reportLevel;
+        return FieldReportLevel.Error;
+    })
 
     // Calculated data
     let calculatedModal = extractPropValue(props.modal, props.prop);
@@ -555,8 +561,6 @@
 
     const doValidation = async () => {
 
-        localValidationStatus.value.splice(0, localValidationStatus.value.length);
-
         const remoteValidation = await doRemoteValidation();
         const localValidation = doLocalValidation();
 
@@ -572,7 +576,14 @@
 
         if (props.type === FieldType.Range) return;
 
-        localValidationStatus.value = validationStatus;
+        let crc = new DataState({
+            status: localValidationStatus.value
+        }).increment(validationStatus);
+
+        // localValidationStatus.value.splice(0, localValidationStatus.value.length);
+        if (crc.changed()){
+            localValidationStatus.value = validationStatus;
+        }
 
         isValid.value = validStatus;
         emits('validation-status', validationStatus);
@@ -596,7 +607,8 @@
             if (checkedValue < min || checkedValue > max) {
                 r.push(FieldValidation.createNumBetween(min, max, ValidationStatus.Ko));
                 isValid.value = false;
-                return r;
+
+                if (computedReportLevel.value === FieldReportLevel.Error) return r;
             }
         }
 
@@ -642,7 +654,7 @@
                     }
             }
 
-            if (r.length > 0) return r;
+            if (computedReportLevel.value === FieldReportLevel.Error && r.length > 0) return r;
         }
 
         if (min > 0) {
@@ -690,21 +702,29 @@
         }
 
         if (textFieldTypes.includes(props.type)) {
-            validateAmountOfNumbers(r, checkedValue, props.validation?.minNumbers, props.validation?.maxNumbers);
-            validateAmountOfUpperChars(r, checkedValue, props.validation?.minUpperChars, props.validation?.maxUpperChars);
-            validateAmountOfLowerChars(r, checkedValue, props.validation?.minLowerChars, props.validation?.maxLowerChars);
-            validateAmountOfChars(r, checkedValue, props.validation?.minChars, props.validation?.maxChars);
-            validateAmountOfSpecialChars(r, checkedValue, props.validation?.minSpecialChars, props.validation?.maxSpecialChars);
+            validateAmountOfNumbers(r, computedReportLevel.value, checkedValue, props.validation?.minNumbers, props.validation?.maxNumbers);
+            validateAmountOfUpperChars(r, computedReportLevel.value, checkedValue, props.validation?.minUpperChars, props.validation?.maxUpperChars);
+            validateAmountOfLowerChars(r, computedReportLevel.value, checkedValue, props.validation?.minLowerChars, props.validation?.maxLowerChars);
+            validateAmountOfChars(r, computedReportLevel.value, checkedValue, props.validation?.minChars, props.validation?.maxChars);
+            validateAmountOfSpecialChars(r, computedReportLevel.value, checkedValue, props.validation?.minSpecialChars, props.validation?.maxSpecialChars);
         }
 
-        if (props.validation?.checkEqualTo && checkedValue !== props.validation?.checkEqualTo) {
-            r.push(FieldValidation.createEqualTo(props.validation?.checkEqualTo, ValidationStatus.Ko));
+        if (props.validation?.checkEqualTo) {
+            let valueToCompare = typeof props.validation?.checkEqualTo === 'function' ? props.validation?.checkEqualTo() : props.validation?.checkEqualTo;
+
+            if (checkedValue !== valueToCompare) {
+                r.push(FieldValidation.createEqualTo(valueToCompare, ValidationStatus.Ko));
+            }
         }
 
         return r;
     };
 
     const ableToRenderValidation = computed(() => {
+        if (props.validation?.trigger === false) return false;
+        if (props.validation?.trigger === FieldAutoValidationTrigger.Always) return true;
+        if (props.validation?.trigger === FieldAutoValidationTrigger.Focus && hadFirstFocus.value) return true;
+
         return props.validation?.trigger === FieldAutoValidationTrigger.Blur
             && hadFirstBlur.value
             && hadFirstFocus.value;
@@ -1739,8 +1759,10 @@
         </div>
 
         <lkt-field-validations
-            v-if="computedEditable && computedCanRenderValidations"
+            v-if="computedEditable"
+            v-show="computedCanRenderValidations"
             :items="computedValidationStatus"
+            :config="validation"
             :stack="validation?.stack" />
 
         <template v-if="ready && (type === FieldType.Select || type === FieldType.Radio || type === FieldType.ToggleButtonGroup)">
