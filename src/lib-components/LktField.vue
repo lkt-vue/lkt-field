@@ -769,7 +769,7 @@
 
     const computedCanRenderValidations = computed(() => {
             if (computedValidationStatus.value.length === 0) return false;
-            if (props.validation.report === false || props.validation.report === FieldReportType.Inline) return false;
+            if (props.validation.report === false || props.validation.report === FieldReportType.Inline || !props.validation.report) return false;
 
             if (computedValidationGroup.value === 2 && !ableToRenderValidation.value) {
                 return false;
@@ -778,10 +778,10 @@
             return true;
         }),
         computedCanRenderValidationsInline = computed(() => {
-            if (localValidationStatus.value.length === 0) return false;
-            if (props.validation.report === false || props.validation.report === FieldReportType.Message) return false;
+            if (computedValidationStatus.value.length === 0) return false;
+            if (props.validation.report === false || props.validation.report === FieldReportType.Message || !props.validation.report) return false;
 
-            if (!ableToRenderValidation.value) {
+            if (computedValidationGroup.value === 1 && !ableToRenderValidation.value) {
                 return false;
             }
 
@@ -1662,7 +1662,9 @@
                     <template #tooltip>
                         <lkt-field-validations
                             :items="localValidationStatus"
-                            :stack="validation?.stack" />
+                            :config="validation"
+                            :stack="validation?.stack"
+                        />
                     </template>
                 </lkt-button>
                 <lkt-button

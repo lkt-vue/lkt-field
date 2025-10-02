@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {computed, ref, watch} from "vue";
-import {Settings} from "../../settings/Settings";
+    import { computed, ref, watch } from 'vue';
+    import { Settings } from '../../settings/Settings';
+    import { ButtonConfig, ButtonType } from 'lkt-vue-kernel';
 
-const emit = defineEmits([
+    const emit = defineEmits([
     'click',
     'update:modelValue'
 ]);
@@ -43,12 +44,14 @@ const onClick = () => emit('click');
 
 <template>
     <lkt-button
-        :text="insideEllipsis ? computedText : ''"
-        :title="computedText"
-        :class="computedClass"
-        :icon="computedIcon"
-        @click="onClick"
         v-model:checked="isChecked"
-        hidden-switch
+        v-bind="<ButtonConfig>{
+            type: ButtonType.HiddenSwitch,
+            text: insideEllipsis ? computedText : '',
+            class: computedClass,
+            icon: computedIcon,
+        }"
+        :title="computedText"
+        @click="onClick"
     />
 </template>

@@ -17,7 +17,7 @@
         <template v-if="config.groupConstraints">
             <lkt-button
                 v-bind="<ButtonConfig>{
-                    ...props.config.groupConstraintsButton,
+                    ...config.groupConstraintsButton,
                     type: ButtonType.TooltipEver
                 }">
                 <template #tooltip="{doClose}">
