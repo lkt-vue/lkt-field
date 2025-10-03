@@ -1,4 +1,4 @@
-import { FileBrowserConfig, LktObject } from 'lkt-vue-kernel';
+import { ButtonConfig, FileBrowserConfig, LktObject } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: string;
@@ -16,6 +16,7 @@ type __VLS_Props = {
     tabindex: number;
     isImage?: boolean;
     fileBrowserConfig?: FileBrowserConfig;
+    callToActionButton?: ButtonConfig;
 };
 declare const _default: DefineComponent<__VLS_Props, {
     click: () => void;
@@ -45,6 +46,7 @@ declare const _default: DefineComponent<__VLS_Props, {
     readonly: boolean;
     fileName: string;
     fileBrowserConfig: FileBrowserConfig;
+    callToActionButton: ButtonConfig;
     focusing: boolean;
     isImage: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {

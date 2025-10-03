@@ -1251,6 +1251,7 @@
                     :readonly="readonly"
                     :is-image="type === FieldType.Image"
                     :file-browser-config="fileBrowserConfig"
+                    :call-to-action-button="callToActionButton"
                     @change="onChange"
                     @uploading="onUploading"
                     @upload-success="onUploadSuccess"

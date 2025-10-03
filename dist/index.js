@@ -1,4 +1,4 @@
-import { defineComponent as we, computed as J, resolveComponent as he, createBlock as Y, openBlock as O, mergeProps as ue, normalizeClass as lt, ref as K, watch as ie, unref as M, withCtx as _e, createCommentVNode as ae, createElementVNode as be, createVNode as se, createElementBlock as re, Fragment as Ve, renderList as ut, toDisplayString as wt, normalizeStyle as yl, withDirectives as Me, vModelCheckbox as ko, onMounted as mt, normalizeProps as De, resolveDynamicComponent as ht, withModifiers as So, nextTick as Ne, vModelText as Rt, markRaw as ni, vShow as et, createTextVNode as Xi, useSlots as il, renderSlot as tt, guardReactiveProps as pt, createStaticVNode as xo, createSlots as Nt, mergeDefaults as To, isRef as $e, vModelDynamic as _l } from "vue";
+import { defineComponent as we, computed as J, resolveComponent as he, createBlock as Y, openBlock as O, mergeProps as ue, normalizeClass as lt, ref as K, watch as ie, unref as M, withCtx as _e, createCommentVNode as ae, createElementVNode as be, createVNode as se, createElementBlock as re, Fragment as Ve, renderList as ut, toDisplayString as wt, normalizeStyle as yl, withDirectives as Me, vModelCheckbox as ko, onMounted as mt, normalizeProps as Ie, resolveDynamicComponent as ht, withModifiers as So, nextTick as Ne, vModelText as Rt, markRaw as ni, vShow as et, createTextVNode as Xi, useSlots as il, renderSlot as tt, guardReactiveProps as pt, createStaticVNode as xo, createSlots as Nt, mergeDefaults as To, isRef as $e, vModelDynamic as _l } from "vue";
 import { stripTags as Ji, fill as Eo, lpad as Bt, generateRandomString as Lo, formatNumber as Cl, trim as Bo, isEmail as zo } from "lkt-string-tools";
 import { httpCall as ll } from "lkt-http-client";
 import { getCurrentLanguage as No, getAvailableLanguages as Ro, __ as gn, currentLanguage as Ao } from "lkt-i18n";
@@ -13060,8 +13060,8 @@ function Sr(e, t, n, l, i, s) {
               te = te.cloneNode(!1);
             }
             o.onlyZeroWidthSpace(Re) || Le.appendChild(Re);
-            const Ie = I(Le);
-            for (Ie && (te = Ie), te && (Ue = te), z = xe, R = [], G = ""; z !== Ue && z !== A && z !== null; )
+            const De = I(Le);
+            for (De && (te = De), te && (Ue = te), z = xe, R = [], G = ""; z !== Ue && z !== A && z !== null; )
               Fe = E(z) ? null : c(z), Fe && z.nodeType === 1 && Q(z) && (R.push(Fe), G += z.style.cssText.substr(0, z.style.cssText.indexOf(":")) + "|"), z = z.parentNode;
             const gt = R.pop() || Oe;
             for (q = z = gt; R.length > 0; )
@@ -13073,16 +13073,16 @@ function Sr(e, t, n, l, i, s) {
             const Ue = o.createTextNode(L.nodeType === 1 ? "" : L.substringData(H, L.length - H)), Re = o.createTextNode(P || L.nodeType === 1 ? "" : L.substringData(0, H));
             if (te ? te = te.cloneNode(!1) : E(r.parentNode) && !te && (r = r.cloneNode(!1), $.appendChild(r), U.push(r)), !o.onlyZeroWidthSpace(Ue)) {
               z = xe, G = "", R = [];
-              const Ie = [];
+              const De = [];
               for (; z !== $ && z !== A && z !== null; )
-                z.nodeType === 1 && Q(z) && (E(z) ? Ie.push(z.cloneNode(!1)) : R.push(z.cloneNode(!1)), G += z.style.cssText.substr(0, z.style.cssText.indexOf(":")) + "|"), z = z.parentNode;
-              for (R = R.concat(Ie), Je = q = z = R.pop() || Ue; R.length > 0; )
+                z.nodeType === 1 && Q(z) && (E(z) ? De.push(z.cloneNode(!1)) : R.push(z.cloneNode(!1)), G += z.style.cssText.substr(0, z.style.cssText.indexOf(":")) + "|"), z = z.parentNode;
+              for (R = R.concat(De), Je = q = z = R.pop() || Ue; R.length > 0; )
                 z = R.pop(), q.appendChild(z), q = z;
               $.appendChild(Je), z.textContent = Ue.data;
             }
             if (te && Je) {
-              const Ie = I(Je);
-              Ie && (te = Ie);
+              const De = I(Je);
+              De && (te = De);
             }
             for (z = xe, R = [], G = ""; z !== $ && z !== A && z !== null; )
               Fe = E(z) ? null : c(z), Fe && z.nodeType === 1 && Q(z) && (R.push(Fe), G += z.style.cssText.substr(0, z.style.cssText.indexOf(":")) + "|"), z = z.parentNode;
@@ -13108,14 +13108,14 @@ function Sr(e, t, n, l, i, s) {
             if (E(r.parentNode) && !E(Re) && !o.onlyZeroWidthSpace(r) && (r = r.cloneNode(!1), $.appendChild(r), U.push(r)), !F && !te && E(Re)) {
               r = r.cloneNode(!1);
               const Oe = Re.childNodes;
-              for (let Ie = 0, gt = Oe.length; Ie < gt; Ie++)
-                r.appendChild(Oe[Ie]);
+              for (let De = 0, gt = Oe.length; De < gt; De++)
+                r.appendChild(Oe[De]);
               Re.appendChild(r), $.appendChild(Re), U.push(r), r.children.length > 0 ? Le = z : Le = r;
             } else Re === xe ? F ? Le = $ : Le = r : F ? ($.appendChild(Re), Le = z) : (r.appendChild(Re), Le = z);
             if (te && xe.nodeType === 3)
               if (I(xe)) {
-                const Oe = o.getParentElement(Le, (function(Ie) {
-                  return this._isMaintainedNode(Ie.parentNode) || Ie.parentNode === $;
+                const Oe = o.getParentElement(Le, (function(De) {
+                  return this._isMaintainedNode(De.parentNode) || De.parentNode === $;
                 }).bind(o));
                 te.appendChild(Oe), r = Oe.cloneNode(!1), U.push(r), $.appendChild(r);
               } else
@@ -16386,7 +16386,7 @@ const xr = {
     return (B, a) => {
       const r = he("lkt-button"), c = he("lkt-tag");
       return he("lkt-table"), O(), re(Ve, null, [
-        B.data.fieldType === M(j).ToggleButtonGroup ? (O(), Y(r, De(ue({ key: 0 }, {
+        B.data.fieldType === M(j).ToggleButtonGroup ? (O(), Y(r, Ie(ue({ key: 0 }, {
           icon: i.value,
           text: s.value,
           events: {
@@ -16704,10 +16704,10 @@ const xr = {
             [Rt, S.value]
           ])
         ])) : !z.autoLoading && (V.value || P.value) ? (O(), re("div", Ir, [
-          z.multiple ? (O(), Y(G, De(ue({ key: 0 }, {
+          z.multiple ? (O(), Y(G, Ie(ue({ key: 0 }, {
             icon: z.optionsConfig.icon,
             text: B.value.length
-          })), null, 16)) : B.value.length > 0 ? (O(), Y(G, De(ue({ key: 1 }, {
+          })), null, 16)) : B.value.length > 0 ? (O(), Y(G, Ie(ue({ key: 1 }, {
             icon: B.value[0].icon ?? z.optionsConfig.icon,
             text: B.value[0].label
           })), null, 16)) : ae("", !0),
@@ -16769,7 +16769,7 @@ const xr = {
                   clickIcon: A
                 }
               }), null, 16, ["modelValue"]))
-            ], 64)) : !z.multiple && B.value.length > 0 ? (O(), Y(rt, De(ue({ key: 1 }, {
+            ], 64)) : !z.multiple && B.value.length > 0 ? (O(), Y(rt, Ie(ue({ key: 1 }, {
               item: B.value[0],
               data: {
                 optionSlot: z.optionSlot,
@@ -17098,9 +17098,9 @@ const xr = {
           key: 0,
           class: f.validation.element.class
         }, f.validation.element.props), null, 16, ["class"])) : (O(), re(Ve, { key: 1 }, [
-          u.value && typeof u.value == "string" ? (O(), Y(m, De(ue({ key: 0 }, {
+          u.value && typeof u.value == "string" ? (O(), Y(m, Ie(ue({ key: 0 }, {
             icon: u.value
-          })), null, 16)) : u.value && typeof u.value == "object" ? (O(), Y(m, De(ue({ key: 1 }, u.value)), null, 16)) : l.value ? (O(), Y(ht(i.value), { key: 2 })) : ae("", !0),
+          })), null, 16)) : u.value && typeof u.value == "object" ? (O(), Y(m, Ie(ue({ key: 1 }, u.value)), null, 16)) : l.value ? (O(), Y(ht(i.value), { key: 2 })) : ae("", !0),
           Xi(" " + wt(n.value), 1)
         ], 64))
       ], 2);
@@ -17117,7 +17117,7 @@ const xr = {
     return (t, n) => {
       const l = he("lkt-button");
       return O(), re("div", $r, [
-        t.config.groupConstraints ? (O(), Y(l, De(ue({ key: 0 }, {
+        t.config.groupConstraints ? (O(), Y(l, Ie(ue({ key: 0 }, {
           ...t.config.groupConstraintsButton,
           type: M(qe).TooltipEver
         })), {
@@ -17404,7 +17404,7 @@ const xr = {
                   ], 8, Jr);
                 }), 128))
               ], 2)) : ae("", !0)
-            ], 64)) : o.value.length > 0 ? (O(), Y(rt, De(ue({ key: 1 }, {
+            ], 64)) : o.value.length > 0 ? (O(), Y(rt, Ie(ue({ key: 1 }, {
               item: o.value[0],
               data: {
                 optionSlot: m.optionSlot,
@@ -17425,7 +17425,7 @@ const xr = {
               be("div", { innerHTML: o.value }, null, 8, Qr)
             ]),
             _: 1
-          }, 8, ["title", "modal", "modal-key", "modal-data"])) : m.download ? (O(), Y(rt, De(ue({ key: 8 }, {
+          }, 8, ["title", "modal", "modal-key", "modal-data"])) : m.download ? (O(), Y(rt, Ie(ue({ key: 8 }, {
             item: { value: "", label: o.value },
             data: {
               optionSlot: m.optionSlot,
@@ -17470,7 +17470,8 @@ const xr = {
     readonly: { type: Boolean, default: !1 },
     tabindex: {},
     isImage: { type: Boolean, default: !1 },
-    fileBrowserConfig: { default: void 0 }
+    fileBrowserConfig: { default: void 0 },
+    callToActionButton: { default: void 0 }
   },
   emits: [
     "update:modelValue",
@@ -17589,7 +17590,12 @@ const xr = {
             }, null, 8, ["src"])) : ae("", !0)
           ]),
           _: 1
-        }, 8, ["click-ref", "text", "disabled"]))
+        }, 8, ["click-ref", "text", "disabled"])),
+        S.callToActionButton ? (O(), Y(a, Ie(ue({ key: 3 }, {
+          ...S.callToActionButton,
+          disabled: S.disabled,
+          clickRef: s.value
+        })), null, 16)) : ae("", !0)
       ], 64);
     };
   }
@@ -17633,14 +17639,14 @@ const xr = {
       return O(), re("div", su, [
         be("div", ru, [
           be("header", uu, [
-            se(b, De(pt({
+            se(b, Ie(pt({
               class: "lkt-calendar--day",
               icon: "lkt-icn-triangle-left",
               events: {
                 click: x
               }
             })), null, 16),
-            se(b, De(pt({
+            se(b, Ie(pt({
               type: M(qe).Tooltip,
               text: d.value,
               class: "lkt-calendar--header-text"
@@ -17679,7 +17685,7 @@ const xr = {
               ]),
               _: 1
             }, 16),
-            se(b, De(pt({
+            se(b, Ie(pt({
               class: "lkt-calendar--day",
               icon: "lkt-icn-triangle-right",
               events: {
@@ -17755,7 +17761,7 @@ const xr = {
       d(l.modelValue), v();
     }), (S, x) => {
       const B = he("lkt-field"), a = he("lkt-button");
-      return O(), Y(a, De(pt({
+      return O(), Y(a, Ie(pt({
         type: M(qe).Tooltip,
         icon: S.icon,
         class: "lkt-field--toggle-button",
@@ -17976,7 +17982,7 @@ const xr = {
       o(f.value), f.value = [Bt(s.value, 2, "0"), Bt(u.value, 2, "0")].join(":");
     }), (m, d) => {
       const v = he("lkt-button");
-      return O(), Y(v, De(pt({
+      return O(), Y(v, Ie(pt({
         type: M(qe).Tooltip,
         icon: m.icon,
         class: "lkt-field--toggle-button",
@@ -18493,6 +18499,7 @@ const Cu = /* @__PURE__ */ we({
     customButtonText: {},
     customButtonClass: {},
     createButton: { type: [Object, Boolean] },
+    callToActionButton: { type: [Object, Boolean] },
     events: {},
     canRender: { type: [Boolean, Function] },
     canDisplay: { type: [Boolean, Function] }
@@ -18547,7 +18554,7 @@ const Cu = /* @__PURE__ */ we({
         j.Table,
         j.Radio
       ].includes(s.type) || k > 0 && s.infoButtonEllipsis ? 1 : k;
-    }), q = J(() => Oe.value && a === "i18n" || Ie.value && a === "password" || xe.value && a === "subtract"), G = J(() => z.value > 0), te = J(() => s.autocomplete === !0 ? "on" : "off"), X = J(() => {
+    }), q = J(() => Oe.value && a === "i18n" || De.value && a === "password" || xe.value && a === "subtract"), G = J(() => z.value > 0), te = J(() => s.autocomplete === !0 ? "on" : "off"), X = J(() => {
       var k;
       return [j.Date, j.DateTime].includes(s.type) ? p.value !== "" : [j.Select, j.Radio].includes(s.type) ? (k = s.optionsConfig) != null && k.zeroMeansEmpty ? !(p.value === "" || p.value === 0) : p.value !== "" : L.value !== "";
     }), Q = J(() => s.type === j.Password && g.value === !0 ? "text" : s.type === j.Email ? "email" : s.type === j.Password ? "password" : s.type === j.Number ? "number" : s.type === j.Tel ? "tel" : s.type === j.Search ? "search" : s.type === j.Color ? "color" : s.type === j.Range ? "range" : "text"), ne = J(() => {
@@ -18606,7 +18613,7 @@ const Cu = /* @__PURE__ */ we({
         return k;
       }
       return s.modalData;
-    }), Ge = J(() => typeof T == "function" ? T(s.prop) : Ze(T, s.prop)), Pe = J(() => s.type === j.File ? ee.acceptTypes.file : s.type === j.Image ? ee.acceptTypes.image : ""), Ye = J(() => s.errorMessage), Fe = J(() => s.infoMessage), xe = J(() => s.canStep && fe.value && s.type === j.Number), Ht = J(() => s.canStep && fe.value && s.type === j.Number && a !== "subtract"), Je = J(() => s.canStep && fe.value && s.type === j.Number), Ue = J(() => s.canUndo && F.value && fe.value && !Vo.includes(s.type)), Re = J(() => s.canClear && X.value && fe.value && !Oo.includes(s.type)), Oe = J(() => s.canI18n && typeof p.value == "object" && fe.value), Ie = J(() => s.type === j.Password && s.showPassword && X.value && fe.value), gt = J(() => Ue.value && !s.infoButtonEllipsis), vt = J(() => Re.value && !s.infoButtonEllipsis), Xe = J(() => Ie.value && !s.infoButtonEllipsis && a !== "password"), kt = J(() => Oe.value && !s.infoButtonEllipsis && a !== "i18n"), cl = J(() => s.type === j.Select), fl = J(() => s.allowReadModeSwitch && !s.infoButtonEllipsis), pl = J(() => typeof s.fileUploadButton == "object" && Object.keys(s.fileUploadButton).length > 0), hl = () => {
+    }), Ge = J(() => typeof T == "function" ? T(s.prop) : Ze(T, s.prop)), Pe = J(() => s.type === j.File ? ee.acceptTypes.file : s.type === j.Image ? ee.acceptTypes.image : ""), Ye = J(() => s.errorMessage), Fe = J(() => s.infoMessage), xe = J(() => s.canStep && fe.value && s.type === j.Number), Ht = J(() => s.canStep && fe.value && s.type === j.Number && a !== "subtract"), Je = J(() => s.canStep && fe.value && s.type === j.Number), Ue = J(() => s.canUndo && F.value && fe.value && !Vo.includes(s.type)), Re = J(() => s.canClear && X.value && fe.value && !Oo.includes(s.type)), Oe = J(() => s.canI18n && typeof p.value == "object" && fe.value), De = J(() => s.type === j.Password && s.showPassword && X.value && fe.value), gt = J(() => Ue.value && !s.infoButtonEllipsis), vt = J(() => Re.value && !s.infoButtonEllipsis), Xe = J(() => De.value && !s.infoButtonEllipsis && a !== "password"), kt = J(() => Oe.value && !s.infoButtonEllipsis && a !== "i18n"), cl = J(() => s.type === j.Select), fl = J(() => s.allowReadModeSwitch && !s.infoButtonEllipsis), pl = J(() => typeof s.fileUploadButton == "object" && Object.keys(s.fileUploadButton).length > 0), hl = () => {
       Ne(() => {
         B.value && B.value.focus();
       });
@@ -18931,7 +18938,7 @@ const Cu = /* @__PURE__ */ we({
         }, null, 8, Su)) : ae("", !0),
         be("div", xu, [
           q.value ? (O(), re("div", Tu, [
-            k.featuredButton === "password" && Ie.value ? (O(), Y(Qi, {
+            k.featuredButton === "password" && De.value ? (O(), Y(Qi, {
               key: 0,
               modelValue: g.value,
               "onUpdate:modelValue": Z[0] || (Z[0] = (ze) => g.value = ze),
@@ -19029,12 +19036,13 @@ const Cu = /* @__PURE__ */ we({
                   readonly: k.readonly,
                   "is-image": k.type === M(j).Image,
                   "file-browser-config": k.fileBrowserConfig,
+                  "call-to-action-button": k.callToActionButton,
                   onChange: Qe,
                   onUploading: po,
                   onUploadSuccess: co,
                   onUploadError: fo,
                   onPickedFiles: ho
-                }, null, 8, ["modelValue", "file-name", "id", "tabindex", "resource", "resource-data", "name", "placeholder", "accept", "focusing", "disabled", "readonly", "is-image", "file-browser-config"])) : Ae.value === M(ge).DateInput ? (O(), Y(hu, {
+                }, null, 8, ["modelValue", "file-name", "id", "tabindex", "resource", "resource-data", "name", "placeholder", "accept", "focusing", "disabled", "readonly", "is-image", "file-browser-config", "call-to-action-button"])) : Ae.value === M(ge).DateInput ? (O(), Y(hu, {
                   key: 6,
                   modelValue: p.value,
                   "onUpdate:modelValue": Z[6] || (Z[6] = (oe) => p.value = oe),
@@ -19529,7 +19537,7 @@ const Cu = /* @__PURE__ */ we({
               key: 12,
               "show-undo": Ue.value,
               "show-clear": Re.value,
-              "show-password": Ie.value,
+              "show-password": De.value,
               "show-edition": k.allowReadModeSwitch,
               "show-password-check": g.value,
               "onUpdate:showPasswordCheck": Z[29] || (Z[29] = (ze) => g.value = ze),
@@ -19615,10 +19623,10 @@ const Cu = /* @__PURE__ */ we({
             key: 0,
             class: lt(["lkt-file-entity-picked-indicator", o.value])
           }, null, 2)) : ae("", !0),
-          i.value.type === M(Ke).Directory ? (O(), Y(v, De(ue({ key: 1 }, {
+          i.value.type === M(Ke).Directory ? (O(), Y(v, Ie(ue({ key: 1 }, {
             icon: "lkt-icn-folder",
             text: i.value.name
-          })), null, 16)) : i.value.type === M(Ke).Image ? (O(), Y(T, De(ue({ key: 2 }, {
+          })), null, 16)) : i.value.type === M(Ke).Image ? (O(), Y(T, Ie(ue({ key: 2 }, {
             src: i.value.src,
             text: i.value.name
           })), null, 16)) : ae("", !0)
@@ -19796,7 +19804,7 @@ const Cu = /* @__PURE__ */ we({
               }, 1040))), 256))
             ]),
             be("div", Pu, [
-              u.value ? (O(), Y(b, De(ue({ key: 0 }, {
+              u.value ? (O(), Y(b, Ie(ue({ key: 0 }, {
                 type: M(Ki).Always,
                 icon: S.value,
                 title: u.value.name
@@ -19838,13 +19846,13 @@ const Cu = /* @__PURE__ */ we({
                       u.value.type !== M(Ke).StorageUnit ? {
                         name: "prev-buttons-ever",
                         fn: _e(() => [
-                          se(g, De(pt({
+                          se(g, Ie(pt({
                             icon: "lkt-icn-arrow-left",
                             events: {
                               click: v
                             }
                           })), null, 16),
-                          se(g, De(pt({
+                          se(g, Ie(pt({
                             icon: "lkt-icn-check",
                             disabled: f.value.length === 0,
                             events: {
@@ -19897,7 +19905,7 @@ const Cu = /* @__PURE__ */ we({
                       u.value.type !== M(Ke).StorageUnit ? {
                         name: "prev-buttons-ever",
                         fn: _e(() => [
-                          se(g, De(pt({
+                          se(g, Ie(pt({
                             icon: "lkt-icn-arrow-left",
                             events: {
                               click: v

@@ -29,6 +29,7 @@
         tabindex: number
         isImage?: boolean
         fileBrowserConfig?: FileBrowserConfig
+        callToActionButton?: ButtonConfig
     }>(), {
         modelValue: '',
         resourceData: () => [],
@@ -40,7 +41,8 @@
         disabled: false,
         readonly: false,
         isImage: false,
-        fileBrowserConfig: undefined
+        fileBrowserConfig: undefined,
+        callToActionButton: undefined
     });
 
     const inputElement = ref(null);
@@ -192,4 +194,13 @@
             </template>
         </lkt-image>
     </div>
+
+    <lkt-button
+        v-if="callToActionButton"
+        v-bind="<ButtonConfig>{
+            ...callToActionButton,
+            disabled,
+            clickRef: inputElement
+        }"
+    />
 </template>
