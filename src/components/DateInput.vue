@@ -1,14 +1,13 @@
 <script setup lang="ts">
     import { computed, onMounted, ref, watch } from 'vue';
     import { getVisibleDateValue, isValidDateObject } from '../functions/date-functions';
-    import LktCalendar from '../components/calendar/LktCalendar.vue';
     import { date } from 'lkt-date-tools';
     import { Settings } from '../settings/Settings';
     import {
         ButtonConfig,
         ButtonType,
         FieldConfig,
-        FieldType, IconConfig,
+        FieldType, IconConfig, TooltipConfig,
         TooltipLocationX,
         TooltipLocationY,
     } from 'lkt-vue-kernel';
@@ -26,6 +25,7 @@
         lang: string
         icon: string|IconConfig
         isDateTime: boolean
+        tooltip: TooltipConfig
     }>(), {
         modelValue: '',
     });
@@ -119,14 +119,16 @@
 <template>
     <lkt-button
         v-bind="<ButtonConfig>{
-            type: ButtonType.Tooltip,
+            type: ButtonType.TooltipEver,
             icon,
             class: 'lkt-field--toggle-button',
             text: visibleDateValue,
             tooltip: {
+                ...tooltip,
                 class: 'lkt-field--date--tooltip',
                 locationY: TooltipLocationY.Bottom,
                 locationX: TooltipLocationX.LeftCorner,
+                referrerWidth: true,
             }
         }"
     >

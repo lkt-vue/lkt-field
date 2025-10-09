@@ -1268,6 +1268,7 @@
                     :name="name"
                     :icon="computedIcon"
                     :is-date-time="FieldType.DateTime === type"
+                    :tooltip="tooltipConfig"
                 />
 
                 <time-input
