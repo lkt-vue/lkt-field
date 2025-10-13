@@ -448,3 +448,17 @@ export const pickFirstOption = (args: {
         args.pickedOptions.splice(0, 1, option);
     }
 }
+
+export const getOptionItemContainerClass = (
+    option: OptionConfig,
+    index: number,
+    focusedOptionIndex: number,
+    isEditable: boolean,
+    multiple: boolean,
+) => {
+    let r = [];
+    if (optionIsActive(option, isEditable, multiple)) r.push('is-active');
+    if (focusedOptionIndex === index) r.push('is-focused');
+    if (option.disabled) r.push('is-disabled')
+    return r.join(' ');
+}

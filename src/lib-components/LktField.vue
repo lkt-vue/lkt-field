@@ -73,6 +73,7 @@
     import RadioInput from '@/components/RadioInput.vue';
     import ToggleButtonGroupInput from '@/components/ToggleButtonGroupInput.vue';
     import { ToggleButtonGroupInputProps } from '@/config/ToggleButtonGroupInputProps.ts';
+    import RangeOptsInput from '@/components/RangeOptsInput.vue';
 
     // Emits
     const emits = defineEmits([
@@ -1119,6 +1120,11 @@
             case FieldType.Table:
                 return InternalInputComponent.TableInput;
 
+            case FieldType.Range:
+                if (props.options.length > 0) {
+                    return InternalInputComponent.RangeOptsInput;
+                }
+
             case FieldType.Radio:
                 return InternalInputComponent.RadioInput;
 
@@ -1330,6 +1336,36 @@
                         searchPlaceholder: computedSearchPlaceholder,
                         multipleDisplayEdition: multipleDisplayEdition,
                         prop,
+                        max: MaximumValue,
+                        tooltip: tooltipConfig,
+                        events,
+                        optionValueType,
+                        referrer: container,
+                    }"
+                    @focus="onFocusSelectInput"
+                    @blur="onBlurSelectInput"
+                    @change="onChange"
+                />
+
+                <range-opts-input
+                    v-else-if="computedInternalInput === InternalInputComponent.RangeOptsInput"
+                    ref="inputElement"
+                    v-model="editableValue"
+                    v-model:show-options="showOptions"
+                    v-model:picked-options="pickedOptions"
+                    v-bind="<RangeOptsInputProps>{
+                        searchable,
+                        searchMode,
+                        multiple,
+                        options,
+                        optionsConfig,
+                        optionSlot,
+                        editable: computedEditable,
+                        focusing,
+                        searchPlaceholder: computedSearchPlaceholder,
+                        multipleDisplayEdition: multipleDisplayEdition,
+                        prop,
+                        min: MinimumValue,
                         max: MaximumValue,
                         tooltip: tooltipConfig,
                         events,

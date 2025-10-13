@@ -15,5 +15,6 @@ export declare enum InternalInputComponent {
     SingleCardInput = 13,
     TableInput = 14,
     RadioInput = 15,
-    ToggleButtonGroupInput = 16
+    ToggleButtonGroupInput = 16,
+    RangeOptsInput = 17
 }

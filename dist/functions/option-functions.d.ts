@@ -77,3 +77,4 @@ export declare const pickFirstOption: (args: {
     options: Ref<Array<OptionConfig>>;
     pickedOptions: Array<OptionConfig>;
 }) => void;
+export declare const getOptionItemContainerClass: (option: OptionConfig, index: number, focusedOptionIndex: number, isEditable: boolean, multiple: boolean) => string;
