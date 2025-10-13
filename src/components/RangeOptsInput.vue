@@ -393,9 +393,6 @@
                     if (option.disabled) r.push('is-disabled')
                     return r.join(' ');
                 },
-                itemContainerStyle: (option: OptionConfig, index: number) => {
-                    return getDropdownOptionPosition(option, index);
-                },
                 itemSlotComponent: markRaw(DropdownOption),
                 itemSlotData: {
                     optionSlot,
