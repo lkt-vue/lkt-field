@@ -20,6 +20,31 @@
     color: transparent;
 }
 
+.lkt-field--range-track {
+    border: var(--lkt-field--range-track--border);
+    height: var(--lkt-field--range-track--height);
+    width: 100%;
+    border-radius: var(--lkt-field--range-track--border-radius);
+    background: var(--lkt-field--range-track--background);
+    box-shadow: var(--lkt-field--range-track--box-shadow);
+    padding: var(--lkt-field--range-track--padding);
+    z-index: 1;
+}
+
+.lkt-field--range-track > input[type="range"] {
+    height: 100%;
+    line-height: 1;
+    padding: 0;
+}
+
+.lkt-field--range-opts > .lkt-table-page {
+    padding: var(--lkt-field--range-options--padding);
+}
+
+.lkt-field.is-range.is-editable>.lkt-field-content>.lkt-field-main {
+    overflow: initial;
+}
+
 
 .lkt-field input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -58,56 +83,55 @@
     width: 100%;
     height: var(--lkt-field--range-track--height);
     cursor: pointer;
-    box-shadow: var(--lkt-field--range-track--box-shadow);
-    background: var(--lkt-field--range-track--background);
-    border-radius: var(--lkt-field--range-track--border-radius);
-    border: var(--lkt-field--range-track--border);
-    padding: var(--lkt-field--range-track--padding);
+
+    /* Hides the slider so custom styles can be added */
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
 }
 
 .lkt-field input[type=range]:focus::-webkit-slider-runnable-track {
-    background: var(--lkt-field--range-track--background);
+    background: transparent;
 }
 
 .lkt-field input[type=range]::-moz-range-track {
     width: 100%;
     height: var(--lkt-field--range-track--height);
     cursor: pointer;
-    box-shadow: var(--lkt-field--range-track--box-shadow);
-    background: var(--lkt-field--range-track--background);
-    border-radius: var(--lkt-field--range-track--border-radius);
-    border: var(--lkt-field--range-track--border);
-    padding: var(--lkt-field--range-track--padding);
+
+    /* Hides the slider so custom styles can be added */
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
 }
 
 .lkt-field input[type=range]::-ms-track {
     width: 100%;
     height: var(--lkt-field--range-track--height);
     cursor: pointer;
+
+    /* Hides the slider so custom styles can be added */
     background: transparent;
     border-color: transparent;
-    border-width: 16px 0;
     color: transparent;
-    border-radius: var(--lkt-field--range-track--border-radius);
-    padding: var(--lkt-field--range-track--padding);
 }
 .lkt-field input[type=range]::-ms-fill-lower {
-    background: var(--lkt-field--range-track--background);
-    border: 0.2px solid #010101;
-    border-radius: var(--lkt-field--range-track--border-radius);
-    box-shadow: var(--lkt-field--range-thumb--box-shadow);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 .lkt-field input[type=range]:focus::-ms-fill-lower {
-    background: var(--lkt-field--range-track--background);
+    background: transparent;
 }
 .lkt-field input[type=range]::-ms-fill-upper {
-    background: var(--lkt-field--range-track--background);
-    border: 0.2px solid #010101;
-    border-radius: var(--lkt-field--range-track--border-radius);
-    box-shadow: var(--lkt-field--range-thumb--box-shadow);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 .lkt-field input[type=range]:focus::-ms-fill-upper {
-    background: var(--lkt-field--range-track--background);
+    background: transparent;
 }
 
 .lkt-field.color-range input[type=range] {

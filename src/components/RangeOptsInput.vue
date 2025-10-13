@@ -366,15 +366,17 @@
 
 <template>
     <div class="lkt-field--range-opts">
-        <input
-            ref="inputRef"
-            v-model="editableValue"
-            :value="editableValue"
-            type="range"
-            :min="computedMin"
-            :max="computedMax"
-            :step="step"
-        />
+        <div class="lkt-field--range-track">
+            <input
+                ref="inputRef"
+                v-model="editableValue"
+                :value="editableValue"
+                type="range"
+                :min="computedMin"
+                :max="computedMax"
+                :step="step"
+            />
+        </div>
         <lkt-table
             v-if="ready"
             ref="optionList"

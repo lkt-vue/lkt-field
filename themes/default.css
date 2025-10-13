@@ -153,6 +153,8 @@
     --lkt-field--range-track--box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
     --lkt-field--range-track--padding: 0;
 
+    --lkt-field--range-options--padding: 0;
+
     --lkt-field--range-thumb--background: #2a6495;
     --lkt-field--range-thumb--height: 16px;
     --lkt-field--range-thumb--width: 16px;
