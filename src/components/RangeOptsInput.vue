@@ -326,43 +326,37 @@
             ].join(';');
         }
 
-        if (l % 2 === 0) {
-
-        } else {
-            let middlePoint = (l / 2) - 0.5;
-            if (index === middlePoint) {
-                return [
-                    ...baseStyles,
-                    `left: 50%`,
-                    'transform: translateX(-50%)',
-                ].join(';');
-            }
-
-            // Pending nodes percentage
-            let percentage = 100 / (l - 1);
-
-            // Pending nodes indexes
-            let pendingNodesList = dropdownOptions.value.map((z, i) => i).filter(z => ![0, middlePoint, (l - 1)].includes(z));
-            let nodeIndexKey = pendingNodesList.findIndex(z => z === index);
-            let nodeIndex = pendingNodesList[nodeIndexKey];
-
-            // Nodes before middle point
-            if (index < middlePoint) {
-                return [
-                    ...baseStyles,
-                    `left: calc(${nodeIndex * percentage}% + ${inputPadding}px)`,
-                    'transform: translateX(-50%)',
-                ].join(';');
-            }
-
+        let middlePoint = (l / 2) - 0.5;
+        if (index === middlePoint) {
             return [
                 ...baseStyles,
-                `left: calc(${nodeIndex * percentage}% - ${inputPadding}px)`,
+                `left: 50%`,
                 'transform: translateX(-50%)',
             ].join(';');
         }
 
-        return {};
+        // Pending nodes percentage
+        let percentage = 100 / (l - 1);
+
+        // Pending nodes indexes
+        let pendingNodesList = dropdownOptions.value.map((z, i) => i).filter(z => ![0, middlePoint, (l - 1)].includes(z));
+        let nodeIndexKey = pendingNodesList.findIndex(z => z === index);
+        let nodeIndex = pendingNodesList[nodeIndexKey];
+
+        // Nodes before middle point
+        if (index < middlePoint) {
+            return [
+                ...baseStyles,
+                `left: calc(${nodeIndex * percentage}% + ${inputPadding}px)`,
+                'transform: translateX(-50%)',
+            ].join(';');
+        }
+
+        return [
+            ...baseStyles,
+            `left: calc(${nodeIndex * percentage}% - ${inputPadding}px)`,
+            'transform: translateX(-50%)',
+        ].join(';');
     }
 
     onMounted(() => {
