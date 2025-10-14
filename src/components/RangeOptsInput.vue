@@ -303,18 +303,25 @@
 
     const getDropdownOptionPosition = (option: OptionConfig, index: number) => {
         let l = dropdownOptions.value.length;
-        let inputPadding = window.getComputedStyle(inputRef.value, null).getPropertyValue('padding-left');
+        let inputPadding = window.getComputedStyle(inputRef.value?.closest('.lkt-field--range-track'), null).getPropertyValue('padding-left');
         inputPadding = parseFloat(inputPadding);
+
+        const baseStyles = [
+            'position: absolute',
+            'top: 0',
+        ];
 
         if (index === 0) {
             return [
-                `left: calc(0% + ${inputPadding / 2}px + 20px)`,
+                ...baseStyles,
+                `left: calc(0% + ${inputPadding/2}px)`,
             ].join(';');
         }
 
         if (index === (l - 1)) {
             return [
-                `left: calc(100% - 20px - ${inputPadding}px)`,
+                ...baseStyles,
+                `left: calc(100% - ${inputPadding}px)`,
                 'transform: translateX(-100%)',
             ].join(';');
         }
@@ -325,29 +332,31 @@
             let middlePoint = (l / 2) - 0.5;
             if (index === middlePoint) {
                 return [
+                    ...baseStyles,
                     `left: 50%`,
                     'transform: translateX(-50%)',
                 ].join(';');
             }
 
             // Pending nodes percentage
-            let pendingNodes = l - 3,
-                percentage = 100 / ((pendingNodes + 1) * (pendingNodes / 2));
+            let percentage = 100 / (l - 1);
 
             // Pending nodes indexes
             let pendingNodesList = dropdownOptions.value.map((z, i) => i).filter(z => ![0, middlePoint, (l - 1)].includes(z));
-            let nodeIndex = pendingNodesList.findIndex(z => z === index) + 1;
-            console.log('pendingNodesList: ', pendingNodesList, nodeIndex);
+            let nodeIndexKey = pendingNodesList.findIndex(z => z === index);
+            let nodeIndex = pendingNodesList[nodeIndexKey];
 
             // Nodes before middle point
             if (index < middlePoint) {
                 return [
-                    `left: calc(${nodeIndex * percentage}% - ${inputPadding}px)`,
+                    ...baseStyles,
+                    `left: calc(${nodeIndex * percentage}% + ${inputPadding}px)`,
                     'transform: translateX(-50%)',
                 ].join(';');
             }
 
             return [
+                ...baseStyles,
                 `left: calc(${nodeIndex * percentage}% - ${inputPadding}px)`,
                 'transform: translateX(-50%)',
             ].join(';');
@@ -389,6 +398,14 @@
                 },
                 itemsContainerClass: `lkt-field--dropdown-options lkt-field--range-options`,
                 itemContainerClass: (option: OptionConfig, index: number) => {
+                    let r = [];
+                    if (optionIsActive(option, editableValue, multiple)) r.push('is-active');
+                    if (focusedOptionIndex === index) r.push('is-focused');
+                    if (option.disabled) r.push('is-disabled')
+                    return r.join(' ');
+                },
+                itemContainerStyle: (option: OptionConfig, index: number) => {
+                    return getDropdownOptionPosition(option, index);
                     let r = [];
                     if (optionIsActive(option, editableValue, multiple)) r.push('is-active');
                     if (focusedOptionIndex === index) r.push('is-focused');

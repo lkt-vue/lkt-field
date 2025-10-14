@@ -294,6 +294,10 @@
                 else r.push('is-valid');
             }
 
+            if ([FieldType.Range, FieldType.Radio, FieldType.Select].includes(props.type)) {
+                r.push(`picked-value--${editableValue.value}`);
+            }
+
             if ([FieldType.Textarea, FieldType.Html].includes(props.type)) r.push('is-lg');
             if ([FieldType.Image].includes(props.type)) r.push('is-xl');
             if (props.multiple && [FieldType.Select, FieldType.Radio].includes(props.type)) r.push('is-lg');
