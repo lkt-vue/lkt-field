@@ -8,6 +8,7 @@
         MultipleOptionsDisplay,
         OptionsConfig,
         TableConfig,
+        TableType,
     } from 'lkt-vue-kernel';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import { computed, useSlots } from 'vue';
@@ -138,7 +139,30 @@
         <template v-else>
             <template v-if="type === FieldType.File || type === FieldType.Image">
                 <div class="lkt-field-main">
+                    <lkt-table
+                        v-if="multiple && type === FieldType.Image"
+                        v-model="value"
+                        v-bind="<TableConfig>{
+                            type: TableType.Carousel
+                        }"
+                    >
+                        <template #item="{item, index}">
+                            <div class="lkt-field--toggle-button">
+                                <lkt-image
+                                    v-if="type === FieldType.Image"
+                                    :src="computedValue[index]"
+                                    class="lkt-field--image-cover"
+                                />
+                                <lkt-image
+                                    v-if="type === FieldType.Image"
+                                    :src="computedValue[index]"
+                                    class="lkt-field--image-main"
+                                />
+                            </div>
+                        </template>
+                    </lkt-table>
                     <lkt-button
+                        v-else
                         class="lkt-field--toggle-button"
                         :text="type === FieldType.File ? fileName : ''"
                         disabled

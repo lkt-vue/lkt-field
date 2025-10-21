@@ -74,6 +74,7 @@
     import ToggleButtonGroupInput from '@/components/ToggleButtonGroupInput.vue';
     import { ToggleButtonGroupInputProps } from '@/config/ToggleButtonGroupInputProps.ts';
     import RangeOptsInput from '@/components/RangeOptsInput.vue';
+    import MultipleFileInput from '@/components/MultipleFileInput.vue';
 
     // Emits
     const emits = defineEmits([
@@ -273,7 +274,18 @@
         classes = computed(() => {
             const r = [];
 
-            r.push(`is-${props.type}`);
+            if (props.multiple) {
+                switch(props.type) {
+                    case FieldType.Image:
+                    case FieldType.File:
+                        r.push(`is-${props.type}s`);
+                        break;
+                }
+
+            } else {
+                r.push(`is-${props.type}`);
+            }
+
             if (booleanFieldTypes.includes(props.type)) {
                 r.push('is-boolean');
                 if (editableValue.value) r.push('is-checked');
@@ -1243,6 +1255,31 @@
                     v-model="editableValue"
                     @change="onChange"
                     ref="inputElement" />
+
+                <multiple-file-input
+                    v-else-if="computedInternalInput === InternalInputComponent.FileInput && multiple"
+                    v-model="value"
+                    v-model:file-name="visibleFileName"
+                    ref="inputElement"
+                    :id="Identifier"
+                    :file-upload-http="fileUploadHttp"
+                    :tabindex="tabindex"
+                    :name="name"
+                    :placeholder="computedPlaceholder"
+                    :accept="computedAccept"
+                    :focusing="focusing"
+                    :disabled="computedIsDisabled"
+                    :readonly="readonly"
+                    :is-image="type === FieldType.Image"
+                    :file-browser-config="fileBrowserConfig"
+                    :call-to-action-button="callToActionButton"
+                    :table-config="optionsConfig.table"
+                    @change="onChange"
+                    @uploading="onUploading"
+                    @upload-success="onUploadSuccess"
+                    @upload-error="onUploadError"
+                    @picked-files="onPickedFiles"
+                />
 
                 <file-input
                     v-else-if="computedInternalInput === InternalInputComponent.FileInput"
