@@ -3,7 +3,7 @@
         AnchorConfig,
         booleanFieldTypes,
         FieldReadModeConfig,
-        FieldType,
+        FieldType, fieldTypesWithOptions,
         LktObject,
         MultipleOptionsDisplay,
         OptionsConfig,
@@ -96,7 +96,7 @@
 
     const computedValue = computed(() => {
         let r = props.value;
-        if ([FieldType.Select, FieldType.Radio, FieldType.ToggleButtonGroup].includes(props.type) && props.multiple && !Array.isArray(r)) {
+        if (fieldTypesWithOptions.includes(props.type) && props.multiple && !Array.isArray(r)) {
             r = [];
         }
 
