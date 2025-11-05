@@ -73,6 +73,7 @@
             switch (props.type) {
                 case FieldType.Select:
                 case FieldType.Radio:
+                case FieldType.DayOfWeek:
                 case FieldType.ToggleButtonGroup:
                     if (props.multiple && Array.isArray(props.value) && props.value.length > 0) {
                         return '';
@@ -141,8 +142,8 @@
                 <div class="lkt-field-main">
                     <lkt-table
                         v-if="multiple && type === FieldType.Image"
-                        v-model="value"
                         v-bind="<TableConfig>{
+                            modelValue: value,
                             type: TableType.Carousel
                         }"
                     >
@@ -216,7 +217,7 @@
                 class="lkt-field--read-value"
                 v-html="computedValue" :title="title"/>
             <div
-                v-else-if="[FieldType.Select, FieldType.Radio, FieldType.ToggleButtonGroup].includes(type)"
+                v-else-if="[FieldType.Select, FieldType.Radio, FieldType.DayOfWeek, FieldType.ToggleButtonGroup].includes(type)"
                 class="lkt-field--read-value"
                 :title="title">
 

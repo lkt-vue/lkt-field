@@ -280,6 +280,9 @@
                     case FieldType.File:
                         r.push(`is-${props.type}s`);
                         break;
+
+                    default:
+                        r.push(`is-${props.type}`);
                 }
 
             } else {
@@ -1142,6 +1145,7 @@
                 }
 
             case FieldType.Radio:
+            case FieldType.DayOfWeek:
                 return InternalInputComponent.RadioInput;
 
             case FieldType.ToggleButtonGroup:
@@ -1382,6 +1386,7 @@
                         events,
                         optionValueType,
                         referrer: container,
+                        isDayOfWeek: type === FieldType.DayOfWeek
                     }"
                     @focus="onFocusSelectInput"
                     @blur="onBlurSelectInput"

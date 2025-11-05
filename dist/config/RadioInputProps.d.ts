@@ -4,6 +4,7 @@ export interface RadioInputProps {
     searchable: boolean;
     searchMode: boolean;
     isLoading: boolean;
+    isDayOfWeek: boolean;
     multiple: boolean;
     options: any;
     optionsConfig: OptionsConfig;

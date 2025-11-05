@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { OptionConfig, TableConfig, TableType, ValidFieldValue } from 'lkt-vue-kernel';
+    import { CalendarController, OptionConfig, TableConfig, TableType, ValidFieldValue } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
         canDisplayOption,
@@ -35,7 +35,15 @@
 
     const focusedOptionIndex = ref(-1);
 
-    const dropdownOptions = ref(<Array<OptionConfig>>[...prepareOptions(props.options, props.prop)]);
+    const computedCalendarOptions = computed(() => {
+        if (!props.isDayOfWeek) return [];
+
+        return CalendarController.getDaysAsOptions();
+    })
+
+    const dropdownOptions = ref(<Array<OptionConfig>>[...prepareOptions(
+        props.isDayOfWeek ? computedCalendarOptions.value : props.options
+        , props.prop)]);
 
     const enabledPropsOptionsWatcher = ref(true);
     watch(enabledPropsOptionsWatcher, (v) => {
