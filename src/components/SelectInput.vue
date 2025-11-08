@@ -125,7 +125,15 @@
 
     watch(editableOptions, (v) => {
         emit('update:pickedOptions', v);
-    });
+
+        // Table mode with drag enabled:
+        // Fix in order to keep user order
+        if (props.optionValueType === 'option'
+            && props.multipleDisplayEdition === MultipleOptionsDisplay.Table
+        ) {
+            editableValue.value = editableOptions.value;
+        }
+    }, {deep: true});
 
     /**
      * Options visibility
