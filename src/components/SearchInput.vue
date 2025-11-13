@@ -1,7 +1,16 @@
 <script setup lang="ts">
     import { markRaw, ref, watch } from 'vue';
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
-    import { TableConfig, TableType, TooltipConfig, TooltipLocationX, TooltipLocationY } from 'lkt-vue-kernel';
+    import {
+        FieldEvents,
+        OptionConfig, OptionsConfig,
+        TableConfig,
+        TableType,
+        TooltipConfig,
+        TooltipLocationX,
+        TooltipLocationY,
+    } from 'lkt-vue-kernel';
+    import { canDisplayOption } from '@/functions/option-functions.ts';
 
     const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
@@ -18,8 +27,11 @@
         tabindex: number
         container: HTMLElement
         tooltip: TooltipConfig
+        events: FieldEvents
+        optionsConfig: OptionsConfig
     }>(), {
         modelValue: '',
+        events: () => ({})
     });
 
     const value = ref(props.modelValue);
@@ -103,8 +115,23 @@
                     isTag: false,
                     optionsConfig: {},
                 },
+                itemDisplayChecker: (option: OptionConfig) => {
+                    return canDisplayOption(option, '', true, optionsConfig?.filter)
+                },
                 itemSlotEvents: {
-                    click: cancelBlur
+                    click: (item: OptionConfig, i: number) => {
+                        if (optionsConfig.closeDropdownOnOptionClick) {
+                            hasFocus = false;
+
+                        } else {
+                            cancelBlur();
+                        }
+                        if (typeof events.clickOption === 'function') {
+                            props.events.clickOption({
+                                option: item,
+                            })
+                        }
+                    }
                 }
             }"
             @page="cancelBlur"

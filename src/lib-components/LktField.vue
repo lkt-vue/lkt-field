@@ -1481,6 +1481,8 @@
                     :options-resource="optionsConfig?.http?.resource"
                     :container="container"
                     :tooltip="tooltipConfig"
+                    :events="events"
+                    :options-config="optionsConfig"
                     @focus="onFocusBooleanInput"
                     @blur="onBlurBooleanInput"
                 />

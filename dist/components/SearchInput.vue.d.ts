@@ -1,4 +1,4 @@
-import { TooltipConfig } from 'lkt-vue-kernel';
+import { FieldEvents, OptionsConfig, TooltipConfig } from 'lkt-vue-kernel';
 import { DefineComponent, ComponentOptionsMixin, PublicProps, ComponentProvideOptions } from 'vue';
 type __VLS_Props = {
     modelValue: string;
@@ -13,6 +13,8 @@ type __VLS_Props = {
     tabindex: number;
     container: HTMLElement;
     tooltip: TooltipConfig;
+    events: FieldEvents;
+    optionsConfig: OptionsConfig;
 };
 declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     "update:modelValue": (...args: any[]) => void;
@@ -23,6 +25,7 @@ declare const _default: DefineComponent<__VLS_Props, {}, {}, {}, {}, ComponentOp
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
 }>, {
+    events: FieldEvents;
     modelValue: string;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
     input: HTMLInputElement;
