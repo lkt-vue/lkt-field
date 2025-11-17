@@ -190,6 +190,15 @@
             {{ computedText }}
         </div>
 
+        <component
+            v-if="data.optionsConfig?.extendedContentSlotComponent"
+            :is="data.optionsConfig.extendedContentSlotComponent"
+            v-bind="{
+                ...data.optionsConfig.extendedContentSlotData,
+                item
+            }"
+        />
+
         <lkt-tag
             v-for="tag in computedTags"
             v-bind="tag"

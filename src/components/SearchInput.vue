@@ -113,7 +113,7 @@
                     editable,
                     prop: {},
                     isTag: false,
-                    optionsConfig: {},
+                    optionsConfig,
                 },
                 itemDisplayChecker: (option: OptionConfig) => {
                     return canDisplayOption(option, '', true, optionsConfig?.filter)

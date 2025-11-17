@@ -14,15 +14,22 @@
     });
 
     const computedMessage = computed(() => {
-            let msg = getCodeMessage(props.validation.code, props.stack),
+            let msg = '',
                 replacements = {
                     min: props.validation.min,
                     max: props.validation.max,
                     value: props.validation.equalToValue,
                 };
 
-            let statusMsg = getCodeMessage(props.validation.status + '-' + props.validation.code, props.stack);
-            if (statusMsg) msg = statusMsg;
+            if (props.validation.text && props.validation.text !== '') {
+                msg = props.validation.text;
+            } else {
+
+                msg = getCodeMessage(props.validation.code, props.stack);
+
+                let statusMsg = getCodeMessage(props.validation.status + '-' + props.validation.code, props.stack);
+                if (statusMsg) msg = statusMsg;
+            }
 
             if (!msg) return props.validation.code;
 

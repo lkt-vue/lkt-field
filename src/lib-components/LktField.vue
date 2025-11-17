@@ -581,18 +581,23 @@
 
     const doValidation = async () => {
 
-        const remoteValidation = await doRemoteValidation();
-        const localValidation = doLocalValidation();
+        let validationStatus: Array<string> = [];
 
-        const validationStatus = [...remoteValidation, ...localValidation];
+        if (props.validation.type === FieldValidationType.External) {
+            if (props.validation.defaultValue !== undefined) {
+                validationStatus = [...props.validation.defaultValue];
+            }
+
+        } else {
+            const remoteValidation = await doRemoteValidation();
+            const localValidation = doLocalValidation();
+
+            validationStatus = [...remoteValidation, ...localValidation];
+        }
 
         let validStatus = validationStatus.filter(v => v.status === ValidationStatus.Ko).length === 0;
 
         isFormValid.value = validStatus;
-
-        // if (!initialValidation && props.validation?.trigger === FieldAutoValidationTrigger.Blur && (!hadFirstBlur.value || !hadFirstFocus.value)) {
-        //     return;
-        // }
 
         if (props.type === FieldType.Range) return;
 
@@ -600,8 +605,8 @@
             status: localValidationStatus.value
         }).increment(validationStatus);
 
-        // localValidationStatus.value.splice(0, localValidationStatus.value.length);
         if (crc.changed()){
+            localValidationStatus.value.splice(0, localValidationStatus.value.length - 1)
             localValidationStatus.value = validationStatus;
         }
 
@@ -743,6 +748,7 @@
     const ableToRenderValidation = computed(() => {
         if (props.validation?.trigger === false) return false;
         if (props.validation?.trigger === FieldAutoValidationTrigger.Always) return true;
+        if (props.validation?.type === FieldValidationType.External && props.validation?.defaultValue.length > 0) return true;
         if (props.validation?.trigger === FieldAutoValidationTrigger.Focus && hadFirstFocus.value) return true;
 
         return props.validation?.trigger === FieldAutoValidationTrigger.Blur
@@ -751,6 +757,13 @@
     })
 
     const computedValidationGroup = computed(() => {
+
+        if (props.validation.type === FieldValidationType.External) {
+            if (localValidationStatus.value.length > 0) {
+                return 3;
+            }
+            return 0;
+        }
 
         if (!ableToRenderValidation.value && props.validation?.defaultValue?.length > 0) {
             return 1;
@@ -780,6 +793,7 @@
                 return [];
 
             case 2:
+            case 3:
                 return localValidationStatus.value;
 
             default:
