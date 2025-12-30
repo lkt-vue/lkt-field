@@ -303,6 +303,7 @@
             if (showOptions.value) r.push('show-options');
             if (props.searchable && searchMode.value) r.push('is-searching');
             if (props.hidden) r.push('lkt-hidden-field');
+            if (props.class) r.push(props.class);
 
             if (props.type !== FieldType.Range && props.validation?.type === FieldValidationType.Auto && hadFirstFocus.value && hadFirstBlur.value) {
                 if (localValidationStatus.value.length > 0) r.push('is-invalid');

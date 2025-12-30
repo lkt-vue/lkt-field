@@ -18719,6 +18719,7 @@ const gu = /* @__PURE__ */ we({
   props: /* @__PURE__ */ Eo({
     modelValue: { type: [String, Number, Boolean, Object, Array] },
     type: {},
+    class: {},
     valid: { type: Boolean },
     placeholder: {},
     searchPlaceholder: {},
@@ -18852,7 +18853,7 @@ const gu = /* @__PURE__ */ we({
         }
       else
         V.push(`is-${s.type}`);
-      return pt.includes(s.type) && (V.push("is-boolean"), E.value && V.push("is-checked")), W.value && V.push("is-changed"), R.value && V.push("is-disabled"), s.multiple && V.push("is-multiple"), j.value && V.push("with-atn-btn"), G.value && V.push("with-info-btn"), s.mandatory && fe.value && V.push("is-mandatory-field"), fe.value && y.value && V.push("has-focus"), N.value && V.push("show-options"), s.searchable && U.value && V.push("is-searching"), s.hidden && V.push("lkt-hidden-field"), s.type !== Z.Range && ((q = s.validation) == null ? void 0 : q.type) === ri.Auto && C.value && _.value && (w.value.length > 0 ? V.push("is-invalid") : V.push("is-valid")), [Z.Range, Z.Radio, Z.Select].includes(s.type) && V.push(`picked-value--${E.value}`), [Z.Textarea, Z.Html].includes(s.type) && V.push("is-lg"), [Z.Image].includes(s.type) && V.push("is-xl"), s.multiple && [Z.Select, Z.Radio].includes(s.type) && V.push("is-lg"), s.multiple && (fe.value ? V.push(`has-multiple-display-${s.multipleDisplayEdition}`) : V.push(`has-multiple-display-${s.multipleDisplay}`)), A.value > 0 && V.push("has-icons", `has-icons-${A.value}`), V.push(fe.value ? "is-editable" : "is-read"), s.type !== Z.Range && (V.push(p.value ? "is-valid" : "is-error"), V.push(J.value ? "is-filled" : "is-empty")), V.join(" ");
+      return pt.includes(s.type) && (V.push("is-boolean"), E.value && V.push("is-checked")), W.value && V.push("is-changed"), R.value && V.push("is-disabled"), s.multiple && V.push("is-multiple"), j.value && V.push("with-atn-btn"), G.value && V.push("with-info-btn"), s.mandatory && fe.value && V.push("is-mandatory-field"), fe.value && y.value && V.push("has-focus"), N.value && V.push("show-options"), s.searchable && U.value && V.push("is-searching"), s.hidden && V.push("lkt-hidden-field"), s.class && V.push(s.class), s.type !== Z.Range && ((q = s.validation) == null ? void 0 : q.type) === ri.Auto && C.value && _.value && (w.value.length > 0 ? V.push("is-invalid") : V.push("is-valid")), [Z.Range, Z.Radio, Z.Select].includes(s.type) && V.push(`picked-value--${E.value}`), [Z.Textarea, Z.Html].includes(s.type) && V.push("is-lg"), [Z.Image].includes(s.type) && V.push("is-xl"), s.multiple && [Z.Select, Z.Radio].includes(s.type) && V.push("is-lg"), s.multiple && (fe.value ? V.push(`has-multiple-display-${s.multipleDisplayEdition}`) : V.push(`has-multiple-display-${s.multipleDisplay}`)), A.value > 0 && V.push("has-icons", `has-icons-${A.value}`), V.push(fe.value ? "is-editable" : "is-read"), s.type !== Z.Range && (V.push(p.value ? "is-valid" : "is-error"), V.push(J.value ? "is-filled" : "is-empty")), V.join(" ");
     }), de = X(() => {
       var V;
       return typeof E.value == "number" ? (M.value, (V = ee.langNumberFormat[M.value]) != null && V.amountOfDecimals ? xl(
