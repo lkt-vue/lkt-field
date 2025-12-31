@@ -172,6 +172,7 @@ export const handleOptionClickMultiple = (args: {
     option: OptionConfig,
     value: Ref<Array<OptionConfig|ValidOptionValue>>
     pickedOptions: Ref<Array<OptionConfig>>
+    dropdownOptions: Array<OptionConfig>
     tagMode: boolean
     searchMode: boolean
     optionValueType: string | 'option'
@@ -185,12 +186,12 @@ export const handleOptionClickMultiple = (args: {
     let k:number[] = [];
 
     if (args.optionValueType === 'option') {
-        k = getInValueOptionIndexes(args.option, args.value.value?.value);
+        k = getInPickedOptionOptionIndexes(args.option, args.value.value);
     } else {
         k = getInValueOptionIndexes(args.option, <Array<ValidOptionValue>>args.value.value);
     }
 
-    let inPickedOptionsIndexes:number[] = getInPickedOptionOptionIndexes(args.option, args.pickedOptions.value);
+    console.log('handleOptionClickMultiple: ', k)
 
     if (k.length === 0) {
         if (args.optionValueType === 'option') {
@@ -207,14 +208,29 @@ export const handleOptionClickMultiple = (args: {
 
     } else if (!args.tagMode) {
 
-        inPickedOptionsIndexes.forEach(removeIndexKey => {
-            args.pickedOptions.value.splice(removeIndexKey, 1);
-        })
+        // let inPickedOptionsIndexes:number[] = getInPickedOptionOptionIndexes(args.option, args.pickedOptions.value);
+        // inPickedOptionsIndexes.forEach(removeIndexKey => {
+        //     args.pickedOptions.value.splice(removeIndexKey, 1);
+        // })
 
         k.forEach(removeIndexKey => {
             args.value.value.splice(removeIndexKey, 1);
         })
+
+        syncPickedOptions({
+            value: args.value,
+            options: args.dropdownOptions,
+            pickedOptions: args.pickedOptions,
+            multiple: true,
+            optionValueType: args.optionValueType,
+            optionsConfig: args.optionsConfig,
+        });
     }
+
+    if (args.optionValueType === 'option') {
+        args.value.value = removeDuplicatedOptions(args.value.value);
+    }
+    args.pickedOptions.value = removeDuplicatedOptions(args.pickedOptions.value);
 
     if (typeof args.keepFocused === 'function') {
         //@ts-ignore
@@ -235,7 +251,7 @@ export const handleOptionClickMultiple = (args: {
 export const syncPickedOptions = (args: {
     value: Ref<OptionConfig|ValidOptionValue|Array<OptionConfig|ValidOptionValue>>
     options: Array<OptionConfig>
-    pickedOptions: Array<OptionConfig>
+    pickedOptions: Ref<Array<OptionConfig>>
     multiple: boolean
     optionValueType: string | 'option'
     optionsConfig?: OptionsConfig
@@ -244,7 +260,7 @@ export const syncPickedOptions = (args: {
         let l = args.options.length;
         for (let i = 0; i < l; ++i) {
             let option = args.optionValueType === 'option'
-                ? findOptionByValue(args.options, args.value.value[i].value)
+                ? findOptionByValue(args.options, args.value.value[i]?.value)
                 : (args.optionsConfig?.typeCasting === 'int'
                         ? findOptionByValue(args.options, parseInt(args.value.value[i]))
                         : findOptionByValue(args.options, args.value.value[i])
@@ -252,10 +268,10 @@ export const syncPickedOptions = (args: {
             ;
 
             if (typeof option !== 'undefined') {
-                if (args.pickedOptions.length === 0) {
-                    args.pickedOptions.push(option);
+                if (args.pickedOptions.value.length === 0) {
+                    args.pickedOptions.value.push(option);
                 } else {
-                    args.pickedOptions.splice(i, 1, option);
+                    args.pickedOptions.value.splice(i, 1, option);
                 }
             }
         }
@@ -272,10 +288,10 @@ export const syncPickedOptions = (args: {
     ;
 
     if (typeof option !== 'undefined') {
-        if (args.pickedOptions.length === 0) {
-            args.pickedOptions.push(option);
+        if (args.pickedOptions.value.length === 0) {
+            args.pickedOptions.value.push(option);
         } else {
-            args.pickedOptions.splice(0, 1, option);
+            args.pickedOptions.value.splice(0, 1, option);
         }
     }
 }

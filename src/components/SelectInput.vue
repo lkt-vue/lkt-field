@@ -378,6 +378,7 @@
                 option,
                 value: editableValue,
                 pickedOptions: editableOptions,
+                dropdownOptions: dropdownOptions.value,
                 tagMode: tagsEnabled,
                 searchMode: props.searchable,
                 keepFocused,
@@ -411,7 +412,7 @@
             syncPickedOptions({
                 value: editableValue,
                 options: dropdownOptions.value,
-                pickedOptions: editableOptions.value,
+                pickedOptions: editableOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
                 optionsConfig: props.optionsConfig,
@@ -420,7 +421,7 @@
             syncPickedOptions({
                 value: editableValue,
                 options: dropdownOptions.value,
-                pickedOptions: editableOptions.value,
+                pickedOptions: editableOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
                 optionsConfig: props.optionsConfig,
@@ -568,7 +569,7 @@
         @blur="onBlurSelectButton"
         @focus="onFocusSelectButton"
     >
-        <template v-if="tagsEnabled || (multiple && editableOptions.length > 0)">
+        <template v-if="tagsEnabled || (multiple && (multipleDisplayEdition === MultipleOptionsDisplay.Table || editableOptions.length > 0))">
             <div v-if="multipleDisplayEdition === MultipleOptionsDisplay.Count">
                 {{ editableOptions.length }}
             </div>

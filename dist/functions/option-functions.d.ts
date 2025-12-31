@@ -25,6 +25,7 @@ export declare const handleOptionClickMultiple: (args: {
     option: OptionConfig;
     value: Ref<Array<OptionConfig | ValidOptionValue>>;
     pickedOptions: Ref<Array<OptionConfig>>;
+    dropdownOptions: Array<OptionConfig>;
     tagMode: boolean;
     searchMode: boolean;
     optionValueType: string | "option";
@@ -36,7 +37,7 @@ export declare const handleOptionClickMultiple: (args: {
 export declare const syncPickedOptions: (args: {
     value: Ref<OptionConfig | ValidOptionValue | Array<OptionConfig | ValidOptionValue>>;
     options: Array<OptionConfig>;
-    pickedOptions: Array<OptionConfig>;
+    pickedOptions: Ref<Array<OptionConfig>>;
     multiple: boolean;
     optionValueType: string | "option";
     optionsConfig?: OptionsConfig;

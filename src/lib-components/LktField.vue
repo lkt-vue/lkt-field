@@ -216,6 +216,11 @@
             return props.disabled;
         }),
         amountOfIcons = computed(() => {
+
+            if (!computedEditable.value) {
+                return 0;
+            }
+
             let r = 0;
 
             if (computedShowUndoInNav.value) ++r;

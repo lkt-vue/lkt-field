@@ -245,6 +245,7 @@
                 option,
                 value: editableValue,
                 pickedOptions: editableOptions,
+                dropdownOptions: dropdownOptions.value,
                 tagMode: false,
                 searchMode: props.searchable,
                 keepFocused,
@@ -276,7 +277,7 @@
             syncPickedOptions({
                 value: editableValue,
                 options: dropdownOptions.value,
-                pickedOptions: editableOptions.value,
+                pickedOptions: editableOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
                 optionsConfig: props.optionsConfig,
@@ -285,7 +286,7 @@
             syncPickedOptions({
                 value: editableValue,
                 options: dropdownOptions.value,
-                pickedOptions: editableOptions.value,
+                pickedOptions: editableOptions,
                 multiple: props.multiple,
                 optionValueType: props.optionValueType,
                 optionsConfig: props.optionsConfig,
