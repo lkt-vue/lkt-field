@@ -16258,7 +16258,7 @@ const Tr = {
 }, qi = (e) => {
   if (e.option.disabled) return !1;
   let t;
-  return e.optionValueType === "option" ? t = Nr(e) : t = zr(e), console.log("handleOptionClickMultiple: ", t), ft({
+  return e.optionValueType === "option" ? t = Nr(e) : t = zr(e), t !== 3 && ft({
     value: e.value,
     options: e.dropdownOptions,
     pickedOptions: e.pickedOptions,

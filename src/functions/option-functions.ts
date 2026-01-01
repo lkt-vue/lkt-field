@@ -272,68 +272,16 @@ export const handleOptionClickMultiple = (args: {
         status = _handlePrimitiveOptionClickForMultipleValue(args);
     }
 
-    console.log('handleOptionClickMultiple: ', status)
-
-    syncPickedOptions({
-        value: args.value,
-        options: args.dropdownOptions,
-        pickedOptions: args.pickedOptions,
-        multiple: true,
-        optionValueType: args.optionValueType,
-        optionsConfig: args.optionsConfig,
-    });
-
-
-    // return;
-    //
-    // let k:number[] = [];
-    //
-    // if (args.optionValueType === 'option') {
-    //     k = getInPickedOptionOptionIndexes(args.option, args.value.value);
-    // } else {
-    //     k = getInValueOptionIndexes(args.option, <Array<ValidOptionValue>>args.value.value);
-    // }
-    //
-    // console.log('handleOptionClickMultiple: ', k)
-    //
-    // if (k.length === 0) {
-    //     if (args.optionValueType === 'option') {
-    //         args.value.value.push(args.option);
-    //     } else {
-    //         if (args.optionsConfig?.typeCasting === 'int') {
-    //             //@ts-ignore
-    //             args.value.value.push(parseInt(args.option.value));
-    //         } else {
-    //             args.value.value.push(String(args.option.value));
-    //         }
-    //     }
-    //     if (!args.tagMode) args.pickedOptions.value.push(args.option);
-    //
-    // } else if (!args.tagMode) {
-    //
-    //     // let inPickedOptionsIndexes:number[] = getInPickedOptionOptionIndexes(args.option, args.pickedOptions.value);
-    //     // inPickedOptionsIndexes.forEach(removeIndexKey => {
-    //     //     args.pickedOptions.value.splice(removeIndexKey, 1);
-    //     // })
-    //
-    //     k.forEach(removeIndexKey => {
-    //         args.value.value.splice(removeIndexKey, 1);
-    //     })
-    //
-    //     syncPickedOptions({
-    //         value: args.value,
-    //         options: args.dropdownOptions,
-    //         pickedOptions: args.pickedOptions,
-    //         multiple: true,
-    //         optionValueType: args.optionValueType,
-    //         optionsConfig: args.optionsConfig,
-    //     });
-    // }
-
-    // if (args.optionValueType === 'option') {
-    //     args.value.value = removeDuplicatedOptions(args.value.value);
-    // }
-    // args.pickedOptions.value = removeDuplicatedOptions(args.pickedOptions.value);
+    if (status !== 3) {
+        syncPickedOptions({
+            value: args.value,
+            options: args.dropdownOptions,
+            pickedOptions: args.pickedOptions,
+            multiple: true,
+            optionValueType: args.optionValueType,
+            optionsConfig: args.optionsConfig,
+        });
+    }
 
     if (typeof args.keepFocused === 'function') {
         //@ts-ignore
