@@ -168,6 +168,87 @@ export const handleOptionClickSingle = (args: {
     return true;
 }
 
+
+
+export const _handlePrimitiveOptionClickForMultipleValue = (args: {
+    option: OptionConfig,
+    value: Ref<Array<ValidOptionValue>>
+    pickedOptions: Ref<Array<OptionConfig>>
+    dropdownOptions: Array<OptionConfig>
+    tagMode: boolean
+    searchMode: boolean
+    optionValueType: string | 'option'
+    searchField?: Component|null
+    callback?: Function
+    keepFocused?: Function
+    optionsConfig?: OptionsConfig
+}): number => {
+
+    let already = false,
+        j: number[] = [];
+    args.value.value?.forEach((v, i) => {
+        if (v == args.option.value) {
+            already = true;
+            j.push(i);
+        }
+    })
+
+    if (already) {
+        if (args.tagMode) return 3;
+        j.forEach(i => {
+            args.value.value.splice(i, 1);
+        })
+        return 1;
+
+    } else {
+        let v = args.option.value;
+        if (args.optionsConfig?.typeCasting === 'int') {
+            //@ts-ignore
+            v = parseInt(v);
+        } else {
+            v = String(v);
+        }
+        args.value.value.push(v);
+        return 2;
+    }
+};
+
+export const _handleObjectOptionClickForMultipleValue = (args: {
+    option: OptionConfig,
+    value: Ref<Array<OptionConfig>>
+    pickedOptions: Ref<Array<OptionConfig>>
+    dropdownOptions: Array<OptionConfig>
+    tagMode: boolean
+    searchMode: boolean
+    optionValueType: string | 'option'
+    searchField?: Component|null
+    callback?: Function
+    keepFocused?: Function
+    optionsConfig?: OptionsConfig
+}): number => {
+
+    let already = false,
+        j: number[] = [];
+
+    args.value.value?.forEach((v, i) => {
+        if (v.value == args.option.value) {
+            already = true;
+            j.push(i);
+        }
+    })
+
+    if (already) {
+        if (args.tagMode) return 3;
+        j.forEach(i => {
+            args.value.value.splice(i, 1);
+        })
+        return 1;
+    } else {
+        args.value.value.push(args.option);
+        return 2;
+    }
+};
+
 export const handleOptionClickMultiple = (args: {
     option: OptionConfig,
     value: Ref<Array<OptionConfig|ValidOptionValue>>
@@ -183,54 +264,76 @@ export const handleOptionClickMultiple = (args: {
 }) => {
     if (args.option.disabled) return false;
 
-    let k:number[] = [];
+    let status;
 
     if (args.optionValueType === 'option') {
-        k = getInPickedOptionOptionIndexes(args.option, args.value.value);
+        status = _handleObjectOptionClickForMultipleValue(args);
     } else {
-        k = getInValueOptionIndexes(args.option, <Array<ValidOptionValue>>args.value.value);
+        status = _handlePrimitiveOptionClickForMultipleValue(args);
     }
 
-    console.log('handleOptionClickMultiple: ', k)
+    console.log('handleOptionClickMultiple: ', status)
 
-    if (k.length === 0) {
-        if (args.optionValueType === 'option') {
-            args.value.value.push(args.option);
-        } else {
-            if (args.optionsConfig?.typeCasting === 'int') {
-                //@ts-ignore
-                args.value.value.push(parseInt(args.option.value));
-            } else {
-                args.value.value.push(String(args.option.value));
-            }
-        }
-        if (!args.tagMode) args.pickedOptions.value.push(args.option);
+    syncPickedOptions({
+        value: args.value,
+        options: args.dropdownOptions,
+        pickedOptions: args.pickedOptions,
+        multiple: true,
+        optionValueType: args.optionValueType,
+        optionsConfig: args.optionsConfig,
+    });
 
-    } else if (!args.tagMode) {
 
-        // let inPickedOptionsIndexes:number[] = getInPickedOptionOptionIndexes(args.option, args.pickedOptions.value);
-        // inPickedOptionsIndexes.forEach(removeIndexKey => {
-        //     args.pickedOptions.value.splice(removeIndexKey, 1);
-        // })
+    // return;
+    //
+    // let k:number[] = [];
+    //
+    // if (args.optionValueType === 'option') {
+    //     k = getInPickedOptionOptionIndexes(args.option, args.value.value);
+    // } else {
+    //     k = getInValueOptionIndexes(args.option, <Array<ValidOptionValue>>args.value.value);
+    // }
+    //
+    // console.log('handleOptionClickMultiple: ', k)
+    //
+    // if (k.length === 0) {
+    //     if (args.optionValueType === 'option') {
+    //         args.value.value.push(args.option);
+    //     } else {
+    //         if (args.optionsConfig?.typeCasting === 'int') {
+    //             //@ts-ignore
+    //             args.value.value.push(parseInt(args.option.value));
+    //         } else {
+    //             args.value.value.push(String(args.option.value));
+    //         }
+    //     }
+    //     if (!args.tagMode) args.pickedOptions.value.push(args.option);
+    //
+    // } else if (!args.tagMode) {
+    //
+    //     // let inPickedOptionsIndexes:number[] = getInPickedOptionOptionIndexes(args.option, args.pickedOptions.value);
+    //     // inPickedOptionsIndexes.forEach(removeIndexKey => {
+    //     //     args.pickedOptions.value.splice(removeIndexKey, 1);
+    //     // })
+    //
+    //     k.forEach(removeIndexKey => {
+    //         args.value.value.splice(removeIndexKey, 1);
+    //     })
+    //
+    //     syncPickedOptions({
+    //         value: args.value,
+    //         options: args.dropdownOptions,
+    //         pickedOptions: args.pickedOptions,
+    //         multiple: true,
+    //         optionValueType: args.optionValueType,
+    //         optionsConfig: args.optionsConfig,
+    //     });
+    // }
 
-        k.forEach(removeIndexKey => {
-            args.value.value.splice(removeIndexKey, 1);
-        })
-
-        syncPickedOptions({
-            value: args.value,
-            options: args.dropdownOptions,
-            pickedOptions: args.pickedOptions,
-            multiple: true,
-            optionValueType: args.optionValueType,
-            optionsConfig: args.optionsConfig,
-        });
-    }
-
-    if (args.optionValueType === 'option') {
-        args.value.value = removeDuplicatedOptions(args.value.value);
-    }
-    args.pickedOptions.value = removeDuplicatedOptions(args.pickedOptions.value);
+    // if (args.optionValueType === 'option') {
+    //     args.value.value = removeDuplicatedOptions(args.value.value);
+    // }
+    // args.pickedOptions.value = removeDuplicatedOptions(args.pickedOptions.value);
 
     if (typeof args.keepFocused === 'function') {
         //@ts-ignore

@@ -21,6 +21,32 @@ export declare const handleOptionClickSingle: (args: {
     callback?: Function;
     optionsConfig?: OptionsConfig;
 }) => boolean;
+export declare const _handlePrimitiveOptionClickForMultipleValue: (args: {
+    option: OptionConfig;
+    value: Ref<Array<ValidOptionValue>>;
+    pickedOptions: Ref<Array<OptionConfig>>;
+    dropdownOptions: Array<OptionConfig>;
+    tagMode: boolean;
+    searchMode: boolean;
+    optionValueType: string | "option";
+    searchField?: Component | null;
+    callback?: Function;
+    keepFocused?: Function;
+    optionsConfig?: OptionsConfig;
+}) => number;
+export declare const _handleObjectOptionClickForMultipleValue: (args: {
+    option: OptionConfig;
+    value: Ref<Array<OptionConfig>>;
+    pickedOptions: Ref<Array<OptionConfig>>;
+    dropdownOptions: Array<OptionConfig>;
+    tagMode: boolean;
+    searchMode: boolean;
+    optionValueType: string | "option";
+    searchField?: Component | null;
+    callback?: Function;
+    keepFocused?: Function;
+    optionsConfig?: OptionsConfig;
+}) => number;
 export declare const handleOptionClickMultiple: (args: {
     option: OptionConfig;
     value: Ref<Array<OptionConfig | ValidOptionValue>>;

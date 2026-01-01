@@ -182,6 +182,7 @@
         buttonBlurTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
     const onBlurQueryInput = (event: Event) => {
+            clearTimeout(queryBlurTimeout);
             queryBlurTimeout = setTimeout(() => {
                 queryHasFocus.value = false;
                 hasFocus.value = buttonHasFocus.value;
@@ -242,6 +243,7 @@
     };
 
     const onBlurSelectButton = (event?: Event) => {
+            clearTimeout(buttonBlurTimeout);
             if (computedRenderSearchUI.value) return;
             buttonBlurTimeout = setTimeout(() => {
                 buttonHasFocus.value = false;
@@ -376,6 +378,7 @@
         const fineHandled = props.multiple
             ? handleOptionClickMultiple({
                 option,
+                //@ts-ignore
                 value: editableValue,
                 pickedOptions: editableOptions,
                 dropdownOptions: dropdownOptions.value,
@@ -388,6 +391,7 @@
             })
             : handleOptionClickSingle({
                 option,
+                //@ts-ignore
                 value: editableValue,
                 pickedOptions: editableOptions.value,
                 showOptions: editableShowOptions.value,
@@ -399,11 +403,13 @@
         if (fineHandled) {
             if (props.searchable && !props.multiple) query.value = '';
 
-            if (typeof props.events.clickOption === 'function') {
+            if (typeof props.events?.clickOption === 'function') {
                 props.events.clickOption({
                     option,
                 });
             }
+
+            // syncPicked();
         }
     };
 
