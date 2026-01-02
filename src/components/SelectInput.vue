@@ -2,7 +2,8 @@
     import DropdownOption from '../components/dropdown/DropdownOption.vue';
     import {
         ButtonConfig,
-        ButtonType, LktObject,
+        ButtonType,
+        LktObject,
         MultipleOptionsDisplay,
         OptionConfig,
         TableConfig,
@@ -10,7 +11,9 @@
         TagConfig,
         TooltipConfig,
         TooltipLocationX,
-        TooltipLocationY, ValidFieldValue,
+        TooltipLocationY,
+        TooltipType,
+        ValidFieldValue,
     } from 'lkt-vue-kernel';
     import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
     import {
@@ -19,7 +22,8 @@
         handleDropdownOptionsKeyboardNavigation,
         handleOptionClickMultiple,
         handleOptionClickSingle,
-        optionIsActive, pickFirstOption,
+        optionIsActive,
+        pickFirstOption,
         prepareOptions,
         receiveOptions,
         removeTag,
@@ -152,6 +156,12 @@
             canRenderDropdownTable.value = editableShowOptions.value;
         });
     });
+
+    const onUpdatedTooltipInternalOpenState = (value) => {
+        if (!value && props.tooltip?.type === TooltipType.Full){
+            editableShowOptions.value = false;
+        }
+    }
 
 
     /**
@@ -637,8 +647,9 @@
             locationY: TooltipLocationY.Bottom,
             ...tooltip,
             modelValue: editableShowOptions,
-            remoteControl: true,
+            remoteControl: tooltip?.type !== TooltipType.Full,
         }"
+        @update:modelValue="onUpdatedTooltipInternalOpenState"
     >
         <lkt-table
             ref="optionList"

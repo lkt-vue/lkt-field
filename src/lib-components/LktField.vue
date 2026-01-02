@@ -1350,6 +1350,7 @@
                     :lang="computedLang"
                     :name="name"
                     :icon="computedIcon"
+                    :tooltip="tooltipConfig"
                 />
 
                 <select-input

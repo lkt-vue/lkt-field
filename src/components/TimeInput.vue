@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onMounted, ref, watch } from 'vue';
-    import { ButtonConfig, ButtonType, TooltipLocationX, TooltipLocationY } from 'lkt-vue-kernel';
+    import { ButtonConfig, ButtonType, TooltipConfig, TooltipLocationX, TooltipLocationY } from 'lkt-vue-kernel';
     import LktTime from '@/components/calendar/LktTime.vue';
     import { lpad } from 'lkt-string-tools';
 
@@ -15,6 +15,7 @@
         tabindex: number
         lang: string
         icon: string
+        tooltip: TooltipConfig
     }>(), {
         modelValue: '',
     });
@@ -54,6 +55,7 @@
             class: 'lkt-field--toggle-button',
             text: editableValue,
             tooltip: {
+                ...tooltip,
                 class: 'lkt-field--date--tooltip',
                 locationY: TooltipLocationY.Bottom,
                 locationX: TooltipLocationX.LeftCorner,
