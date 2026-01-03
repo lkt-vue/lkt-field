@@ -19957,7 +19957,7 @@ const vu = /* @__PURE__ */ xe({
         }, null, 8, ["items", "config", "stack"])), [
           [it, ro.value]
         ]) : oe("", !0),
-        q.value && (e.type === V(G).Select || e.type === V(G).Radio || e.type === V(G).ToggleButtonGroup) ? (F(), Y(gn, ae({
+        q.value && (e.type === V(G).Select || e.type === V(G).Radio || e.type === V(G).ToggleButtonGroup || e.type === V(G).Table) ? (F(), Y(gn, ae({
           key: 3,
           ref_key: "inputElement",
           ref: L

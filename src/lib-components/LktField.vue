@@ -1874,7 +1874,7 @@
             :config="validation"
             :stack="validation?.stack" />
 
-        <template v-if="ready && (type === FieldType.Select || type === FieldType.Radio || type === FieldType.ToggleButtonGroup)">
+        <template v-if="ready && (type === FieldType.Select || type === FieldType.Radio || type === FieldType.ToggleButtonGroup || type === FieldType.Table)">
             <select-input
                 ref="inputElement"
                 v-bind="<SelectInputProps>{
