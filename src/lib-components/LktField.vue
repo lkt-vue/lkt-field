@@ -1865,6 +1865,8 @@
                     @clear="doClear"
                 />
             </div>
+
+            <lkt-polymorphic-element v-for="element in endContent" v-bind="element"/>
         </div>
 
         <lkt-field-validations
